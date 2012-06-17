@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Class diagram</title>
+
+<!-- jquery dependencies -->
+<script type="text/javascript"
+    src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script type="text/javascript"
+    src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.js"></script>
+<link rel="stylesheet" type="text/css"
+    href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/themes/base/jquery-ui.css"/>
+
+<!-- xuml-diagrams dependencies -->
+<link rel="stylesheet" type="text/css" href="xuml-diagrams.css"/>
+
+<script type="text/javascript"
+    src="xuml-diagrams.js"></script>
+
+<script>
+	$(function() {
+		setup();
+	});
+</script>
+
+<style type=”text/css” media=”print”>
+.noprint {display:none}
+</style>
+</head>
+
+<body>
+<canvas id="canvas" width="4000" height="4000"></canvas>
+
+${xuml.divs}
+
+</body>
+</html>

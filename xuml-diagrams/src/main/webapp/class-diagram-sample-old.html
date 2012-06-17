@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Class diagram</title>
+
+<!-- jquery dependencies -->
+<script type="text/javascript"
+    src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+<script type="text/javascript"
+    src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.js"></script>
+<link rel="stylesheet" type="text/css"
+    href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.1/themes/base/jquery-ui.css"/>
+
+<!-- xuml-diagrams dependencies -->
+<link rel="stylesheet" type="text/css" href="xuml-diagrams.css"/>
+
+<script type="text/javascript"
+    src="xuml-diagrams.js"></script>
+
+<script>
+	$(function() {
+		setup();
+	});
+</script>
+
+<style type=”text/css” media=”print”>
+.noprint {display:none}
+</style>
+</head>
+
+<body>
+<canvas id="canvas" width="4000" height="4000"></canvas>
+
+<div id="Watch" class=" draggable cls" style="width: 280px; height: 155px; left: 245px; top: 259px; ">
+  <div class="header">&lt;&lt;stereotype&gt;&gt;</div>
+  <div class="attributes">
+    <div class="attribute">id: ArbitraryId {I}</div>
+    <div class="attribute">startTime: Timestamp</div>
+    <div class="attribute">finishTime: Timestamp {O}</div>
+  </div>
+  <div class="operations">
+	<div class="operation">isActive()</div>
+	<div class="operation">description()</div>
+  </div>
+  <div class="events">
+	<div class="event">stop</div>
+  </div>
+</div>
+
+<div id="WatchIdentifier" class="draggable cls" style="left: 842px; top: 253px; width:200px;  ">
+  <div class="attributes">
+    <div class="attribute">id: ArbitraryId {I}</div>
+    <div class="attribute">value: String {I1}</div>
+    <div class="attribute">id R01 {I1}</div>
+    <div class="attribute">type R02 {I1}</div>
+  </div>
+</div>
+
+<div id="WatchIdentifierType" class="draggable cls" style="width: 250px; left: 818px; top: 625px; ">
+  <div class="attributes">
+    <div class="attribute">id: ArbitraryId {I}</div>
+    <div class="attribute">name: String {U}</div>
+    <div class="attribute">ctsCraftType: String {O}</div>
+    <div class="attribute">ctsIdentifierType: String {O}</div>
+  </div>
+</div>
+
+<div id="DisappearsWatch" class="draggable cls" style="width: 330px; height: 110px; left: 57px; top: 55px;">
+  <div class="attributes">
+    <div class="attribute">thresholdHours: Decimal</div>
+    <div class="attribute">warningThresholdHours: Decimal {O}</div>
+  </div>
+  <div class="events">
+	<div class="event">positionArrived</div>
+	<div class="event">noPosition</div>
+  </div>
+</div>
+
+<div id="AppearsWatch" class="draggable cls" style="width: 250px; height: 89px; left: 74px; top: 523px; ">
+  <div class="attributes">
+    <div class="attribute">thresholdHours: Decimal</div>
+  </div>
+  <div class="events">
+	<div class="event">positionArrived</div>
+	<div class="event">noPosition</div>
+  </div>
+</div>
+
+<div id="R01" class="relationship" 
+	className1="WatchIdentifier" className2="WatchIdentifierType" 
+	verbClause1="classifies" verbClause2="classified by" 
+	multiplicity1="*" multiplicity2="1">
+</div>
+
+<div id="R02" class="relationship" 
+	className1="Watch" className2="WatchIdentifier" 
+	verbClause1="identifies" verbClause2="identified by something that is really long" 
+	multiplicity1="1" multiplicity2="1..*">
+</div>
+
+
+<div id="R03" class="relationship" 
+	className1="Watch" className2="Recipient" 
+	verbClause1="is notified about" verbClause2="notifies" 
+	multiplicity1="*" multiplicity2="*">
+</div>
+
+<div id="Recipient" class="draggable cls" style="width: 213px; height: 89px; left: 370px; top: 602px; ">
+  <div class="attributes">
+    <div class="attribute">id: ArbitraryId {I}</div>
+	<div class="attribute">name: String</div>
+  </div>
+</div>
+
+<div id="Notification" class="associationClass draggable cls"
+	relationshipName="R03" style="left: 581px; top: 406px; width:200px;">
+  <div class="attributes">
+    <div class="attribute">id: ArbitraryId {I}</div>
+	<div class="attribute">time: Timestamp</div>
+  </div>
+</div>
+
+<div id="G01-DisappearsWatch" groupName="G01" class="generalization" subClassName="DisappearsWatch" superClassName="Watch"></div>
+<div id="G01-AppearsWatch" groupName="G01" class="generalization" subClassName="AppearsWatch" superClassName="Watch"></div>
+
+</body>
+</html>
+

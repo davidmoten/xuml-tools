@@ -1,0 +1,181 @@
+<html>
+<head>
+<script type="text/javascript"
+    src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script type="text/javascript"
+    src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.js"></script>
+<link rel="stylesheet" type="text/css"
+    href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.1/themes/base/jquery-ui.css"/>
+
+<script type="text/javascript"
+    src="https://ajax.googleapis.com/ajax/libs/mootools/1.4.5/mootools-yui-compressed.js"></script>
+<script type="text/javascript"
+    src="js/inlineEdit.v3.js"></script>
+
+<style type="text/css">
+#presentation {min-height:5em;width:100%}
+#xml {min-height:10em;width:100%}
+body {font-family: Tahoma, Geneva, sans-serif;font-size:80%%;}
+.mandatory {color:red;float:left;}
+label {float:left;clear:left;padding-top:0.3em;}
+input {margin-bottom:10px;}
+textarea {margin-bottom:10px;}
+#status {color:gray; float:left;padding-left:10px;}
+.error {color:red;}
+h2 {color:white;background-color:blue;padding:10px;}
+h3 {clear:left;}
+.label {clear:left;float:left;padding-top:3px;min-width:10em;}
+.buttons {float:left; padding-left:0.5em;}
+.input {float:left;}
+.button {float:left; padding-left:1.0em;color:blue;padding-top:3px;}
+.id {float:left; padding-left:10px;width:5em;border:1px solid grey; padding:0.5em;height:20px;text-align: center;display:none;}
+.type {float:left; padding-left:10px;width:10em;border:1px solid grey; padding:0.5em;height:20px; text-align: center;}
+.name {float:left;color:brown;border-top:1px solid grey;border-bottom:1px solid grey;border-left:1px solid grey; width:30em;padding:0.5em;height:20px;}
+.action {float:left;border-top:1px solid grey;border-bottom:1px solid grey;border-right:1px solid grey; width:6em;padding:0.5em;height:20px;}
+.view {float:left;
+	background-image: url(images/view.png);
+	background-repeat: no-repeat;
+	background-position: center center;}
+.edit {float:left;
+	background-image: url(images/edit.png);
+	background-repeat: no-repeat;
+	background-position: center center;}
+#newModel {clear:left;float:left;margin:10px}
+#newClassDiagram {float:left;margin:10px;}
+#model-xml {width:100%; height:90%;border:none;}
+.line {clear:left;}
+#found {  padding:5px;margin-bottom:5px;}
+</style>
+<script>
+
+$(function() {
+	
+	var setStatus = function(s){
+		$("#status").text(s);
+	}
+	var setError = function(s){
+		$("#error").text(s);
+		setStatus("Error occurred");
+	}
+	var editXml = function (id,name) {
+		var title = id + ": "+ name;
+		jQuery.get("model",{id:id},function(data) {
+			var dlg = $('<div id="dialog" title="'+title+'"><textarea id="model-xml"></textarea><br/><div id="modelError" class="error"></div></div>');
+			dlg.find('#model-xml').val(data);
+			dlg.dialog({
+				autoOpen:true,
+		        maxWidth:"90%",
+		        maxHeight: "90%",
+		        width: 800,
+		        height: 600,
+		        modal: true,
+		        buttons: {
+			        "Save": function() {
+			        	var me = $(this);
+			        	jQuery.post("model",{id:id,xml:$(this).find("#model-xml").val()},function(data) {
+				        	me.dialog("close");
+			        	}).error(function (request,status,error) {
+			    			$("#modelError").text(request.responseText);
+			    		});
+			        },
+			        Cancel: function() {
+			        	$(this).dialog("close");
+			        }
+			    }
+	        });
+		},'text')
+		.error(function (request,status,error) {
+			setError(request.responseText);
+		});
+	};
+	
+    var find = function(searchFor) {
+		var found = $("#found");
+		setStatus("searching...")
+		jQuery.get("find",{"text":searchFor},function(data){
+			var result;
+			if (data.length==0) 
+				result = {count:0};
+			else
+				result = JSON.parse(data);
+			var html = "";
+			var action = function (t,id) {
+				return "myaction-"+t+"-"+id;
+			}
+			for (var i=1;i<=result.count;i++){
+				var type=result["type"+i];
+				var id = result["id"+i];
+				var name=result["name"+i];
+				var style = "view";
+				var typeName ="Class Diagram";
+				if (type == "model") {
+					style = "edit";
+					typeName = "Model";
+				}
+				html += "<div class='line'>"
+						+"<div class='type'>" + typeName +"</div>"
+						+"<div class='id'>"+id+"</div>"
+						+"<div class='name'>" + name + "</div>"
+						+"<div id='"+action(type,id)+"' class='action "+style+"'></div>"
+						+"</div>\n";
+				console.log(html);
+			}
+			found.html(html);
+			for (var i=1;i<=result.count;i++) {
+				var type=result["type"+i];
+				var id = result["id"+i];
+				var name=result["name"+i];
+				$("#"+action(type,id)).click(function(type,id,name) {
+					return function(){	
+						if (type == "model") 
+							editXml(id,name);
+						else 
+							window.location="cd?id="+id;
+					};
+				}(type,id,name));
+			};
+			window.addEvent('domready',function(){
+				$$('.name').each(function(el){
+					el.addEvent('click',function(){this.inlineEdit(); $(".input").css("width","30em");});
+				});
+			});
+			setStatus("");
+		})
+		.error(function (request,status,error) {
+			setError(request.responseText);
+		});
+	};
+
+	$("#newModel").click(function(){
+		var id = prompt("New model id:", "");
+		if (id !== null) {
+			var name = prompt("Model name:","");
+			if (name !== null)
+				editXml(id,name);
+		}
+	});
+	$("#find").click(function () {
+		var searchFor = $("searchFor").val();
+		find(searchFor);
+	});
+	find("");
+});
+
+</script>
+
+</head>
+<body>
+
+<h2>XUML Tools</h2>
+<p>XUML Tools includes a Class Diagram Viewer (perhaps later an Editor) that parses a model definition (specified in xml)
+ and displays a class diagram from the model in an HTML 5 viewer for manipulation by the user.</p>
+ <p>Here is an <a href="cd?id=47">example class diagram.</a></p>
+<p>The xml schema (XSD) for model definitions is <a href="schema">here</a>.</p>
+
+<!-- <label for="find"></label><input type="text" id="searchFor" value=""></input><input type="button" id="find" value="Find"></input>-->
+<div id="found"></div>
+<input type="button" id="newModel" value="New Model"></input><input type="button" id="newClassDiagram" value="New Class Diagram"></input>
+<div id="status"></div>
+<div id="error" class="error"></div>
+</body>
+</html>

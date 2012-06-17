@@ -1,0 +1,3 @@
+jpa and generalization
+http://www.devx.com/Java/Article/33906/1763/page/1
+

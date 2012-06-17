@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Class diagram</title>
+
+<!-- jquery dependencies -->
+<script type="text/javascript"
+    src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script type="text/javascript"
+    src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.js"></script>
+<link rel="stylesheet" type="text/css"
+    href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/themes/base/jquery-ui.css"/>
+
+<!-- xuml-diagrams dependencies -->
+<link rel="stylesheet" type="text/css" href="xuml-diagrams.css"/>
+
+<script type="text/javascript"
+    src="xuml-diagrams.js"></script>
+
+<script>
+	$(function() {
+		setup();
+	});
+</script>
+
+<style type=”text/css” media=”print”>
+.noprint {display:none}
+</style>
+</head>
+
+<body>
+<canvas id="canvas" width="4000" height="4000"></canvas>
+
+<div id="Class" class="cls draggable">
+  <div class="attributes">
+    <div class="attribute">Name: String {I}</div>
+<div class="attribute">Domain: {I,I2,I3,I4,R14}</div>
+<div class="attribute">Element: {I2,R14}</div>
+    <div class="attribute">Cnum: String {I3}</div>
+    <div class="attribute">Alias: String {I4}</div>
+  </div>
+</div>
+<div id="Attribute" class="cls draggable">
+  <div class="attributes">
+    <div class="attribute">Name: String {I}</div>
+<div class="attribute">Class: {I,R20}</div>
+<div class="attribute">Domain: {I,R20}</div>
+  </div>
+</div>
+<div id="ReferentialAttribute" class="cls draggable">
+  <div class="attributes">
+<div class="attribute">Name: {I,R21}</div>
+<div class="attribute">Class: {I,R21}</div>
+<div class="attribute">Domain: {I,R21}</div>
+  </div>
+</div>
+<div id="SpecializedClass" class="cls draggable">
+  <div class="attributes">
+<div class="attribute">Name: {I,R23}</div>
+<div class="attribute">Domain: {I,R23}</div>
+  </div>
+</div>
+<div id="NonSpecializedClass" class="cls draggable">
+  <div class="attributes">
+<div class="attribute">Name: {I,R23}</div>
+<div class="attribute">Domain: {I,R23}</div>
+  </div>
+</div>
+<div id="Identifier" class="cls draggable">
+  <div class="attributes">
+    <div class="attribute">Number: String {I}</div>
+<div class="attribute">Class: {I,R27}</div>
+<div class="attribute">Domain: {I,R27}</div>
+  </div>
+</div>
+<div id="IdentifierAttribute" class="cls draggable associationClass" relationshipName="R22" >
+  <div class="attributes">
+<div class="attribute">Identifier: {I,R22}</div>
+<div class="attribute">Attribute: {I,R22}</div>
+<div class="attribute">Class: {I,R22}</div>
+<div class="attribute">Domain: {I,R22}</div>
+  </div>
+</div>
+<div id="NativeAttribute" class="cls draggable">
+  <div class="attributes">
+<div class="attribute">Name: {I,R21}</div>
+<div class="attribute">Class: {I,R21}</div>
+<div class="attribute">Domain: {I,R21}</div>
+<div class="attribute">Type: {R24}</div>
+  </div>
+</div>
+<div id="AttributeInDerivation" class="cls draggable associationClass" relationshipName="R26" >
+  <div class="attributes">
+<div class="attribute">SourceAttribute: {I,R26}</div>
+<div class="attribute">SourceClass: {I,R26}</div>
+<div class="attribute">TargetAttribute: {I,R26}</div>
+<div class="attribute">TargetClass: {I,R26}</div>
+<div class="attribute">Domain: {I,R26}</div>
+  </div>
+</div>
+<div id="IndependentAttribute" class="cls draggable">
+  <div class="attributes">
+<div class="attribute">Name: {I,R25}</div>
+<div class="attribute">Class: {I,R25}</div>
+<div class="attribute">Domain: {I,R25}</div>
+  </div>
+</div>
+<div id="DerivedAttribute" class="cls draggable">
+  <div class="attributes">
+<div class="attribute">Name: {I,R25}</div>
+<div class="attribute">Class: {I,R25}</div>
+<div class="attribute">Domain: {I,R25}</div>
+    <div class="attribute">Formula: String </div>
+  </div>
+</div>
+<div class="relationship" id="R20" className1="Class" className2="Attribute" verbClause1="characterizes" verbClause2="is characterized by" multiplicity1="1" multiplicity2="1..*"></div>
+<div class="relationship" id="R22" className1="Identifier" className2="Attribute" verbClause1="is required in" verbClause2="requires" multiplicity1="*" multiplicity2="1..*"></div>
+<div class="relationship" id="R26" className1="Attribute" className2="DerivedAttribute" verbClause1="is derived from" verbClause2="contributes to the value of" multiplicity1="1..*" multiplicity2="*"></div>
+<div class="relationship" id="R27" className1="Class" className2="Identifier" verbClause1="uniquely distinguishes" verbClause2="is uniquely distinguished by" multiplicity1="1" multiplicity2="1..*"></div>
+<div class="generalization" id="ReferentialAttribute-R21" groupName="R21" superClassName="Attribute" subClassName="ReferentialAttribute"></div>
+<div class="generalization" id="NativeAttribute-R21" groupName="R21" superClassName="Attribute" subClassName="NativeAttribute"></div>
+<div class="generalization" id="DerivedAttribute-R25" groupName="R25" superClassName="NativeAttribute" subClassName="DerivedAttribute"></div>
+<div class="generalization" id="IndependentAttribute-R25" groupName="R25" superClassName="NativeAttribute" subClassName="IndependentAttribute"></div>
+<div class="generalization" id="SpecializedClass-R23" groupName="R23" superClassName="Class" subClassName="SpecializedClass"></div>
+<div class="generalization" id="NonSpecializedClass-R23" groupName="R23" superClassName="Class" subClassName="NonSpecializedClass"></div>
+
+
+</body>
+</html>

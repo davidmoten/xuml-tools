@@ -1,0 +1,1245 @@
+<schema targetNamespace="http://www.miuml.org/metamodel" xmlns:t="http://www.miuml.org/metamodel"
+	xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+	<annotation>
+		<documentation>
+			<html>
+				<p>This schema describes the information of a miUML model in xml
+					form. The schema is created directly from the miUML class
+					diagrams
+					available at http://www.miUML.org.
+				</p>
+				<p>The same terminology is used and the superclass
+					heirarchies are
+					being implemented where possible.</p>
+				<p> To reduce verbosity in xml compliant with the schema attributes
+					are preferred over elements when convenient.</p>
+				<p>Every relationship on the class diagrams should eventually appear
+					in this document in the documentation annotations on types or
+					elements.</p>
+				<p>Some classes and relationships from the metamodel may add no data
+					to this schema. There existence may be purely to represent
+					uniqueness constraints on the data which is outside the scope of
+					the schema. The miUML approach is to provide a program/service to
+					perform this sort of validation. All relationships that are
+					identified as not being required in the schema should eventually be
+					mentioned in documentation annotations so that it is clear they
+					have been considered.</p>
+				<p>Subsystems to be considered by this schema include:</p>
+				<ul>
+					<li>Domain Subsystem</li>
+					<li>Class and Attribute Subsystem</li>
+					<li>Relationship Subsystem</li>
+					<li>State Subsystem</li>
+					<li>Polymorphism Subsystem</li>
+					<li>Formalization Subsystem</li>
+					<li>Type Subsystem</li>
+					<li>Required Referential Identifier Subsystem</li>
+				</ul>
+			</html>
+		</documentation>
+	</annotation>
+
+	<!--++++++++++++++++++++++++ -->
+	<!-- DOMAIN SUBSYSTEM ++++++ -->
+	<!--++++++++++++++++++++++++ -->
+
+	<!-- Domain and specializations -->
+
+	<element name="Domains" type="t:Domains" />
+
+	<complexType name="Domains">
+		<sequence>
+			<element name="DomainBuildSpecification" type="t:DomainBuildSpecification" />
+			<element ref="t:ConstrainedType" minOccurs="0" maxOccurs="unbounded">
+				<annotation>
+					<documentation>R708 CommonType</documentation>
+				</annotation>
+			</element>
+			<element ref="t:Domain" minOccurs="0" maxOccurs="unbounded" />
+		</sequence>
+	</complexType>
+
+	<element name="Domain" type="t:Domain" abstract="true" />
+
+	<complexType name="Domain">
+		<sequence>
+			<element name="Bridge" type="t:Bridge" minOccurs="0"
+				maxOccurs="unbounded">
+				<annotation>
+					<documentation>R7. The enclosing domain is the Client domain
+					</documentation>
+				</annotation>
+			</element>
+		</sequence>
+		<attribute name="Name" type="t:Name" use="required" />
+		<attribute name="Alias" type="t:Alias" use="optional">
+			<annotation>
+				<documentation>When this attribute is missing the alias should be
+					assumed to be the same as the Name field.
+				</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+
+	<element name="ModeledDomain" substitutionGroup="t:Domain"
+		type="t:ModeledDomain" />
+	<element name="RealizedDomain" substitutionGroup="t:Domain"
+		type="t:RealizedDomain" />
+
+	<complexType name="ModeledDomain">
+		<complexContent>
+			<extension base="t:Domain">
+				<annotation>
+					<documentation>R4</documentation>
+				</annotation>
+				<sequence>
+					<element ref="t:ConstrainedType" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation>R708 DomainType</documentation>
+						</annotation>
+					</element>
+					<element name="Subsystem" type="t:Subsystem" maxOccurs="unbounded">
+						<annotation>
+							<documentation>R1</documentation>
+						</annotation>
+					</element>
+					<element name="ConstrainedLoop" type="t:ConstrainedLoop"
+						minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation>R17</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="RealizedDomain">
+		<complexContent>
+			<extension base="t:Domain">
+				<annotation>
+					<documentation>R4</documentation>
+				</annotation>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<!-- Bridge -->
+
+	<complexType name="Bridge">
+		<attribute name="Service" type="t:Name" use="required">
+			<annotation>
+				<documentation>R7c</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+
+	<!-- Subsystem -->
+
+	<complexType name="Subsystem">
+		<sequence>
+			<element ref="t:SubsystemElement" minOccurs="0" maxOccurs="unbounded">
+				<annotation>
+					<documentation>R13</documentation>
+				</annotation>
+			</element>
+		</sequence>
+		<attribute name="Name" type="t:Name" use="required" />
+		<attribute name="Alias" type="t:Name" use="optional">
+			<annotation>
+				<documentation>When this attribute is missing the alias should be
+					assumed to be the same as the Name field.
+				</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="Floor" type="t:PositiveInteger" use="required">
+			<annotation>
+				<documentation>R3</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="Ceiling" type="t:PositiveInteger" use="required">
+			<annotation>
+				<documentation>R3</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+
+	<!-- Element and specializations -->
+
+	<element name="Element" type="t:Element" abstract="true" />
+
+	<complexType name="Element">
+		<attribute name="Element" type="t:Number" use="optional">
+			<annotation>
+				<documentation>
+					Number has been made optional because it is not
+					required
+					to uniquely refer to an Element within a Domain in the
+					schema.
+				</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+
+	<element name="SpanningElement" substitutionGroup="t:Element"
+		type="t:SpanningElement" abstract="true" />
+	<element name="SubsystemElement" substitutionGroup="t:Element"
+		type="t:SubsystemElement" abstract="true" />
+
+	<complexType name="SpanningElement">
+		<complexContent>
+			<extension base="t:Element">
+				<annotation>
+					<documentation>R16. Only ConstrainedLoop is modeled as a
+						specialization of SpanningElement. Xsd does not support multiple
+						inheritance so DomainType is modeled via an optional Element
+						attribute on ConstrainedType. Lineage is used only for validation
+						thus does not appear in this schema.
+					</documentation>
+				</annotation>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="SubsystemElement">
+		<complexContent>
+			<extension base="t:Element">
+				<annotation>
+					<documentation>R16</documentation>
+				</annotation>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<!-- Spanning Element specializations -->
+	<complexType name="ConstrainedLoop">
+		<complexContent>
+			<extension base="t:SpanningElement">
+				<annotation>
+					<documentation>R17</documentation>
+				</annotation>
+				<sequence>
+					<annotation>
+						<documentation>
+							Note that as per the miuml metamodel documentation
+							(Relationship Subsystem Class Diagram Notes) the order of the
+							relationships listed below is not important. It is a set of
+							relationships.
+						</documentation>
+					</annotation>
+					<element name="LoopSegment" type="t:Rnum" maxOccurs="unbounded">
+						<annotation>
+							<documentation>R160</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<!-- Subsystem Element specializations -->
+
+	<element name="Relationship" substitutionGroup="t:SubsystemElement"
+		type="t:Relationship" abstract="true" />
+	<element name="Class" substitutionGroup="t:SubsystemElement"
+		type="t:Class" abstract="true" />
+
+	<complexType name="Relationship">
+		<complexContent>
+			<extension base="t:SubsystemElement">
+				<annotation>
+					<documentation>R14. R160 is for uniqueness purposes only and so is
+						not in the schema.
+					</documentation>
+				</annotation>
+				<attribute name="Rnum" type="t:Rnum" use="required" />
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="Class">
+		<complexContent>
+			<extension base="t:SubsystemElement">
+				<annotation>
+					<documentation>R14</documentation>
+				</annotation>
+				<sequence>
+					<element ref="t:Attribute" maxOccurs="unbounded">
+						<annotation>
+							<documentation>R20</documentation>
+						</annotation>
+					</element>
+					<element ref="t:Lifecycle" minOccurs="0">
+						<annotation>
+							<documentation>R500</documentation>
+						</annotation>
+					</element>
+				</sequence>
+				<attribute name="Name" type="t:Name" use="required" />
+				<attribute name="Cnum" type="t:Cnum" use="optional">
+					<annotation>
+						<documentation>
+							Schema xml consumers (model
+							compilers/viewers/editors/validators/documenters) will not always
+							require this field
+							so it can be omitted.
+						</documentation>
+					</annotation>
+				</attribute>
+				<attribute name="Alias" type="t:Alias" use="optional">
+					<annotation>
+						<documentation>
+							Schema xml consumers (model
+							compilers/viewers/editors/validators/documenters) will not always
+							require this field and if they do the value should be considered
+							to default to the Name attribute.
+						</documentation>
+					</annotation>
+				</attribute>
+				<attribute name="Association" type="t:Rnum" use="optional">
+					<annotation>
+						<documentation>R120</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="DomainBuildSpecification">
+		<attribute name="Name" type="string" use="required" />
+		<attribute name="DomainNameIsDefaultSubsystemName" type="boolean"
+			use="required" />
+		<attribute name="DefaultSubsystemName" type="string" use="required" />
+		<attribute name="DefaultSubsystemRange" type="t:PositiveInteger"
+			use="required" />
+		<attribute name="DefaultIdName" type="string" use="required" />
+		<attribute name="DefaultIdType" type="t:Name" use="required" />
+	</complexType>
+
+	<!--++++++++++++++++++++++++ -->
+	<!-- CLASS SUBSYSTEM +++++++ -->
+	<!--++++++++++++++++++++++++ -->
+
+	<!-- Class specializations -->
+
+	<element name="NonSpecializedClass" substitutionGroup="t:Class"
+		type="t:NonSpecializedClass" />
+	<element name="SpecializedClass" substitutionGroup="t:Class"
+		type="t:SpecializedClass" />
+
+	<complexType name="NonSpecializedClass">
+		<complexContent>
+			<extension base="t:Class">
+				<annotation>
+					<documentation>R23</documentation>
+				</annotation>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="SpecializedClass">
+		<complexContent>
+			<extension base="t:Class">
+				<annotation>
+					<documentation>R23</documentation>
+				</annotation>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<!-- Attribute specializations -->
+	<element name="Attribute" type="t:Attribute" abstract="true" />
+
+	<complexType name="Attribute">
+		<sequence>
+			<element name="Identifier" type="t:IdentifierAttribute"
+				minOccurs="0" maxOccurs="unbounded">
+				<annotation>
+					<documentation>R22</documentation>
+				</annotation>
+			</element>
+		</sequence>
+		<attribute name="Name" type="t:Name" use="required" />
+	</complexType>
+
+	<element name="NativeAttribute" substitutionGroup="t:Attribute"
+		type="t:NativeAttribute" abstract="true" />
+	<element name="ReferentialAttribute" substitutionGroup="t:Attribute"
+		type="t:ReferentialAttribute" />
+
+	<complexType name="NativeAttribute">
+		<complexContent>
+			<extension base="t:Attribute">
+				<annotation>
+					<documentation>R21</documentation>
+				</annotation>
+				<attribute name="Type" type="t:Name">
+					<annotation>
+						<documentation>R24</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="IdentifierAttribute">
+		<attribute name="Number" type="t:Number" use="required" />
+		<!-- TODO add referential roles -->
+	</complexType>
+
+	<complexType name="ReferentialAttribute">
+		<complexContent>
+			<extension base="t:Attribute">
+				<annotation>
+					<documentation>R21</documentation>
+				</annotation>
+				<sequence>
+					<element ref="t:Reference">
+						<annotation>
+							<documentation>R31</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<!-- Native Attribute specializations -->
+
+	<element name="IndependentAttribute" substitutionGroup="t:NativeAttribute"
+		type="t:IndependentAttribute" />
+	<element name="DerivedAttribute" substitutionGroup="t:NativeAttribute"
+		type="t:DerivedAttribute" />
+
+	<complexType name="IndependentAttribute">
+		<complexContent>
+			<extension base="t:NativeAttribute">
+				<annotation>
+					<documentation>R25</documentation>
+				</annotation>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="DerivedAttribute">
+		<complexContent>
+			<annotation>
+				<documentation>R26 has not been represented in the schema because
+					it's use depends on a formula language for derived attributes.
+					Such
+					a language has not yet been defined in miUML (April 18 2012).
+				</documentation>
+			</annotation>
+			<extension base="t:NativeAttribute">
+				<annotation>
+					<documentation>R25</documentation>
+				</annotation>
+				<attribute name="Formula" type="t:Formula" use="required" />
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<!-- Identifier and specializations -->
+
+	<element name="Identifier" type="t:Identifier" abstract="true" />
+
+	<complexType name="Identifier">
+		<attribute name="Number" type="t:Number" use="required" />
+	</complexType>
+
+	<element name="ModeledIdentifier" substitutionGroup="t:Identifier"
+		type="t:ModeledIdentifier" />
+	<element name="RequiredReferentialIdentifier"
+		substitutionGroup="t:Identifier" type="t:RequiredReferentialIdentifier" />
+
+	<complexType name="ModeledIdentifier">
+		<complexContent>
+			<extension base="t:Identifier">
+				<annotation>
+					<documentation>R30</documentation>
+				</annotation>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="RequiredReferentialIdentifier">
+		<complexContent>
+			<extension base="t:Identifier">
+				<annotation>
+					<documentation>R30</documentation>
+				</annotation>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<!--++++++++++++++++++++++++++++++ -->
+	<!-- RELATIONSHIP SUBSYSTEM ++++++ -->
+	<!--++++++++++++++++++++++++++++++ -->
+
+	<!-- R131 and Facet and Lineage omitted as they contribute to validation 
+		only. -->
+
+	<!-- Relationship specializations -->
+
+	<element name="Generalization" substitutionGroup="t:Relationship"
+		type="t:Generalization" />
+	<element name="Association" substitutionGroup="t:Relationship"
+		type="t:Association" abstract="true" />
+
+	<complexType name="Generalization">
+		<complexContent>
+			<extension base="t:Relationship">
+				<annotation>
+					<documentation>R100. R103,R102,R118,R117 add uniqueness constraints
+						only and thus do not appear in this schema.
+					</documentation>
+				</annotation>
+				<sequence>
+					<element name="SpecializedClass" type="t:Named" minOccurs="2"
+						maxOccurs="unbounded">
+						<annotation>
+							<documentation>R101, minOccurs=2 represents the relationships
+								R116,R117,R118 (Minimal Partition)
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+				<attribute name="Superclass" type="t:Name" use="required" />
+			</extension>
+		</complexContent>
+	</complexType>
+
+
+	<complexType name="Association">
+		<complexContent>
+			<extension base="t:Relationship">
+				<annotation>
+					<documentation>R100</documentation>
+				</annotation>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<!-- Association specializations -->
+
+	<element name="UnaryAssociation" substitutionGroup="t:Association"
+		type="t:UnaryAssociation" />
+	<element name="BinaryAssociation" substitutionGroup="t:Association"
+		type="t:BinaryAssociation" />
+
+	<complexType name="UnaryAssociation">
+		<complexContent>
+			<extension base="t:Association">
+				<annotation>
+					<documentation>R119</documentation>
+				</annotation>
+				<sequence>
+					<element name="SymmetricPerspective" type="t:SymmetricPerspective">
+						<annotation>
+							<documentation>R123</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="BinaryAssociation">
+		<complexContent>
+			<extension base="t:Association">
+				<annotation>
+					<documentation>R119</documentation>
+				</annotation>
+				<sequence>
+					<element name="ActivePerspective" type="t:ActivePerspective">
+						<annotation>
+							<documentation>R124</documentation>
+						</annotation>
+					</element>
+					<element name="PassivePerspective" type="t:PassivePerspective">
+						<annotation>
+							<documentation>R125</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<!-- Perspective and specializations -->
+
+	<element name="Perspective" type="t:Perspective" abstract="true" />
+
+	<complexType name="Perspective">
+		<annotation>
+			<documentation>Removed Side attribute because some subclasses do not
+				required it, e.g. ActivePerspective and PassivePerspective
+			</documentation>
+		</annotation>
+		<attribute name="Phrase" type="t:Phrase" use="required" />
+		<!-- <attribute name="Side" type="t:Number" use="required" /> -->
+		<attribute name="ViewedClass" type="t:Name" use="required">
+			<annotation>
+				<documentation>R110</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="OnePerspective" type="boolean" use="required">
+			<annotation>
+				<documentation>Represents the R104 specialization group because
+					schema does not support multiple inheritance.
+				</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="Conditional" type="boolean" use="required" />
+	</complexType>
+
+	<element name="SymmetricPerspective" substitutionGroup="t:Perspective"
+		type="t:SymmetricPerspective" abstract="true" />
+	<element name="AsymmetricPerspective" substitutionGroup="t:Perspective"
+		type="t:AsymmetricPerspective" abstract="true" />
+
+	<complexType name="SymmetricPerspective">
+		<complexContent>
+			<extension base="t:Perspective">
+				<annotation>
+					<documentation>R121</documentation>
+				</annotation>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="AsymmetricPerspective">
+		<complexContent>
+			<extension base="t:Perspective">
+				<annotation>
+					<documentation>R121</documentation>
+				</annotation>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<!-- AsymmetricPerspective specializations -->
+
+	<element name="ActivePerspective" substitutionGroup="t:AsymmetricPerspective"
+		type="t:ActivePerspective" />
+	<element name="PassivePerspective" substitutionGroup="t:AsymmetricPerspective"
+		type="t:PassivePerspective" />
+
+
+	<complexType name="ActivePerspective">
+		<complexContent>
+			<extension base="t:AsymmetricPerspective">
+				<annotation>
+					<documentation>R105</documentation>
+				</annotation>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="PassivePerspective">
+		<complexContent>
+			<extension base="t:AsymmetricPerspective">
+				<annotation>
+					<documentation>R105</documentation>
+				</annotation>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<!--+++++++++++++++++++++++++++++++ -->
+	<!-- FORMALIZATION SUBSYSTEM ++++++ -->
+	<!--+++++++++++++++++++++++++++++++ -->
+
+	<element name="Reference" type="t:Reference" abstract="true" />
+	<element name="AssocativeReference" type="t:AssociativeReference"
+		substitutionGroup="t:Reference" />
+	<element name="ToOneReference" type="t:ToOneReference"
+		substitutionGroup="t:Reference" />
+	<element name="SuperclassReference" type="t:SuperclassReference"
+		substitutionGroup="t:Reference" />
+
+	<complexType name="Reference">
+		<annotation>
+			<documentation>
+				R21,R31,R32
+			</documentation>
+		</annotation>
+		<attribute name="Relationship" type="t:Rnum" use="required" />
+		<attribute name="Attribute" type="t:Name" use="optional">
+			<annotation>
+				<documentation>
+					If this attribute is not used then its value is
+					assumed to be the name of the enclosing attribute
+					making the
+					reference.
+				</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+
+	<complexType name="AssociativeReference">
+		<complexContent>
+			<annotation>
+				<documentation>R152</documentation>
+			</annotation>
+			<extension base="t:Reference">
+				<attribute name="Side" type="t:Side" use="optional">
+					<annotation>
+						<documentation>TODO
+						</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="ToOneReference">
+		<complexContent>
+			<annotation>
+				<documentation>R152</documentation>
+			</annotation>
+			<extension base="t:Reference">
+				<attribute name="Side" type="t:Side" use="optional">
+					<annotation>
+						<documentation>This should only be required for reflexive binary
+							associations.
+						</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="SuperclassReference">
+		<complexContent>
+			<annotation>
+				<documentation>R152</documentation>
+			</annotation>
+			<extension base="t:Reference"></extension>
+		</complexContent>
+	</complexType>
+
+	<!--+++++++++++++++++++++++++++++++ -->
+	<!-- TYPE SUBSYSTEM +++++++++++++++ -->
+	<!--+++++++++++++++++++++++++++++++ -->
+
+	<element name="Type" type="t:Type" abstract="true" />
+	<element name="ConstrainedType" type="t:ConstrainedType"
+		substitutionGroup="t:Type" abstract="true" />
+	<element name="UnconstrainedType" type="t:ConstrainedType"
+		substitutionGroup="t:Type" />
+
+	<complexType name="Type">
+		<attribute name="Name" type="t:Name" use="required" />
+	</complexType>
+
+	<complexType name="ConstrainedType">
+		<complexContent>
+			<annotation>
+				<documentation>R714</documentation>
+			</annotation>
+			<extension base="t:Type">
+				<attribute name="LocalName" type="t:Name" use="optional">
+					<annotation>
+						<documentation>
+							<p>Models R708 Domain Type + Common Type. When a type is
+								particular to a domain then it should have a local name property
+								(that may be the same name as the name which should be unique
+								across all domains). When this attribute is omitted the
+								LocalName is assumed to be the same as the Name.</p>
+							<p>The operator part of the Type subsystem is not modeled because
+								it will not be used till a processing language is developed. For
+								this reason R712,R713,R716 R718,R719,R720 have not been modeled
+								in this schema.</p>
+						</documentation>
+					</annotation>
+				</attribute>
+				<attribute name="Element" type="t:Number" use="optional">
+					<annotation>
+						<documentation>
+							Schema does not support multiple inheritance so
+							R16+R17 is modelled using this optional attribute. A
+							ConstrainedType is only an Element if it is a DomainType. Even if
+							the ConstrainedType is a DomainType the element number is still
+							an optional attribute.
+						</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="UnconstrainedType">
+		<complexContent>
+			<annotation>
+				<documentation>R714</documentation>
+			</annotation>
+			<extension base="t:Type"></extension>
+		</complexContent>
+	</complexType>
+
+	<element name="AtomicType" type="t:AtomicType"
+		substitutionGroup="t:ConstrainedType" />
+	<element name="StructuredType" type="t:StructuredType"
+		substitutionGroup="t:ConstrainedType" />
+
+	<complexType name="AtomicType">
+		<complexContent>
+			<annotation>
+				<documentation>R700</documentation>
+			</annotation>
+			<extension base="t:ConstrainedType">
+				<annotation>
+					<documentation>R717. All atomic types are based on an unconstrained
+						type of the same name. For example the constrained Real with
+						precision and upper and lower bounds is based on the mathematical
+						domain R of real numbers (without constraints).
+					</documentation>
+				</annotation>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="StructuredType">
+		<complexContent>
+			<annotation>
+				<documentation>R700</documentation>
+			</annotation>
+			<extension base="t:ConstrainedType">
+				<sequence>
+					<element ref="t:Member" maxOccurs="unbounded" />
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<element name="Member" type="t:Member" abstract="true" />
+	<element name="Structure" type="t:Structure" substitutionGroup="t:Member" />
+	<element name="Field" type="t:Field" substitutionGroup="t:Member" />
+
+	<complexType name="Member">
+		<attribute name="Name" type="t:Name" use="required" />
+	</complexType>
+
+	<complexType name="Structure">
+		<complexContent>
+			<annotation>
+				<documentation>R703</documentation>
+			</annotation>
+			<extension base="t:Member">
+				<sequence>
+					<element ref="t:Member" maxOccurs="unbounded">
+						<annotation>
+							<documentation>R704</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="Field">
+		<complexContent>
+			<annotation>
+				<documentation>R703</documentation>
+			</annotation>
+			<extension base="t:Member">
+				<attribute name="Type" type="t:Name">
+					<annotation>
+						<documentation>R705</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<!-- TODO: Operator part of Type Subsystem is not included because requires 
+		Action Language which is not developed yet (1 April 2012). -->
+
+	<element name="BooleanType" type="t:BooleanType"
+		substitutionGroup="t:AtomicType" />
+	<element name="IntegerType" type="t:IntegerType"
+		substitutionGroup="t:AtomicType" />
+	<element name="RealType" type="t:RealType" substitutionGroup="t:AtomicType" />
+	<element name="RationalType" type="t:RationalType"
+		substitutionGroup="t:AtomicType" />
+	<element name="EnumeratedType" type="t:EnumeratedType"
+		substitutionGroup="t:AtomicType" />
+	<element name="SymbolicType" type="t:SymbolicType"
+		substitutionGroup="t:AtomicType" />
+
+	<complexType name="BooleanType">
+		<complexContent>
+			<annotation>
+				<documentation>R706</documentation>
+			</annotation>
+			<extension base="t:AtomicType"></extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="IntegerType">
+		<complexContent>
+			<annotation>
+				<documentation>R706</documentation>
+			</annotation>
+			<extension base="t:AtomicType">
+				<attribute name="Units" type="t:Name" use="required" />
+				<attribute name="LowerLimit" type="integer" use="required" />
+				<attribute name="UpperLimit" type="integer" use="required" />
+				<attribute name="DefaultValue" type="integer" use="required" />
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="RealType">
+		<complexContent>
+			<annotation>
+				<documentation>R706</documentation>
+			</annotation>
+			<extension base="t:AtomicType">
+				<attribute name="Units" type="t:Name" use="required" />
+				<attribute name="Precision" type="t:PositiveInteger" use="required" />
+				<attribute name="LowerLimit" type="decimal" use="required" />
+				<attribute name="UpperLimit" type="decimal" use="required" />
+				<attribute name="DefaultValue" type="decimal" use="required" />
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="RationalType">
+		<complexContent>
+			<annotation>
+				<documentation>R706</documentation>
+			</annotation>
+			<extension base="t:AtomicType">
+				<sequence>
+					<element name="Units" type="t:Name" />
+					<element name="Precision" type="t:PositiveInteger" />
+					<element name="LowerLimit" type="decimal" />
+					<element name="UpperLimit" type="decimal" />
+					<element name="DefaultValue" type="decimal" />
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="EnumeratedType">
+		<complexContent>
+			<annotation>
+				<documentation>R706</documentation>
+			</annotation>
+			<extension base="t:AtomicType">
+				<sequence>
+					<element name="DefaultValue" type="string">
+						<annotation>
+							<documentation>R715</documentation>
+						</annotation>
+					</element>
+					<element name="Value" type="string" maxOccurs="unbounded">
+						<annotation>
+							<documentation>R707</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="SymbolicType">
+		<complexContent>
+			<annotation>
+				<documentation>R706</documentation>
+			</annotation>
+			<extension base="t:AtomicType">
+				<attribute name="MinLength" type="t:PositiveInteger" use="required" />
+				<attribute name="MaxLength" type="t:PositiveInteger" use="required" />
+				<attribute name="Prefix" type="string" use="required" />
+				<attribute name="Suffix" type="string" use="required" />
+				<attribute name="ValidationPattern" type="string" use="required" />
+				<attribute name="DefaultValue" type="string" use="required" />
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<!--+++++++++++++++++++++++++++++++ -->
+	<!-- STATE SUBSYSTEM ++++++++++++++ -->
+	<!--+++++++++++++++++++++++++++++++ -->
+
+	<element name="Destination" type="t:Destination" abstract="true" />
+	<element name="State" type="t:State" substitutionGroup="t:Destination" />
+	<element name="DeletionPseudoState" type="t:DeletionPseudoState"
+		substitutionGroup="t:Destination" />
+
+	<complexType name="Destination">
+		<attribute name="Name" type="t:Name" use="required" />
+	</complexType>
+
+	<complexType name="State">
+		<complexContent>
+			<annotation>
+				<documentation>R510</documentation>
+			</annotation>
+			<extension base="t:Destination">
+				<attribute name="Snum" type="t:PositiveInteger" use="optional">
+					<annotation>
+						<documentation>This field is optional because for many consumers
+							this field can be ignored or generated.
+						</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="DeletionPseudoState">
+		<complexContent>
+			<annotation>
+				<documentation>R510</documentation>
+			</annotation>
+			<extension base="t:Destination" />
+		</complexContent>
+	</complexType>
+
+	<element name="StateModel" type="t:StateModel" abstract="true" />
+	<element name="Lifecycle" type="t:Lifecycle" substitutionGroup="t:StateModel" />
+	<element name="Assigner" type="t:Assigner" substitutionGroup="t:StateModel" />
+
+	<complexType name="StateModel">
+		<sequence>
+			<element name="State" type="t:State" maxOccurs="unbounded">
+				<annotation>
+					<documentation>R503</documentation>
+				</annotation>
+			</element>
+			<element ref="t:Event" maxOccurs="unbounded">
+				<annotation>
+					<documentation>
+						R565+R550+R558+R561+R560,
+						R565+R550+R557+R554+R560
+					</documentation>
+				</annotation>
+			</element>
+			<element name="Transition" type="t:Transition" minOccurs="0"
+				maxOccurs="unbounded">
+				<annotation>
+					<documentation>R503+R505+R506</documentation>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+
+	<complexType name="Lifecycle">
+		<complexContent>
+			<annotation>
+				<documentation>R502</documentation>
+			</annotation>
+			<extension base="t:StateModel">
+				<sequence>
+					<element name="DeletionPseudoState" type="t:DeletionPseudoState"
+						minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation>R513</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="Assigner">
+		<complexContent>
+			<annotation>
+				<documentation>R502</documentation>
+			</annotation>
+			<extension base="t:StateModel">
+				<!-- TODO add assigner stuff -->
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="EventResponse">
+	</complexType>
+
+	<complexType name="Transition">
+		<complexContent>
+			<extension base="t:EventResponse">
+				<attribute name="State" type="t:Name" use="required" />
+				<attribute name="Destination" type="t:Name" use="required">
+					<annotation>
+						<documentation>R507</documentation>
+					</annotation>
+				</attribute>
+				<attribute name="EventID" type="t:Nominal" use="required">
+					<annotation>
+						<documentation>
+							Note that the EventID might be a
+							LocalEffectiveSignallingEvent on the enclosing class or it might
+							be the EventID of an Inherited Effective Event from a superclass.
+							The possibility of namespace clashes in this case forces the use
+							of an Event ID rather than just the event Name for unique
+							identification. More on event inheritance is yet to be done in
+							this schema.
+						</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<!--+++++++++++++++++++++++++++++++ -->
+	<!-- POLYMORPHISM SUBSYSTEM +++++++ -->
+	<!--+++++++++++++++++++++++++++++++ -->
+
+	<element name="Event" type="t:Event" abstract="true" />
+	<element name="CreationEvent" type="t:CreationEvent"
+		substitutionGroup="t:Event" />
+	<element name="LocalEffectiveSignalingEvent" type="t:LocalEffectiveSignalingEvent"
+		substitutionGroup="t:Event" />
+
+	<complexType name="Event">
+		<complexContent>
+			<extension base="t:EventSignature">
+				<annotation>
+					<documentation>A large portion of the Polymorphism Subsystem has
+						been collapsed by the relationship of Event to Event Signature.
+						The collapsed portion serves validation purposes only.
+					</documentation>
+				</annotation>
+				<attribute name="ID" type="t:Nominal" use="required" />
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<element name="StateModelSignature" type="t:StateModelSignature"
+		abstract="true" />
+	<element name="EventSignature" type="t:EventSignature"
+		substitutionGroup="t:StateModelSignature" />
+
+	<complexType name="StateModelSignature">
+		<sequence>
+			<element name="StateModelParameter" type="t:StateModelParameter"
+				minOccurs="0" maxOccurs="unbounded">
+				<annotation>
+					<documentation>R563</documentation>
+				</annotation>
+			</element>
+		</sequence>
+		<attribute name="Name" type="t:Name" use="required" />
+	</complexType>
+
+	<complexType name="EventSignature">
+		<complexContent>
+			<annotation>
+				<documentation>R562</documentation>
+			</annotation>
+			<extension base="t:StateModelSignature">
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="StateModelParameter">
+		<annotation>
+			<documentation>Dave Moten simplified the definition of
+				StateModelParameter because parameter typing is intimately related
+				to Action Language which has not been defined for miUml yet (28 May
+				2012). Dave chose to do this also to enable model compilers that may
+				not implement a miUml Action Language but rather map state model
+				signatures to methods in a platform language like java in the case
+				of xuml-compiler2.
+			</documentation>
+		</annotation>
+		<attribute name="Name" type="t:Name" use="required" />
+		<attribute name="Type" type="t:Name" use="required">
+			<annotation>
+				<documentation>R566</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+
+	<complexType name="CreationEvent">
+		<complexContent>
+			<extension base="t:Event">
+				<annotation>
+					<documentation>R567+R554+R560</documentation>
+				</annotation>
+				<attribute name="State" type="t:Name" use="required">
+					<annotation>
+						<documentation>R508</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="LocalEffectiveSignalingEvent">
+		<complexContent>
+			<extension base="t:Event">
+				<annotation>
+					<documentation>R568+R554</documentation>
+				</annotation>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<!-- Utility complex types -->
+
+	<complexType name="Named">
+		<attribute name="Name" type="t:Name" />
+	</complexType>
+
+	<!-- Simple types -->
+
+	<simpleType name="Formula">
+		<restriction base="t:NonBlankString" />
+	</simpleType>
+
+	<simpleType name="Cnum">
+		<restriction base="t:PositiveInteger" />
+	</simpleType>
+
+	<simpleType name="Nominal">
+		<restriction base="t:PositiveInteger" />
+	</simpleType>
+
+	<simpleType name="Number">
+		<restriction base="t:PositiveInteger" />
+	</simpleType>
+
+	<simpleType name="Rnum">
+		<restriction base="t:PositiveInteger" />
+	</simpleType>
+
+	<simpleType name="Side">
+		<restriction base="string">
+			<enumeration value="active" />
+			<enumeration value="passive" />
+		</restriction>
+	</simpleType>
+
+	<simpleType name="Name">
+		<restriction base="t:NonBlankString" />
+	</simpleType>
+
+	<simpleType name="Alias">
+		<restriction base="t:NonBlankString" />
+	</simpleType>
+
+	<simpleType name="Phrase">
+		<restriction base="t:NonBlankString" />
+	</simpleType>
+
+	<simpleType name="NonBlankString">
+		<restriction base="string">
+			<pattern value=".*[^\s].*" />
+		</restriction>
+	</simpleType>
+
+	<simpleType name="PositiveInteger">
+		<restriction base="integer">
+			<minInclusive value="1" />
+		</restriction>
+	</simpleType>
+
+</schema>
+		

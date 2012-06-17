@@ -1,0 +1,33 @@
+body {font-family: Tahoma, Geneva, sans-serif;font-size:100%;}
+body {font-family: Tahoma, Geneva, sans-serif;font-size:100%;}
+.draggable { position:absolute; left:0px; top:0px; }
+.className { border-bottom:thin solid grey; padding:0.5em;font-weight:bold; text-align:center;}
+.header { font-weight:normal;text-align:center;padding-left:0.5em;padding-top:0.5em;padding-right:0.5em;color:grey;}
+.attributes { padding:0.5em; }
+.operations { padding:0.5em;border-top:thin solid grey;}
+.operation { font-style:italic;}
+.events { padding:0.5em; border-top:thin solid grey;}
+.event { font-style: normal; color:black;}
+#canvas { position:absolute; left:50px; top: 50px; }
+.relationshipName {position:absolute; left:100px;top:100px;background:white;padding:2px;}
+.generalization {position:absolute; left:100px;top:100px;background:white;}
+.verbClause1 {position:absolute; left:100px;top:100px;background:transparent;max-width:110px;font-size:80%;}
+.verbClause2 {position:absolute; left:100px;top:100px;background:transparent;max-width:110px;font-size:80%;}
+.multiplicity1 {position:absolute; left:100px;top:100px;transparent;font-size:80%;}
+.multiplicity2 {position:absolute; left:100px;top:100px;transparent;font-size:80%;}
+.cls {background:#F6F4D4; box-shadow: 5px 5px 5px #888;border:thin solid grey;}
+#save {float:right; padding-right:2em;color:#0000EE;}
+#restore {float:right; padding-right:2em; color:#0000EE;}
+#options {float:right; padding-right:2em; color:#0000EE;}
+#edit {float:right; padding-right:2em; color:#0000EE;}
+#home {float:right; padding-right:2em; color:#0000EE;}
+#title {position:absolute; top:5px;left:1em; width:40em;font-size:120%;}
+#options-editor {display:none;}
+.operation {position:relative;padding-left:1.1em;left:-5px;top:2px;
+	background-image: url(images/cog.png); 
+	background-repeat: no-repeat;
+	background-position: left top;}
+.event {position:relative;padding-left:1.1em;left:-5px;top:2px;
+	background-image: url(images/event.png);
+	background-repeat: no-repeat;
+	background-position: left top;}

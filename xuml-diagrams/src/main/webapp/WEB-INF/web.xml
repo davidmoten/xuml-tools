@@ -1,0 +1,78 @@
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	version="2.5">
+
+	<display-name>${project.artifactId} ${project.version}</display-name>
+
+	<listener>
+		<listener-class>xuml.tools.jaxb.ApplicationServletContextListener</listener-class>
+	</listener>
+
+	<servlet>
+		<servlet-name>Datastore</servlet-name>
+		<servlet-class>xuml.tools.gae.DatastoreServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>Datastore</servlet-name>
+		<url-pattern>/ds</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>Schema</servlet-name>
+		<servlet-class>xuml.tools.jaxb.SchemaServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>Schema</servlet-name>
+		<url-pattern>/schema</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>Model</servlet-name>
+		<servlet-class>xuml.tools.jaxb.ModelServlet</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>Model</servlet-name>
+		<url-pattern>/model</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>Presentation</servlet-name>
+		<servlet-class>xuml.tools.jaxb.PresentationServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>Find</servlet-name>
+		<url-pattern>/find</url-pattern>
+	</servlet-mapping>	<servlet>
+		<servlet-name>Find</servlet-name>
+		<servlet-class>xuml.tools.jaxb.FindServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>Presentation</servlet-name>
+		<url-pattern>/presentation</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>ClassDiagram</servlet-name>
+		<servlet-class>xuml.tools.jaxb.ClassDiagramServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>ClassDiagram</servlet-name>
+		<url-pattern>/cd</url-pattern>
+	</servlet-mapping>
+
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>index.html</welcome-file>
+	</welcome-file-list>
+
+	<session-config>
+		<session-timeout>15</session-timeout>
+	</session-config>
+
+</web-app>
