@@ -1,5 +1,10 @@
 package xuml.tools.jaxb.compiler;
 
+import javax.xml.bind.JAXBElement;
+
+import miuml.jaxb.Domain;
+import miuml.jaxb.Domains;
+import miuml.jaxb.ModeledDomain;
 import miuml.jaxb.Perspective;
 
 public class Util {
@@ -101,6 +106,16 @@ public class Util {
 
 	public static String toColumnName(String attributeName) {
 		return camelCaseToLowerUnderscore(attributeName);
+	}
+
+	public static ModeledDomain getModeledDomain(Domains domains, String name) {
+		for (JAXBElement<? extends Domain> domain : domains.getDomain()) {
+			if (domain.getValue() instanceof ModeledDomain
+					&& name.equals(domain.getValue().getName())) {
+				return (ModeledDomain) domain.getValue();
+			}
+		}
+		return null;
 	}
 
 }

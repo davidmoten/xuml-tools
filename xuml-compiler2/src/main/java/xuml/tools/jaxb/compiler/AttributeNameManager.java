@@ -27,6 +27,8 @@ public class AttributeNameManager {
 
 	private final Map<String, BiMap<String, String>> referencedColumns = newHashMap();
 
+	private final Map<String, BiMap<String, String>> referencedTables = newHashMap();
+
 	public String toFieldName(String cls, String viewedClass, BigInteger rNum) {
 		if (referenceFields.get(cls) == null) {
 			BiMap<String, String> bimap = HashBiMap.create();
@@ -106,5 +108,29 @@ public class AttributeNameManager {
 
 	private static String getKey(String viewedClass, BigInteger rnum) {
 		return viewedClass + "_._R" + rnum;
+	}
+
+	public String toTableName(String schema, String className) {
+		if (referencedTables.get(schema) == null) {
+			BiMap<String, String> bimap = HashBiMap.create();
+			referencedTables.put(schema, bimap);
+		}
+		BiMap<String, String> map = referencedTables.get(schema);
+		String key = getKey(schema, className);
+		if (map.get(key) != null)
+			return map.get(key);
+		else {
+			String optimalName = Util.lowerFirst(Util.toColumnName(className));
+			String name = optimalName;
+			if (map.inverse().get(name) != null) {
+				int i = 1;
+				while (map.inverse().get(name + "_" + i) != null) {
+					i++;
+				}
+				name = name + "_" + i;
+			}
+			map.put(key, name);
+			return name;
+		}
 	}
 }

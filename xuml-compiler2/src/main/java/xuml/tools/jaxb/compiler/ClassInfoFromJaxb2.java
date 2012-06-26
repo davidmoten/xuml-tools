@@ -41,21 +41,18 @@ public class ClassInfoFromJaxb2 extends ClassInfo {
 	private final String packageName;
 	private final String classDescription;
 	private final String schema;
-	private final String table;
 	private final TypeRegister typeRegister = new TypeRegister();
 	private final Lookups lookups;
 	private static AttributeNameManager nameManager = AttributeNameManager
 			.getInstance();
 
 	public ClassInfoFromJaxb2(Class cls, String packageName,
-			String classDescription, String schema, String table,
-			Lookups lookups) {
+			String classDescription, String schema, Lookups lookups) {
 		this.cls = cls;
 		this.packageName = packageName;
 		// TODO is this property needed?
 		this.classDescription = classDescription;
 		this.schema = schema;
-		this.table = table;
 		this.lookups = lookups;
 	}
 
@@ -116,7 +113,7 @@ public class ClassInfoFromJaxb2 extends ClassInfo {
 
 	@Override
 	String getTable() {
-		return table;
+		return nameManager.toTableName(schema, cls.getName());
 	}
 
 	@Override
@@ -224,7 +221,7 @@ public class ClassInfoFromJaxb2 extends ClassInfo {
 	private ClassInfoFromJaxb2 getClassInfo(String otherClassName) {
 		ClassInfoFromJaxb2 otherInfo = new ClassInfoFromJaxb2(
 				lookups.getClassByName(otherClassName), packageName, "unknown",
-				schema, table, lookups);
+				schema, lookups);
 		return otherInfo;
 	}
 

@@ -24,11 +24,11 @@ public class ApplicationServletContextListener implements
 			ModelPersistence.instance().save(
 					id,
 					IOUtils.toString(ApplicationServletContextListener.class
-							.getResourceAsStream("/bookstore.xml")));
+							.getResourceAsStream("/samples.xml")));
 			PresentationPersistence.instance().save(
 					id,
 					IOUtils.toString(ApplicationServletContextListener.class
-							.getResourceAsStream("/bookstore.json")));
+							.getResourceAsStream("/samples.json")));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

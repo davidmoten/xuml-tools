@@ -15,12 +15,13 @@ public class CodeGeneratorJavaTest {
 		if ("false".equals(System.getProperty("generate")))
 			return;
 		miuml.jaxb.Domains domains = new Marshaller().unmarshal(getClass()
-				.getResourceAsStream("/bookstore.xml"));
+				.getResourceAsStream("/samples.xml"));
 		File resources = new File("target/generated-resources");
 		if (!resources.exists())
 			resources.mkdirs();
-		new CodeGeneratorJava((ModeledDomain) domains.getDomain().get(2)
-				.getValue(), "miuml", "miuml", resources).generate(new File(
-				"target/generated/"));
+		ModeledDomain abcDomain = Util.getModeledDomain(domains,
+				"Nested composite id example");
+		new CodeGeneratorJava(abcDomain, "miuml", "simple", "miuml", resources)
+				.generate(new File("target/generated/"));
 	}
 }

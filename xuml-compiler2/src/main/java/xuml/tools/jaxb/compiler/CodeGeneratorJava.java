@@ -20,12 +20,14 @@ public class CodeGeneratorJava {
 	private final File resourcesDirectory;
 	private final ModeledDomain domain;
 	private final String domainPackageName;
+	private final String domainSchema;
 
 	public CodeGeneratorJava(miuml.jaxb.ModeledDomain domain,
-			String domainPackageName, String contextPackageName,
-			File resourcesDirectory) {
+			String domainPackageName, String domainSchema,
+			String contextPackageName, File resourcesDirectory) {
 		this.domain = domain;
 		this.domainPackageName = domainPackageName;
+		this.domainSchema = domainSchema;
 		this.contextPackageName = contextPackageName;
 		this.resourcesDirectory = resourcesDirectory;
 	}
@@ -141,7 +143,7 @@ public class CodeGeneratorJava {
 	private ClassInfo createClassInfo(Class cls) {
 		Lookups lookups = new Lookups(domain);
 		return new ClassInfoFromJaxb2(cls, domainPackageName, "description",
-				"schema", "table", lookups);
+				domainSchema, lookups);
 	}
 
 	//
