@@ -43,7 +43,7 @@ public class ClassInfoFromJaxb2 extends ClassInfo {
 	private final String schema;
 	private final TypeRegister typeRegister = new TypeRegister();
 	private final Lookups lookups;
-	private static AttributeNameManager nameManager = AttributeNameManager
+	private static NameManager nameManager = NameManager
 			.getInstance();
 
 	public ClassInfoFromJaxb2(Class cls, String packageName,
