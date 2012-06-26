@@ -11,7 +11,7 @@ import org.junit.Test;
 public class CodeGeneratorJavaTest {
 
 	@Test
-	public void test() throws FileNotFoundException {
+	public void testCodeGenerationFromABC() throws FileNotFoundException {
 		if ("false".equals(System.getProperty("generate")))
 			return;
 		miuml.jaxb.Domains domains = new Marshaller().unmarshal(getClass()
