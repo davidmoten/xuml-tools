@@ -315,14 +315,18 @@ public abstract class ClassInfo {
 		private final String thatVerbClause;
 		private final String fieldName;
 		private final List<JoinColumn> joinColumns;
-		private final String thisName;
+		/**
+		 * Gets used for mappedBy field in a OneToMany annotation for example.
+		 */
+		private final String thisFieldName;
+		// TODO remove this if not needed
 		private final String otherName;
 		private final MyManyToMany manyToMany;
 
 		public MyReferenceMember(String simpleClassName, String fullClassName,
 				Mult thisMult, Mult thatMult, String thisVerbClause,
 				String thatVerbClause, String fieldName,
-				List<JoinColumn> joinColumns, String thisName,
+				List<JoinColumn> joinColumns, String thisFieldName,
 				String otherName, MyManyToMany manyToMany) {
 			this.simpleClassName = simpleClassName;
 			this.fullClassName = fullClassName;
@@ -332,7 +336,7 @@ public abstract class ClassInfo {
 			this.thatVerbClause = thatVerbClause;
 			this.fieldName = fieldName;
 			this.joinColumns = joinColumns;
-			this.thisName = thisName;
+			this.thisFieldName = thisFieldName;
 			this.otherName = otherName;
 			this.manyToMany = manyToMany;
 		}
@@ -341,8 +345,8 @@ public abstract class ClassInfo {
 			return fieldName;
 		}
 
-		public String getThisName() {
-			return thisName;
+		public String getThisFieldName() {
+			return thisFieldName;
 		}
 
 		public String getOtherName() {

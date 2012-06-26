@@ -313,7 +313,7 @@ public class ClassWriter {
 				info.addType(FetchType.class);
 				out.format(
 						"    @OneToOne(mappedBy=\"%s\",fetch=FetchType.LAZY,targetEntity=%s.class)\n",
-						ref.getThisName(), info.addType(ref.getFullClassName()));
+						ref.getThisFieldName(), info.addType(ref.getFullClassName()));
 				writeField(out, ref);
 			} else if (isRelationship(ref, Mult.ZERO_ONE, Mult.ONE)) {
 				info.addType(OneToOne.class);
@@ -331,7 +331,7 @@ public class ClassWriter {
 				info.addType(FetchType.class);
 				out.format(
 						"    @OneToMany(mappedBy=\"%s\",cascade=CascadeType.ALL,fetch=FetchType.LAZY,targetEntity=%s.class)\n",
-						ref.getThisName(), info.addType(ref.getFullClassName()));
+						ref.getThisFieldName(), info.addType(ref.getFullClassName()));
 				writeMultipleField(out, ref);
 			} else if (isRelationship(ref, Mult.MANY, Mult.ONE)) {
 				info.addType(ManyToOne.class);
@@ -349,7 +349,7 @@ public class ClassWriter {
 				info.addType(CascadeType.class);
 				out.format(
 						"    @OneToMany(mappedBy=\"%s\",cascade=CascadeType.ALL,fetch=FetchType.LAZY,targetEntity=%s.class)\n",
-						ref.getThisName(), info.addType(ref.getFullClassName()));
+						ref.getThisFieldName(), info.addType(ref.getFullClassName()));
 				writeMultipleField(out, ref);
 			} else if (isRelationship(ref, Mult.ONE_MANY, Mult.ONE)) {
 				info.addType(ManyToOne.class);
@@ -367,7 +367,7 @@ public class ClassWriter {
 					info.addType(FetchType.class);
 					out.format(
 							"    @OneToOne(mappedBy=\"%s\",fetch=FetchType.LAZY,targetEntity=%s.class)\n",
-							ref.getThisName(),
+							ref.getThisFieldName(),
 							info.addType(ref.getFullClassName()));
 				} else {
 					// secondary
@@ -387,7 +387,7 @@ public class ClassWriter {
 				info.addType(FetchType.class);
 				out.format(
 						"    @OneToMany(mappedBy=\"%s\",cascade=CascadeType.ALL,fetch=FetchType.LAZY,targetEntity=%s.class)\n",
-						ref.getThisName(), info.addType(ref.getFullClassName()));
+						ref.getThisFieldName(), info.addType(ref.getFullClassName()));
 				writeMultipleField(out, ref);
 			} else if (isRelationship(ref, Mult.MANY, Mult.ZERO_ONE)) {
 				info.addTypes(ManyToOne.class);
@@ -404,7 +404,7 @@ public class ClassWriter {
 				info.addType(FetchType.class);
 				out.format(
 						"    @OneToMany(mappedBy=\"%s\",cascade=CascadeType.ALL,fetch=FetchType.LAZY,targetEntity=%s.class)\n",
-						ref.getThisName(), info.addType(ref.getFullClassName()));
+						ref.getThisFieldName(), info.addType(ref.getFullClassName()));
 				writeMultipleField(out, ref);
 			} else if (isRelationship(ref, Mult.ONE_MANY, Mult.ZERO_ONE)) {
 				info.addType(ManyToOne.class);
@@ -634,7 +634,7 @@ public class ClassWriter {
 		info.addType(FetchType.class);
 		out.format(
 				"    @ManyToMany(mappedBy=\"%s\",targetEntity=%s.class,cascade=CascadeType.ALL,fetch=FetchType.LAZY)\n",
-				ref.getThisName(), info.addType(ref.getFullClassName()));
+				ref.getThisFieldName(), info.addType(ref.getFullClassName()));
 		writeMultipleField(out, ref);
 	}
 

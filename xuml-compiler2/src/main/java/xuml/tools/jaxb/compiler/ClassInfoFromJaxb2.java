@@ -127,6 +127,9 @@ public class ClassInfoFromJaxb2 extends ClassInfo {
 	@Override
 	List<String> getOperations() {
 		// TODO Auto-generated method stub
+
+		// TODO review operations, not supported by miUML. Should be using
+		// derived attributes.
 		return Lists.newArrayList();
 	}
 
@@ -402,11 +405,16 @@ public class ClassInfoFromJaxb2 extends ClassInfo {
 			}
 
 		// TODO
+		String fieldName = nameManager.toFieldName(cls.getName(),
+				pThat.getViewedClass(), a.getRnum());
+		// now establish the name of the field for this class as seen in the
+		// other class
+		String thisFieldName = nameManager.toFieldName(otherClassName,
+				cls.getName(), a.getRnum());
 		return new MyReferenceMember(pThat.getViewedClass(),
 				infoOther.getClassFullName(), toMult(pThis), toMult(pThat),
-				pThis.getPhrase(), pThat.getPhrase(), nameManager.toFieldName(
-						cls.getName(), pThat.getViewedClass(), a.getRnum()),
-				joins, "thisName", "thatName", (MyManyToMany) null);
+				pThis.getPhrase(), pThat.getPhrase(), fieldName, joins,
+				thisFieldName, "thatName", (MyManyToMany) null);
 	}
 
 	private String getMatchingAttributeName(BigInteger rNum,
