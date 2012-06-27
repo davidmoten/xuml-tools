@@ -41,21 +41,17 @@ public class ClassInfoFromJaxb2 extends ClassInfo {
 	private final String packageName;
 	private final String classDescription;
 	private final String schema;
-	private final String table;
 	private final TypeRegister typeRegister = new TypeRegister();
 	private final Lookups lookups;
-	private static AttributeNameManager nameManager = AttributeNameManager
-			.getInstance();
+	private static NameManager nameManager = NameManager.getInstance();
 
 	public ClassInfoFromJaxb2(Class cls, String packageName,
-			String classDescription, String schema, String table,
-			Lookups lookups) {
+			String classDescription, String schema, Lookups lookups) {
 		this.cls = cls;
 		this.packageName = packageName;
 		// TODO is this property needed?
 		this.classDescription = classDescription;
 		this.schema = schema;
-		this.table = table;
 		this.lookups = lookups;
 	}
 
@@ -116,7 +112,7 @@ public class ClassInfoFromJaxb2 extends ClassInfo {
 
 	@Override
 	String getTable() {
-		return table;
+		return nameManager.toTableName(schema, cls.getName());
 	}
 
 	@Override
@@ -126,7 +122,8 @@ public class ClassInfoFromJaxb2 extends ClassInfo {
 
 	@Override
 	List<String> getOperations() {
-		// TODO Auto-generated method stub
+		// TODO review operations, not supported by miUML. Should be using
+		// derived attributes.
 		return Lists.newArrayList();
 	}
 
@@ -221,7 +218,7 @@ public class ClassInfoFromJaxb2 extends ClassInfo {
 	private ClassInfoFromJaxb2 getClassInfo(String otherClassName) {
 		ClassInfoFromJaxb2 otherInfo = new ClassInfoFromJaxb2(
 				lookups.getClassByName(otherClassName), packageName, "unknown",
-				schema, table, lookups);
+				schema, lookups);
 		return otherInfo;
 	}
 
@@ -290,7 +287,8 @@ public class ClassInfoFromJaxb2 extends ClassInfo {
 				LocalEffectiveSignalingEvent ev = (LocalEffectiveSignalingEvent) event;
 				List<MyParameter> parameters = Lists.newArrayList();
 				for (StateModelParameter p : ev.getStateModelParameter()) {
-					parameters.add(new MyParameter(p.getName(), p.getType()));
+					parameters.add(new MyParameter(Util.toJavaIdentifier(p
+							.getName()), lookups.getJavaType(p.getType())));
 				}
 				list.add(new MyEvent(ev.getName(), Util.toClassSimpleName(ev
 						.getName()), parameters));
@@ -316,18 +314,27 @@ public class ClassInfoFromJaxb2 extends ClassInfo {
 		List<MyTransition> list = Lists.newArrayList();
 		for (Transition transition : cls.getLifecycle().getTransition()) {
 			// TODO what to do about event name? Event inheritance is involved.
-			new MyTransition(transition.getEventID().toString(), transition
-					.getEventID().toString(), transition.getState(),
-					transition.getDestination());
+			list.add(new MyTransition(getEventName(transition.getEventID()),
+					transition.getEventID().toString(), transition.getState(),
+					transition.getDestination()));
 		}
 		return list;
 	}
 
+	private String getEventName(BigInteger eventId) {
+		for (JAXBElement<? extends Event> ev : cls.getLifecycle().getEvent()) {
+			if (ev.getValue().getID().equals(eventId))
+				return ev.getValue().getName();
+		}
+		return null;
+	}
+
 	@Override
-	String getStateIdentifier(String stateName) {
+	String getStateAsJavaIdentifier(String stateName) {
 		for (State state : cls.getLifecycle().getState())
 			if (state.getName().equals(stateName))
-				return state.getSnum().toString();
+				// TODO use nameManager
+				return Util.toJavaConstantIdentifier(stateName);
 		throw new RuntimeException("state not found: " + stateName);
 	}
 
@@ -349,15 +356,13 @@ public class ClassInfoFromJaxb2 extends ClassInfo {
 
 	@Override
 	List<MyReferenceMember> getReferenceMembers() {
-		// TODO this is wrong, need to use referential attributes to build up
-		// reference members
 
 		List<MyReferenceMember> list = Lists.newArrayList();
 		List<Association> associations = lookups.getAssociations(cls);
 		for (Association a : associations) {
 			MyReferenceMember m = createMyReferenceMember(a, cls);
+			System.out.println("created " + m);
 			list.add(m);
-
 		}
 		return list;
 	}
@@ -401,12 +406,16 @@ public class ClassInfoFromJaxb2 extends ClassInfo {
 				joins.add(jc);
 			}
 
-		// TODO
+		String fieldName = nameManager.toFieldName(cls.getName(),
+				pThat.getViewedClass(), a.getRnum());
+		// now establish the name of the field for this class as seen in the
+		// other class
+		String thisFieldName = nameManager.toFieldName(otherClassName,
+				cls.getName(), a.getRnum());
 		return new MyReferenceMember(pThat.getViewedClass(),
 				infoOther.getClassFullName(), toMult(pThis), toMult(pThat),
-				pThis.getPhrase(), pThat.getPhrase(), nameManager.toFieldName(
-						cls.getName(), pThat.getViewedClass(), a.getRnum()),
-				joins, "thisName", "thatName", (MyManyToMany) null);
+				pThis.getPhrase(), pThat.getPhrase(), fieldName, joins,
+				thisFieldName, "thatName", (MyManyToMany) null);
 	}
 
 	private String getMatchingAttributeName(BigInteger rNum,
@@ -466,9 +475,7 @@ public class ClassInfoFromJaxb2 extends ClassInfo {
 
 	@Override
 	Type getType(String name) {
-		if ("string".equals(name))
-			return new Type("java.lang.String");
-		else
-			throw new RuntimeException("type not found " + name);
+		String javaClassName = lookups.getJavaType(name);
+		return new Type(javaClassName);
 	}
 }

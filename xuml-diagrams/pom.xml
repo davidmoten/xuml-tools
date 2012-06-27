@@ -66,6 +66,11 @@
 						</type>
 					</dependency>
 				</dependencies>
+				<configuration>
+					<jvmFlags>
+						<jvmFlag>-Dappengine.user.timezone=UTC</jvmFlag>
+					</jvmFlags>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

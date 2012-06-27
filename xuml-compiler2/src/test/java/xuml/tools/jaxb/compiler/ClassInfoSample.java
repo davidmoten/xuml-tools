@@ -159,7 +159,7 @@ public class ClassInfoSample extends ClassInfo {
 	 * xuml.tools.jaxb.compiler.IClassInfo#getStateIdentifier(java.lang.String)
 	 */
 	@Override
-	public String getStateIdentifier(String state) {
+	public String getStateAsJavaIdentifier(String state) {
 		return toJavaConstantIdentifier(state);
 	}
 

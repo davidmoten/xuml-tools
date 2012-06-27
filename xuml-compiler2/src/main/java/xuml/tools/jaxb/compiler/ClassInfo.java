@@ -66,7 +66,7 @@ public abstract class ClassInfo {
 
 	abstract List<MyTransition> getTransitions();
 
-	abstract String getStateIdentifier(String state);
+	abstract String getStateAsJavaIdentifier(String state);
 
 	abstract boolean isSuperclass();
 
@@ -315,14 +315,18 @@ public abstract class ClassInfo {
 		private final String thatVerbClause;
 		private final String fieldName;
 		private final List<JoinColumn> joinColumns;
-		private final String thisName;
+		/**
+		 * Gets used for mappedBy field in a OneToMany annotation for example.
+		 */
+		private final String thisFieldName;
+		// TODO remove this if not needed
 		private final String otherName;
 		private final MyManyToMany manyToMany;
 
 		public MyReferenceMember(String simpleClassName, String fullClassName,
 				Mult thisMult, Mult thatMult, String thisVerbClause,
 				String thatVerbClause, String fieldName,
-				List<JoinColumn> joinColumns, String thisName,
+				List<JoinColumn> joinColumns, String thisFieldName,
 				String otherName, MyManyToMany manyToMany) {
 			this.simpleClassName = simpleClassName;
 			this.fullClassName = fullClassName;
@@ -332,7 +336,7 @@ public abstract class ClassInfo {
 			this.thatVerbClause = thatVerbClause;
 			this.fieldName = fieldName;
 			this.joinColumns = joinColumns;
-			this.thisName = thisName;
+			this.thisFieldName = thisFieldName;
 			this.otherName = otherName;
 			this.manyToMany = manyToMany;
 		}
@@ -341,8 +345,8 @@ public abstract class ClassInfo {
 			return fieldName;
 		}
 
-		public String getThisName() {
-			return thisName;
+		public String getThisFieldName() {
+			return thisFieldName;
 		}
 
 		public String getOtherName() {
@@ -379,6 +383,35 @@ public abstract class ClassInfo {
 
 		public MyManyToMany getManyToMany() {
 			return manyToMany;
+		}
+
+		@Override
+		public String toString() {
+			StringBuilder builder = new StringBuilder();
+			builder.append("MyReferenceMember [simpleClassName=");
+			builder.append(simpleClassName);
+			builder.append(", fullClassName=");
+			builder.append(fullClassName);
+			builder.append(", thisMult=");
+			builder.append(thisMult);
+			builder.append(", thatMult=");
+			builder.append(thatMult);
+			builder.append(", thisVerbClause=");
+			builder.append(thisVerbClause);
+			builder.append(", thatVerbClause=");
+			builder.append(thatVerbClause);
+			builder.append(", fieldName=");
+			builder.append(fieldName);
+			builder.append(", joinColumns=");
+			builder.append(joinColumns);
+			builder.append(", thisFieldName=");
+			builder.append(thisFieldName);
+			builder.append(", otherName=");
+			builder.append(otherName);
+			builder.append(", manyToMany=");
+			builder.append(manyToMany);
+			builder.append("]");
+			return builder.toString();
 		}
 
 	}

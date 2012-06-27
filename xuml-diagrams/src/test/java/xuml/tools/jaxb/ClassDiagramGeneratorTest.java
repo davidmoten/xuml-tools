@@ -18,7 +18,7 @@ public class ClassDiagramGeneratorTest {
 	public void testGenerate() throws IOException {
 		ClassDiagramGenerator g = new ClassDiagramGenerator();
 		Domains domains = new Marshaller().unmarshal(getClass()
-				.getResourceAsStream("/bookstore.xml"));
+				.getResourceAsStream("/samples.xml"));
 		String s = g.generate(domains);
 		System.out.println(s);
 		File webapp = new File("target/webapp");

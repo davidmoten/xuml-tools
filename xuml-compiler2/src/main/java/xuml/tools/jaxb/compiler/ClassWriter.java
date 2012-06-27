@@ -313,7 +313,8 @@ public class ClassWriter {
 				info.addType(FetchType.class);
 				out.format(
 						"    @OneToOne(mappedBy=\"%s\",fetch=FetchType.LAZY,targetEntity=%s.class)\n",
-						ref.getThisName(), info.addType(ref.getFullClassName()));
+						ref.getThisFieldName(),
+						info.addType(ref.getFullClassName()));
 				writeField(out, ref);
 			} else if (isRelationship(ref, Mult.ZERO_ONE, Mult.ONE)) {
 				info.addType(OneToOne.class);
@@ -331,7 +332,8 @@ public class ClassWriter {
 				info.addType(FetchType.class);
 				out.format(
 						"    @OneToMany(mappedBy=\"%s\",cascade=CascadeType.ALL,fetch=FetchType.LAZY,targetEntity=%s.class)\n",
-						ref.getThisName(), info.addType(ref.getFullClassName()));
+						ref.getThisFieldName(),
+						info.addType(ref.getFullClassName()));
 				writeMultipleField(out, ref);
 			} else if (isRelationship(ref, Mult.MANY, Mult.ONE)) {
 				info.addType(ManyToOne.class);
@@ -349,7 +351,8 @@ public class ClassWriter {
 				info.addType(CascadeType.class);
 				out.format(
 						"    @OneToMany(mappedBy=\"%s\",cascade=CascadeType.ALL,fetch=FetchType.LAZY,targetEntity=%s.class)\n",
-						ref.getThisName(), info.addType(ref.getFullClassName()));
+						ref.getThisFieldName(),
+						info.addType(ref.getFullClassName()));
 				writeMultipleField(out, ref);
 			} else if (isRelationship(ref, Mult.ONE_MANY, Mult.ONE)) {
 				info.addType(ManyToOne.class);
@@ -367,7 +370,7 @@ public class ClassWriter {
 					info.addType(FetchType.class);
 					out.format(
 							"    @OneToOne(mappedBy=\"%s\",fetch=FetchType.LAZY,targetEntity=%s.class)\n",
-							ref.getThisName(),
+							ref.getThisFieldName(),
 							info.addType(ref.getFullClassName()));
 				} else {
 					// secondary
@@ -387,7 +390,8 @@ public class ClassWriter {
 				info.addType(FetchType.class);
 				out.format(
 						"    @OneToMany(mappedBy=\"%s\",cascade=CascadeType.ALL,fetch=FetchType.LAZY,targetEntity=%s.class)\n",
-						ref.getThisName(), info.addType(ref.getFullClassName()));
+						ref.getThisFieldName(),
+						info.addType(ref.getFullClassName()));
 				writeMultipleField(out, ref);
 			} else if (isRelationship(ref, Mult.MANY, Mult.ZERO_ONE)) {
 				info.addTypes(ManyToOne.class);
@@ -404,7 +408,8 @@ public class ClassWriter {
 				info.addType(FetchType.class);
 				out.format(
 						"    @OneToMany(mappedBy=\"%s\",cascade=CascadeType.ALL,fetch=FetchType.LAZY,targetEntity=%s.class)\n",
-						ref.getThisName(), info.addType(ref.getFullClassName()));
+						ref.getThisFieldName(),
+						info.addType(ref.getFullClassName()));
 				writeMultipleField(out, ref);
 			} else if (isRelationship(ref, Mult.ONE_MANY, Mult.ZERO_ONE)) {
 				info.addType(ManyToOne.class);
@@ -487,7 +492,7 @@ public class ClassWriter {
 		out.format("        return state;\n");
 		out.format("    }\n\n");
 		jd(out, STATE_COMMENT, "    ");
-		out.format("    private void setState(String state){\n");
+		out.format("    public void setState(String state){\n");
 		out.format("        this.state= state;\n");
 		out.format("    }\n\n");
 	}
@@ -502,7 +507,7 @@ public class ClassWriter {
 		for (String state : info.getStateNames()) {
 			if (!first)
 				out.format(",");
-			out.format(info.getStateIdentifier(state));
+			out.format(info.getStateAsJavaIdentifier(state));
 			first = false;
 		}
 		out.format(";\n");
@@ -634,7 +639,7 @@ public class ClassWriter {
 		info.addType(FetchType.class);
 		out.format(
 				"    @ManyToMany(mappedBy=\"%s\",targetEntity=%s.class,cascade=CascadeType.ALL,fetch=FetchType.LAZY)\n",
-				ref.getThisName(), info.addType(ref.getFullClassName()));
+				ref.getThisFieldName(), info.addType(ref.getFullClassName()));
 		writeMultipleField(out, ref);
 	}
 
@@ -675,15 +680,24 @@ public class ClassWriter {
 	private void writeEventCallMethods(PrintStream out, ClassInfo info) {
 		// add event call methods
 
+		out.format("    @%s\n", info.addType(Transient.class));
 		out.format("    public void event(%s<%s> event){\n",
 				info.addType(Event.class), info.getJavaClassSimpleName());
+		for (MyEvent event : info.getEvents()) {
+			out.format("        if (event instanceof Events.%s){\n",
+					event.getSimpleClassName());
+			out.format("            processEvent((Events.%s) event);\n",
+					event.getSimpleClassName());
+			out.format("        }\n");
+		}
 		out.format("    }\n\n");
 		for (MyEvent event : info.getEvents()) {
-			info.addType(Transient.class);
+
 			jd(out,
 					"Synchronously perform the change. This method should be considered\nfor internal use only. Use the signal method instead.",
 					"    ");
-			out.format("    @Transient\n");
+			out.format("    @%s\n", info.addType(Transient.class));
+
 			out.format("    private void processEvent(Events.%s event){\n",
 					event.getSimpleClassName());
 			boolean first = true;
@@ -696,11 +710,14 @@ public class ClassWriter {
 						out.format("        else if");
 					first = false;
 					out.format(" (state.equals(State.%s.toString())){\n",
-							info.getStateIdentifier(transition.getFromState()));
-					out.format("            state=State.%s.toString();\n",
-							info.getStateIdentifier(transition.getToState()));
+							info.getStateAsJavaIdentifier(transition
+									.getFromState()));
+					out.format("            state=State.%s.toString();\n", info
+							.getStateAsJavaIdentifier(transition.getToState()));
 					out.format("            synchronized(this) {\n");
-					out.format("                behaviour.onEntry(event);\n");
+					out.format("                behaviour.onEntry%s(event);\n",
+							Util.upperFirst(Util.toJavaIdentifier(transition
+									.getToState())));
 					out.format("            }\n");
 					out.format("        }\n");
 				}

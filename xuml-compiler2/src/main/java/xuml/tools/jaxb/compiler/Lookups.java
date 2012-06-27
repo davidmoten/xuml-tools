@@ -9,16 +9,24 @@ import java.util.Map;
 import javax.xml.bind.JAXBElement;
 
 import miuml.jaxb.Association;
+import miuml.jaxb.AtomicType;
 import miuml.jaxb.Attribute;
 import miuml.jaxb.BinaryAssociation;
+import miuml.jaxb.BooleanType;
 import miuml.jaxb.Class;
+import miuml.jaxb.ConstrainedType;
+import miuml.jaxb.Domains;
+import miuml.jaxb.EnumeratedType;
 import miuml.jaxb.Generalization;
+import miuml.jaxb.IntegerType;
 import miuml.jaxb.ModeledDomain;
 import miuml.jaxb.Named;
+import miuml.jaxb.RealType;
 import miuml.jaxb.ReferentialAttribute;
 import miuml.jaxb.Relationship;
 import miuml.jaxb.Subsystem;
 import miuml.jaxb.SubsystemElement;
+import miuml.jaxb.SymbolicType;
 import miuml.jaxb.ToOneReference;
 import miuml.jaxb.UnaryAssociation;
 
@@ -34,8 +42,12 @@ class Lookups {
 			.newHashMap();
 
 	private final Map<String, Attribute> attributesByName = Maps.newHashMap();
+	private final ModeledDomain domain;
+	private final Domains domains;
 
-	public Lookups(ModeledDomain domain) {
+	public Lookups(Domains domains, ModeledDomain domain) {
+		this.domains = domains;
+		this.domain = domain;
 		for (Subsystem subsystem : domain.getSubsystem()) {
 			for (JAXBElement<? extends SubsystemElement> ssElement : subsystem
 					.getSubsystemElement()) {
@@ -134,4 +146,48 @@ class Lookups {
 		return list;
 	}
 
+	public String getJavaType(String typeName) {
+		// check domain class types then if not found check global types
+		String result = getJavaType(domain.getConstrainedType());
+		if (result == null)
+			result = getJavaType(domains.getConstrainedType());
+		if (result == null)
+			throw new RuntimeException("type not found: " + typeName);
+		else
+			return result;
+
+	}
+
+	private String getJavaType(
+			List<JAXBElement<? extends ConstrainedType>> types) {
+		String result = null;
+		for (JAXBElement<? extends ConstrainedType> element : types) {
+			if (element.getValue() instanceof AtomicType) {
+				AtomicType t = (AtomicType) element.getValue();
+				result = getJavaType(t);
+
+			} else
+				throw new RuntimeException(
+						"Structure types not implemented yet");
+		}
+		return result;
+	}
+
+	private String getJavaType(AtomicType t) {
+		String result;
+		if (t instanceof BooleanType)
+			result = Boolean.class.getName();
+		else if (t instanceof EnumeratedType)
+			result = String.class.getName();
+		else if (t instanceof IntegerType)
+			result = Integer.class.getName();
+		else if (t instanceof RealType)
+			result = Double.class.getName();
+		else if (t instanceof SymbolicType)
+			result = String.class.getName();
+		else
+			throw new RuntimeException(t.getClass().getName()
+					+ " not implemented");
+		return result;
+	}
 }

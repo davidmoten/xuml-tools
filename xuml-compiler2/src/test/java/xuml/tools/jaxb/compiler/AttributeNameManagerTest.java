@@ -8,7 +8,7 @@ public class AttributeNameManagerTest {
 
 	@Test
 	public void test() {
-		String column = AttributeNameManager.getInstance().toColumnName("Test",
+		String column = NameManager.getInstance().toColumnName("Test",
 				"B A two");
 		assertEquals("b_a_two", column);
 	}

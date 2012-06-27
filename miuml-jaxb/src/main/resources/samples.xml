@@ -68,7 +68,7 @@
 			<SpecializedClass Name="Product" Cnum="1" Element="1"
 				Alias="Product">
 				<IndependentAttribute Name="ProductID"
-					Type="UniversalProductCode">
+					Type="Universal Product Code">
 					<Identifier Number="1" />
 				</IndependentAttribute>
 				<DerivedAttribute Name="Product Name" Formula="formula for product name"
@@ -320,7 +320,7 @@
 
 		<Subsystem Name="Composite Id example" Floor="61" Ceiling="80">
 
-			<SpecializedClass Name="A">
+			<NonSpecializedClass Name="A">
 
 				<IndependentAttribute Name="A one" Type="string">
 					<Identifier Number="1" />
@@ -329,9 +329,25 @@
 					<Identifier Number="1" />
 				</IndependentAttribute>
 				<IndependentAttribute Name="A three" Type="string" />
-			</SpecializedClass>
+				<Lifecycle>
+					<State Name="Has Started" />
+					<State Name="Done Something" />
+					<State Name="Done Something Else" />
+					<CreationEvent Name="Create" ID="1"
+						State="Has Started">
+						<StateModelParameter Name="Account number"
+							Type="Bank Card Account Number" />
+					</CreationEvent>
+					<LocalEffectiveSignalingEvent Name="Something Done"
+						ID="2">
+						<StateModelParameter Name="The count" Type="Count" />
+					</LocalEffectiveSignalingEvent>
+					<Transition State="Has Started"
+						Destination="Done Something" EventID="2" />
+				</Lifecycle>
+			</NonSpecializedClass>
 
-			<SpecializedClass Name="B">
+			<NonSpecializedClass Name="B">
 				<IndependentAttribute Name="B one" Type="string">
 					<Identifier Number="1" />
 				</IndependentAttribute>
@@ -344,9 +360,9 @@
 					<ToOneReference Relationship="1" Attribute="A two" />
 				</ReferentialAttribute>
 				<IndependentAttribute Name="B two" Type="string" />
-			</SpecializedClass>
+			</NonSpecializedClass>
 
-			<SpecializedClass Name="C">
+			<NonSpecializedClass Name="C">
 				<IndependentAttribute Name="C one" Type="string">
 					<Identifier Number="1" />
 				</IndependentAttribute>
@@ -363,7 +379,7 @@
 					<ToOneReference Relationship="2" Attribute="B A two" />
 				</ReferentialAttribute>
 				<IndependentAttribute Name="C two" Type="string" />
-			</SpecializedClass>
+			</NonSpecializedClass>
 
 			<BinaryAssociation Rnum="1">
 				<ActivePerspective Phrase="characterizes"

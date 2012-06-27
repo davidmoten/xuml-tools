@@ -10,22 +10,35 @@ import javax.persistence.EntityManagerFactory;
 import javax.xml.bind.JAXBElement;
 
 import miuml.jaxb.Class;
+import miuml.jaxb.Domains;
 import miuml.jaxb.ModeledDomain;
 import miuml.jaxb.Subsystem;
 import miuml.jaxb.SubsystemElement;
+import xuml.tools.jaxb.compiler.ClassInfo.MyEvent;
+import xuml.tools.jaxb.compiler.ClassInfo.MyTransition;
 
+/**
+ * Generates code associated with one modeled domain.
+ * 
+ * @author dxm
+ * 
+ */
 public class CodeGeneratorJava {
 
 	private final String contextPackageName;
 	private final File resourcesDirectory;
 	private final ModeledDomain domain;
 	private final String domainPackageName;
+	private final String domainSchema;
+	private final Domains domains;
 
-	public CodeGeneratorJava(miuml.jaxb.ModeledDomain domain,
-			String domainPackageName, String contextPackageName,
-			File resourcesDirectory) {
-		this.domain = domain;
+	public CodeGeneratorJava(Domains domains, String domainName,
+			String domainPackageName, String domainSchema,
+			String contextPackageName, File resourcesDirectory) {
+		this.domains = domains;
+		this.domain = Util.getModeledDomain(domains, domainName);
 		this.domainPackageName = domainPackageName;
+		this.domainSchema = domainSchema;
 		this.contextPackageName = contextPackageName;
 		this.resourcesDirectory = resourcesDirectory;
 	}
@@ -33,7 +46,7 @@ public class CodeGeneratorJava {
 	public void generate(File destination) {
 
 		ModeledDomain md = domain;
-		Lookups lookups = new Lookups(md);
+		Lookups lookups = new Lookups(domains, md);
 		for (Subsystem subsystem : md.getSubsystem()) {
 			for (JAXBElement<? extends SubsystemElement> element : subsystem
 					.getSubsystemElement()) {
@@ -139,9 +152,9 @@ public class CodeGeneratorJava {
 	}
 
 	private ClassInfo createClassInfo(Class cls) {
-		Lookups lookups = new Lookups(domain);
+		Lookups lookups = new Lookups(domains, domain);
 		return new ClassInfoFromJaxb2(cls, domainPackageName, "description",
-				"schema", "table", lookups);
+				domainSchema, lookups);
 	}
 
 	//
@@ -160,12 +173,21 @@ public class CodeGeneratorJava {
 		PrintStream out = new PrintStream(bytes);
 		String pkg = getPackage(cls);
 		out.format("public interface %sBehaviour {\n\n", cls.getName());
-		// TODO
-		// for (Event event : cls.getEvent()) {
-		// String typeName = types.addType(new Type(pkg + "." + cls.getName()
-		// + ".Events." + upperFirst(event.getName())));
-		// out.format("    void onEntry(%s event);\n\n", typeName);
-		// }
+		ClassInfo info = createClassInfo(cls);
+
+		for (MyEvent event : info.getEvents()) {
+			for (MyTransition transition : info.getTransitions()) {
+				// constraint is no event overloading
+				if (transition.getEventName().equals(event.getName())) {
+					out.format("    void onEntry%s(%s event);\n\n", Util
+							.upperFirst(Util.toJavaIdentifier(transition
+									.getToState())), types.addType(info
+							.getClassFullName()
+							+ ".Events."
+							+ event.getSimpleClassName()));
+				}
+			}
+		}
 
 		out.format("}");
 		out.close();

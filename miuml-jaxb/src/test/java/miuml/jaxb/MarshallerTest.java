@@ -7,6 +7,6 @@ public class MarshallerTest {
 	@Test
 	public void testUnmarshal() {
 		new Marshaller().unmarshal(MarshallerTest.class
-				.getResourceAsStream("/bookstore.xml"));
+				.getResourceAsStream("/samples.xml"));
 	}
 }
