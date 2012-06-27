@@ -34,9 +34,6 @@ public class Signaller {
 	public <T, R> void signal(Entity<T, R> entity, Event<T> event) {
 		boolean signalToSelf = entity.equals(info.get().getCurrentEntity());
 		EntityEvent<T, R> ee = new EntityEvent<T, R>(entity, event);
-		if (signalToSelf)
-			info.get().getCurrentActor().tell(ee);
-		else
-			root.tell(ee);
+		root.tell(new Signal<T, R>(ee, signalToSelf));
 	}
 }
