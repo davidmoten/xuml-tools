@@ -1,8 +1,7 @@
 package xuml.tools.jaxb.compiler;
 
 import xuml.tools.jaxb.compiler.message.Commit;
-import xuml.tools.jaxb.compiler.message.SignalToOther;
-import xuml.tools.jaxb.compiler.message.SignalToSelf;
+import xuml.tools.jaxb.compiler.message.Signal;
 import akka.actor.ActorSystem;
 import akka.dispatch.PriorityGenerator;
 import akka.dispatch.UnboundedPriorityMailbox;
@@ -15,12 +14,13 @@ public class EntityMailbox extends UnboundedPriorityMailbox {
 		super(new PriorityGenerator() {
 			@Override
 			public int gen(Object message) {
-				if (message instanceof SignalToSelf)
-					return 0; // high priority
-				else if (message instanceof Commit)
+				if (message instanceof Signal) {
+					if (((Signal<?, ?>) message).toSelf())
+						return 0; // high priority
+					else
+						return 20; // low priority
+				} else if (message instanceof Commit)
 					return 10;// medium priority
-				else if (message instanceof SignalToOther)
-					return 20;// low priority
 				else
 					return 30;// lowest priority
 			}

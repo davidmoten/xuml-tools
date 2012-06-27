@@ -11,7 +11,6 @@ public class EntityEvent<T, R> {
 	public EntityEvent(Entity<T, R> entity, Event<T> event) {
 		this.entity = entity;
 		this.event = event;
-
 	}
 
 	public Entity<T, R> getEntity() {

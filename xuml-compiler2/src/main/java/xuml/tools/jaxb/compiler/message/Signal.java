@@ -1,6 +1,5 @@
-package xuml.tools.jaxb.compiler.actor;
+package xuml.tools.jaxb.compiler.message;
 
-import xuml.tools.jaxb.compiler.message.EntityEvent;
 
 public class Signal<T, R> {
 	private final EntityEvent<T, R> entityEvent;

@@ -3,6 +3,7 @@ package xuml.tools.jaxb.compiler.actor;
 import xuml.tools.jaxb.compiler.Entity;
 import xuml.tools.jaxb.compiler.Event;
 import xuml.tools.jaxb.compiler.message.EntityEvent;
+import xuml.tools.jaxb.compiler.message.Signal;
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
