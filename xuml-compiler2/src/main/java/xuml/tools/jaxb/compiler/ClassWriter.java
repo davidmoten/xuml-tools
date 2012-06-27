@@ -697,6 +697,7 @@ public class ClassWriter {
 					"Synchronously perform the change. This method should be considered\nfor internal use only. Use the signal method instead.",
 					"    ");
 			out.format("    @%s\n", info.addType(Transient.class));
+
 			out.format("    private void processEvent(Events.%s event){\n",
 					event.getSimpleClassName());
 			boolean first = true;

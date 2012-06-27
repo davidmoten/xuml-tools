@@ -14,6 +14,8 @@ import miuml.jaxb.Domains;
 import miuml.jaxb.ModeledDomain;
 import miuml.jaxb.Subsystem;
 import miuml.jaxb.SubsystemElement;
+import xuml.tools.jaxb.compiler.ClassInfo.MyEvent;
+import xuml.tools.jaxb.compiler.ClassInfo.MyTransition;
 
 /**
  * Generates code associated with one modeled domain.
@@ -171,13 +173,21 @@ public class CodeGeneratorJava {
 		PrintStream out = new PrintStream(bytes);
 		String pkg = getPackage(cls);
 		out.format("public interface %sBehaviour {\n\n", cls.getName());
+		ClassInfo info = createClassInfo(cls);
 
-		// TODO
-		// for (Event event : cls.getEvent()) {
-		// String typeName = types.addType(new Type(pkg + "." + cls.getName()
-		// + ".Events." + upperFirst(event.getName())));
-		// out.format("    void onEntry(%s event);\n\n", typeName);
-		// }
+		for (MyEvent event : info.getEvents()) {
+			for (MyTransition transition : info.getTransitions()) {
+				// constraint is no event overloading
+				if (transition.getEventName().equals(event.getName())) {
+					out.format("    void onEntry%s(%s event);\n\n", Util
+							.upperFirst(Util.toJavaIdentifier(transition
+									.getToState())), types.addType(info
+							.getClassFullName()
+							+ ".Events."
+							+ event.getSimpleClassName()));
+				}
+			}
+		}
 
 		out.format("}");
 		out.close();
