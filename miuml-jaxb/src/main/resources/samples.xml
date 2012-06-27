@@ -338,6 +338,12 @@
 						<StateModelParameter Name="Account number"
 							Type="Bank Card Account Number" />
 					</CreationEvent>
+					<LocalEffectiveSignalingEvent Name="Something Done"
+						ID="2">
+						<StateModelParameter Name="The count" Type="Count" />
+					</LocalEffectiveSignalingEvent>
+					<Transition State="Has Started"
+						Destination="Done Something" EventID="2" />
 				</Lifecycle>
 			</NonSpecializedClass>
 

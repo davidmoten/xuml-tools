@@ -287,7 +287,8 @@ public class ClassInfoFromJaxb2 extends ClassInfo {
 				LocalEffectiveSignalingEvent ev = (LocalEffectiveSignalingEvent) event;
 				List<MyParameter> parameters = Lists.newArrayList();
 				for (StateModelParameter p : ev.getStateModelParameter()) {
-					parameters.add(new MyParameter(p.getName(), p.getType()));
+					parameters.add(new MyParameter(Util.toJavaIdentifier(p
+							.getName()), lookups.getJavaType(p.getType())));
 				}
 				list.add(new MyEvent(ev.getName(), Util.toClassSimpleName(ev
 						.getName()), parameters));
@@ -313,11 +314,19 @@ public class ClassInfoFromJaxb2 extends ClassInfo {
 		List<MyTransition> list = Lists.newArrayList();
 		for (Transition transition : cls.getLifecycle().getTransition()) {
 			// TODO what to do about event name? Event inheritance is involved.
-			new MyTransition(transition.getEventID().toString(), transition
-					.getEventID().toString(), transition.getState(),
-					transition.getDestination());
+			list.add(new MyTransition(getEventName(transition.getEventID()),
+					transition.getEventID().toString(), transition.getState(),
+					transition.getDestination()));
 		}
 		return list;
+	}
+
+	private String getEventName(BigInteger eventId) {
+		for (JAXBElement<? extends Event> ev : cls.getLifecycle().getEvent()) {
+			if (ev.getValue().getID().equals(eventId))
+				return ev.getValue().getName();
+		}
+		return null;
 	}
 
 	@Override

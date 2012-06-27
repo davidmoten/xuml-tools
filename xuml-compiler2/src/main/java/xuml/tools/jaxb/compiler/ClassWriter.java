@@ -492,7 +492,7 @@ public class ClassWriter {
 		out.format("        return state;\n");
 		out.format("    }\n\n");
 		jd(out, STATE_COMMENT, "    ");
-		out.format("    private void setState(String state){\n");
+		out.format("    public void setState(String state){\n");
 		out.format("        this.state= state;\n");
 		out.format("    }\n\n");
 	}
@@ -680,15 +680,23 @@ public class ClassWriter {
 	private void writeEventCallMethods(PrintStream out, ClassInfo info) {
 		// add event call methods
 
+		out.format("    @%s\n", info.addType(Transient.class));
 		out.format("    public void event(%s<%s> event){\n",
 				info.addType(Event.class), info.getJavaClassSimpleName());
+		for (MyEvent event : info.getEvents()) {
+			out.format("        if (event instanceof Events.%s){\n",
+					event.getSimpleClassName());
+			out.format("            processEvent((Events.%s) event);\n",
+					event.getSimpleClassName());
+			out.format("        }\n");
+		}
 		out.format("    }\n\n");
 		for (MyEvent event : info.getEvents()) {
-			info.addType(Transient.class);
+
 			jd(out,
 					"Synchronously perform the change. This method should be considered\nfor internal use only. Use the signal method instead.",
 					"    ");
-			out.format("    @Transient\n");
+			out.format("    @%s\n", info.addType(Transient.class));
 			out.format("    private void processEvent(Events.%s event){\n",
 					event.getSimpleClassName());
 			boolean first = true;
@@ -701,11 +709,14 @@ public class ClassWriter {
 						out.format("        else if");
 					first = false;
 					out.format(" (state.equals(State.%s.toString())){\n",
-							info.getStateAsJavaIdentifier(transition.getFromState()));
-					out.format("            state=State.%s.toString();\n",
-							info.getStateAsJavaIdentifier(transition.getToState()));
+							info.getStateAsJavaIdentifier(transition
+									.getFromState()));
+					out.format("            state=State.%s.toString();\n", info
+							.getStateAsJavaIdentifier(transition.getToState()));
 					out.format("            synchronized(this) {\n");
-					out.format("                behaviour.onEntry(event);\n");
+					out.format("                behaviour.onEntry%s(event);\n",
+							Util.upperFirst(Util.toJavaIdentifier(transition
+									.getToState())));
 					out.format("            }\n");
 					out.format("        }\n");
 				}
