@@ -171,6 +171,7 @@ public class CodeGeneratorJava {
 		PrintStream out = new PrintStream(bytes);
 		String pkg = getPackage(cls);
 		out.format("public interface %sBehaviour {\n\n", cls.getName());
+
 		// TODO
 		// for (Event event : cls.getEvent()) {
 		// String typeName = types.addType(new Type(pkg + "." + cls.getName()
