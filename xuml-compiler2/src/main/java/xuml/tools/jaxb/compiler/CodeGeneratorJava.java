@@ -26,7 +26,6 @@ import xuml.tools.jaxb.compiler.ClassInfo.MyTransition;
 public class CodeGeneratorJava {
 
 	private final String contextPackageName;
-	private final File resourcesDirectory;
 	private final ModeledDomain domain;
 	private final String domainPackageName;
 	private final String domainSchema;
@@ -34,13 +33,12 @@ public class CodeGeneratorJava {
 
 	public CodeGeneratorJava(Domains domains, String domainName,
 			String domainPackageName, String domainSchema,
-			String contextPackageName, File resourcesDirectory) {
+			String contextPackageName) {
 		this.domains = domains;
 		this.domain = Util.getModeledDomain(domains, domainName);
 		this.domainPackageName = domainPackageName;
 		this.domainSchema = domainSchema;
 		this.contextPackageName = contextPackageName;
-		this.resourcesDirectory = resourcesDirectory;
 	}
 
 	public void generate(File destination) {
@@ -153,7 +151,7 @@ public class CodeGeneratorJava {
 
 	private ClassInfo createClassInfo(Class cls) {
 		Lookups lookups = new Lookups(domains, domain);
-		return new ClassInfoFromJaxb2(cls, domainPackageName, "description",
+		return new ClassInfoFromJaxb(cls, domainPackageName, "description",
 				domainSchema, lookups);
 	}
 

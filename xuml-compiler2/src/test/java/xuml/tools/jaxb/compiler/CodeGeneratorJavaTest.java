@@ -25,7 +25,7 @@ public class CodeGeneratorJavaTest {
 		File resources = new File("target/generated-resources");
 		if (!resources.exists())
 			resources.mkdirs();
-		new CodeGeneratorJava(domains, domainName, "miuml", schema, "miuml",
-				resources).generate(new File("target/generated/"));
+		new CodeGeneratorJava(domains, domainName, "miuml", schema, "miuml")
+				.generate(new File("target/generated/"));
 	}
 }
