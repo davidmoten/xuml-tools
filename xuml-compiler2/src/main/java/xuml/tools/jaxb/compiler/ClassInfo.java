@@ -66,7 +66,7 @@ public abstract class ClassInfo {
 
 	abstract List<MyTransition> getTransitions();
 
-	abstract String getStateIdentifier(String state);
+	abstract String getStateAsJavaIdentifier(String state);
 
 	abstract boolean isSuperclass();
 

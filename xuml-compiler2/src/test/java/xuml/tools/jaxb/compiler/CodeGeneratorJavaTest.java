@@ -20,8 +20,6 @@ public class CodeGeneratorJavaTest {
 	}
 
 	private void generateClassesForDomain(String domainName, String schema) {
-		if ("false".equals(System.getProperty("generate")))
-			return;
 		miuml.jaxb.Domains domains = new Marshaller().unmarshal(getClass()
 				.getResourceAsStream("/samples.xml"));
 		File resources = new File("target/generated-resources");

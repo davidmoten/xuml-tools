@@ -507,7 +507,7 @@ public class ClassWriter {
 		for (String state : info.getStateNames()) {
 			if (!first)
 				out.format(",");
-			out.format(info.getStateIdentifier(state));
+			out.format(info.getStateAsJavaIdentifier(state));
 			first = false;
 		}
 		out.format(";\n");
@@ -701,9 +701,9 @@ public class ClassWriter {
 						out.format("        else if");
 					first = false;
 					out.format(" (state.equals(State.%s.toString())){\n",
-							info.getStateIdentifier(transition.getFromState()));
+							info.getStateAsJavaIdentifier(transition.getFromState()));
 					out.format("            state=State.%s.toString();\n",
-							info.getStateIdentifier(transition.getToState()));
+							info.getStateAsJavaIdentifier(transition.getToState()));
 					out.format("            synchronized(this) {\n");
 					out.format("                behaviour.onEntry(event);\n");
 					out.format("            }\n");

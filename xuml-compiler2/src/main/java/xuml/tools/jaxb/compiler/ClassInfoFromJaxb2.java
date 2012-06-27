@@ -321,10 +321,11 @@ public class ClassInfoFromJaxb2 extends ClassInfo {
 	}
 
 	@Override
-	String getStateIdentifier(String stateName) {
+	String getStateAsJavaIdentifier(String stateName) {
 		for (State state : cls.getLifecycle().getState())
 			if (state.getName().equals(stateName))
-				return state.getSnum().toString();
+				// TODO use nameManager
+				return Util.toJavaConstantIdentifier(stateName);
 		throw new RuntimeException("state not found: " + stateName);
 	}
 
