@@ -202,29 +202,30 @@ public class ClassWriter {
 		out.format("    }\n\n");
 	}
 
-	private void writeSignaller(PrintStream out, ClassInfo info) {
-		jd(out,
-				"Used for signalling instances of "
-						+ info.getJavaClassSimpleName(), "    ");
-		String signaller = info.addType(Signaller.class);
-		out.format(
-				"    private static %3$s<%1$s,%2$s> signaller =\n"
-						+ "        new %3$s<%1$s,%2$s>(%4$s.getEntityManagerFactory(),%1$s.class);\n\n",
-				info.addType(info.getJavaClassSimpleName()),
-				info.addType(info.getPrimaryIdAttributeMembers().get(0)
-						.getType()), signaller,
-				info.addType(info.getContextPackageName() + ".Context"));
-
-		jd(out, "Find the " + info.getJavaClassSimpleName()
-				+ " with id and send the event to it as a signal.", "    ");
-		out.format(
-				"    public static void signal(%s id, Event<%s> event){\n",
-				info.addType(info.getPrimaryIdAttributeMembers().get(0)
-						.getType()),
-				info.addType(info.getJavaClassSimpleName()));
-		out.format("        signaller.signal(id,event);\n");
-		out.format("    }\n\n");
-	}
+	// private void writeSignaller(PrintStream out, ClassInfo info) {
+	// jd(out,
+	// "Used for signalling instances of "
+	// + info.getJavaClassSimpleName(), "    ");
+	// String signaller = info.addType(Signaller.class);
+	// out.format(
+	// "    private static %3$s<%1$s,%2$s> signaller =\n"
+	// +
+	// "        new %3$s<%1$s,%2$s>(%4$s.getEntityManagerFactory(),%1$s.class);\n\n",
+	// info.addType(info.getJavaClassSimpleName()),
+	// info.addType(info.getPrimaryIdAttributeMembers().get(0)
+	// .getType()), signaller,
+	// info.addType(info.getContextPackageName() + ".Context"));
+	//
+	// jd(out, "Find the " + info.getJavaClassSimpleName()
+	// + " with id and send the event to it as a signal.", "    ");
+	// out.format(
+	// "    public static void signal(%s id, Event<%s> event){\n",
+	// info.addType(info.getPrimaryIdAttributeMembers().get(0)
+	// .getType()),
+	// info.addType(info.getJavaClassSimpleName()));
+	// out.format("        signaller.signal(id,event);\n");
+	// out.format("    }\n\n");
+	// }
 
 	private boolean hasEmbeddedId() {
 		return info.getPrimaryIdAttributeMembers().size() > 1;

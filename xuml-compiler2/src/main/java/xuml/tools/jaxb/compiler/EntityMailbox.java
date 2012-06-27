@@ -1,6 +1,8 @@
 package xuml.tools.jaxb.compiler;
 
 import xuml.tools.jaxb.compiler.message.Commit;
+import xuml.tools.jaxb.compiler.message.SignalToOther;
+import xuml.tools.jaxb.compiler.message.SignalToSelf;
 import akka.actor.ActorSystem;
 import akka.dispatch.PriorityGenerator;
 import akka.dispatch.UnboundedPriorityMailbox;
