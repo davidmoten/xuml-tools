@@ -43,8 +43,7 @@ public class ClassInfoFromJaxb2 extends ClassInfo {
 	private final String schema;
 	private final TypeRegister typeRegister = new TypeRegister();
 	private final Lookups lookups;
-	private static NameManager nameManager = NameManager
-			.getInstance();
+	private static NameManager nameManager = NameManager.getInstance();
 
 	public ClassInfoFromJaxb2(Class cls, String packageName,
 			String classDescription, String schema, Lookups lookups) {
@@ -123,8 +122,6 @@ public class ClassInfoFromJaxb2 extends ClassInfo {
 
 	@Override
 	List<String> getOperations() {
-		// TODO Auto-generated method stub
-
 		// TODO review operations, not supported by miUML. Should be using
 		// derived attributes.
 		return Lists.newArrayList();
@@ -349,15 +346,13 @@ public class ClassInfoFromJaxb2 extends ClassInfo {
 
 	@Override
 	List<MyReferenceMember> getReferenceMembers() {
-		// TODO this is wrong, need to use referential attributes to build up
-		// reference members
 
 		List<MyReferenceMember> list = Lists.newArrayList();
 		List<Association> associations = lookups.getAssociations(cls);
 		for (Association a : associations) {
 			MyReferenceMember m = createMyReferenceMember(a, cls);
+			System.out.println("created " + m);
 			list.add(m);
-
 		}
 		return list;
 	}
@@ -401,7 +396,6 @@ public class ClassInfoFromJaxb2 extends ClassInfo {
 				joins.add(jc);
 			}
 
-		// TODO
 		String fieldName = nameManager.toFieldName(cls.getName(),
 				pThat.getViewedClass(), a.getRnum());
 		// now establish the name of the field for this class as seen in the
@@ -471,9 +465,7 @@ public class ClassInfoFromJaxb2 extends ClassInfo {
 
 	@Override
 	Type getType(String name) {
-		if ("string".equals(name))
-			return new Type("java.lang.String");
-		else
-			throw new RuntimeException("type not found " + name);
+		String javaClassName = lookups.getJavaType(name);
+		return new Type(javaClassName);
 	}
 }

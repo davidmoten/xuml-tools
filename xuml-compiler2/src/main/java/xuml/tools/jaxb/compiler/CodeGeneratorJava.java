@@ -10,10 +10,17 @@ import javax.persistence.EntityManagerFactory;
 import javax.xml.bind.JAXBElement;
 
 import miuml.jaxb.Class;
+import miuml.jaxb.Domains;
 import miuml.jaxb.ModeledDomain;
 import miuml.jaxb.Subsystem;
 import miuml.jaxb.SubsystemElement;
 
+/**
+ * Generates code associated with one modeled domain.
+ * 
+ * @author dxm
+ * 
+ */
 public class CodeGeneratorJava {
 
 	private final String contextPackageName;
@@ -21,11 +28,13 @@ public class CodeGeneratorJava {
 	private final ModeledDomain domain;
 	private final String domainPackageName;
 	private final String domainSchema;
+	private final Domains domains;
 
-	public CodeGeneratorJava(miuml.jaxb.ModeledDomain domain,
+	public CodeGeneratorJava(Domains domains, String domainName,
 			String domainPackageName, String domainSchema,
 			String contextPackageName, File resourcesDirectory) {
-		this.domain = domain;
+		this.domains = domains;
+		this.domain = Util.getModeledDomain(domains, domainName);
 		this.domainPackageName = domainPackageName;
 		this.domainSchema = domainSchema;
 		this.contextPackageName = contextPackageName;
@@ -35,7 +44,7 @@ public class CodeGeneratorJava {
 	public void generate(File destination) {
 
 		ModeledDomain md = domain;
-		Lookups lookups = new Lookups(md);
+		Lookups lookups = new Lookups(domains, md);
 		for (Subsystem subsystem : md.getSubsystem()) {
 			for (JAXBElement<? extends SubsystemElement> element : subsystem
 					.getSubsystemElement()) {
@@ -141,7 +150,7 @@ public class CodeGeneratorJava {
 	}
 
 	private ClassInfo createClassInfo(Class cls) {
-		Lookups lookups = new Lookups(domain);
+		Lookups lookups = new Lookups(domains, domain);
 		return new ClassInfoFromJaxb2(cls, domainPackageName, "description",
 				domainSchema, lookups);
 	}

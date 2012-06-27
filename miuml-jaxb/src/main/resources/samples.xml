@@ -68,7 +68,7 @@
 			<SpecializedClass Name="Product" Cnum="1" Element="1"
 				Alias="Product">
 				<IndependentAttribute Name="ProductID"
-					Type="UniversalProductCode">
+					Type="Universal Product Code">
 					<Identifier Number="1" />
 				</IndependentAttribute>
 				<DerivedAttribute Name="Product Name" Formula="formula for product name"
@@ -329,6 +329,7 @@
 					<Identifier Number="1" />
 				</IndependentAttribute>
 				<IndependentAttribute Name="A three" Type="string" />
+
 			</SpecializedClass>
 
 			<SpecializedClass Name="B">

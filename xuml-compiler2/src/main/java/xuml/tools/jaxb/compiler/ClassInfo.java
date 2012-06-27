@@ -385,6 +385,35 @@ public abstract class ClassInfo {
 			return manyToMany;
 		}
 
+		@Override
+		public String toString() {
+			StringBuilder builder = new StringBuilder();
+			builder.append("MyReferenceMember [simpleClassName=");
+			builder.append(simpleClassName);
+			builder.append(", fullClassName=");
+			builder.append(fullClassName);
+			builder.append(", thisMult=");
+			builder.append(thisMult);
+			builder.append(", thatMult=");
+			builder.append(thatMult);
+			builder.append(", thisVerbClause=");
+			builder.append(thisVerbClause);
+			builder.append(", thatVerbClause=");
+			builder.append(thatVerbClause);
+			builder.append(", fieldName=");
+			builder.append(fieldName);
+			builder.append(", joinColumns=");
+			builder.append(joinColumns);
+			builder.append(", thisFieldName=");
+			builder.append(thisFieldName);
+			builder.append(", otherName=");
+			builder.append(otherName);
+			builder.append(", manyToMany=");
+			builder.append(manyToMany);
+			builder.append("]");
+			return builder.toString();
+		}
+
 	}
 
 	public static class MyManyToMany {

@@ -4,14 +4,22 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 import miuml.jaxb.Marshaller;
-import miuml.jaxb.ModeledDomain;
 
 import org.junit.Test;
 
 public class CodeGeneratorJavaTest {
 
 	@Test
-	public void testCodeGenerationFromABC() throws FileNotFoundException {
+	public void testCodeGenerationForABC() throws FileNotFoundException {
+		generateClassesForDomain("Nested composite id example", "simple");
+	}
+
+	// @Test
+	public void testCodeGenerationForBookstore() throws FileNotFoundException {
+		generateClassesForDomain("Bookstore", "bookstore");
+	}
+
+	private void generateClassesForDomain(String domainName, String schema) {
 		if ("false".equals(System.getProperty("generate")))
 			return;
 		miuml.jaxb.Domains domains = new Marshaller().unmarshal(getClass()
@@ -19,9 +27,7 @@ public class CodeGeneratorJavaTest {
 		File resources = new File("target/generated-resources");
 		if (!resources.exists())
 			resources.mkdirs();
-		ModeledDomain abcDomain = Util.getModeledDomain(domains,
-				"Nested composite id example");
-		new CodeGeneratorJava(abcDomain, "miuml", "simple", "miuml", resources)
-				.generate(new File("target/generated/"));
+		new CodeGeneratorJava(domains, domainName, "miuml", schema, "miuml",
+				resources).generate(new File("target/generated/"));
 	}
 }
