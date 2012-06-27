@@ -40,6 +40,7 @@ import xuml.tools.jaxb.compiler.ClassInfo.MyPrimaryIdAttribute;
 import xuml.tools.jaxb.compiler.ClassInfo.MyReferenceMember;
 import xuml.tools.jaxb.compiler.ClassInfo.MySubclassRole;
 import xuml.tools.jaxb.compiler.ClassInfo.MyTransition;
+import xuml.tools.jaxb.compiler.actor.Signaller;
 
 import com.google.common.base.Preconditions;
 
@@ -680,9 +681,15 @@ public class ClassWriter {
 
 	private void writeEventCallMethods(PrintStream out, ClassInfo info) {
 		// add event call methods
-
 		out.format("    @%s\n", info.addType(Transient.class));
-		out.format("    public void event(%s<%s> event){\n",
+		out.format("    @%s\n", info.addType(Override.class));
+		out.format("    public void signal(%s<%s> event){\n",
+				info.addType(Event.class), info.getJavaClassSimpleName());
+		out.format("        %s.getInstance().signal(this,event);\n",
+				info.addType(Signaller.class));
+		out.format("    }\n\n");
+		out.format("    @%s\n", info.addType(Transient.class));
+		out.format("    void event(%s<%s> event){\n",
 				info.addType(Event.class), info.getJavaClassSimpleName());
 		for (MyEvent event : info.getEvents()) {
 			out.format("        if (event instanceof Events.%s){\n",
@@ -699,7 +706,7 @@ public class ClassWriter {
 					"    ");
 			out.format("    @%s\n", info.addType(Transient.class));
 
-			out.format("    private void processEvent(Events.%s event){\n",
+			out.format("    void processEvent(Events.%s event){\n",
 					event.getSimpleClassName());
 			boolean first = true;
 			for (MyTransition transition : info.getTransitions()) {

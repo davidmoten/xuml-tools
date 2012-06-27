@@ -10,9 +10,11 @@ public interface Entity<T, R> {
 	R getId();
 
 	/**
-	 * All events go through here.s
+	 * All events go through here. ThreadLocal will be used to detect if an
+	 * event is to self or not.
 	 * 
 	 * @param event
 	 */
-	void event(Event<T> event);
+	void signal(Event<T> event);
+
 }
