@@ -3,7 +3,7 @@ package xuml.tools.jaxb.compiler.message;
 import xuml.tools.jaxb.compiler.Entity;
 import xuml.tools.jaxb.compiler.Event;
 
-public class EntityEvent<T, R> {
+public class EntityEvent<T, R> implements HasEntity<T, R> {
 
 	private final Entity<T, R> entity;
 	private final Event<T> event;
@@ -13,6 +13,7 @@ public class EntityEvent<T, R> {
 		this.event = event;
 	}
 
+	@Override
 	public Entity<T, R> getEntity() {
 		return entity;
 	}

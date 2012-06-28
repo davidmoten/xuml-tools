@@ -1,6 +1,6 @@
-package xuml.tools.jaxb.compiler;
+package xuml.tools.jaxb.compiler.actor;
 
-import xuml.tools.jaxb.compiler.message.Commit;
+import xuml.tools.jaxb.compiler.message.EntityCommit;
 import xuml.tools.jaxb.compiler.message.Signal;
 import akka.actor.ActorSystem;
 import akka.dispatch.PriorityGenerator;
@@ -19,7 +19,7 @@ public class EntityMailbox extends UnboundedPriorityMailbox {
 						return 0; // high priority
 					else
 						return 20; // low priority
-				} else if (message instanceof Commit)
+				} else if (message instanceof EntityCommit)
 					return 10;// medium priority
 				else
 					return 30;// lowest priority

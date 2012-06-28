@@ -17,4 +17,11 @@ public interface Entity<T, R> {
 	 */
 	void signal(Event<T> event);
 
+	/**
+	 * Synchronously signal an entity.
+	 * 
+	 * @param event
+	 */
+	void event(Event<T> event);
+
 }

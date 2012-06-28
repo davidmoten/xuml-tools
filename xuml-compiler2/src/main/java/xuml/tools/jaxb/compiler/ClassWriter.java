@@ -689,15 +689,30 @@ public class ClassWriter {
 				info.addType(Signaller.class));
 		out.format("    }\n\n");
 		out.format("    @%s\n", info.addType(Transient.class));
-		out.format("    void event(%s<%s> event){\n",
+		out.format("    @%s\n", info.addType(Override.class));
+		out.format("    public void event(%s<%s> event){\n",
 				info.addType(Event.class), info.getJavaClassSimpleName());
+		out.format("        // set the current entity in a ThreadLocal variable so we can detect signals to self\n");
+		out.format(
+				"        %s.getInstance().getInfo().setCurrentEntity(this);\n\n",
+				info.addType(Signaller.class));
+		out.format("        // process the event\n");
 		for (MyEvent event : info.getEvents()) {
 			out.format("        if (event instanceof Events.%s){\n",
 					event.getSimpleClassName());
 			out.format("            processEvent((Events.%s) event);\n",
 					event.getSimpleClassName());
-			out.format("        }\n");
+			out.format("        }\n\n");
 		}
+		out.format("        // put a commit message on the queue for the entity\n");
+		out.format("        // a priority mailbox should ensure that all signals to self\n");
+		out.format("        // are processed before this commit.");
+		out.format("        %s.getInstance().commit(this);\n",
+				info.addType(Signaller.class));
+		out.format(
+				"        %s.getInstance().getInfo().setCurrentEntity(null);\n",
+				info.addType(Signaller.class));
+		out.format("        // reset the current entity\n");
 		out.format("    }\n\n");
 		for (MyEvent event : info.getEvents()) {
 

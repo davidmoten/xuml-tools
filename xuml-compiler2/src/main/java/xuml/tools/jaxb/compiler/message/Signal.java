@@ -1,6 +1,5 @@
 package xuml.tools.jaxb.compiler.message;
 
-
 public class Signal<T, R> {
 	private final EntityEvent<T, R> entityEvent;
 	private final boolean toSelf;

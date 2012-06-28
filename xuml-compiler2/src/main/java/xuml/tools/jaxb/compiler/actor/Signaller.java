@@ -2,6 +2,7 @@ package xuml.tools.jaxb.compiler.actor;
 
 import xuml.tools.jaxb.compiler.Entity;
 import xuml.tools.jaxb.compiler.Event;
+import xuml.tools.jaxb.compiler.message.EntityCommit;
 import xuml.tools.jaxb.compiler.message.EntityEvent;
 import xuml.tools.jaxb.compiler.message.Signal;
 import akka.actor.ActorRef;
@@ -36,5 +37,13 @@ public class Signaller {
 		boolean signalToSelf = entity.equals(info.get().getCurrentEntity());
 		EntityEvent<T, R> ee = new EntityEvent<T, R>(entity, event);
 		root.tell(new Signal<T, R>(ee, signalToSelf));
+	}
+
+	public <T, R> void commit(Entity<T, R> entity) {
+		root.tell(new EntityCommit<T, R>(entity));
+	}
+
+	public Info getInfo() {
+		return info.get();
 	}
 }
