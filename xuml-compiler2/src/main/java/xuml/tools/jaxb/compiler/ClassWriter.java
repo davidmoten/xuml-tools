@@ -702,6 +702,7 @@ public class ClassWriter {
 	}
 
 	private void writeEventCallMethods(PrintStream out, ClassInfo info) {
+
 		// add event call methods
 		out.format("    @%s\n", info.addType(Transient.class));
 		out.format("    @%s\n", info.addType(Override.class));
@@ -714,65 +715,68 @@ public class ClassWriter {
 		out.format("    @%s\n", info.addType(Override.class));
 		out.format("    public void event(%s<%s> event){\n",
 				info.addType(Event.class), info.getJavaClassSimpleName());
-		out.format("        // set the current entity in a ThreadLocal variable so we can detect signals to self\n");
-		out.format(
-				"        %s.getInstance().getInfo().setCurrentEntity(this);\n\n",
-				info.addType(Signaller.class));
-		out.format("        // process the event\n");
-		for (MyEvent event : info.getEvents()) {
-			out.format("        if (event instanceof Events.%s){\n",
-					event.getSimpleClassName());
-			out.format("            processEvent((Events.%s) event);\n",
-					event.getSimpleClassName());
-			out.format("        }\n\n");
-		}
-		out.format("        // put a commit message on the queue for the entity\n");
-		out.format("        // a priority mailbox should ensure that all signals to self\n");
-		out.format("        // are processed before this commit.");
-		out.format("        %s.getInstance().commit(this);\n",
-				info.addType(Signaller.class));
-		out.format(
-				"        %s.getInstance().getInfo().setCurrentEntity(null);\n",
-				info.addType(Signaller.class));
-		out.format("        // reset the current entity\n");
-		out.format("    }\n\n");
-		for (MyEvent event : info.getEvents()) {
+		if (info.getEvents().size() > 0) {
+			out.format("        // set the current entity in a ThreadLocal variable so we can detect signals to self\n");
+			out.format(
+					"        %s.getInstance().getInfo().setCurrentEntity(this);\n\n",
+					info.addType(Signaller.class));
+			out.format("        // process the event\n");
+			for (MyEvent event : info.getEvents()) {
+				out.format("        if (event instanceof Events.%s){\n",
+						event.getSimpleClassName());
+				out.format("            processEvent((Events.%s) event);\n",
+						event.getSimpleClassName());
+				out.format("        }\n\n");
+			}
+			out.format("        // put a commit message on the queue for the entity\n");
+			out.format("        // a priority mailbox should ensure that all signals to self\n");
+			out.format("        // are processed before this commit.\n");
+			out.format("        %s.getInstance().commit(this);\n\n",
+					info.addType(Signaller.class));
+			out.format("        // reset the current entity\n");
+			out.format(
+					"        %s.getInstance().getInfo().setCurrentEntity(null);\n",
+					info.addType(Signaller.class));
+			out.format("    }\n\n");
+			for (MyEvent event : info.getEvents()) {
 
-			jd(out,
-					"Synchronously perform the change. This method should be considered\nfor internal use only. Use the signal method instead.",
-					"    ");
-			out.format("    @%s\n", info.addType(Transient.class));
+				jd(out,
+						"Synchronously perform the change. This method should be considered\nfor internal use only. Use the signal method instead.",
+						"    ");
+				out.format("    @%s\n", info.addType(Transient.class));
 
-			out.format("    void processEvent(Events.%s event){\n",
-					event.getSimpleClassName());
-			boolean first = true;
-			for (MyTransition transition : info.getTransitions()) {
-				// constraint is no event overloading
-				if (transition.getEventName().equals(event.getName())) {
-					if (first)
-						out.format("        if");
-					else
-						out.format("        else if");
-					first = false;
-					out.format(" (state.equals(State.%s.toString())){\n",
-							info.getStateAsJavaIdentifier(transition
-									.getFromState()));
-					out.format("            state=State.%s.toString();\n", info
-							.getStateAsJavaIdentifier(transition.getToState()));
-					out.format("            synchronized(this) {\n");
-					out.format("                behaviour.onEntry%s(event);\n",
-							Util.upperFirst(Util.toJavaIdentifier(transition
-									.getToState())));
-					out.format("            }\n");
-					out.format("        }\n");
+				out.format("    void processEvent(Events.%s event){\n",
+						event.getSimpleClassName());
+				boolean first = true;
+				for (MyTransition transition : info.getTransitions()) {
+					// constraint is no event overloading
+					if (transition.getEventName().equals(event.getName())) {
+						if (first)
+							out.format("        if");
+						else
+							out.format("        else if");
+						first = false;
+						out.format(" (state.equals(State.%s.toString())){\n",
+								info.getStateAsJavaIdentifier(transition
+										.getFromState()));
+						out.format("            state=State.%s.toString();\n",
+								info.getStateAsJavaIdentifier(transition
+										.getToState()));
+						out.format("            synchronized(this) {\n");
+						out.format(
+								"                behaviour.onEntry%s(event);\n",
+								Util.upperFirst(Util
+										.toJavaIdentifier(transition
+												.getToState())));
+						out.format("            }\n");
+						out.format("        }\n");
+					}
 				}
 			}
 		}
 	}
 
 	private void writeEventsFinish(PrintStream out, ClassInfo info) {
-		if (info.getEvents().size() == 0)
-			return;
 		out.format("    }\n\n");
 	}
 
