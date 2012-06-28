@@ -8,6 +8,20 @@ import akka.dispatch.UnboundedPriorityMailbox;
 
 import com.typesafe.config.Config;
 
+/**
+ * <p>
+ * Prioritizes mail for an {@link EntityActor}.
+ * </p>
+ * <ul>
+ * <li>High priority: Signal to self</li>
+ * <li>Medium priority: Commit</li>
+ * <li>Low priority: Signal to other</li>
+ * <li>Lowest priority: other messages (like StopEntityActor)</li>
+ * </ul>
+ * 
+ * @author dxm
+ * 
+ */
 public class EntityMailbox extends UnboundedPriorityMailbox {
 	public EntityMailbox(ActorSystem.Settings settings, Config config) {
 		// needed for reflective instantiation
