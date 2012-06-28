@@ -11,21 +11,23 @@ public class CodeGeneratorJavaTest {
 
 	@Test
 	public void testCodeGenerationForABC() throws FileNotFoundException {
-		generateClassesForDomain("Nested composite id example", "simple");
+		generateClassesForDomain("Nested composite id example", "miuml",
+				"simple");
 	}
 
 	// @Test
 	public void testCodeGenerationForBookstore() throws FileNotFoundException {
-		generateClassesForDomain("Bookstore", "bookstore");
+		generateClassesForDomain("Bookstore", "bookstore", "bookstore");
 	}
 
-	private void generateClassesForDomain(String domainName, String schema) {
+	private void generateClassesForDomain(String domainName,
+			String domainPackageName, String schema) {
 		miuml.jaxb.Domains domains = new Marshaller().unmarshal(getClass()
 				.getResourceAsStream("/samples.xml"));
 		File resources = new File("target/generated-resources");
 		if (!resources.exists())
 			resources.mkdirs();
-		new CodeGeneratorJava(domains, domainName, "miuml", schema, "miuml")
-				.generate(new File("target/generated/"));
+		new CodeGeneratorJava(domains, domainName, domainPackageName, schema,
+				"miuml").generate(new File("target/generated/"));
 	}
 }

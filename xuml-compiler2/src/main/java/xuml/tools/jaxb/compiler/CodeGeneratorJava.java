@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 
-import javax.persistence.EntityManagerFactory;
 import javax.xml.bind.JAXBElement;
 
 import miuml.jaxb.Class;
@@ -57,7 +56,6 @@ public class CodeGeneratorJava {
 					createBehaviourFactoryInterface(cls, destination);
 				}
 			}
-			createContext(destination);
 
 			// create object factory
 			// createObjectFactory(domain, destination);
@@ -69,76 +67,6 @@ public class CodeGeneratorJava {
 
 	private void log(String message) {
 		java.lang.System.out.println(message);
-	}
-
-	// private void createPersistenceXml(List<Class> clazz, File
-	// resourcesDirectory) {
-	// List<String> list = Lists.newArrayList();
-	// for (Class cls : clazz) {
-	// ClassInfo info = createClassInfo(cls);
-	// list.add(info.getClassFullName());
-	// }
-	// String xml = new PersistenceXmlWriter().generate(list);
-	// try {
-	// File file = new File(resourcesDirectory, "META-INF/persistence.xml");
-	// file.getParentFile().mkdirs();
-	// FileUtils.write(file, xml);
-	// } catch (IOException e) {
-	// throw new RuntimeException(e);
-	// }
-	// }
-
-	private void createContext(File destination) {
-		TypeRegister types = new TypeRegister();
-		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-		PrintStream out = new PrintStream(bytes);
-		types.addType(EntityManagerFactory.class);
-		out.format("package %s;\n\n", contextPackageName);
-		out.format("IMPORTS_HERE\n");
-		out.format("public class Context {\n\n");
-		out.format("    private static EntityManagerFactory emf;\n\n");
-		out.format("    public static EntityManagerFactory getEntityManagerFactory() {\n");
-		out.format("        return emf;\n");
-		out.format("    }\n\n");
-		out.format("    public static void setEntityManagerFactory(EntityManagerFactory value){\n");
-		out.format("        emf = value;\n");
-		out.format("    }\n");
-		for (Subsystem ss : domain.getSubsystem()) {
-			for (JAXBElement<? extends SubsystemElement> element : ss
-					.getSubsystemElement()) {
-				if (element.getValue() instanceof Class) {
-					Class cls = (Class) element.getValue();
-					ClassInfo info = createClassInfo(cls);
-					String behaviourFactory = types.addType(info
-							.getBehaviourFactoryFullName());
-					out.format("    private static %s %s;\n\n",
-							behaviourFactory,
-							info.getBehaviourFactoryFieldName());
-					out.format("    public static void set%s(%s factory){\n",
-							info.getBehaviourFactorySimpleName(),
-							behaviourFactory);
-					out.format("        %s=factory;\n",
-							info.getBehaviourFactoryFieldName());
-					out.format("    }\n\n");
-					out.format("    public static %s get%s(){\n",
-							behaviourFactory,
-							info.getBehaviourFactorySimpleName());
-					out.format("        return %s;\n",
-							info.getBehaviourFactoryFieldName());
-					out.format("    }\n\n");
-				}
-			}
-		}
-
-		out.format("}\n");
-		out.close();
-
-		File file = new File(destination, contextPackageName.replace(".", "/")
-				+ "/Context.java");
-		String java = bytes.toString().replace("IMPORTS_HERE",
-				types.getImports());
-		writeToFile(java.getBytes(), file);
-
 	}
 
 	private void createImplementation(Class cls, File destination,
