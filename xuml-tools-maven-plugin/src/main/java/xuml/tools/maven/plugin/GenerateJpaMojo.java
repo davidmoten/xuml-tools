@@ -22,6 +22,7 @@ import miuml.jaxb.Marshaller;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.project.MavenProject;
 
 import xuml.tools.jaxb.compiler.CodeGeneratorJava;
 
@@ -33,6 +34,14 @@ import xuml.tools.jaxb.compiler.CodeGeneratorJava;
  * @phase process-resources
  */
 public class GenerateJpaMojo extends AbstractMojo {
+
+	/**
+	 * @parameter expression="${project}"
+	 * @required
+	 * @readonly
+	 * @since 1.0
+	 */
+	private MavenProject project;
 
 	/**
 	 * Location to place generated java source.
@@ -86,5 +95,6 @@ public class GenerateJpaMojo extends AbstractMojo {
 				.getResourceAsStream(domainsXml));
 		new CodeGeneratorJava(domains, domain, packageName, schema)
 				.generate(outputSourceDirectory);
+		project.addCompileSourceRoot(outputSourceDirectory.getAbsolutePath());
 	}
 }
