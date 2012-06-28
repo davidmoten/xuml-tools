@@ -2,17 +2,16 @@ package xuml.tools.jaxb.compiler.message;
 
 import xuml.tools.jaxb.compiler.Entity;
 
-public class EntityCommit<T, R> implements HasEntity<T, R> {
+public class EntityCommit<T> implements HasEntity<T> {
 
-	private final Entity<T, R> entity;
+	private final Entity<T> entity;
 
-	public EntityCommit(Entity<T, R> entity) {
-		super();
+	public EntityCommit(Entity<T> entity) {
 		this.entity = entity;
 	}
 
 	@Override
-	public Entity<T, R> getEntity() {
+	public Entity<T> getEntity() {
 		return entity;
 	}
 }

@@ -1,13 +1,13 @@
 package xuml.tools.jaxb.compiler;
 
-public interface Entity<T, R> {
+public interface Entity<T> {
 
 	/**
 	 * Returns the Entity id (which might be a composite).
 	 * 
 	 * @return
 	 */
-	R getId();
+	String uniqueId();
 
 	/**
 	 * All events go through here. ThreadLocal will be used to detect if an

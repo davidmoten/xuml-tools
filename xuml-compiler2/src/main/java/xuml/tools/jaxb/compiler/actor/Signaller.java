@@ -33,14 +33,14 @@ public class Signaller {
 	private Signaller() {
 	}
 
-	public <T, R> void signal(Entity<T, R> entity, Event<T> event) {
+	public <T, R> void signal(Entity<T> entity, Event<T> event) {
 		boolean signalToSelf = entity.equals(info.get().getCurrentEntity());
-		EntityEvent<T, R> ee = new EntityEvent<T, R>(entity, event);
-		root.tell(new Signal<T, R>(ee, signalToSelf));
+		EntityEvent<T> ee = new EntityEvent<T>(entity, event);
+		root.tell(new Signal<T>(ee, signalToSelf));
 	}
 
-	public <T, R> void commit(Entity<T, R> entity) {
-		root.tell(new EntityCommit<T, R>(entity));
+	public <T, R> void commit(Entity<T> entity) {
+		root.tell(new EntityCommit<T>(entity));
 	}
 
 	public Info getInfo() {

@@ -26,7 +26,7 @@ public class RootActor extends UntypedActor {
 		if (message instanceof EntityManagerFactory)
 			handleMessage((EntityManagerFactory) message);
 		else if (message instanceof HasEntity)
-			handleMessage((HasEntity<?, ?>) message);
+			handleMessage((HasEntity<?>) message);
 		else if (message instanceof CloseEntityActor)
 			handleMessage((CloseEntityActor) message);
 	}
@@ -37,15 +37,15 @@ public class RootActor extends UntypedActor {
 		actor.tell(new StopEntityActor());
 	}
 
-	private String getKey(Entity<?, ?> entity) {
-		return entity.getId().toString();
+	private String getKey(Entity<?> entity) {
+		return entity.uniqueId();
 	}
 
 	private void handleMessage(EntityManagerFactory message) {
 		emf = message;
 	}
 
-	private void handleMessage(HasEntity<?, ?> message) {
+	private void handleMessage(HasEntity<?> message) {
 		String key = getKey(message.getEntity());
 		ActorRef actor = getActor(key);
 		actor.tell(message, getSelf());

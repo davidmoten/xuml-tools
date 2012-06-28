@@ -65,6 +65,7 @@ public class ClassWriter {
 		writeConstructors(out, info);
 		// writeSignaller(out, info);
 		writeIdMember(out, info);
+		writeUniqueIdMethod(out, info);
 		writeNonIdIndependentAttributeMembers(out, info);
 		writeStateMember(out, info);
 		writeReferenceMembers(out, info);
@@ -157,12 +158,9 @@ public class ClassWriter {
 		} else
 			extension = "";
 
-		Type idType = getIdType(info);
-
-		out.format("public class %s%s implements %s<%1$s,%s> {\n\n",
+		out.format("public class %s%s implements %s<%1$s> {\n\n",
 				info.getJavaClassSimpleName(), extension,
-				info.addType(xuml.tools.jaxb.compiler.Entity.class),
-				info.addType(idType));
+				info.addType(xuml.tools.jaxb.compiler.Entity.class));
 	}
 
 	private Type getIdType(ClassInfo info) {
@@ -279,8 +277,32 @@ public class ClassWriter {
 						member.getFieldName(), member.getFieldName());
 				out.format("%s}\n\n", "        ");
 			}
+			out.format("%s@%s\n", "        ", info.addType(Override.class));
+			out.format("%spublic %s toString(){\n", "        ",
+					info.addType(String.class));
+			out.format("%s%s _s = new %s();\n", "            ",
+					info.addType(StringBuffer.class),
+					info.addType(StringBuffer.class));
+			for (MyPrimaryIdAttribute member : info
+					.getPrimaryIdAttributeMembers()) {
+				out.format("%s_s.append(%s.toString());\n", "            ",
+						member.getFieldName());
+				out.format("%s_s.append(\";\");\n", "            ");
+			}
+			out.format("%sreturn _s.toString();\n", "            ");
+			out.format("%s}\n\n", "        ");
 			out.format("    }\n\n");
 		}
+	}
+
+	private void writeUniqueIdMethod(PrintStream out, ClassInfo info) {
+		out.format("    @%s\n", info.addType(Transient.class));
+		out.format("    @%s\n", info.addType(Override.class));
+		out.format("    public String uniqueId(){\n");
+		out.format("        return %s.class.getName() + \":\" + getId();\n",
+				info.getJavaClassSimpleName());
+		out.format("    }\n\n");
+
 	}
 
 	private void writeIndependentAttributeMember(PrintStream out,

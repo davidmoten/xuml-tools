@@ -42,7 +42,7 @@ public class EntityActor extends UntypedActor {
 			// otherwise perform the event on the entity after it has been
 			// refreshed within the scope of the current entity manager
 			checkTransaction();
-			Entity<?, ?> entity = signal.getEntityEvent().getEntity();
+			Entity<?> entity = signal.getEntityEvent().getEntity();
 			em.refresh(signal.getEntityEvent().getEntity());
 			entity.event(signal.getEntityEvent().getEvent());
 		}
@@ -52,7 +52,7 @@ public class EntityActor extends UntypedActor {
 		this.emf = message;
 	}
 
-	private void commit(EntityCommit<?, ?> message) {
+	private void commit(EntityCommit<?> message) {
 		if (em != null) {
 			tx.commit();
 			em.close();

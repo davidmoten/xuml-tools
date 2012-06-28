@@ -15,7 +15,7 @@ public class EntityMailbox extends UnboundedPriorityMailbox {
 			@Override
 			public int gen(Object message) {
 				if (message instanceof Signal) {
-					if (((Signal<?, ?>) message).toSelf())
+					if (((Signal<?>) message).toSelf())
 						return 0; // high priority
 					else
 						return 20; // low priority

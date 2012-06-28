@@ -1,16 +1,16 @@
 package xuml.tools.jaxb.compiler.message;
 
-public class Signal<T, R> {
-	private final EntityEvent<T, R> entityEvent;
+public class Signal<T> {
+	private final EntityEvent<T> entityEvent;
 	private final boolean toSelf;
 
-	public Signal(EntityEvent<T, R> entityEvent, boolean toSelf) {
+	public Signal(EntityEvent<T> entityEvent, boolean toSelf) {
 		super();
 		this.entityEvent = entityEvent;
 		this.toSelf = toSelf;
 	}
 
-	public EntityEvent<T, R> getEntityEvent() {
+	public EntityEvent<T> getEntityEvent() {
 		return entityEvent;
 	}
 
