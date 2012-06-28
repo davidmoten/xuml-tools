@@ -23,6 +23,7 @@
 		<module>xuml-diagrams</module>
 		<module>xuml-compiler-migrator</module>
 		<module>xuml-model-compiler</module>
+		<module>xuml-model-compiler-test</module>
 		<module>miuml-jaxb</module>
 		<module>xuml-tools-maven-plugin</module>
 	</modules>
