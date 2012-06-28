@@ -22,7 +22,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.moten.david</groupId>
-			<artifactId>xuml-compiler2</artifactId>
+			<artifactId>xuml-model-compiler</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
