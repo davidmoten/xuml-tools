@@ -24,20 +24,17 @@ import xuml.tools.jaxb.compiler.ClassInfo.MyTransition;
  */
 public class CodeGeneratorJava {
 
-	private final String contextPackageName;
 	private final ModeledDomain domain;
 	private final String domainPackageName;
 	private final String domainSchema;
 	private final Domains domains;
 
 	public CodeGeneratorJava(Domains domains, String domainName,
-			String domainPackageName, String domainSchema,
-			String contextPackageName) {
+			String domainPackageName, String domainSchema) {
 		this.domains = domains;
 		this.domain = Util.getModeledDomain(domains, domainName);
 		this.domainPackageName = domainPackageName;
 		this.domainSchema = domainSchema;
-		this.contextPackageName = contextPackageName;
 	}
 
 	public void generate(File destination) {
