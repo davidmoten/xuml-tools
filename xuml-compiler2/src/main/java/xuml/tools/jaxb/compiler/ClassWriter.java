@@ -728,10 +728,11 @@ public class ClassWriter {
 						event.getSimpleClassName());
 				out.format("        }\n\n");
 			}
-			out.format("        // put a commit message on the queue for the entity\n");
-			out.format("        // a priority mailbox should ensure that all signals to self\n");
-			out.format("        // are processed before this commit.\n");
-			out.format("        %s.getInstance().commit(this);\n\n",
+			out.format("        // Put a commit message on the queue for the entity.\n");
+			out.format("        // The priority mailbox should ensure that all signals\n");
+			out.format("        // to self made during processEvent above are processed\n");
+			out.format("        // before this commit.\n");
+			out.format("        %s.getInstance().signalCommit(this);\n\n",
 					info.addType(Signaller.class));
 			out.format("        // reset the current entity\n");
 			out.format(
@@ -740,12 +741,10 @@ public class ClassWriter {
 			out.format("    }\n\n");
 			for (MyEvent event : info.getEvents()) {
 
-				jd(out,
-						"Synchronously perform the change. This method should be considered\nfor internal use only. Use the signal method instead.",
-						"    ");
+				jd(out, "Synchronously perform the change.", "    ");
 				out.format("    @%s\n", info.addType(Transient.class));
 
-				out.format("    void processEvent(Events.%s event){\n",
+				out.format("    private void processEvent(Events.%s event){\n",
 						event.getSimpleClassName());
 				boolean first = true;
 				for (MyTransition transition : info.getTransitions()) {

@@ -39,7 +39,7 @@ public class Signaller {
 		root.tell(new Signal<T>(ee, signalToSelf));
 	}
 
-	public <T, R> void commit(Entity<T> entity) {
+	public <T, R> void signalCommit(Entity<T> entity) {
 		root.tell(new EntityCommit<T>(entity));
 	}
 
