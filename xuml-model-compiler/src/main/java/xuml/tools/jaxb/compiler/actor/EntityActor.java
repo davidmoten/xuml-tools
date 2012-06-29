@@ -10,6 +10,8 @@ import xuml.tools.jaxb.compiler.message.EntityCommit;
 import xuml.tools.jaxb.compiler.message.Signal;
 import xuml.tools.jaxb.compiler.message.StopEntityActor;
 import akka.actor.UntypedActor;
+import akka.event.Logging;
+import akka.event.LoggingAdapter;
 
 public class EntityActor extends UntypedActor {
 
@@ -17,10 +19,16 @@ public class EntityActor extends UntypedActor {
 	private EntityManager em;
 	private EntityTransaction tx;
 	private boolean closed = false;
+	private final LoggingAdapter log;
+
+	public EntityActor() {
+		log = Logging.getLogger(getContext().system(), this);
+	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void onReceive(Object message) throws Exception {
+		log.info("received message " + message.getClass().getName());
 		if (message instanceof EntityManagerFactory)
 			handleMessage((EntityManagerFactory) message);
 		else if (message instanceof Signal) {
@@ -58,6 +66,7 @@ public class EntityActor extends UntypedActor {
 			em.close();
 			em = null;
 			tx = null;
+			log.info("commited");
 		}
 		getSender().tell(new CloseEntityActor(message.getEntity()));
 		closed = true;
@@ -68,6 +77,7 @@ public class EntityActor extends UntypedActor {
 			em = emf.createEntityManager();
 			tx = em.getTransaction();
 			tx.begin();
+			log.info("started transaction");
 		}
 	}
 }

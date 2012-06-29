@@ -1,5 +1,7 @@
 package xuml.tools.jaxb.compiler.actor;
 
+import javax.persistence.EntityManagerFactory;
+
 import xuml.tools.jaxb.compiler.message.EntityCommit;
 import xuml.tools.jaxb.compiler.message.Signal;
 import akka.actor.ActorSystem;
@@ -13,7 +15,7 @@ import com.typesafe.config.Config;
  * Prioritizes mail for an {@link EntityActor}.
  * </p>
  * <ul>
- * <li>High priority: Signal to self</li>
+ * <li>High priority: Signal to self,EntityManagerFactory</li>
  * <li>Medium priority: Commit</li>
  * <li>Low priority: Signal to other</li>
  * <li>Lowest priority: other messages (like StopEntityActor)</li>
@@ -28,7 +30,9 @@ public class EntityMailbox extends UnboundedPriorityMailbox {
 		super(new PriorityGenerator() {
 			@Override
 			public int gen(Object message) {
-				if (message instanceof Signal) {
+				if (message instanceof EntityManagerFactory)
+					return 0;
+				else if (message instanceof Signal) {
 					if (((Signal<?>) message).toSelf())
 						return 0; // high priority
 					else
