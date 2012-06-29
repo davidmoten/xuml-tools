@@ -1,5 +1,7 @@
 package xuml.tools.jaxb.compiler.actor;
 
+import javax.persistence.EntityManagerFactory;
+
 import xuml.tools.jaxb.compiler.Entity;
 import xuml.tools.jaxb.compiler.Event;
 import xuml.tools.jaxb.compiler.message.EntityCommit;
@@ -31,6 +33,16 @@ public class Signaller {
 	}
 
 	private Signaller() {
+	}
+
+	/**
+	 * Sets the entity manager factory for all database interaction managed by
+	 * the signaller.
+	 * 
+	 * @param emf
+	 */
+	public void setEntityManagerFactory(EntityManagerFactory emf) {
+		root.tell(emf);
 	}
 
 	public <T, R> void signal(Entity<T> entity, Event<T> event) {

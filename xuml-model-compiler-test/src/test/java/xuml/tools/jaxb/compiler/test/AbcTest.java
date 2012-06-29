@@ -8,6 +8,7 @@ import moten.david.util.database.derby.DerbyUtil;
 
 import org.junit.Test;
 
+import xuml.tools.jaxb.compiler.actor.Signaller;
 import abc.A;
 import abc.A.AId;
 import abc.A.Events.Create;
@@ -22,6 +23,8 @@ public class AbcTest {
 		DerbyUtil.disableDerbyLog();
 		EntityManagerFactory emf = Persistence
 				.createEntityManagerFactory("abc");
+		Signaller.getInstance().setEntityManagerFactory(emf);
+
 		EntityManager em = emf.createEntityManager();
 		A.setBehaviourFactory(new ABehaviourFactory() {
 			@Override
@@ -50,10 +53,13 @@ public class AbcTest {
 		a.event(create);
 		em.persist(a);
 		em.close();
+
+		a.signal(new A.Events.SomethingDone("12a"));
 	}
 
 	@Test(expected = NullPointerException.class)
 	public void testBehaviourNotSetForAThrowsException() {
+		A.setBehaviourFactory(null);
 		new A();
 	}
 }
