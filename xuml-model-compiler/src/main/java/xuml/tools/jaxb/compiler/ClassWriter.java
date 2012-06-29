@@ -4,6 +4,7 @@ import static xuml.tools.jaxb.compiler.Util.upperFirst;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -181,6 +182,7 @@ public class ClassWriter {
 		jd(out, BEHAVIOUR_COMMENT, "    ");
 		String behaviourTypeName = info.addType(info
 				.getBehaviourFullClassName());
+		out.format("    @%s", info.addType(Transient.class));
 		out.format("    private %s behaviour;\n\n", behaviourTypeName);
 
 		jd(out, "Constructor using BehaviourFactory.", "    ");
@@ -245,8 +247,9 @@ public class ClassWriter {
 					info.getEmbeddedIdAttributeName());
 			info.addType(Embeddable.class);
 			out.format("    @Embeddable\n");
-			out.format("    public static class %s {\n\n",
-					info.getEmbeddedIdSimpleClassName());
+			out.format("    public static class %s implements %s {\n\n",
+					info.getEmbeddedIdSimpleClassName(),
+					info.addType(Serializable.class));
 			for (MyPrimaryIdAttribute member : info
 					.getPrimaryIdAttributeMembers()) {
 				info.addType(Column.class);
@@ -255,7 +258,7 @@ public class ClassWriter {
 							member.getColumnName());
 				else {
 					out.format(
-							"        @Column(name=\"%s\",insertable=true,updatable=true)\n",
+							"        @Column(name=\"%s\",insertable=false,updatable=false)\n",
 							member.getColumnName());
 				}
 				out.format("%sprivate %s %s;\n\n", "        ",
@@ -467,7 +470,7 @@ public class ClassWriter {
 				out.format(",\n");
 			first = false;
 			out.format(
-					"        @JoinColumn(name=\"%s\",referencedColumnName=\"%s\",nullable=%s)",
+					"        @JoinColumn(name=\"%s\",referencedColumnName=\"%s\",nullable=%s,insertable=false,updatable=false)",
 					col.getThisColumnName(), col.getOtherColumnName(), nullable);
 		}
 		out.format("})\n");
