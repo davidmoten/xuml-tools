@@ -47,7 +47,7 @@ import com.google.common.base.Preconditions;
 
 public class ClassWriter {
 
-	private static final String BEHAVIOUR_COMMENT = "All actions like onEntry actions and defined operations are performed by this Behaviour class.";
+	private static final String BEHAVIOUR_COMMENT = "All actions like onEntry actions and defined\noperations are performed by this Behaviour class.";
 	private static final String STATE_COMMENT = "For internal use only by the state machine but is persisted by the jpa provider.";
 	private static final String NO_IDENTIFIERS = "no identifiers";
 	public static boolean modelInheritanceWithZeroOneToOneAssociations = true;
@@ -180,19 +180,28 @@ public class ClassWriter {
 		jd(out, "No argument constructor required by JPA.", "    ");
 		out.format("    public %s(){\n", info.getJavaClassSimpleName());
 		out.format("        //JPA requires no-arg constructor\n");
-		if (hasBehaviour(info))
+		if (hasBehaviour(info)) {
+			out.format("        %s.checkNotNull(_behaviourFactory,\n",
+					info.addType(Preconditions.class));
+			out.format(
+					"            \"static behaviour factory needs to be set on \" + %s.class.getName());\n",
+					info.getJavaClassSimpleName());
 			out.format("        _behaviour = _behaviourFactory.create(this);\n");
+		}
 		out.format("    }\n\n");
 		if (hasBehaviour(info)) {
 			String factoryTypeName = info.addType(info
 					.getBehaviourFactoryFullClassName());
-			jd(out, BEHAVIOUR_COMMENT, "    ");
+
+			jd(out, "If behaviour is not explicitly specified then the\n"
+					+ "behaviour factory is used to create behaviour.", "    ");
 			String behaviourTypeName = info.addType(info
 					.getBehaviourFullClassName());
 			out.format("    @%s\n", info.addType(Transient.class));
 			out.format("    private static %s _behaviourFactory;\n\n",
 					factoryTypeName);
 
+			jd(out, BEHAVIOUR_COMMENT, "    ");
 			out.format("    @%s\n", info.addType(Transient.class));
 			out.format("    private %s _behaviour;\n\n", behaviourTypeName);
 
@@ -201,8 +210,12 @@ public class ClassWriter {
 					info.getJavaClassSimpleName(), behaviourTypeName);
 			out.format("        this._behaviour = behaviour;\n");
 			out.format("    }\n\n");
+
 			// TODO optionallly add Guice injection
 			// out.format("    @%s\n", info.addType(Inject.class));
+			jd(out, "Sets the BehaviourFactory for all instances of\n"
+					+ "this class. It will only be used when Behaviour\n"
+					+ "is not explicitly provided in the constructor.", "    ");
 			out.format(
 					"    public static void setBehaviourFactory(%s factory){\n",
 					factoryTypeName);
@@ -699,8 +712,11 @@ public class ClassWriter {
 		out.format("    @%s\n", info.addType(Override.class));
 		out.format("    public void signal(%s<%s> event){\n",
 				info.addType(Event.class), info.getJavaClassSimpleName());
-		out.format("        %s.getInstance().signal(this,event);\n",
-				info.addType(Signaller.class));
+		if (hasBehaviour(info))
+			out.format("        %s.getInstance().signal(this,event);\n",
+					info.addType(Signaller.class));
+		else
+			out.format("        //no behaviour for this class\n");
 		out.format("    }\n\n");
 		out.format("    @%s\n", info.addType(Transient.class));
 		out.format("    @%s\n", info.addType(Override.class));

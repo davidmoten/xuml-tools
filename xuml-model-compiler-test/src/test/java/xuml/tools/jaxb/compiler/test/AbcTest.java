@@ -6,6 +6,8 @@ import moten.david.util.database.derby.DerbyUtil;
 
 import org.junit.Test;
 
+import abc.A;
+
 public class AbcTest {
 
 	@Test
@@ -15,8 +17,8 @@ public class AbcTest {
 
 	}
 
-	private static class ABehaviourFactory {
-
+	@Test(expected = NullPointerException.class)
+	public void testBehaviourNotSetForAThrowsException() {
+		new A();
 	}
-
 }
