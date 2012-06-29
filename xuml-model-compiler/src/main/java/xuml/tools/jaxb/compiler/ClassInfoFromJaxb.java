@@ -16,11 +16,11 @@ import miuml.jaxb.AsymmetricPerspective;
 import miuml.jaxb.Attribute;
 import miuml.jaxb.BinaryAssociation;
 import miuml.jaxb.Class;
+import miuml.jaxb.CreationEvent;
 import miuml.jaxb.Event;
 import miuml.jaxb.Generalization;
 import miuml.jaxb.IdentifierAttribute;
 import miuml.jaxb.IndependentAttribute;
-import miuml.jaxb.LocalEffectiveSignalingEvent;
 import miuml.jaxb.NativeAttribute;
 import miuml.jaxb.Reference;
 import miuml.jaxb.ReferentialAttribute;
@@ -273,16 +273,14 @@ public class ClassInfoFromJaxb extends ClassInfo {
 		for (JAXBElement<? extends Event> element : cls.getLifecycle()
 				.getEvent()) {
 			Event event = element.getValue();
-			if (event instanceof LocalEffectiveSignalingEvent) {
-				LocalEffectiveSignalingEvent ev = (LocalEffectiveSignalingEvent) event;
-				List<MyParameter> parameters = Lists.newArrayList();
-				for (StateModelParameter p : ev.getStateModelParameter()) {
-					parameters.add(new MyParameter(Util.toJavaIdentifier(p
-							.getName()), lookups.getJavaType(p.getType())));
-				}
-				list.add(new MyEvent(ev.getName(), Util.toClassSimpleName(ev
-						.getName()), parameters));
+			List<MyParameter> parameters = Lists.newArrayList();
+			for (StateModelParameter p : event.getStateModelParameter()) {
+				parameters.add(new MyParameter(Util.toJavaIdentifier(p
+						.getName()), lookups.getJavaType(p.getType())));
 			}
+			MyEvent myEvent = new MyEvent(event.getName(),
+					Util.toClassSimpleName(event.getName()), parameters);
+			list.add(myEvent);
 		}
 		return list;
 	}
@@ -308,7 +306,21 @@ public class ClassInfoFromJaxb extends ClassInfo {
 					transition.getEventID().toString(), transition.getState(),
 					transition.getDestination()));
 		}
+		CreationEvent creation = getCreationEvent();
+		if (creation != null) {
+			list.add(new MyTransition(getEventName(creation.getID()), creation
+					.getID().toString(), null, creation.getState()));
+		}
 		return list;
+	}
+
+	private CreationEvent getCreationEvent() {
+		for (JAXBElement<? extends Event> element : cls.getLifecycle()
+				.getEvent()) {
+			if (element.getValue() instanceof CreationEvent)
+				return (CreationEvent) element.getValue();
+		}
+		return null;
 	}
 
 	private String getEventName(BigInteger eventId) {

@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import abc.A;
 import abc.A.AId;
+import abc.A.Events.Create;
 import abc.A.Events.SomethingDone;
 import abc.behaviour.ABehaviour;
 import abc.behaviour.ABehaviourFactory;
@@ -17,7 +18,7 @@ import abc.behaviour.ABehaviourFactory;
 public class AbcTest {
 
 	@Test
-	public void test() {
+	public void testCreateEntityManagerFactoryAndCreateAndPersistOneEntity() {
 		DerbyUtil.disableDerbyLog();
 		EntityManagerFactory emf = Persistence
 				.createEntityManagerFactory("abc");
@@ -31,14 +32,22 @@ public class AbcTest {
 							SomethingDone event) {
 						entity.setAThree("done something");
 					}
+
+					@Override
+					public void onEntryHasStarted(A entity, Create event) {
+						AId id = new AId();
+						id.setAOne(event.getAOne());
+						id.setATwo(event.getATwo());
+						entity.setId(id);
+						entity.setAThree(event.getAccountNumber());
+					}
 				};
 			}
 		});
 		A a = new A();
-		AId id = new AId();
-		id.setAOne("value1");
-		id.setATwo("value2");
-		a.setId(id);
+
+		Create create = new A.Events.Create("value1", "value2", "1234");
+		a.event(create);
 		em.persist(a);
 		em.close();
 	}

@@ -79,7 +79,6 @@ public class ClassWriter {
 		writeEventsStart(out, info);
 		writeEvents(out, info);
 		writeEventCallMethods(out, info);
-		writeEventsFinish(out, info);
 
 		writeClassClose(out);
 		ByteArrayOutputStream headerBytes = new ByteArrayOutputStream();
@@ -569,11 +568,15 @@ public class ClassWriter {
 			StringBuilder constructor = new StringBuilder();
 			constructor.append("            public "
 					+ event.getSimpleClassName() + "(");
+			boolean first = true;
 			for (MyParameter p : event.getParameters()) {
 				out.format("            private final %s %s;\n",
 						info.addType(p.getType()), p.getFieldName());
+				if (!first)
+					constructor.append(", ");
 				constructor.append(info.addType(p.getType()) + " "
 						+ p.getFieldName());
+				first = false;
 			}
 			constructor.append("){\n");
 			constructor.append(constructorBody);
@@ -745,7 +748,9 @@ public class ClassWriter {
 			out.format(
 					"        %s.getInstance().getInfo().setCurrentEntity(null);\n",
 					info.addType(Signaller.class));
-			out.format("    }\n\n");
+		}
+		out.format("    }\n\n");
+		if (hasBehaviour(info)) {
 			for (MyEvent event : info.getEvents()) {
 
 				jd(out, "Synchronously perform the change.", "    ");
@@ -762,9 +767,14 @@ public class ClassWriter {
 						else
 							out.format("        else if");
 						first = false;
-						out.format(" (state.equals(State.%s.toString())){\n",
-								info.getStateAsJavaIdentifier(transition
-										.getFromState()));
+						if (transition.getFromState() == null)
+							// handle creation state
+							out.format(" (state==null){\n");
+						else
+							out.format(
+									" (state.equals(State.%s.toString())){\n",
+									info.getStateAsJavaIdentifier(transition
+											.getFromState()));
 						out.format("            state=State.%s.toString();\n",
 								info.getStateAsJavaIdentifier(transition
 										.getToState()));
@@ -778,12 +788,9 @@ public class ClassWriter {
 						out.format("        }\n");
 					}
 				}
+				out.format("    }\n");
 			}
 		}
-	}
-
-	private void writeEventsFinish(PrintStream out, ClassInfo info) {
-		out.format("    }\n\n");
 	}
 
 	private void writeIndependentAttributeMember(PrintStream out,

@@ -335,6 +335,10 @@
 					<State Name="Done Something Else" />
 					<CreationEvent Name="Create" ID="1"
 						State="Has Started">
+						<StateModelParameter Name="A one"
+							Type="string" />
+							<StateModelParameter Name="A two"
+							Type="string" />
 						<StateModelParameter Name="Account number"
 							Type="Bank Card Account Number" />
 					</CreationEvent>
