@@ -1,5 +1,8 @@
 package xuml.tools.jaxb.compiler.actor;
 
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import xuml.tools.jaxb.compiler.Entity;
 
 public class Info {
@@ -12,6 +15,26 @@ public class Info {
 
 	public void setCurrentEntity(Entity<?> entity) {
 		this.currentEntity = entity;
+	}
+
+	private AtomicInteger counter = new AtomicInteger(0);
+
+	public AtomicInteger getCounter() {
+		return counter;
+	}
+
+	public void setCounter(AtomicInteger counter) {
+		this.counter = counter;
+	}
+
+	private UUID id;
+
+	public UUID getId() {
+		return id;
+	}
+
+	public void setId(UUID id) {
+		this.id = id;
 	}
 
 }

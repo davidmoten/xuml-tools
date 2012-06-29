@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -41,6 +42,7 @@ import xuml.tools.jaxb.compiler.ClassInfo.MyPrimaryIdAttribute;
 import xuml.tools.jaxb.compiler.ClassInfo.MyReferenceMember;
 import xuml.tools.jaxb.compiler.ClassInfo.MySubclassRole;
 import xuml.tools.jaxb.compiler.ClassInfo.MyTransition;
+import xuml.tools.jaxb.compiler.actor.Info;
 import xuml.tools.jaxb.compiler.actor.Signaller;
 
 import com.google.common.base.Preconditions;
@@ -727,9 +729,18 @@ public class ClassWriter {
 				info.addType(Event.class), info.getJavaClassSimpleName());
 		if (hasBehaviour(info)) {
 			out.format("        // set the current entity in a ThreadLocal variable so we can detect signals to self\n");
-			out.format(
-					"        %s.getInstance().getInfo().setCurrentEntity(this);\n\n",
+			out.format("        %s info = %s.getInstance().getInfo();\n",
+					info.addType(Info.class), info.addType(Signaller.class));
+			out.format("        %s signaller = %s.getInstance();\n",
+					info.addType(Signaller.class),
 					info.addType(Signaller.class));
+			out.format("        info.setCurrentEntity(this);\n\n",
+					info.addType(Signaller.class));
+			out.format("        if (info.getCounter().get()==0){\n");
+			out.format("            info.setId(%s.randomUUID());\n",
+					info.addType(UUID.class));
+			out.format("        }\n");
+			out.format("        info.getCounter().incrementAndGet();\n\n");
 			out.format("        // process the event\n");
 			for (MyEvent event : info.getEvents()) {
 				out.format("        if (event instanceof Events.%s){\n",
@@ -742,12 +753,12 @@ public class ClassWriter {
 			out.format("        // The priority mailbox should ensure that all signals\n");
 			out.format("        // to self made during processEvent above are processed\n");
 			out.format("        // before this commit.\n");
-			out.format("        %s.getInstance().signalCommit(this);\n\n",
-					info.addType(Signaller.class));
+			out.format("        info.getCounter().decrementAndGet();\n");
+			out.format("        if (info.getCounter().get()==0) {\n");
+			out.format("            signaller.signalCommit(this);\n");
+			out.format("        }\n");
 			out.format("        // reset the current entity\n");
-			out.format(
-					"        %s.getInstance().getInfo().setCurrentEntity(null);\n",
-					info.addType(Signaller.class));
+			out.format("        info.setCurrentEntity(null);\n");
 		}
 		out.format("    }\n\n");
 		if (hasBehaviour(info)) {

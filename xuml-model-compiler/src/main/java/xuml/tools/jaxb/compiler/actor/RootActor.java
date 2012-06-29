@@ -68,7 +68,7 @@ public class RootActor extends UntypedActor {
 			public Actor create() {
 				return new EntityActor();
 			}
-		}).withDispatcher("entity-dispatcher"));
+			// }).withDispatcher("entity-dispatcher"));
+		}));
 	}
-
 }
