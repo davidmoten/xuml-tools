@@ -80,11 +80,6 @@ public class CodeGeneratorJava {
 				domainSchema, lookups);
 	}
 
-	//
-	// private void createObjectFactory(System system2, File destination) {
-	//
-	// }
-	//
 	private void createBehaviourInterface(Class cls, File destination) {
 
 		ClassInfo info = createClassInfo(cls);
@@ -105,12 +100,13 @@ public class CodeGeneratorJava {
 			for (MyTransition transition : info.getTransitions()) {
 				// constraint is no event overloading
 				if (transition.getEventName().equals(event.getName())) {
-					out.format("    void onEntry%s(%s event);\n\n", Util
-							.upperFirst(Util.toJavaIdentifier(transition
+					out.format("    void onEntry%s(%s entity, %s event);\n\n",
+							Util.upperFirst(Util.toJavaIdentifier(transition
 									.getToState())), types.addType(info
-							.getClassFullName()
-							+ ".Events."
-							+ event.getSimpleClassName()));
+									.getClassFullName()), types.addType(info
+									.getClassFullName()
+									+ ".Events."
+									+ event.getSimpleClassName()));
 				}
 			}
 		}

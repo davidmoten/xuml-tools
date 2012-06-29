@@ -770,7 +770,7 @@ public class ClassWriter {
 										.getToState()));
 						out.format("            synchronized(this) {\n");
 						out.format(
-								"                _behaviour.onEntry%s(event);\n",
+								"                _behaviour.onEntry%s(this, event);\n",
 								Util.upperFirst(Util
 										.toJavaIdentifier(transition
 												.getToState())));
