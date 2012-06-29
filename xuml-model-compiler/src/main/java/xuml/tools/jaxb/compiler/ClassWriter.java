@@ -177,56 +177,44 @@ public class ClassWriter {
 
 	private void writeConstructors(PrintStream out, ClassInfo info) {
 		// constructor
-		String factoryTypeName = info.addType(info
-				.getBehaviourFactoryFullClassName());
-		jd(out, BEHAVIOUR_COMMENT, "    ");
-		String behaviourTypeName = info.addType(info
-				.getBehaviourFullClassName());
-		out.format("    @%s", info.addType(Transient.class));
-		out.format("    private %s behaviour;\n\n", behaviourTypeName);
-
-		jd(out, "Constructor using BehaviourFactory.", "    ");
-		out.format("    public %s(%s behaviourFactory){\n",
-				info.getJavaClassSimpleName(), factoryTypeName);
-		out.format("        this.behaviour = behaviourFactory.create(this);\n");
-		out.format("    }\n\n");
 		jd(out, "No argument constructor required by JPA.", "    ");
 		out.format("    public %s(){\n", info.getJavaClassSimpleName());
 		out.format("        //JPA requires no-arg constructor\n");
+		if (hasBehaviour(info))
+			out.format("        _behaviour = _behaviourFactory.create(this);\n");
 		out.format("    }\n\n");
+		if (hasBehaviour(info)) {
+			String factoryTypeName = info.addType(info
+					.getBehaviourFactoryFullClassName());
+			jd(out, BEHAVIOUR_COMMENT, "    ");
+			String behaviourTypeName = info.addType(info
+					.getBehaviourFullClassName());
+			out.format("    @%s\n", info.addType(Transient.class));
+			out.format("    private static %s _behaviourFactory;\n\n",
+					factoryTypeName);
 
-		// TODO optionallly add Guice injection
-		// out.format("    @%s\n", info.addType(Inject.class));
-		out.format("    public void setBehaviour(%s behaviourFactory){\n",
-				factoryTypeName);
-		out.format("        this.behaviour = behaviourFactory.create(this);\n");
-		out.format("    }\n\n");
+			out.format("    @%s\n", info.addType(Transient.class));
+			out.format("    private %s _behaviour;\n\n", behaviourTypeName);
+
+			jd(out, "Constructor using Behaviour.", "    ");
+			out.format("    public %s(%s behaviour){\n",
+					info.getJavaClassSimpleName(), behaviourTypeName);
+			out.format("        this._behaviour = behaviour;\n");
+			out.format("    }\n\n");
+			// TODO optionallly add Guice injection
+			// out.format("    @%s\n", info.addType(Inject.class));
+			out.format(
+					"    public static void setBehaviourFactory(%s factory){\n",
+					factoryTypeName);
+			out.format("        _behaviourFactory = factory;\n");
+			out.format("    }\n\n");
+		}
+
 	}
 
-	// private void writeSignaller(PrintStream out, ClassInfo info) {
-	// jd(out,
-	// "Used for signalling instances of "
-	// + info.getJavaClassSimpleName(), "    ");
-	// String signaller = info.addType(Signaller.class);
-	// out.format(
-	// "    private static %3$s<%1$s,%2$s> signaller =\n"
-	// +
-	// "        new %3$s<%1$s,%2$s>(%4$s.getEntityManagerFactory(),%1$s.class);\n\n",
-	// info.addType(info.getJavaClassSimpleName()),
-	// info.addType(info.getPrimaryIdAttributeMembers().get(0)
-	// .getType()), signaller,
-	// info.addType(info.getContextPackageName() + ".Context"));
-	//
-	// jd(out, "Find the " + info.getJavaClassSimpleName()
-	// + " with id and send the event to it as a signal.", "    ");
-	// out.format(
-	// "    public static void signal(%s id, Event<%s> event){\n",
-	// info.addType(info.getPrimaryIdAttributeMembers().get(0)
-	// .getType()),
-	// info.addType(info.getJavaClassSimpleName()));
-	// out.format("        signaller.signal(id,event);\n");
-	// out.format("    }\n\n");
-	// }
+	private boolean hasBehaviour(ClassInfo info) {
+		return info.getEvents().size() > 0;
+	}
 
 	private boolean hasEmbeddedId() {
 		return info.getPrimaryIdAttributeMembers().size() > 1;
@@ -718,7 +706,7 @@ public class ClassWriter {
 		out.format("    @%s\n", info.addType(Override.class));
 		out.format("    public void event(%s<%s> event){\n",
 				info.addType(Event.class), info.getJavaClassSimpleName());
-		if (info.getEvents().size() > 0) {
+		if (hasBehaviour(info)) {
 			out.format("        // set the current entity in a ThreadLocal variable so we can detect signals to self\n");
 			out.format(
 					"        %s.getInstance().getInfo().setCurrentEntity(this);\n\n",
@@ -766,7 +754,7 @@ public class ClassWriter {
 										.getToState()));
 						out.format("            synchronized(this) {\n");
 						out.format(
-								"                behaviour.onEntry%s(event);\n",
+								"                _behaviour.onEntry%s(event);\n",
 								Util.upperFirst(Util
 										.toJavaIdentifier(transition
 												.getToState())));

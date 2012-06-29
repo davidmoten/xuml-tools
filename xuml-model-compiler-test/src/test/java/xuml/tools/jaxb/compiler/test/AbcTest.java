@@ -12,6 +12,11 @@ public class AbcTest {
 	public void test() {
 		DerbyUtil.disableDerbyLog();
 		Persistence.createEntityManagerFactory("abc");
+
+	}
+
+	private static class ABehaviourFactory {
+
 	}
 
 }

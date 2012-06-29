@@ -87,6 +87,10 @@ public class CodeGeneratorJava {
 	//
 	private void createBehaviourInterface(Class cls, File destination) {
 
+		ClassInfo info = createClassInfo(cls);
+		if (info.getEvents().size() == 0)
+			return;
+
 		destination.mkdirs();
 		// add operations, performOnEntry methods
 		File file = new File(destination, getClassBehaviourFilename(cls));
@@ -96,7 +100,6 @@ public class CodeGeneratorJava {
 		PrintStream out = new PrintStream(bytes);
 		String pkg = getPackage(cls);
 		out.format("public interface %sBehaviour {\n\n", cls.getName());
-		ClassInfo info = createClassInfo(cls);
 
 		for (MyEvent event : info.getEvents()) {
 			for (MyTransition transition : info.getTransitions()) {
@@ -125,6 +128,9 @@ public class CodeGeneratorJava {
 	private void createBehaviourFactoryInterface(Class cls, File destination) {
 		TypeRegister types = new TypeRegister();
 		ClassInfo info = createClassInfo(cls);
+		if (info.getEvents().size() == 0)
+			return;
+
 		String java = "package " + getPackage(cls) + ".behaviour;\n\n";
 		java += "IMPORTS_HERE\n";
 		java += "public interface " + cls.getName() + "BehaviourFactory {\n\n";
