@@ -54,7 +54,7 @@ public class EntityActor extends UntypedActor {
 			getSender().tell(new CloseEntityActor(signal.getEntity()));
 			// only after successful commit do we send the signals to other
 			// entities made during onEntry procedure.
-			entity.entityHelper().sendQueuedSignals();
+			entity.helper().sendQueuedSignals();
 			closed = true;
 		}
 	}

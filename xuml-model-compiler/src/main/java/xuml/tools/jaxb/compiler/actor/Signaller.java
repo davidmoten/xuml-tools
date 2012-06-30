@@ -46,8 +46,7 @@ public class Signaller {
 
 	public <T, R> void signal(Entity<T> entity, Event<T> event) {
 		if (signalInitiatedFromEvent()) {
-			info.get().getCurrentEntity().entityHelper()
-					.queueSignal(entity, event);
+			info.get().getCurrentEntity().helper().queueSignal(entity, event);
 		} else {
 			root.tell(new Signal<T>(entity, event));
 		}

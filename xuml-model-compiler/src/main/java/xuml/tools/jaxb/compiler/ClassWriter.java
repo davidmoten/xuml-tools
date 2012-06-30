@@ -236,7 +236,7 @@ public class ClassWriter {
 		out.format("    private final %s _helper = new %s(this);\n\n",
 				info.addType(EntityHelper.class),
 				info.addType(EntityHelper.class));
-		out.format("    public %s entityHelper() {\n",
+		out.format("    public %s helper() {\n",
 				info.addType(EntityHelper.class));
 		out.format("        return _helper;\n");
 		out.format("    }\n\n");
