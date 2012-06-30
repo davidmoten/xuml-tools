@@ -8,11 +8,9 @@ import xuml.tools.jaxb.compiler.Entity;
 import xuml.tools.jaxb.compiler.message.CloseEntityActor;
 import xuml.tools.jaxb.compiler.message.Signal;
 import xuml.tools.jaxb.compiler.message.StopEntityActor;
-import akka.actor.Actor;
 import akka.actor.ActorRef;
 import akka.actor.Props;
 import akka.actor.UntypedActor;
-import akka.actor.UntypedActorFactory;
 
 import com.google.common.collect.Maps;
 
@@ -61,14 +59,6 @@ public class RootActor extends UntypedActor {
 	}
 
 	private ActorRef createActor() {
-		return getContext().actorOf(new Props(new UntypedActorFactory() {
-			private static final long serialVersionUID = 2036603134850456388L;
-
-			@Override
-			public Actor create() {
-				return new EntityActor();
-			}
-			// }).withDispatcher("entity-dispatcher"));
-		}));
+		return getContext().actorOf(new Props(EntityActor.class));
 	}
 }

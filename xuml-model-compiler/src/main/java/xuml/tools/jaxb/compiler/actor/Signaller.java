@@ -9,11 +9,6 @@ import xuml.tools.jaxb.compiler.message.Signal;
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
-import akka.dispatch.Await;
-import akka.dispatch.Future;
-import akka.pattern.Patterns;
-import akka.util.Duration;
-import akka.util.Timeout;
 
 public class Signaller {
 
@@ -69,14 +64,7 @@ public class Signaller {
 		return info.get();
 	}
 
-	public void gracefulStop() {
-		// TODO figure out how to gracefully stop without waiting
-		Timeout timeout = new Timeout(Duration.parse("5 seconds"));
-		Future<Object> future = Patterns.ask(root, "stop", timeout);
-		try {
-			String result = (String) Await.result(future, timeout.duration());
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+	public void stop() {
+		actorSystem.shutdown();
 	}
 }

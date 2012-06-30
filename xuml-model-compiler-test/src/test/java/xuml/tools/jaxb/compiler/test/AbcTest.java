@@ -59,7 +59,8 @@ public class AbcTest {
 
 		a.signal(new A.Events.SomethingDone("12a"));
 		a.signal(new A.Events.SomethingDone("13a"));
-		Signaller.getInstance().gracefulStop();
+		Thread.sleep(5000);
+		Signaller.getInstance().stop();
 
 	}
 

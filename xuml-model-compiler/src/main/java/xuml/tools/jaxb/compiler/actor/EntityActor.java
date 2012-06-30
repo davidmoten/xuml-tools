@@ -15,8 +15,6 @@ import akka.event.LoggingAdapter;
 public class EntityActor extends UntypedActor {
 
 	private EntityManagerFactory emf;
-	private EntityManager em;
-	private EntityTransaction tx;
 	private boolean closed = false;
 	private final LoggingAdapter log;
 
@@ -46,11 +44,19 @@ public class EntityActor extends UntypedActor {
 		} else if (emf != null) {
 			// otherwise perform the event on the entity after it has been
 			// refreshed within the scope of the current entity manager
-			startTransaction();
 			Entity<?> entity = signal.getEntity();
+			EntityManager em = emf.createEntityManager();
+			EntityTransaction tx = em.getTransaction();
+			tx.begin();
+			log.info("started transaction");
 			em.merge(signal.getEntity());
+			log.info("merged");
+			log.info("calling event "
+					+ signal.getEvent().getClass().getSimpleName());
 			entity.event(signal.getEvent());
-			commit();
+			tx.commit();
+			log.info("commited");
+			em.close();
 			getSender().tell(new CloseEntityActor(signal.getEntity()));
 			// only after successful commit do we send the signals to other
 			// entities made during onEntry procedure.
@@ -63,22 +69,4 @@ public class EntityActor extends UntypedActor {
 		this.emf = message;
 	}
 
-	private void commit() {
-		if (em != null) {
-			tx.commit();
-			em.close();
-			em = null;
-			tx = null;
-			log.info("commited");
-		}
-	}
-
-	private void startTransaction() {
-		if (em == null) {
-			em = emf.createEntityManager();
-			tx = em.getTransaction();
-			tx.begin();
-			log.info("started transaction");
-		}
-	}
 }
