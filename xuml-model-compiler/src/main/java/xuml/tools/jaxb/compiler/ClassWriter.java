@@ -712,17 +712,20 @@ public class ClassWriter {
 
 		out.format("    @%s\n", info.addType(Transient.class));
 		out.format("    @%s\n", info.addType(Override.class));
-		out.format("    public void signal(%s<%s> event){\n",
-				info.addType(Event.class), info.getJavaClassSimpleName());
+		out.format("    public %s signal(%s<%s> event){\n",
+				info.getJavaClassSimpleName(), info.addType(Event.class),
+				info.getJavaClassSimpleName());
 		if (hasBehaviour(info))
 			out.format("        _helper.signal(event);\n");
 		else
 			out.format("        //no behaviour for this class\n");
+		out.format("        return this;\n");
 		out.format("    }\n\n");
 		out.format("    @%s\n", info.addType(Transient.class));
 		out.format("    @%s\n", info.addType(Override.class));
-		out.format("    public void event(%s<%s> event){\n\n",
-				info.addType(Event.class), info.getJavaClassSimpleName());
+		out.format("    public %s event(%s<%s> event){\n\n",
+				info.getJavaClassSimpleName(), info.addType(Event.class),
+				info.getJavaClassSimpleName());
 		if (hasBehaviour(info)) {
 			out.format("        _helper.beforeEvent();\n\n");
 			out.format("        // process the event\n");
@@ -735,6 +738,7 @@ public class ClassWriter {
 			}
 			out.format("        _helper.afterEvent();\n");
 		}
+		out.format("        return this;\n");
 		out.format("    }\n\n");
 		if (hasBehaviour(info)) {
 			for (MyEvent event : info.getEvents()) {

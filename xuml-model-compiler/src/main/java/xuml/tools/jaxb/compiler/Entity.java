@@ -15,14 +15,14 @@ public interface Entity<T> {
 	 * 
 	 * @param event
 	 */
-	void signal(Event<T> event);
+	T signal(Event<T> event);
 
 	/**
 	 * Synchronously signal an entity.
 	 * 
 	 * @param event
 	 */
-	void event(Event<T> event);
+	T event(Event<T> event);
 
 	EntityHelper helper();
 

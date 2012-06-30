@@ -55,8 +55,7 @@ public class AbcTest {
 
 		Create create = new A.Events.Create("value1", "value2", "1234");
 
-		A a = new A();
-		a.event(create);
+		A a = new A().event(create);
 		em.persist(a);
 		em.close();
 
