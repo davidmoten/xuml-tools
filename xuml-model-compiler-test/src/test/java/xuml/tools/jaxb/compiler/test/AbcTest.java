@@ -19,13 +19,13 @@ import abc.behaviour.ABehaviourFactory;
 public class AbcTest {
 
 	@Test
-	public void testCreateEntityManagerFactoryAndCreateAndPersistOneEntity() {
+	public void testCreateEntityManagerFactoryAndCreateAndPersistOneEntity()
+			throws InterruptedException {
 		DerbyUtil.disableDerbyLog();
 		EntityManagerFactory emf = Persistence
 				.createEntityManagerFactory("abc");
 		Signaller.getInstance().setEntityManagerFactory(emf);
 
-		EntityManager em = emf.createEntityManager();
 		A.setBehaviourFactory(new ABehaviourFactory() {
 			@Override
 			public ABehaviour create(A cls) {
@@ -34,6 +34,7 @@ public class AbcTest {
 					public void onEntryDoneSomething(A entity,
 							SomethingDone event) {
 						entity.setAThree("done something");
+						System.out.println(event.getTheCount());
 					}
 
 					@Override
@@ -43,18 +44,23 @@ public class AbcTest {
 						id.setATwo(event.getATwo());
 						entity.setId(id);
 						entity.setAThree(event.getAccountNumber());
+						System.out.println("created");
 					}
 				};
 			}
 		});
-		A a = new A();
+		EntityManager em = emf.createEntityManager();
 
+		A a = new A();
 		Create create = new A.Events.Create("value1", "value2", "1234");
 		a.event(create);
 		em.persist(a);
 		em.close();
 
 		a.signal(new A.Events.SomethingDone("12a"));
+		a.signal(new A.Events.SomethingDone("13a"));
+		Signaller.getInstance().gracefulStop();
+
 	}
 
 	@Test(expected = NullPointerException.class)

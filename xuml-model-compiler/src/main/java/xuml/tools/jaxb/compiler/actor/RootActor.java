@@ -6,7 +6,7 @@ import javax.persistence.EntityManagerFactory;
 
 import xuml.tools.jaxb.compiler.Entity;
 import xuml.tools.jaxb.compiler.message.CloseEntityActor;
-import xuml.tools.jaxb.compiler.message.HasEntity;
+import xuml.tools.jaxb.compiler.message.Signal;
 import xuml.tools.jaxb.compiler.message.StopEntityActor;
 import akka.actor.Actor;
 import akka.actor.ActorRef;
@@ -25,8 +25,8 @@ public class RootActor extends UntypedActor {
 	public void onReceive(Object message) throws Exception {
 		if (message instanceof EntityManagerFactory)
 			handleMessage((EntityManagerFactory) message);
-		else if (message instanceof HasEntity)
-			handleMessage((HasEntity<?>) message);
+		else if (message instanceof Signal)
+			handleMessage((Signal) message);
 		else if (message instanceof CloseEntityActor)
 			handleMessage((CloseEntityActor) message);
 	}
@@ -45,7 +45,7 @@ public class RootActor extends UntypedActor {
 		emf = message;
 	}
 
-	private void handleMessage(HasEntity<?> message) {
+	private void handleMessage(Signal message) {
 		String key = getKey(message.getEntity());
 		ActorRef actor = getActor(key);
 		actor.tell(message, getSelf());

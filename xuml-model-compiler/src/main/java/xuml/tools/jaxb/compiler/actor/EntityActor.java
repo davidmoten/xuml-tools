@@ -48,7 +48,7 @@ public class EntityActor extends UntypedActor {
 			// refreshed within the scope of the current entity manager
 			startTransaction();
 			Entity<?> entity = signal.getEntity();
-			em.refresh(signal.getEntity());
+			em.merge(signal.getEntity());
 			entity.event(signal.getEvent());
 			commit();
 			getSender().tell(new CloseEntityActor(signal.getEntity()));
