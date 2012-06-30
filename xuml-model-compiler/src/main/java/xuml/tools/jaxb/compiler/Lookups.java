@@ -2,7 +2,6 @@ package xuml.tools.jaxb.compiler;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,7 +9,6 @@ import javax.xml.bind.JAXBElement;
 
 import miuml.jaxb.Association;
 import miuml.jaxb.AtomicType;
-import miuml.jaxb.Attribute;
 import miuml.jaxb.BinaryAssociation;
 import miuml.jaxb.BooleanType;
 import miuml.jaxb.Class;
@@ -22,12 +20,10 @@ import miuml.jaxb.IntegerType;
 import miuml.jaxb.ModeledDomain;
 import miuml.jaxb.Named;
 import miuml.jaxb.RealType;
-import miuml.jaxb.ReferentialAttribute;
 import miuml.jaxb.Relationship;
 import miuml.jaxb.Subsystem;
 import miuml.jaxb.SubsystemElement;
 import miuml.jaxb.SymbolicType;
-import miuml.jaxb.ToOneReference;
 import miuml.jaxb.UnaryAssociation;
 
 import com.google.common.collect.Lists;
@@ -38,10 +34,6 @@ class Lookups {
 	private final Map<BigInteger, Relationship> relationshipsByNumber = Maps
 			.newHashMap();
 
-	private final Map<BigInteger, Map<ClassAttribute, ClassAttribute>> relationshipAttributeMappings = Maps
-			.newHashMap();
-
-	private final Map<String, Attribute> attributesByName = Maps.newHashMap();
 	private final ModeledDomain domain;
 	private final Domains domains;
 
@@ -57,27 +49,6 @@ class Lookups {
 							(Relationship) val);
 				} else if (val instanceof Class) {
 					classesByName.put(((Class) val).getName(), (Class) val);
-				}
-			}
-		}
-
-		for (Class cls : classesByName.values()) {
-			for (JAXBElement<? extends Attribute> element : cls.getAttribute()) {
-				if (element.getValue() instanceof ReferentialAttribute) {
-					ReferentialAttribute r = (ReferentialAttribute) element
-							.getValue();
-					BigInteger rNum = r.getReference().getValue()
-							.getRelationship();
-					if (relationshipAttributeMappings.get(rNum) == null)
-						relationshipAttributeMappings.put(rNum,
-								new HashMap<ClassAttribute, ClassAttribute>());
-					if (r.getReference().getValue() instanceof ToOneReference) {
-						ToOneReference r2 = (ToOneReference) r.getReference()
-								.getValue();
-						// relationshipAttributeMappings.get(rNum).put(new
-						// ClassAttribute(cls.getName(),r.getName()), new
-						// ClassAttribute( r2.getAttribute()))
-					}
 				}
 			}
 		}

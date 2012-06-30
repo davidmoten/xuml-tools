@@ -34,6 +34,7 @@ public class EntityActor extends UntypedActor {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void handleMessage(@SuppressWarnings("rawtypes") Signal signal) {
 		if (closed) {
 			// if this actor is marked as closed then bounce all signal messages

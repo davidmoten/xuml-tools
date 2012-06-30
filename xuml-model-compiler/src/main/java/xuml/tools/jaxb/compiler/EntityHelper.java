@@ -15,6 +15,7 @@ import com.google.common.collect.Lists;
  * @author dave
  * 
  */
+@SuppressWarnings({ "unchecked", "rawtypes" })
 public class EntityHelper {
 
 	private final Entity entity;
@@ -44,7 +45,7 @@ public class EntityHelper {
 			Signaller.getInstance().signal(entity, event);
 	}
 
-	public void queueSignal(Entity ent, Event event) {
+	public <T> void queueSignal(Entity<T> ent, Event<T> event) {
 		signalsToOther.add(new Signal(ent, event));
 	}
 

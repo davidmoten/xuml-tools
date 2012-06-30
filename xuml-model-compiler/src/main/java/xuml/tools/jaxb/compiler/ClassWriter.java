@@ -503,18 +503,6 @@ public class ClassWriter {
 		out.format("    }\n\n");
 	}
 
-	private void writeIndependentAttributeGetterAndSetter(PrintStream out,
-			MyPrimaryIdAttribute attribute) {
-
-		out.format("    public %s getId() {\n", info.addType(getIdType(info)));
-		out.format("        return id;\n");
-		out.format("    }\n\n");
-		out.format("    public void setId(%s id) {\n",
-				info.addType(getIdType(info)));
-		out.format("        this.id = id;\n");
-		out.format("    }\n\n");
-	}
-
 	private void writeNonIdIndependentAttributeGettersAndSetters(
 			PrintStream out, ClassInfo info) {
 		for (MyIndependentAttribute attribute : info
@@ -822,10 +810,6 @@ public class ClassWriter {
 		out.format("%s@Column(name=\"%s\",nullable=%s)\n", indent, columnName,
 				isNullable);
 		out.format("%sprivate %s %s;\n\n", indent, type, fieldName);
-	}
-
-	private void writeIndependentAttribute(PrintStream out,
-			MyIndependentAttribute attribute, String indent, String type) {
 	}
 
 	private void writeIndependentAttributeGetterAndSetter(PrintStream out,
