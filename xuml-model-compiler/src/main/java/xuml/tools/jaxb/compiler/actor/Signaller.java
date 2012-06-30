@@ -46,9 +46,8 @@ public class Signaller {
 	}
 
 	public <T, R> void signal(Entity<T> entity, Event<T> event) {
-		boolean signalToSelf = entity.equals(info.get().getCurrentEntity());
 		EntityEvent<T> ee = new EntityEvent<T>(entity, event);
-		root.tell(new Signal<T>(ee, signalToSelf));
+		root.tell(new Signal<T>(ee));
 	}
 
 	public <T, R> void signalCommit(Entity<T> entity) {

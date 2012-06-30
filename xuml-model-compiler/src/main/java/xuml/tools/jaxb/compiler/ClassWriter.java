@@ -8,7 +8,6 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -42,7 +41,6 @@ import xuml.tools.jaxb.compiler.ClassInfo.MyPrimaryIdAttribute;
 import xuml.tools.jaxb.compiler.ClassInfo.MyReferenceMember;
 import xuml.tools.jaxb.compiler.ClassInfo.MySubclassRole;
 import xuml.tools.jaxb.compiler.ClassInfo.MyTransition;
-import xuml.tools.jaxb.compiler.actor.Info;
 import xuml.tools.jaxb.compiler.actor.Signaller;
 
 import com.google.common.base.Preconditions;
@@ -66,7 +64,7 @@ public class ClassWriter {
 		writeClassAnnotation(out, info);
 		writeClassDeclaration(out, info);
 		writeConstructors(out, info);
-		// writeSignaller(out, info);
+		writeEntityHelper(out, info);
 		writeIdMember(out, info);
 		writeUniqueIdMethod(out, info);
 		writeNonIdIndependentAttributeMembers(out, info);
@@ -232,6 +230,13 @@ public class ClassWriter {
 
 	private boolean hasEmbeddedId() {
 		return info.getPrimaryIdAttributeMembers().size() > 1;
+	}
+
+	private void writeEntityHelper(PrintStream out, ClassInfo info) {
+		out.format("    @%s\n", info.addType(Transient.class));
+		out.format("    private final %s _helper = new %s(this);\n\n",
+				info.addType(EntityHelper.class),
+				info.addType(EntityHelper.class));
 	}
 
 	private void writeIdMember(PrintStream out, ClassInfo info) {
@@ -713,34 +718,23 @@ public class ClassWriter {
 	private void writeEventCallMethods(PrintStream out, ClassInfo info) {
 
 		// add event call methods
+
 		out.format("    @%s\n", info.addType(Transient.class));
 		out.format("    @%s\n", info.addType(Override.class));
 		out.format("    public void signal(%s<%s> event){\n",
 				info.addType(Event.class), info.getJavaClassSimpleName());
 		if (hasBehaviour(info))
-			out.format("        %s.getInstance().signal(this,event);\n",
+			out.format("        _helper.signal(event);\n",
 					info.addType(Signaller.class));
 		else
 			out.format("        //no behaviour for this class\n");
 		out.format("    }\n\n");
 		out.format("    @%s\n", info.addType(Transient.class));
 		out.format("    @%s\n", info.addType(Override.class));
-		out.format("    public void event(%s<%s> event){\n",
+		out.format("    public void event(%s<%s> event){\n\n",
 				info.addType(Event.class), info.getJavaClassSimpleName());
 		if (hasBehaviour(info)) {
-			out.format("        // set the current entity in a ThreadLocal variable so we can detect signals to self\n");
-			out.format("        %s info = %s.getInstance().getInfo();\n",
-					info.addType(Info.class), info.addType(Signaller.class));
-			out.format("        %s signaller = %s.getInstance();\n",
-					info.addType(Signaller.class),
-					info.addType(Signaller.class));
-			out.format("        info.setCurrentEntity(this);\n\n",
-					info.addType(Signaller.class));
-			out.format("        if (info.getCounter().get()==0){\n");
-			out.format("            info.setId(%s.randomUUID());\n",
-					info.addType(UUID.class));
-			out.format("        }\n");
-			out.format("        info.getCounter().incrementAndGet();\n\n");
+			out.format("        _helper.beforeEvent();\n\n");
 			out.format("        // process the event\n");
 			for (MyEvent event : info.getEvents()) {
 				out.format("        if (event instanceof Events.%s){\n",
@@ -749,16 +743,7 @@ public class ClassWriter {
 						event.getSimpleClassName());
 				out.format("        }\n\n");
 			}
-			out.format("        // Put a commit message on the queue for the entity.\n");
-			out.format("        // The priority mailbox should ensure that all signals\n");
-			out.format("        // to self made during processEvent above are processed\n");
-			out.format("        // before this commit.\n");
-			out.format("        info.getCounter().decrementAndGet();\n");
-			out.format("        if (info.getCounter().get()==0) {\n");
-			out.format("            signaller.signalCommit(this);\n");
-			out.format("        }\n");
-			out.format("        // reset the current entity\n");
-			out.format("        info.setCurrentEntity(null);\n");
+			out.format("        _helper.afterEvent();\n");
 		}
 		out.format("    }\n\n");
 		if (hasBehaviour(info)) {

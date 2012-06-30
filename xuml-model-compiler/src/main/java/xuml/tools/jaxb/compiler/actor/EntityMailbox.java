@@ -33,10 +33,7 @@ public class EntityMailbox extends UnboundedPriorityMailbox {
 				if (message instanceof EntityManagerFactory)
 					return 0;
 				else if (message instanceof Signal) {
-					if (((Signal<?>) message).toSelf())
-						return 0; // high priority
-					else
-						return 20; // low priority
+					return 0;// highest priority
 				} else if (message instanceof EntityCommit)
 					return 10;// medium priority
 				else
