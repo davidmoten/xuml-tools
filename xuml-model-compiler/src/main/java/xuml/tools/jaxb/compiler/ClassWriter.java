@@ -729,13 +729,19 @@ public class ClassWriter {
 		if (hasBehaviour(info)) {
 			out.format("        _helper.beforeEvent();\n\n");
 			out.format("        // process the event\n");
+			boolean first = true;
 			for (MyEvent event : info.getEvents()) {
-				out.format("        if (event instanceof Events.%s){\n",
+				out.format("        ");
+				if (!first)
+					out.format("else ");
+				out.format("if (event instanceof Events.%s){\n",
 						event.getSimpleClassName());
 				out.format("            processEvent((Events.%s) event);\n",
 						event.getSimpleClassName());
-				out.format("        }\n\n");
+				out.format("        }\n");
+				first = false;
 			}
+			out.println();
 			out.format("        _helper.afterEvent();\n");
 		}
 		out.format("        return this;\n");
