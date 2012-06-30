@@ -41,7 +41,6 @@ import xuml.tools.jaxb.compiler.ClassInfo.MyPrimaryIdAttribute;
 import xuml.tools.jaxb.compiler.ClassInfo.MyReferenceMember;
 import xuml.tools.jaxb.compiler.ClassInfo.MySubclassRole;
 import xuml.tools.jaxb.compiler.ClassInfo.MyTransition;
-import xuml.tools.jaxb.compiler.actor.Signaller;
 
 import com.google.common.base.Preconditions;
 
@@ -183,7 +182,7 @@ public class ClassWriter {
 			out.format("        %s.checkNotNull(_behaviourFactory,\n",
 					info.addType(Preconditions.class));
 			out.format(
-					"            \"static behaviour factory needs to be set on \" + %s.class.getName());\n",
+					"            \"You need to call static method setBehaviourFactory before instantiating \" + %s.class.getName());\n",
 					info.getJavaClassSimpleName());
 			out.format("        _behaviour = _behaviourFactory.create(this);\n");
 		}
@@ -237,6 +236,10 @@ public class ClassWriter {
 		out.format("    private final %s _helper = new %s(this);\n\n",
 				info.addType(EntityHelper.class),
 				info.addType(EntityHelper.class));
+		out.format("    public %s entityHelper() {\n",
+				info.addType(EntityHelper.class));
+		out.format("        return _helper;\n");
+		out.format("    }\n\n");
 	}
 
 	private void writeIdMember(PrintStream out, ClassInfo info) {
@@ -724,8 +727,7 @@ public class ClassWriter {
 		out.format("    public void signal(%s<%s> event){\n",
 				info.addType(Event.class), info.getJavaClassSimpleName());
 		if (hasBehaviour(info))
-			out.format("        _helper.signal(event);\n",
-					info.addType(Signaller.class));
+			out.format("        _helper.signal(event);\n");
 		else
 			out.format("        //no behaviour for this class\n");
 		out.format("    }\n\n");

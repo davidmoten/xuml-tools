@@ -1,15 +1,24 @@
 package xuml.tools.jaxb.compiler.message;
 
-public class Signal<T> {
-	private final EntityEvent<T> entityEvent;
+import xuml.tools.jaxb.compiler.Entity;
+import xuml.tools.jaxb.compiler.Event;
 
-	public Signal(EntityEvent<T> entityEvent) {
-		super();
-		this.entityEvent = entityEvent;
+public class Signal<T> {
+
+	private final Entity<T> entity;
+	private final Event<T> event;
+
+	public Signal(Entity<T> entity, Event<T> event) {
+		this.entity = entity;
+		this.event = event;
 	}
 
-	public EntityEvent<T> getEntityEvent() {
-		return entityEvent;
+	public Entity<T> getEntity() {
+		return entity;
+	}
+
+	public Event<T> getEvent() {
+		return event;
 	}
 
 }

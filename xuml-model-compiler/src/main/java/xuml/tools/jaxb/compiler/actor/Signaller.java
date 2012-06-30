@@ -5,7 +5,6 @@ import javax.persistence.EntityManagerFactory;
 import xuml.tools.jaxb.compiler.Entity;
 import xuml.tools.jaxb.compiler.Event;
 import xuml.tools.jaxb.compiler.message.EntityCommit;
-import xuml.tools.jaxb.compiler.message.EntityEvent;
 import xuml.tools.jaxb.compiler.message.Signal;
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
@@ -46,8 +45,16 @@ public class Signaller {
 	}
 
 	public <T, R> void signal(Entity<T> entity, Event<T> event) {
-		EntityEvent<T> ee = new EntityEvent<T>(entity, event);
-		root.tell(new Signal<T>(ee));
+		if (signalInitiatedFromEvent()) {
+			info.get().getCurrentEntity().entityHelper()
+					.queueSignal(entity, event);
+		} else {
+			root.tell(new Signal<T>(entity, event));
+		}
+	}
+
+	private boolean signalInitiatedFromEvent() {
+		return info.get().getCurrentEntity() != null;
 	}
 
 	public <T, R> void signalCommit(Entity<T> entity) {

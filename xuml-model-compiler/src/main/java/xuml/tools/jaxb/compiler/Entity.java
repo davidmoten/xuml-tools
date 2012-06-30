@@ -1,5 +1,6 @@
 package xuml.tools.jaxb.compiler;
 
+
 public interface Entity<T> {
 
 	/**
@@ -23,5 +24,7 @@ public interface Entity<T> {
 	 * @param event
 	 */
 	void event(Event<T> event);
+
+	EntityHelper entityHelper();
 
 }

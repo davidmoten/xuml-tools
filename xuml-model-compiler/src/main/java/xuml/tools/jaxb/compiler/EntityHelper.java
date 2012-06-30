@@ -5,6 +5,7 @@ import java.util.Stack;
 
 import xuml.tools.jaxb.compiler.actor.Info;
 import xuml.tools.jaxb.compiler.actor.Signaller;
+import xuml.tools.jaxb.compiler.message.Signal;
 
 import com.google.common.collect.Lists;
 
@@ -18,6 +19,7 @@ public class EntityHelper {
 
 	private final Entity entity;
 	private final Stack<Call> stack = new Stack<Call>();
+	private final List<Signal> signalsToOther = Lists.newArrayList();
 
 	public EntityHelper(Entity entity) {
 		this.entity = entity;
@@ -37,14 +39,29 @@ public class EntityHelper {
 		// time.
 		boolean isSignalToSelf = entity == info.getCurrentEntity();
 		if (isSignalToSelf)
-			stack.peek().getEvents().add(event);
+			stack.peek().getEventsToSelf().add(event);
 		else
 			Signaller.getInstance().signal(entity, event);
 	}
 
+	public void queueSignal(Entity ent, Event event) {
+		signalsToOther.add(new Signal(ent, event));
+	}
+
+	public void sendQueuedSignals() {
+		for (Signal signal : signalsToOther) {
+			Signaller.getInstance().signal(signal.getEntity(),
+					signal.getEvent());
+		}
+	}
+
+	/**
+	 * Just after each Entity.performEvent is called we perform the events to
+	 * self that were called during that event.
+	 */
 	public void afterEvent() {
 		Call call = stack.peek();
-		for (Event event : call.getEvents()) {
+		for (Event event : call.getEventsToSelf()) {
 			entity.event(event);
 		}
 		stack.pop();
@@ -54,13 +71,14 @@ public class EntityHelper {
 			// thread will not make an assumption about the current entity
 			info.setCurrentEntity(null);
 		}
+
 	}
 
 	private static class Call {
-		private final List<Event> events = Lists.newArrayList();
+		private final List<Event> eventsToSelf = Lists.newArrayList();
 
-		public List<Event> getEvents() {
-			return events;
+		public List<Event> getEventsToSelf() {
+			return eventsToSelf;
 		}
 	}
 

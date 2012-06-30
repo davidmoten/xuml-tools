@@ -6,7 +6,6 @@ import javax.persistence.EntityTransaction;
 
 import xuml.tools.jaxb.compiler.Entity;
 import xuml.tools.jaxb.compiler.message.CloseEntityActor;
-import xuml.tools.jaxb.compiler.message.EntityCommit;
 import xuml.tools.jaxb.compiler.message.Signal;
 import xuml.tools.jaxb.compiler.message.StopEntityActor;
 import akka.actor.UntypedActor;
@@ -33,8 +32,6 @@ public class EntityActor extends UntypedActor {
 			handleMessage((EntityManagerFactory) message);
 		else if (message instanceof Signal) {
 			handleMessage((Signal) message);
-		} else if (message instanceof EntityCommit) {
-			commit((EntityCommit) message);
 		} else if (message instanceof StopEntityActor) {
 			getContext().stop(getSelf());
 		}
@@ -49,10 +46,16 @@ public class EntityActor extends UntypedActor {
 		} else if (emf != null) {
 			// otherwise perform the event on the entity after it has been
 			// refreshed within the scope of the current entity manager
-			checkTransaction();
-			Entity<?> entity = signal.getEntityEvent().getEntity();
-			em.refresh(signal.getEntityEvent().getEntity());
-			entity.event(signal.getEntityEvent().getEvent());
+			startTransaction();
+			Entity<?> entity = signal.getEntity();
+			em.refresh(signal.getEntity());
+			entity.event(signal.getEvent());
+			commit();
+			getSender().tell(new CloseEntityActor(signal.getEntity()));
+			// only after successful commit do we send the signals to other
+			// entities made during onEntry procedure.
+			entity.entityHelper().sendQueuedSignals();
+			closed = true;
 		}
 	}
 
@@ -60,7 +63,7 @@ public class EntityActor extends UntypedActor {
 		this.emf = message;
 	}
 
-	private void commit(EntityCommit<?> message) {
+	private void commit() {
 		if (em != null) {
 			tx.commit();
 			em.close();
@@ -68,11 +71,9 @@ public class EntityActor extends UntypedActor {
 			tx = null;
 			log.info("commited");
 		}
-		getSender().tell(new CloseEntityActor(message.getEntity()));
-		closed = true;
 	}
 
-	private void checkTransaction() {
+	private void startTransaction() {
 		if (em == null) {
 			em = emf.createEntityManager();
 			tx = em.getTransaction();
