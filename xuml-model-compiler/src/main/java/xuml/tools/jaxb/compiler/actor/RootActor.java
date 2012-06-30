@@ -11,6 +11,8 @@ import xuml.tools.jaxb.compiler.message.StopEntityActor;
 import akka.actor.ActorRef;
 import akka.actor.Props;
 import akka.actor.UntypedActor;
+import akka.event.Logging;
+import akka.event.LoggingAdapter;
 
 import com.google.common.collect.Maps;
 
@@ -18,13 +20,19 @@ public class RootActor extends UntypedActor {
 
 	private EntityManagerFactory emf;
 	private final HashMap<String, ActorRef> actors = Maps.newHashMap();
+	private final LoggingAdapter log;
+
+	public RootActor() {
+		log = Logging.getLogger(getContext().system(), this);
+	}
 
 	@Override
 	public void onReceive(Object message) throws Exception {
+		log.info("received message " + message.getClass().getName());
 		if (message instanceof EntityManagerFactory)
 			handleMessage((EntityManagerFactory) message);
 		else if (message instanceof Signal)
-			handleMessage((Signal) message);
+			handleMessage((Signal<?>) message);
 		else if (message instanceof CloseEntityActor)
 			handleMessage((CloseEntityActor) message);
 	}
@@ -32,7 +40,7 @@ public class RootActor extends UntypedActor {
 	private void handleMessage(CloseEntityActor message) {
 		String key = getKey(message.getEntity());
 		ActorRef actor = actors.remove(key);
-		actor.tell(new StopEntityActor());
+		actor.tell(new StopEntityActor(), getSelf());
 	}
 
 	private String getKey(Entity<?> entity) {
@@ -43,7 +51,7 @@ public class RootActor extends UntypedActor {
 		emf = message;
 	}
 
-	private void handleMessage(Signal message) {
+	private void handleMessage(Signal<?> message) {
 		String key = getKey(message.getEntity());
 		ActorRef actor = getActor(key);
 		actor.tell(message, getSelf());
@@ -53,7 +61,7 @@ public class RootActor extends UntypedActor {
 		if (actors.get(key) == null) {
 			ActorRef actor = createActor();
 			actors.put(key, actor);
-			actor.tell(emf);
+			actor.tell(emf, getSelf());
 		}
 		return actors.get(key);
 	}

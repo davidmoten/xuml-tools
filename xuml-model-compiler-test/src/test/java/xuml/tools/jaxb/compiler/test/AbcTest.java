@@ -6,6 +6,7 @@ import javax.persistence.Persistence;
 
 import moten.david.util.database.derby.DerbyUtil;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import xuml.tools.jaxb.compiler.actor.Signaller;
@@ -33,7 +34,7 @@ public class AbcTest {
 					@Override
 					public void onEntryDoneSomething(A entity,
 							SomethingDone event) {
-						entity.setAThree("done something");
+						entity.setAThree(event.getTheCount());
 						System.out.println(event.getTheCount());
 					}
 
@@ -49,17 +50,24 @@ public class AbcTest {
 				};
 			}
 		});
+
 		EntityManager em = emf.createEntityManager();
 
-		A a = new A();
 		Create create = new A.Events.Create("value1", "value2", "1234");
+
+		A a = new A();
 		a.event(create);
 		em.persist(a);
 		em.close();
 
 		a.signal(new A.Events.SomethingDone("12a"));
-		a.signal(new A.Events.SomethingDone("13a"));
 		Thread.sleep(5000);
+
+		em = emf.createEntityManager();
+		em.merge(a);
+		Assert.assertEquals("12a", a.getAThree());
+		em.close();
+
 		Signaller.getInstance().stop();
 
 	}

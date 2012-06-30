@@ -22,20 +22,18 @@ public class EntityActor extends UntypedActor {
 		log = Logging.getLogger(getContext().system(), this);
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void onReceive(Object message) throws Exception {
 		log.info("received message " + message.getClass().getName());
 		if (message instanceof EntityManagerFactory)
 			handleMessage((EntityManagerFactory) message);
 		else if (message instanceof Signal) {
-			handleMessage((Signal) message);
+			handleMessage((Signal<?>) message);
 		} else if (message instanceof StopEntityActor) {
 			getContext().stop(getSelf());
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	private void handleMessage(@SuppressWarnings("rawtypes") Signal signal) {
 		if (closed) {
 			// if this actor is marked as closed then bounce all signal messages
