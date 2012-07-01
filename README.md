@@ -61,4 +61,4 @@ Web Class Diagram Viewer
 
     cd xuml-tools/xuml-diagrams
     mvn clean gae:run
-Then open [http://localhost:8080]() in a browser.
+Then open [http://localhost:8080]() in a browser. An early draft is released at [http://xuml-tools.appspot.com]() on Google App Engine.
