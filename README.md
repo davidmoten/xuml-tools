@@ -13,10 +13,10 @@ Until the project has matured enough to release artifacts to Maven Central repos
 
 To generate your own JPA classes from xml compliant with the miUML schema add the following plugin to your pom.xml:
 ```
-  <build>
-    <plugins>
-      <plugin>
-			 <groupId>${project.groupId}</groupId>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>xuml-tools-maven-plugin</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 				<executions>
