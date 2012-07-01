@@ -1,12 +1,13 @@
 package xuml.tools.jaxb.compiler.test;
 
+import static org.junit.Assert.assertEquals;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 import moten.david.util.database.derby.DerbyUtil;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import xuml.tools.jaxb.compiler.actor.Signaller;
@@ -53,18 +54,32 @@ public class AbcTest {
 
 		EntityManager em = emf.createEntityManager();
 
-		Create create = new A.Events.Create("value1", "value2", "1234");
+		A a1 = new A()
+				.event(new A.Events.Create("value1.1", "value2.1", "1234"));
+		em.persist(a1);
 
-		A a = new A().event(create);
-		em.persist(a);
+		A a2 = new A()
+				.event(new A.Events.Create("value1.2", "value2.2", "1234"));
+		em.persist(a2);
+
+		A a3 = new A()
+				.event(new A.Events.Create("value1.3", "value2.3", "1234"));
+		em.persist(a3);
+
 		em.close();
 
-		a.signal(new A.Events.SomethingDone("12a"));
+		a1.signal(new A.Events.SomethingDone("12a"));
+		a2.signal(new A.Events.SomethingDone("12b"));
+		a3.signal(new A.Events.SomethingDone("12c"));
 		Thread.sleep(5000);
 
 		em = emf.createEntityManager();
-		em.merge(a);
-		Assert.assertEquals("12a", a.getAThree());
+		em.merge(a1);
+		assertEquals("12a", a1.getAThree());
+		em.merge(a2);
+		assertEquals("12b", a2.getAThree());
+		em.merge(a3);
+		assertEquals("12c", a3.getAThree());
 		em.close();
 
 		Signaller.getInstance().stop();
