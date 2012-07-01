@@ -57,9 +57,9 @@
 		</properties>
 	</persistence-unit>
 	<persistence-unit name="embeddedIdTest" >
-		<class>xuml.tools.jaxb.compiler.A</class>
-		<class>xuml.tools.jaxb.compiler.B</class>
-		<class>xuml.tools.jaxb.compiler.C</class>
+		<class>xuml.tools.model.compiler.A</class>
+		<class>xuml.tools.model.compiler.B</class>
+		<class>xuml.tools.model.compiler.C</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.DerbyDialect" />

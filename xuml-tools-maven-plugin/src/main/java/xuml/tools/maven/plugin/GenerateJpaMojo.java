@@ -24,7 +24,7 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 
-import xuml.tools.jaxb.compiler.CodeGeneratorJava;
+import xuml.tools.model.compiler.CodeGeneratorJava;
 
 /**
  * Generates JPA classes from a miUML schema specified domain.

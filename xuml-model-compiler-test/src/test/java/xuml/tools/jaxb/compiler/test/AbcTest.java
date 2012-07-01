@@ -10,7 +10,7 @@ import moten.david.util.database.derby.DerbyUtil;
 
 import org.junit.Test;
 
-import xuml.tools.jaxb.compiler.actor.Signaller;
+import xuml.tools.model.compiler.actor.Signaller;
 import abc.A;
 import abc.A.AId;
 import abc.A.Events.Create;
