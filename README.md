@@ -49,6 +49,7 @@ The java model compiler includes the following features from Executable UML:
 The todo list includes:
 * Event polymorphism
 * Comprehensive unit testing
+* Persistent signalling 
 
 The items that may be left out:
 * Structured types
