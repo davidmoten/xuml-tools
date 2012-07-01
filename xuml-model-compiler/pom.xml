@@ -3,14 +3,14 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<artifactId>xuml-tools</artifactId>
-		<groupId>org.moten.david</groupId>
+		<groupId>org.github.davidmoten</groupId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>xuml-model-compiler</artifactId>
 	<name>${project.artifactId}</name>
 	<dependencies>
 		<dependency>
-			<groupId>org.moten.david</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>miuml-jaxb</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
@@ -41,7 +41,7 @@
 			<version>2.0</version>
 		</dependency>
 		<dependency>
-			<groupId>org.moten.david</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>hibernate</artifactId>
 			<version>${project.parent.version}</version>
 			<type>pom</type>
