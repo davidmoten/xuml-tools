@@ -18,7 +18,7 @@ To generate your own JPA classes from xml compliant with the miUML schema add th
       <plugin>
 			 <groupId>${project.groupId}</groupId>
 				<artifactId>xuml-tools-maven-plugin</artifactId>
-				<version>${project.version}</version>
+				<version>0.0.1-SNAPSHOT</version>
 				<executions>
 					<execution>
 						<id>generate-jpa</id>
