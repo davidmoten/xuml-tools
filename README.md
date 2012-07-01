@@ -1,7 +1,7 @@
 xuml-tools
 ==========
 
-Executable UML tools (xml schema, java model compiler, javascript model viewer) based on miUML metamodels.
+Executable UML tools (xml schema, java model compiler, java+javascript model viewer) based on miUML metamodels.
 
 Getting started
 ---------------
@@ -38,10 +38,16 @@ To generate your own JPA classes from xml compliant with the miUML schema add th
 </build>
 ```
 
+
+Model schema
+------------
+Models are defined in xml that is compliant to the miUML xuml-tools schema. 
+
 Java model compiler
 -------------------
 The java model compiler includes the following features from Executable UML:
 
+* All association types
 * Composite primary keys
 * Asynchronous signalling
 * Auto-detection of signals to self
@@ -49,11 +55,13 @@ The java model compiler includes the following features from Executable UML:
 The todo list includes:
 * Event polymorphism
 * Comprehensive unit testing
-* Persistent signalling 
+* Persistent signalling
+* Synchronous signalling (?) 
 
 The items that may be left out:
 * Structured types
 * Bridges
+* Derived attributes 
 * any specific Action Language implementation 
 
 Web Class Diagram Viewer
