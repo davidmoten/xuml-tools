@@ -44,7 +44,7 @@ To generate your own JPA classes from xml compliant with the miUML schema add th
 
 Model schema
 ------------
-Models are defined in xml that is compliant to the miUML xuml-tools schema. 
+Models are defined in xml that is compliant to the miUML xuml-tools [https://github.com/davidmoten/xuml-tools/blob/master/miuml-jaxb/src/main/resources/miuml-metamodel.xsd](schema). 
 
 Java model compiler
 -------------------
