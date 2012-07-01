@@ -78,7 +78,7 @@ public abstract class ClassInfo {
 
 	abstract Set<String> getAtLeastOneFieldChecks();
 
-	abstract String getImports();
+	abstract String getImports(String relativeToClass);
 
 	abstract String getIdColumnName();
 

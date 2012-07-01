@@ -286,8 +286,8 @@ public class ClassInfoSample extends ClassInfo {
 	 * @see xuml.tools.jaxb.compiler.IClassInfo#getImports()
 	 */
 	@Override
-	public String getImports() {
-		return types.getImports();
+	public String getImports(String relativeToClass) {
+		return types.getImports(relativeToClass);
 	}
 
 	@Override

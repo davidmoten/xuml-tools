@@ -52,11 +52,17 @@ public class TypeRegister {
 		}
 	}
 
-	public String getImports() {
+	public String getImports(String relativeToClass) {
 		TreeSet<String> set = new TreeSet<String>(types.keySet());
 		StringBuilder s = new StringBuilder();
 		for (String t : set) {
-			s.append("import " + t + ";\n");
+			boolean isImmediateChildOfRelativeClass = t
+					.startsWith(relativeToClass)
+					&& t.length() > relativeToClass.length()
+					&& t.indexOf('.', relativeToClass.length() + 1) != -1;
+			if (!t.startsWith(relativeToClass)
+					|| t.indexOf(".", relativeToClass.length() + 1) != -1)
+				s.append("import " + t + ";\n");
 		}
 		return s.toString();
 	}

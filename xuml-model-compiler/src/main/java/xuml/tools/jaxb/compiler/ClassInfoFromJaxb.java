@@ -454,8 +454,8 @@ public class ClassInfoFromJaxb extends ClassInfo {
 	}
 
 	@Override
-	String getImports() {
-		return getTypes().getImports();
+	String getImports(String relativeToClass) {
+		return getTypes().getImports(relativeToClass);
 	}
 
 	@Override

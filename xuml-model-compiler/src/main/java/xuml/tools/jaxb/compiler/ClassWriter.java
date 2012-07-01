@@ -100,27 +100,27 @@ public class ClassWriter {
 	}
 
 	private void writeClassAnnotation(PrintStream out, ClassInfo info) {
-		info.addType(Entity.class);
-		info.addType(Table.class);
-		out.format("@Entity\n");
+		out.format("@%s\n", info.addType(Entity.class));
 		List<List<String>> uniqueConstraints = info
 				.getUniqueConstraintColumnNames();
 		Preconditions.checkState(uniqueConstraints.size() > 0, NO_IDENTIFIERS);
 		if (uniqueConstraints.size() > 1) {
-			info.addType(UniqueConstraint.class);
-			out.format("@Table(schema=\"%s\",name=\"%s\",\n", info.getSchema(),
+			out.format("@%s(schema=\"%s\",name=\"%s\",\n",
+					info.addType(Table.class), info.getSchema(),
 					info.getTable());
 			StringBuilder s = new StringBuilder();
 			for (List<String> list : uniqueConstraints) {
 				if (s.length() > 0)
 					s.append(",\n");
-				s.append("        @UniqueConstraint(columnNames={"
-						+ getCommaDelimitedQuoted(list) + "})");
+				s.append("        @" + info.addType(UniqueConstraint.class)
+						+ "(columnNames={" + getCommaDelimitedQuoted(list)
+						+ "})");
 			}
 			out.format("    uniqueConstraints={\n");
 			out.format("%s})\n", s);
 		} else {
-			out.format("@Table(schema=\"%s\",name=\"%s\")\n", info.getSchema(),
+			out.format("@%s(schema=\"%s\",name=\"%s\")\n",
+					info.addType(Table.class), info.getSchema(),
 					info.getTable());
 		}
 
@@ -131,19 +131,19 @@ public class ClassWriter {
 	private void writeJpaInheritanceAnnotations(PrintStream out, ClassInfo info) {
 
 		if (info.isSuperclass()) {
-			info.addType(Inheritance.class);
-			info.addType(InheritanceType.class);
-			info.addType(DiscriminatorColumn.class);
-			info.addType(DiscriminatorType.class);
-			out.format("@Inheritance(strategy = InheritanceType.JOINED)\n");
+			out.format("@%s(strategy = %s.JOINED)\n",
+					info.addType(Inheritance.class),
+					info.addType(InheritanceType.class));
 			out.format("//DiscriminatorColumn annotation is ignored by Hibernate but may be used\n");
 			out.format("//by other JPA providers. See https://hibernate.onjira.com/browse/ANN-140\n");
-			out.format("@DiscriminatorColumn(name = \"DISCRIMINATOR\", discriminatorType = DiscriminatorType.STRING, length = 255)\n");
+			out.format(
+					"@%s(name = \"DISCRIMINATOR\", discriminatorType = %s.STRING, length = 255)\n",
+					info.addType(DiscriminatorColumn.class),
+					info.addType(DiscriminatorType.class));
 		}
 		if (info.isSubclass()) {
 			MySubclassRole subclass = info.getSubclassRole();
-			info.addType(DiscriminatorValue.class);
-			out.format("@DiscriminatorValue(\"%s\")\n",
+			out.format("@%s(\"%s\")\n", info.addType(DiscriminatorValue.class),
 					subclass.getDiscriminatorValue());
 		}
 	}
@@ -245,31 +245,29 @@ public class ClassWriter {
 	private void writeIdMember(PrintStream out, ClassInfo info) {
 		jd(out, "Primary key", "    ");
 		if (!hasEmbeddedId()) {
-			info.addType(Id.class);
-			out.format("    @Id\n");
+			out.format("    @%s\n", info.addType(Id.class));
 			writeIndependentAttributeMember(out, info
 					.getPrimaryIdAttributeMembers().get(0), "    ");
 		} else {
-			info.addType(EmbeddedId.class);
-			out.format("    @EmbeddedId\n");
+			out.format("    @%s\n", info.addType(EmbeddedId.class));
 			out.format("    private %s %s;\n\n",
 					info.getEmbeddedIdSimpleClassName(),
 					info.getEmbeddedIdAttributeName());
-			info.addType(Embeddable.class);
-			out.format("    @Embeddable\n");
+			out.format("    @%s\n", info.addType(Embeddable.class));
+			out.format("    @%s(\"serial\")\n",
+					info.addType(SuppressWarnings.class));
 			out.format("    public static class %s implements %s {\n\n",
 					info.getEmbeddedIdSimpleClassName(),
 					info.addType(Serializable.class));
 			for (MyPrimaryIdAttribute member : info
 					.getPrimaryIdAttributeMembers()) {
-				info.addType(Column.class);
 				if (member.getReferenceClass() == null)
-					out.format("        @Column(name=\"%s\")\n",
-							member.getColumnName());
+					out.format("        @%s(name=\"%s\")\n",
+							info.addType(Column.class), member.getColumnName());
 				else {
 					out.format(
-							"        @Column(name=\"%s\",insertable=false,updatable=false)\n",
-							member.getColumnName());
+							"        @%s(name=\"%s\",insertable=false,updatable=false)\n",
+							info.addType(Column.class), member.getColumnName());
 				}
 				out.format("%sprivate %s %s;\n\n", "        ",
 						info.addType(member.getType()), member.getFieldName());
@@ -334,10 +332,13 @@ public class ClassWriter {
 	}
 
 	private void writeStateMember(PrintStream out, ClassInfo info) {
-		info.addType(Column.class);
-		jd(out, STATE_COMMENT, "    ");
-		out.format("    @Column(name=\"state\",nullable=false)\n");
-		out.format("    private String state;\n\n");
+		if (hasBehaviour(info)) {
+			info.addType(Column.class);
+			jd(out, STATE_COMMENT, "    ");
+			out.format("    @%s(name=\"state\",nullable=false)\n",
+					info.addType(Column.class));
+			out.format("    private String state;\n\n");
+		}
 	}
 
 	private void writeReferenceMembers(PrintStream out, ClassInfo info) {
@@ -512,31 +513,35 @@ public class ClassWriter {
 	}
 
 	private void writeStateGetterAndSetter(PrintStream out, ClassInfo info) {
-		jd(out, STATE_COMMENT, "    ");
-		out.format("    public String getState(){\n");
-		out.format("        return state;\n");
-		out.format("    }\n\n");
-		jd(out, STATE_COMMENT, "    ");
-		out.format("    public void setState(String state){\n");
-		out.format("        this.state= state;\n");
-		out.format("    }\n\n");
+		if (hasBehaviour(info)) {
+			jd(out, STATE_COMMENT, "    ");
+			out.format("    public String getState(){\n");
+			out.format("        return state;\n");
+			out.format("    }\n\n");
+			jd(out, STATE_COMMENT, "    ");
+			out.format("    public void setState(String state){\n");
+			out.format("        this.state= state;\n");
+			out.format("    }\n\n");
+		}
 	}
 
 	private void writeStates(PrintStream out, ClassInfo info) {
-		jd(out,
-				"The list of all states from the state machine for this entity.",
-				"    ");
-		out.format("    private static enum State {\n");
-		boolean first = true;
-		out.format("        ");
-		for (String state : info.getStateNames()) {
-			if (!first)
-				out.format(",");
-			out.format(info.getStateAsJavaIdentifier(state));
-			first = false;
+		if (hasBehaviour(info)) {
+			jd(out,
+					"The list of all states from the state machine for this entity.",
+					"    ");
+			out.format("    private static enum State {\n");
+			boolean first = true;
+			out.format("        ");
+			for (String state : info.getStateNames()) {
+				if (!first)
+					out.format(",");
+				out.format(info.getStateAsJavaIdentifier(state));
+				first = false;
+			}
+			out.format(";\n");
+			out.format("    }\n\n");
 		}
-		out.format(";\n");
-		out.format("    }\n\n");
 	}
 
 	private void writeEventsStart(PrintStream out, ClassInfo info) {
@@ -600,7 +605,7 @@ public class ClassWriter {
 		info.addType(PreUpdate.class);
 		out.format("    @Transient\n");
 		out.format("    @PreUpdate\n");
-		out.format("    private void validateBeforeUpdate(){\n");
+		out.format("    void validateBeforeUpdate(){\n");
 		for (String fieldName : info.getAtLeastOneFieldChecks()) {
 			out.format("        check%sValid();\n", upperFirst(fieldName));
 		}
@@ -853,7 +858,7 @@ public class ClassWriter {
 	}
 
 	private void writeImports(PrintStream out, ClassInfo info) {
-		out.println(info.getImports());
+		out.println(info.getImports(info.getClassFullName()));
 	}
 
 	// ///////////////////////////////////////

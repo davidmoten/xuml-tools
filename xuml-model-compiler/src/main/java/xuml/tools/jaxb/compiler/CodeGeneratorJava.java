@@ -115,7 +115,7 @@ public class CodeGeneratorJava {
 		out.close();
 
 		String java = "package " + pkg + ".behaviour;\n\n";
-		java += types.getImports();
+		java += types.getImports(info.getBehaviourFullClassName());
 		java += "\n";
 		String all = java + bytes.toString();
 		writeToFile(all.getBytes(), file);
@@ -135,7 +135,8 @@ public class CodeGeneratorJava {
 		java += "    " + getClassJavaSimpleName(cls) + "Behaviour create("
 				+ info.addType(info.getClassFullName()) + " cls);\n";
 		java += "}";
-		java = java.replace("IMPORTS_HERE", info.getImports());
+		java = java.replace("IMPORTS_HERE",
+				info.getImports(info.getBehaviourFactoryFullClassName()));
 		File file = new File(destination, getClassBehaviourFactoryFilename(cls));
 		writeToFile(java.getBytes(), file);
 	}
