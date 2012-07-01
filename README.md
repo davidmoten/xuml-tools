@@ -55,3 +55,10 @@ The items that may be left out:
 * Structured types
 * Bridges
 * any specific Action Language implementation 
+
+Web Class Diagram Viewer
+------------------------
+
+    cd xuml-tools/xuml-diagrams
+    mvn clean gae:run
+Then open http://localhost:8080 in a browser.
