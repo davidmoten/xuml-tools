@@ -55,7 +55,7 @@
 								<pluginExecution>
 									<pluginExecutionFilter>
 										<groupId>
-											org.moten.david
+											org.github.davidmoten
 										</groupId>
 										<artifactId>
 											xuml-tools-maven-plugin
