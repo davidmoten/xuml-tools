@@ -274,16 +274,25 @@ public class ClassInfoFromJaxb extends ClassInfo {
 				.getEvent()) {
 			Event event = element.getValue();
 			List<MyParameter> parameters = Lists.newArrayList();
-			// TODO of eventSignature is null then get signature from
-			// destination state
+
 			if (event.getEventSignature() != null)
 				for (StateModelParameter p : event.getEventSignature()
 						.getStateModelParameter()) {
 					parameters.add(new MyParameter(Util.toJavaIdentifier(p
 							.getName()), lookups.getJavaType(p.getType())));
 				}
+			else {
+				// TODO of eventSignature is null then get signature from
+				// destination state
+				for (MyTransition transition : getTransitions()) {
+					if (transition.getEventId().equals(event.getID())) {
+
+					}
+				}
+			}
 			MyEvent myEvent = new MyEvent(event.getName(),
-					Util.toClassSimpleName(event.getName()), parameters);
+					Util.toClassSimpleName(event.getName()), parameters,
+					event.getEventSignature() == null);
 			list.add(myEvent);
 		}
 		return list;

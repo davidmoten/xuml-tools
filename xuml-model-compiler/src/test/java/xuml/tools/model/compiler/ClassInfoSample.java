@@ -7,10 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import xuml.tools.model.compiler.ClassInfo;
-import xuml.tools.model.compiler.Type;
-import xuml.tools.model.compiler.TypeRegister;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
@@ -127,7 +123,8 @@ public class ClassInfoSample extends ClassInfo {
 		List<MyEvent> list = newArrayList();
 		List<MyParameter> params = newArrayList();
 		params.add(new MyParameter("message", "String"));
-		list.add(new MyEvent("Validation Error", "ValidationError", params));
+		list.add(new MyEvent("Validation Error", "ValidationError", params,
+				false));
 		return list;
 	}
 

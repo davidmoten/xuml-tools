@@ -224,15 +224,17 @@ public abstract class ClassInfo {
 		private final String name;
 		private String simpleClassName;
 		private final List<MyParameter> parameters;
+		private final boolean signatureFromState;
 
 		public List<MyParameter> getParameters() {
 			return parameters;
 		}
 
 		public MyEvent(String name, String simpleClassName,
-				List<MyParameter> parameters) {
+				List<MyParameter> parameters, boolean signatureFromState) {
 			this.name = name;
 			this.simpleClassName = simpleClassName;
+			this.signatureFromState = signatureFromState;
 			if (parameters == null)
 				this.parameters = newArrayList();
 			else
@@ -241,6 +243,10 @@ public abstract class ClassInfo {
 
 		public String getName() {
 			return name;
+		}
+
+		public boolean isSignatureFromState() {
+			return signatureFromState;
 		}
 
 		public String getSimpleClassName() {

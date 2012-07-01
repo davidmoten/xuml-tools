@@ -3,6 +3,9 @@ xuml-tools
 
 Executable UML tools (xml schema, java model compiler, java+javascript model viewer) based on miUML metamodels.
 
+This project is still in development and has not reached alpha release status yet.
+
+
 Getting started
 ---------------
 Until the project has matured enough to release artifacts to Maven Central repository this is how to locally install the artfacts from source:
