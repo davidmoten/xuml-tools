@@ -37,3 +37,20 @@ To generate your own JPA classes from xml compliant with the miUML schema add th
 		</plugins>
 	</build>
 ```
+
+Java model compiler
+-------------------
+The java model compiler includes the following features from Executable UML:
+
+* Composite primary keys
+* Asynchronous signalling
+* Auto-detection of signals to self
+
+The todo list includes:
+* Event polymorphism
+* Comprehensive unit testing
+
+The items that may be left out:
+* Structured types
+* Bridges
+* any specific Action Language implementation 
