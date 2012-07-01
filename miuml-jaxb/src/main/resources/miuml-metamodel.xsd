@@ -981,6 +981,10 @@
 				<documentation>R510</documentation>
 			</annotation>
 			<extension base="t:Destination">
+				<sequence>
+					<element name="StateSignature" type="t:StateSignature"
+						minOccurs="0" />
+				</sequence>
 				<attribute name="Snum" type="t:PositiveInteger" use="optional">
 					<annotation>
 						<documentation>This field is optional because for many consumers
@@ -1098,22 +1102,26 @@
 		substitutionGroup="t:Event" />
 
 	<complexType name="Event">
-		<complexContent>
-			<extension base="t:EventSignature">
-				<annotation>
-					<documentation>A large portion of the Polymorphism Subsystem has
-						been collapsed by the relationship of Event to Event Signature.
-						The collapsed portion serves validation purposes only.
-					</documentation>
-				</annotation>
-				<attribute name="ID" type="t:Nominal" use="required" />
-			</extension>
-		</complexContent>
+		<annotation>
+			<documentation>
+			A large portion of the Polymorphism Subsystem has been
+				collapsed by the relationship of Event to Event Signature. The
+				collapsed portion serves validation purposes only.
+			</documentation>
+		</annotation>
+		<sequence>
+			<element name="EventSignature" type="t:EventSignature"
+				minOccurs="0" />
+		</sequence>
+		<attribute name="Name" type="t:Name" use="required" />
+		<attribute name="ID" type="t:Nominal" use="required" />
 	</complexType>
 
 	<element name="StateModelSignature" type="t:StateModelSignature"
 		abstract="true" />
 	<element name="EventSignature" type="t:EventSignature"
+		substitutionGroup="t:StateModelSignature" />
+	<element name="StateSignature" type="t:StateSignature"
 		substitutionGroup="t:StateModelSignature" />
 
 	<complexType name="StateModelSignature">
@@ -1125,7 +1133,6 @@
 				</annotation>
 			</element>
 		</sequence>
-		<attribute name="Name" type="t:Name" use="required" />
 	</complexType>
 
 	<complexType name="EventSignature">
@@ -1138,6 +1145,17 @@
 		</complexContent>
 	</complexType>
 
+	<complexType name="StateSignature">
+		<complexContent>
+			<annotation>
+				<documentation>R562</documentation>
+			</annotation>
+			<extension base="t:StateModelSignature">
+				<attribute name="Name" type="t:Name" use="required" />
+			</extension>
+		</complexContent>
+	</complexType>
+
 	<complexType name="StateModelParameter">
 		<annotation>
 			<documentation>Dave Moten simplified the definition of
@@ -1146,7 +1164,7 @@
 				2012). Dave chose to do this also to enable model compilers that may
 				not implement a miUml Action Language but rather map state model
 				signatures to methods in a platform language like java in the case
-				of xuml-compiler2.
+				of xuml-tools.
 			</documentation>
 		</annotation>
 		<attribute name="Name" type="t:Name" use="required" />

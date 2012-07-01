@@ -183,38 +183,42 @@
 
 					<CreationEvent Name="Check out" ID="1"
 						State="Establishing Customer and Verifying Payment">
-						<StateModelParameter Name="Cart" Type="arbitraryId" />
-						<StateModelParameter Name="Account number"
-							Type="Bank Card Account Number" />
-						<StateModelParameter Name="Billing address"
-							Type="Mailing Address" />
-						<StateModelParameter Name="Card expiration date]"
-							Type="Month Year" />
-						<StateModelParameter Name="Cardholder name"
-							Type="Personal Name" />
-						<StateModelParameter Name="Customer email"
-							Type="Internet Email Address" />
-						<StateModelParameter Name="Customer Name"
-							Type="Personal Name" />
-						<StateModelParameter Name="Billing address"
-							Type="Mailing Address" />
-						<StateModelParameter Name="Customer phone"
-							Type="Telephone Number" />
-						<StateModelParameter Name="Shipping address"
-							Type="Mailing Address" />
+						<EventSignature>
+							<StateModelParameter Name="Cart" Type="arbitraryId" />
+							<StateModelParameter Name="Account number"
+								Type="Bank Card Account Number" />
+							<StateModelParameter Name="Billing address"
+								Type="Mailing Address" />
+							<StateModelParameter Name="Card expiration date]"
+								Type="Month Year" />
+							<StateModelParameter Name="Cardholder name"
+								Type="Personal Name" />
+							<StateModelParameter Name="Customer email"
+								Type="Internet Email Address" />
+							<StateModelParameter Name="Customer Name"
+								Type="Personal Name" />
+							<StateModelParameter Name="Billing address"
+								Type="Mailing Address" />
+							<StateModelParameter Name="Customer phone"
+								Type="Telephone Number" />
+							<StateModelParameter Name="Shipping address"
+								Type="Mailing Address" />
+						</EventSignature>
 					</CreationEvent>
 
 					<LocalEffectiveSignalingEvent Name="Submit charge"
 						ID="2">
-						<StateModelParameter Name="Cart" Type="arbitraryId" />
-						<StateModelParameter Name="Account number"
-							Type="Bank Card Account Number" />
-						<StateModelParameter Name="Billing address"
-							Type="Mailing Address" />
-						<StateModelParameter Name="Card expiration date"
-							Type="Month Year" />
-						<StateModelParameter Name="Cardholder name"
-							Type="Personal Name" />
+						<EventSignature>
+							<StateModelParameter Name="Cart" Type="arbitraryId" />
+							<StateModelParameter Name="Account number"
+								Type="Bank Card Account Number" />
+							<StateModelParameter Name="Billing address"
+								Type="Mailing Address" />
+							<StateModelParameter Name="Card expiration date"
+								Type="Month Year" />
+							<StateModelParameter Name="Cardholder name"
+								Type="Personal Name" />
+						</EventSignature>
 					</LocalEffectiveSignalingEvent>
 
 					<LocalEffectiveSignalingEvent Name="Payment declined"
@@ -333,21 +337,22 @@
 					<State Name="Has Started" />
 					<State Name="Done Something" />
 					<State Name="Done Something Else" />
-					<CreationEvent Name="Create" ID="1"
-						State="Has Started">
-						<StateModelParameter Name="A one"
-							Type="string" />
-							<StateModelParameter Name="A two"
-							Type="string" />
-						<StateModelParameter Name="Account number"
-							Type="Bank Card Account Number" />
+					<CreationEvent Name="Create" ID="1" State="Has Started">
+						<EventSignature>
+							<StateModelParameter Name="A one" Type="string" />
+							<StateModelParameter Name="A two" Type="string" />
+							<StateModelParameter Name="Account number"
+								Type="Bank Card Account Number" />
+						</EventSignature>
 					</CreationEvent>
 					<LocalEffectiveSignalingEvent Name="Something Done"
 						ID="2">
-						<StateModelParameter Name="The count" Type="Count" />
+						<EventSignature>
+							<StateModelParameter Name="The count" Type="Count" />
+						</EventSignature>
 					</LocalEffectiveSignalingEvent>
-					<Transition State="Has Started"
-						Destination="Done Something" EventID="2" />
+					<Transition State="Has Started" Destination="Done Something"
+						EventID="2" />
 				</Lifecycle>
 			</NonSpecializedClass>
 
