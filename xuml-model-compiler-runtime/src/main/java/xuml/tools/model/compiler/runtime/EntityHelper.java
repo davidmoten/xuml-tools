@@ -3,8 +3,6 @@ package xuml.tools.model.compiler.runtime;
 import java.util.List;
 import java.util.Stack;
 
-import xuml.tools.model.compiler.runtime.actor.Info;
-import xuml.tools.model.compiler.runtime.actor.Signaller;
 import xuml.tools.model.compiler.runtime.message.Signal;
 
 import com.google.common.collect.Lists;

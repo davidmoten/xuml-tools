@@ -1,4 +1,4 @@
-package xuml.tools.model.compiler.runtime.actor;
+package xuml.tools.model.compiler.runtime;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -7,9 +7,7 @@ import java.io.ObjectOutputStream;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
-import xuml.tools.model.compiler.runtime.Entity;
-import xuml.tools.model.compiler.runtime.Event;
-import xuml.tools.model.compiler.runtime.SignalPersistence;
+import xuml.tools.model.compiler.runtime.actor.RootActor;
 import xuml.tools.model.compiler.runtime.message.EntityCommit;
 import xuml.tools.model.compiler.runtime.message.Signal;
 import akka.actor.ActorRef;

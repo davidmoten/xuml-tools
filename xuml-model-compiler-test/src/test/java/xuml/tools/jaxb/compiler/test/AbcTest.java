@@ -9,7 +9,7 @@ import javax.persistence.Persistence;
 
 import org.junit.Test;
 
-import xuml.tools.model.compiler.runtime.actor.Signaller;
+import xuml.tools.model.compiler.runtime.Signaller;
 import xuml.tools.util.database.DerbyUtil;
 import abc.A;
 import abc.A.AId;
