@@ -124,7 +124,7 @@ public class ClassInfoSample extends ClassInfo {
 		List<MyParameter> params = newArrayList();
 		params.add(new MyParameter("message", "String"));
 		list.add(new MyEvent("Validation Error", "ValidationError", params,
-				false));
+				null, null));
 		return list;
 	}
 

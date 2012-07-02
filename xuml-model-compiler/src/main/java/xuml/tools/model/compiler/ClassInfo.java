@@ -5,6 +5,9 @@ import static com.google.common.collect.Lists.newArrayList;
 import java.util.List;
 import java.util.Set;
 
+import miuml.jaxb.EventSignature;
+import miuml.jaxb.StateSignature;
+
 public abstract class ClassInfo {
 
 	abstract String getPackage();
@@ -224,17 +227,20 @@ public abstract class ClassInfo {
 		private final String name;
 		private String simpleClassName;
 		private final List<MyParameter> parameters;
-		private final boolean signatureFromState;
+		private final String stateName;
+		private final String stateSignatureInterfaceSimpleName;
 
 		public List<MyParameter> getParameters() {
 			return parameters;
 		}
 
 		public MyEvent(String name, String simpleClassName,
-				List<MyParameter> parameters, boolean signatureFromState) {
+				List<MyParameter> parameters, String stateName,
+				String stateSignatureInterfaceSimpleName) {
 			this.name = name;
 			this.simpleClassName = simpleClassName;
-			this.signatureFromState = signatureFromState;
+			this.stateName = stateName;
+			this.stateSignatureInterfaceSimpleName = stateSignatureInterfaceSimpleName;
 			if (parameters == null)
 				this.parameters = newArrayList();
 			else
@@ -245,16 +251,27 @@ public abstract class ClassInfo {
 			return name;
 		}
 
-		public boolean isSignatureFromState() {
-			return signatureFromState;
-		}
-
 		public String getSimpleClassName() {
 			return simpleClassName;
 		}
 
 		public void setSimpleClassName(String simpleClassName) {
 			this.simpleClassName = simpleClassName;
+		}
+
+		/**
+		 * If the parameter list was obtained from the {@link StateSignature}
+		 * rather than the {@link EventSignature} then this returns the state
+		 * name.
+		 * 
+		 * @return
+		 */
+		public String getStateName() {
+			return stateName;
+		}
+
+		public String getStateSignatureInterfaceSimpleName() {
+			return stateSignatureInterfaceSimpleName;
 		}
 	}
 
@@ -483,6 +500,21 @@ public abstract class ClassInfo {
 		public String getToState() {
 			return toState;
 		}
+
+		@Override
+		public String toString() {
+			StringBuilder builder = new StringBuilder();
+			builder.append("MyTransition [eventName=");
+			builder.append(eventName);
+			builder.append(", fromState=");
+			builder.append(fromState);
+			builder.append(", toState=");
+			builder.append(toState);
+			builder.append(", eventId=");
+			builder.append(eventId);
+			builder.append("]");
+			return builder.toString();
+		}
 	}
 
 	public String getEmbeddedIdSimpleClassName() {
@@ -492,4 +524,5 @@ public abstract class ClassInfo {
 	public String getEmbeddedIdAttributeName() {
 		return "id";
 	}
+
 }

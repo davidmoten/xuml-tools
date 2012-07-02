@@ -14,7 +14,7 @@ import xuml.tools.model.compiler.actor.Signaller;
 import abc.A;
 import abc.A.AId;
 import abc.A.Events.Create;
-import abc.A.Events.SomethingDone;
+import abc.A.Events.StateSignature_DoneSomething;
 import abc.behaviour.ABehaviour;
 import abc.behaviour.ABehaviourFactory;
 
@@ -32,12 +32,6 @@ public class AbcTest {
 			@Override
 			public ABehaviour create(A cls) {
 				return new ABehaviour() {
-					@Override
-					public void onEntryDoneSomething(A entity,
-							SomethingDone event) {
-						entity.setAThree(event.getTheCount());
-						System.out.println(event.getTheCount());
-					}
 
 					@Override
 					public void onEntryHasStarted(A entity, Create event) {
@@ -47,6 +41,13 @@ public class AbcTest {
 						entity.setId(id);
 						entity.setAThree(event.getAccountNumber());
 						System.out.println("created");
+					}
+
+					@Override
+					public void onEntryDoneSomething(A entity,
+							StateSignature_DoneSomething event) {
+						entity.setAThree(event.getTheCount());
+						System.out.println(event.getTheCount());
 					}
 				};
 			}

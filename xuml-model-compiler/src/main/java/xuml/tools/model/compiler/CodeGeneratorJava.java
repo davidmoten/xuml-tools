@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.List;
+import java.util.Map;
 
 import javax.xml.bind.JAXBElement;
 
@@ -15,6 +17,9 @@ import miuml.jaxb.Subsystem;
 import miuml.jaxb.SubsystemElement;
 import xuml.tools.model.compiler.ClassInfo.MyEvent;
 import xuml.tools.model.compiler.ClassInfo.MyTransition;
+
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 /**
  * Generates code associated with one modeled domain.
@@ -96,7 +101,29 @@ public class CodeGeneratorJava {
 		String pkg = getPackage(cls);
 		out.format("public interface %sBehaviour {\n\n", cls.getName());
 
+		// write state names that have signatures
+		Map<String, MyEvent> stateEvent = Maps.newLinkedHashMap();
 		for (MyEvent event : info.getEvents()) {
+			if (event.getStateName() != null)
+				stateEvent.put(event.getStateName(), event);
+		}
+		List<MyEvent> nonStateEvents = Lists.newArrayList();
+		for (MyEvent event : info.getEvents()) {
+			if (event.getStateName() == null)
+				nonStateEvents.add(event);
+		}
+
+		for (String state : stateEvent.keySet()) {
+			MyEvent event = stateEvent.get(state);
+			out.format("    void onEntry%s(%s entity, %s event);\n\n", Util
+					.upperFirst(Util.toJavaIdentifier(event.getStateName())),
+					types.addType(info.getClassFullName()), types.addType(info
+							.getClassFullName()
+							+ ".Events."
+							+ event.getStateSignatureInterfaceSimpleName()));
+		}
+
+		for (MyEvent event : nonStateEvents) {
 			for (MyTransition transition : info.getTransitions()) {
 				// constraint is no event overloading
 				if (transition.getEventName().equals(event.getName())) {

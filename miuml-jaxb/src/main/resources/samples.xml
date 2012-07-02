@@ -335,7 +335,11 @@
 				<IndependentAttribute Name="A three" Type="string" />
 				<Lifecycle>
 					<State Name="Has Started" />
-					<State Name="Done Something" />
+					<State Name="Done Something" >
+						<StateSignature>
+							<StateModelParameter Name="The count" Type="Count" />
+						</StateSignature>
+					</State>
 					<State Name="Done Something Else" />
 					<CreationEvent Name="Create" ID="1" State="Has Started">
 						<EventSignature>
@@ -347,9 +351,6 @@
 					</CreationEvent>
 					<LocalEffectiveSignalingEvent Name="Something Done"
 						ID="2">
-						<EventSignature>
-							<StateModelParameter Name="The count" Type="Count" />
-						</EventSignature>
 					</LocalEffectiveSignalingEvent>
 					<Transition State="Has Started" Destination="Done Something"
 						EventID="2" />

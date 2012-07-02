@@ -7,6 +7,7 @@ import java.io.PrintStream;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -43,6 +44,7 @@ import xuml.tools.model.compiler.ClassInfo.MySubclassRole;
 import xuml.tools.model.compiler.ClassInfo.MyTransition;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Maps;
 
 public class ClassWriter {
 
@@ -75,7 +77,6 @@ public class ClassWriter {
 		writeNonIdIndependentAttributeGettersAndSetters(out, info);
 		writeStateGetterAndSetter(out, info);
 		writeStates(out, info);
-		writeEventsStart(out, info);
 		writeEvents(out, info);
 		writeEventCallMethods(out, info);
 
@@ -544,23 +545,45 @@ public class ClassWriter {
 		}
 	}
 
-	private void writeEventsStart(PrintStream out, ClassInfo info) {
-		if (info.getEvents().size() == 0)
-			return;
-		// create Events static class and each Event declared within
-		jd(out, "Event declarations.", "    ");
-		out.format("    public static class Events {\n\n");
-	}
-
 	private void writeEvents(PrintStream out, ClassInfo info) {
 		List<MyEvent> events = info.getEvents();
 		if (events.size() == 0)
 			return;
 
+		// create Events static class and each Event declared within
+		jd(out, "Event declarations.", "    ");
+		out.format("    public static class Events {\n\n");
+
+		// write state names that have signatures
+		Map<String, MyEvent> stateEvent = Maps.newHashMap();
 		for (MyEvent event : info.getEvents()) {
-			out.format("        public static class %s implements %s<%s>{\n\n",
+			if (event.getStateName() != null)
+				stateEvent.put(event.getStateName(), event);
+		}
+
+		for (MyEvent event : stateEvent.values()) {
+			out.format("        public static interface %s {\n\n",
+					event.getStateSignatureInterfaceSimpleName());
+			// getters
+			for (MyParameter p : event.getParameters()) {
+				out.format("            public %s get%s();\n\n",
+						info.addType(p.getType()), upperFirst(p.getFieldName()));
+
+			}
+			out.format("        }\n\n");
+		}
+
+		for (MyEvent event : info.getEvents()) {
+			String extraImplements;
+			if (event.getStateName() != null)
+				extraImplements = ", "
+						+ event.getStateSignatureInterfaceSimpleName();
+			else
+				extraImplements = "";
+			out.format(
+					"        public static class %s implements %s<%s>%s {\n\n",
 					event.getSimpleClassName(), info.addType(Event.class),
-					info.getJavaClassSimpleName());
+					info.getJavaClassSimpleName(), extraImplements);
 
 			StringBuilder constructorBody = new StringBuilder();
 			for (MyParameter p : event.getParameters()) {

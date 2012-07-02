@@ -27,6 +27,7 @@ import miuml.jaxb.ReferentialAttribute;
 import miuml.jaxb.Relationship;
 import miuml.jaxb.State;
 import miuml.jaxb.StateModelParameter;
+import miuml.jaxb.StateModelSignature;
 import miuml.jaxb.Transition;
 import miuml.jaxb.UnaryAssociation;
 
@@ -273,29 +274,61 @@ public class ClassInfoFromJaxb extends ClassInfo {
 		for (JAXBElement<? extends Event> element : cls.getLifecycle()
 				.getEvent()) {
 			Event event = element.getValue();
-			List<MyParameter> parameters = Lists.newArrayList();
 
-			if (event.getEventSignature() != null)
-				for (StateModelParameter p : event.getEventSignature()
-						.getStateModelParameter()) {
-					parameters.add(new MyParameter(Util.toJavaIdentifier(p
-							.getName()), lookups.getJavaType(p.getType())));
-				}
-			else {
+			final StateModelSignature signature;
+			final String stateName;
+
+			if (event.getEventSignature() != null) {
+				signature = event.getEventSignature();
+				stateName = null;
+			} else {
 				// TODO of eventSignature is null then get signature from
 				// destination state
-				for (MyTransition transition : getTransitions()) {
-					if (transition.getEventId().equals(event.getID())) {
+				State destinationState = null;
 
+				for (MyTransition transition : getTransitions()) {
+					if (transition.getEventId()
+							.equals(event.getID().toString())) {
+						for (State state : cls.getLifecycle().getState()) {
+							if (transition.getToState().equals(state.getName())) {
+								destinationState = state;
+							}
+						}
 					}
 				}
+				if (destinationState != null) {
+					signature = destinationState.getStateSignature();
+					stateName = destinationState.getName();
+				} else {
+					signature = null;
+					stateName = null;
+				}
 			}
+
+			if (signature == null)
+				throw new RuntimeException("signature not found for class="
+						+ cls.getName() + ",event=" + event.getName());
+
+			List<MyParameter> parameters = Lists.newArrayList();
+			for (StateModelParameter p : signature.getStateModelParameter()) {
+				parameters.add(new MyParameter(Util.toJavaIdentifier(p
+						.getName()), lookups.getJavaType(p.getType())));
+			}
+
 			MyEvent myEvent = new MyEvent(event.getName(),
 					Util.toClassSimpleName(event.getName()), parameters,
-					event.getEventSignature() == null);
+					stateName, getStateSignatureInterfaceName(stateName));
 			list.add(myEvent);
 		}
 		return list;
+	}
+
+	private String getStateSignatureInterfaceName(final String stateName) {
+		if (stateName == null)
+			return null;
+		else
+			return "StateSignature_"
+					+ Util.upperFirst(Util.toJavaIdentifier(stateName));
 	}
 
 	@Override

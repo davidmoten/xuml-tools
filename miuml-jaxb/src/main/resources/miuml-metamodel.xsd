@@ -1151,7 +1151,6 @@
 				<documentation>R562</documentation>
 			</annotation>
 			<extension base="t:StateModelSignature">
-				<attribute name="Name" type="t:Name" use="required" />
 			</extension>
 		</complexContent>
 	</complexType>
