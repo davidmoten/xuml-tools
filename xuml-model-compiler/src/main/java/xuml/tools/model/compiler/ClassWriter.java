@@ -584,9 +584,10 @@ public class ClassWriter {
 			else
 				extraImplements = "";
 			out.format(
-					"        public static class %s implements %s<%s>%s {\n\n",
+					"        public static class %s implements %s<%s>,%s%s {\n\n",
 					event.getSimpleClassName(), info.addType(Event.class),
-					info.getJavaClassSimpleName(), extraImplements);
+					info.getJavaClassSimpleName(),
+					info.addType(Serializable.class), extraImplements);
 
 			StringBuilder constructorBody = new StringBuilder();
 			for (MyParameter p : event.getParameters()) {

@@ -1,7 +1,5 @@
 package xuml.tools.model.compiler;
 
-import java.util.UUID;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -23,7 +21,6 @@ public class EmbeddedIdTest {
 		EntityManager em = emf.createEntityManager();
 		SignalPersistence signal = new SignalPersistence();
 		signal.name = "signal.class.name";
-		signal.uuid = UUID.randomUUID().toString();
 		signal.signal = "some stuff".getBytes();
 		em.getTransaction().begin();
 		em.persist(signal);

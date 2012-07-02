@@ -1,9 +1,15 @@
 package xuml.tools.model.compiler.runtime.actor;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 import xuml.tools.model.compiler.runtime.Entity;
 import xuml.tools.model.compiler.runtime.Event;
+import xuml.tools.model.compiler.runtime.SignalPersistence;
 import xuml.tools.model.compiler.runtime.message.EntityCommit;
 import xuml.tools.model.compiler.runtime.message.Signal;
 import akka.actor.ActorRef;
@@ -21,6 +27,7 @@ public class Signaller {
 	private final ActorSystem actorSystem = ActorSystem.create();
 	private final ActorRef root = actorSystem.actorOf(
 			new Props(RootActor.class), "root");
+	private EntityManagerFactory emf;
 
 	private static Signaller instance;
 
@@ -41,14 +48,37 @@ public class Signaller {
 	 * @param emf
 	 */
 	public void setEntityManagerFactory(EntityManagerFactory emf) {
+		this.emf = emf;
 		root.tell(emf);
 	}
 
 	public <T, R> void signal(Entity<T> entity, Event<T> event) {
+		long id = persistSignal(event);
+		Signal<T> signal = new Signal<T>(entity, event, id);
 		if (signalInitiatedFromEvent()) {
-			info.get().getCurrentEntity().helper().queueSignal(entity, event);
+			info.get().getCurrentEntity().helper().queueSignal(signal);
 		} else {
-			root.tell(new Signal<T>(entity, event));
+			root.tell(signal);
+		}
+	}
+
+	private <T> long persistSignal(Event<T> event) {
+		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+		try {
+			ObjectOutputStream oos = new ObjectOutputStream(bytes);
+			oos.writeObject(event);
+			oos.close();
+			SignalPersistence signal = new SignalPersistence();
+			signal.name = event.getClass().getName();
+			signal.signal = bytes.toByteArray();
+			EntityManager em = emf.createEntityManager();
+			em.getTransaction().begin();
+			em.persist(signal);
+			em.getTransaction().commit();
+			em.close();
+			return signal.id;
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
 	}
 

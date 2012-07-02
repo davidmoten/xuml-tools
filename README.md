@@ -53,13 +53,12 @@ The java model compiler includes the following features from Executable UML:
 * Generates JPA entities
 * All association types
 * Composite primary keys
-* Asynchronous signalling
+* Asynchronous persistent signalling
 * Auto-detection of signals to self
 
 The todo list includes:
 * Event polymorphism
 * Comprehensive unit testing
-* Persistent signalling (JMS or db)
 * Synchronous signalling (?) 
 
 The items that may be left out:

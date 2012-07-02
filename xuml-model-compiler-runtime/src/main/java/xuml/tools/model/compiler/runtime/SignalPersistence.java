@@ -16,9 +16,6 @@ public class SignalPersistence {
 	@Column(name = "signal_id")
 	public Long id;
 
-	@Column(name = "signal_uuid", unique = true, nullable = false)
-	public String uuid;
-
 	@Column(name = "name", nullable = false)
 	public String name;
 

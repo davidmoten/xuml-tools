@@ -45,8 +45,8 @@ public class EntityHelper {
 			Signaller.getInstance().signal(entity, event);
 	}
 
-	public <T> void queueSignal(Entity<T> ent, Event<T> event) {
-		signalsToOther.add(new Signal(ent, event));
+	public <T> void queueSignal(Signal<T> signal) {
+		signalsToOther.add(signal);
 	}
 
 	public void sendQueuedSignals() {
