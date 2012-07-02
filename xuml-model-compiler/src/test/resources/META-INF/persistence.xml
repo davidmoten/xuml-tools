@@ -4,62 +4,11 @@
     http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
 	version="1.0">
 
-	<persistence-unit name="CTS-derby" >
-		<class>au.gov.amsa.er.craft.tracking.generated.impl.CraftImpl</class>
-		<class>au.gov.amsa.er.craft.tracking.generated.impl.CraftTypeImpl</class>
-		<class>au.gov.amsa.er.craft.tracking.generated.impl.FixImpl</class>
-		<class>au.gov.amsa.er.craft.tracking.generated.impl.CraftReportingAgentImpl</class>
-		<class>au.gov.amsa.er.craft.tracking.generated.impl.CraftIdentityTypeImpl</class>
-		<class>au.gov.amsa.er.craft.tracking.generated.impl.RouteImpl</class>
-		<class>au.gov.amsa.er.craft.tracking.generated.impl.WaypointImpl</class>
-		<class>au.gov.amsa.er.craft.tracking.generated.impl.CraftTypeIdentityTypeImpl</class>
-		<class>au.gov.amsa.er.craft.tracking.generated.impl.CraftIdentityImpl</class>
-		<class>au.gov.amsa.er.craft.tracking.generated.impl.PreviousCraftIdentityImpl</class>
-		<class>au.gov.amsa.er.craft.tracking.generated.impl.FixPropertyImpl</class>
-		<class>au.gov.amsa.er.craft.tracking.generated.impl.FixIdentityImpl</class>
-		<exclude-unlisted-classes>true</exclude-unlisted-classes>
-		<properties>
-			<property name="hibernate.dialect" value="org.hibernate.dialect.DerbyDialect" />
-			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
-			<property name="hibernate.connection.driver_class" value="org.apache.derby.jdbc.EmbeddedDriver" />
-			<property name="hibernate.connection.url" value="jdbc:derby:target/db-CTS;create=true" />
-			<property name="hibernate.connection.pool_size" value= "5"/>
-			<property name="hibernate.show_sql" value="false"/>
-			<property name="hibernate.format_sql" value="true"/>
-		</properties>
-	</persistence-unit>
-		<persistence-unit name="CTS-derby-tomcat" >
-		<class>au.gov.amsa.er.craft.tracking.generated.impl.CraftImpl</class>
-		<class>au.gov.amsa.er.craft.tracking.generated.impl.CraftTypeImpl</class>
-		<class>au.gov.amsa.er.craft.tracking.generated.impl.FixImpl</class>
-		<class>au.gov.amsa.er.craft.tracking.generated.impl.CraftReportingAgentImpl</class>
-		<class>au.gov.amsa.er.craft.tracking.generated.impl.CraftIdentityTypeImpl</class>
-		<class>au.gov.amsa.er.craft.tracking.generated.impl.RouteImpl</class>
-		<class>au.gov.amsa.er.craft.tracking.generated.impl.AnonymousRouteImpl</class>
-		<class>au.gov.amsa.er.craft.tracking.generated.impl.NamedRouteImpl</class>
-		<class>au.gov.amsa.er.craft.tracking.generated.impl.WaypointImpl</class>
-		<class>au.gov.amsa.er.craft.tracking.generated.impl.WaypointOnRouteImpl</class>
-		<class>au.gov.amsa.er.craft.tracking.generated.impl.CraftTypeIdentityTypeImpl</class>
-		<class>au.gov.amsa.er.craft.tracking.generated.impl.CraftIdentityImpl</class>
-		<class>au.gov.amsa.er.craft.tracking.generated.impl.AnonymousWaypointImpl</class>
-		<class>au.gov.amsa.er.craft.tracking.generated.impl.NamedWaypointImpl</class>
-		<class>au.gov.amsa.er.craft.tracking.generated.impl.PreviousCraftIdentityImpl</class>
-		<class>au.gov.amsa.er.craft.tracking.generated.impl.FixPropertyImpl</class>
-		<exclude-unlisted-classes>true</exclude-unlisted-classes>
-		<properties>
-			<property name="hibernate.dialect" value="org.hibernate.dialect.DerbyDialect" />
-			<property name="hibernate.hbm2ddl.auto" value="create" />
-			<property name="hibernate.connection.driver_class" value="org.apache.derby.jdbc.EmbeddedDriver" />
-			<property name="hibernate.connection.url" value="jdbc:derby:../temp/db-CTS;create=true" />
-			<property name="hibernate.connection.pool_size" value= "5"/>
-			<property name="hibernate.show_sql" value="false"/>
-			<property name="hibernate.format_sql" value="true"/>
-		</properties>
-	</persistence-unit>
 	<persistence-unit name="embeddedIdTest" >
 		<class>xuml.tools.model.compiler.A</class>
 		<class>xuml.tools.model.compiler.B</class>
 		<class>xuml.tools.model.compiler.C</class>
+		<class>xuml.tools.model.compiler.runtime.SignalPersistence</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.DerbyDialect" />
