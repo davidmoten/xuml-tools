@@ -51,7 +51,7 @@ public class Signaller {
 	}
 
 	public <T, R> void signal(Entity<T> entity, Event<T> event) {
-		long id = persistSignal(event);
+		long id = persistSignal(entity.getId(), event);
 		Signal<T> signal = new Signal<T>(entity, event, id);
 		if (signalInitiatedFromEvent()) {
 			info.get().getCurrentEntity().helper().queueSignal(signal);
@@ -60,24 +60,29 @@ public class Signaller {
 		}
 	}
 
-	private <T> long persistSignal(Event<T> event) {
+	private <T> long persistSignal(Object id, Event<T> event) {
+		byte[] idBytes = toBytes(id);
+		byte[] eventBytes = toBytes(event);
+		SignalPersistence signal = new SignalPersistence(id.getClass()
+				.getName(), idBytes, event.getClass().getName(), eventBytes);
+		EntityManager em = emf.createEntityManager();
+		em.getTransaction().begin();
+		em.persist(signal);
+		em.getTransaction().commit();
+		em.close();
+		return signal.id;
+	}
+
+	private byte[] toBytes(Object object) {
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		try {
 			ObjectOutputStream oos = new ObjectOutputStream(bytes);
-			oos.writeObject(event);
+			oos.writeObject(object);
 			oos.close();
-			SignalPersistence signal = new SignalPersistence();
-			signal.name = event.getClass().getName();
-			signal.signal = bytes.toByteArray();
-			EntityManager em = emf.createEntityManager();
-			em.getTransaction().begin();
-			em.persist(signal);
-			em.getTransaction().commit();
-			em.close();
-			return signal.id;
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+		return bytes.toByteArray();
 	}
 
 	private boolean signalInitiatedFromEvent() {

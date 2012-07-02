@@ -19,9 +19,9 @@ public class EmbeddedIdTest {
 		EntityManagerFactory emf = Persistence
 				.createEntityManagerFactory("embeddedIdTest");
 		EntityManager em = emf.createEntityManager();
-		SignalPersistence signal = new SignalPersistence();
-		signal.name = "signal.class.name";
-		signal.signal = "some stuff".getBytes();
+		SignalPersistence signal = new SignalPersistence(
+				String.class.getName(), "id stuff".getBytes(), "event stuff",
+				"event.class.name".getBytes());
 		em.getTransaction().begin();
 		em.persist(signal);
 		em.getTransaction().commit();

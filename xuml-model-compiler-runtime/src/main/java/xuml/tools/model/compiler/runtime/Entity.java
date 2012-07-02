@@ -1,7 +1,10 @@
 package xuml.tools.model.compiler.runtime;
 
+import java.io.Serializable;
 
 public interface Entity<T> {
+
+	Serializable getId();
 
 	/**
 	 * Returns a string that uniquely represents an individual entity in the

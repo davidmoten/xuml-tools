@@ -11,14 +11,32 @@ import javax.persistence.Table;
 @Table(name = "xuml_signal")
 public class SignalPersistence {
 
+	public SignalPersistence() {
+		// jpa requires no-arg constructor
+	}
+
+	public SignalPersistence(String idClassName, byte[] idContent,
+			String className, byte[] eventContent) {
+		this.idClassName = idClassName;
+		this.className = className;
+		this.idContent = idContent;
+		this.eventContent = eventContent;
+	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "signal_id")
 	public Long id;
 
-	@Column(name = "name", nullable = false)
-	public String name;
+	@Column(name = "id_class_name")
+	public String idClassName;
 
-	@Column(name = "signal", nullable = false)
-	public byte[] signal;
+	@Column(name = "class_name", nullable = false)
+	public String className;
+
+	@Column(name = "id_content", nullable = false)
+	public byte[] idContent;
+
+	@Column(name = "event_content", nullable = false)
+	public byte[] eventContent;
 }
