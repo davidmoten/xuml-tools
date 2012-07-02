@@ -50,7 +50,7 @@ public class CodeGeneratorJava {
 			// create object factory
 			// createObjectFactory(domain, destination);
 
-			// createPersistenceXml(domain.getClazz(), resourcesDirectory);
+			// createPersitenceXml(domain.getClazz(), resourcesDirectory);
 		}
 		log("finished generation");
 	}
@@ -73,48 +73,17 @@ public class CodeGeneratorJava {
 				domainSchema, lookups);
 	}
 
-	//
-	// // ----------------------------------------
-	// // Utility Methods
-	// // -----------------------------------------
-	private String getPackage(Class cls) {
-		return domainPackageName;
-	}
-
-	//
-
 	private String getClassJavaSimpleName(Class cls) {
 		return cls.getName().replace(" ", "").replace("-", "");
 	}
 
-	//
 	private String getFullClassName(Class cls) {
 		return domainPackageName + "." + getClassJavaSimpleName(cls);
-	}
-
-	private String getClassBehaviourFilename(Class cls) {
-		String s = getFullClassName(cls);
-		int i = s.lastIndexOf(".");
-		if (i == -1)
-			s = "behaviour." + s;
-		else
-			s = s.substring(0, i) + ".behaviour" + s.substring(i);
-		return s.replace(".", "/") + "Behaviour.java";
 	}
 
 	private String getClassFilename(Class cls) {
 		String s = getFullClassName(cls);
 		return s.replace(".", "/") + ".java";
-	}
-
-	private String getClassBehaviourFactoryFilename(Class cls) {
-		String s = getFullClassName(cls);
-		int i = s.lastIndexOf(".");
-		if (i == -1)
-			s = "behaviour." + s;
-		else
-			s = s.substring(0, i) + ".behaviour" + s.substring(i);
-		return s.replace(".", "/") + "BehaviourFactory.java";
 	}
 
 	// ----------------------------------------
@@ -132,9 +101,5 @@ public class CodeGeneratorJava {
 			throw new RuntimeException(e);
 		}
 	}
-	//
-	// private static void re(String string) {
-	// throw new RuntimeException(string);
-	// }
 
 }
