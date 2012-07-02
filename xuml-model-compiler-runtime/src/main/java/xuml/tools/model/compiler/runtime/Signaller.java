@@ -70,31 +70,35 @@ public class Signaller {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void sendSignalsInQueue() {
 		EntityManager em = emf.createEntityManager();
-		List<SignalQueue> signals = em.createQuery(
-				"select s from " + SignalQueue.class.getSimpleName()
+		List<QueuedSignal> signals = em.createQuery(
+				"select s from " + QueuedSignal.class.getSimpleName()
 						+ " s order by id").getResultList();
-		for (SignalQueue sig : signals) {
-			Event event = (Event) toObject(sig.eventContent);
-			Object id = toObject(sig.idContent);
-			Class<?> eventClass;
-			try {
-				eventClass = Class.forName(sig.className);
-			} catch (ClassNotFoundException e) {
-				throw new RuntimeException(e);
-			}
-			Entity entity = (Entity) em.find(eventClass, id);
-			if (entity != null) {
-				signal(new Signal(entity, event, sig.id));
-			}
+		for (QueuedSignal sig : signals) {
+			signal(em, sig);
 		}
 		em.close();
+	}
+
+	private void signal(EntityManager em, QueuedSignal sig) {
+		Event event = (Event) toObject(sig.eventContent);
+		Object id = toObject(sig.idContent);
+		Class<?> eventClass;
+		try {
+			eventClass = Class.forName(sig.className);
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException(e);
+		}
+		Entity entity = (Entity) em.find(eventClass, id);
+		if (entity != null) {
+			signal(new Signal(entity, event, sig.id));
+		}
 	}
 
 	private <T> long persistSignal(Object id, Event<T> event) {
 		byte[] idBytes = toBytes(id);
 		byte[] eventBytes = toBytes(event);
-		SignalQueue signal = new SignalQueue(id.getClass().getName(), idBytes,
-				event.getClass().getName(), eventBytes);
+		QueuedSignal signal = new QueuedSignal(idBytes, event.getClass()
+				.getName(), eventBytes);
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
 		em.persist(signal);
