@@ -1,13 +1,13 @@
-package xuml.tools.model.compiler.actor;
+package xuml.tools.model.compiler.runtime.actor;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 
-import xuml.tools.model.compiler.Entity;
-import xuml.tools.model.compiler.message.CloseEntityActor;
-import xuml.tools.model.compiler.message.Signal;
-import xuml.tools.model.compiler.message.StopEntityActor;
+import xuml.tools.model.compiler.runtime.Entity;
+import xuml.tools.model.compiler.runtime.message.CloseEntityActor;
+import xuml.tools.model.compiler.runtime.message.Signal;
+import xuml.tools.model.compiler.runtime.message.StopEntityActor;
 import akka.actor.UntypedActor;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;

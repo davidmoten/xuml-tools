@@ -1,9 +1,9 @@
-package xuml.tools.model.compiler.actor;
+package xuml.tools.model.compiler.runtime.actor;
 
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import xuml.tools.model.compiler.Entity;
+import xuml.tools.model.compiler.runtime.Entity;
 
 public class Info {
 

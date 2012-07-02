@@ -42,6 +42,8 @@ import xuml.tools.model.compiler.ClassInfo.MyPrimaryIdAttribute;
 import xuml.tools.model.compiler.ClassInfo.MyReferenceMember;
 import xuml.tools.model.compiler.ClassInfo.MySubclassRole;
 import xuml.tools.model.compiler.ClassInfo.MyTransition;
+import xuml.tools.model.compiler.runtime.EntityHelper;
+import xuml.tools.model.compiler.runtime.Event;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
@@ -163,7 +165,7 @@ public class ClassWriter {
 
 		out.format("public class %s%s implements %s<%1$s> {\n\n",
 				info.getJavaClassSimpleName(), extension,
-				info.addType(xuml.tools.model.compiler.Entity.class));
+				info.addType(xuml.tools.model.compiler.runtime.Entity.class));
 	}
 
 	private Type getIdType(ClassInfo info) {

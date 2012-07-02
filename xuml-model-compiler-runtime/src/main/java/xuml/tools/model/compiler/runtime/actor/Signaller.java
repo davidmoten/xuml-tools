@@ -1,11 +1,11 @@
-package xuml.tools.model.compiler.actor;
+package xuml.tools.model.compiler.runtime.actor;
 
 import javax.persistence.EntityManagerFactory;
 
-import xuml.tools.model.compiler.Entity;
-import xuml.tools.model.compiler.Event;
-import xuml.tools.model.compiler.message.EntityCommit;
-import xuml.tools.model.compiler.message.Signal;
+import xuml.tools.model.compiler.runtime.Entity;
+import xuml.tools.model.compiler.runtime.Event;
+import xuml.tools.model.compiler.runtime.message.EntityCommit;
+import xuml.tools.model.compiler.runtime.message.Signal;
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;

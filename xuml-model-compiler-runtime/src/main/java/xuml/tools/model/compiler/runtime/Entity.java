@@ -1,4 +1,5 @@
-package xuml.tools.model.compiler;
+package xuml.tools.model.compiler.runtime;
+
 
 public interface Entity<T> {
 

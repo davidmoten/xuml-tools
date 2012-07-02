@@ -1,6 +1,6 @@
-package xuml.tools.model.compiler.message;
+package xuml.tools.model.compiler.runtime.message;
 
-import xuml.tools.model.compiler.Entity;
+import xuml.tools.model.compiler.runtime.Entity;
 
 public class EntityCommit<T> implements HasEntity<T> {
 

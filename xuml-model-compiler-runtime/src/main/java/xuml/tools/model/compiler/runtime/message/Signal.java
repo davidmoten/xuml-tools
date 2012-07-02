@@ -1,7 +1,7 @@
-package xuml.tools.model.compiler.message;
+package xuml.tools.model.compiler.runtime.message;
 
-import xuml.tools.model.compiler.Entity;
-import xuml.tools.model.compiler.Event;
+import xuml.tools.model.compiler.runtime.Entity;
+import xuml.tools.model.compiler.runtime.Event;
 
 public class Signal<T> {
 
