@@ -8,15 +8,15 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "xuml_signal_queue")
+@Table(name = "xuml_queued_signal")
 public class QueuedSignal {
 
 	public QueuedSignal() {
 		// jpa requires no-arg constructor
 	}
 
-	public QueuedSignal(byte[] idContent, String className, byte[] eventContent) {
-		this.className = className;
+	public QueuedSignal(byte[] idContent, String eventClassName, byte[] eventContent) {
+		this.eventClassName = eventClassName;
 		this.idContent = idContent;
 		this.eventContent = eventContent;
 	}
@@ -27,7 +27,7 @@ public class QueuedSignal {
 	public Long id;
 
 	@Column(name = "class_name", nullable = false)
-	public String className;
+	public String eventClassName;
 
 	@Column(name = "id_content", nullable = false)
 	public byte[] idContent;

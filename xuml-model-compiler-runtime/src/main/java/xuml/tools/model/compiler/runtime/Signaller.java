@@ -84,7 +84,7 @@ public class Signaller {
 		Object id = toObject(sig.idContent);
 		Class<?> eventClass;
 		try {
-			eventClass = Class.forName(sig.className);
+			eventClass = Class.forName(sig.eventClassName);
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException(e);
 		}
