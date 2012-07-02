@@ -67,7 +67,7 @@ public class Signaller {
 		}
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({ "unchecked" })
 	public void sendSignalsInQueue() {
 		EntityManager em = emf.createEntityManager();
 		List<QueuedSignal> signals = em.createQuery(
@@ -79,6 +79,7 @@ public class Signaller {
 		em.close();
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void signal(EntityManager em, QueuedSignal sig) {
 		Event event = (Event) toObject(sig.eventContent);
 		Object id = toObject(sig.idContent);
