@@ -60,8 +60,7 @@ public class TypeRegister {
 					.startsWith(relativeToClass)
 					&& t.length() > relativeToClass.length()
 					&& t.indexOf('.', relativeToClass.length() + 1) != -1;
-			if (!t.startsWith(relativeToClass)
-					|| t.indexOf(".", relativeToClass.length() + 1) != -1)
+			if (isImmediateChildOfRelativeClass)
 				s.append("import " + t + ";\n");
 		}
 		return s.toString();
