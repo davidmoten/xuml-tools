@@ -532,7 +532,7 @@ public class ClassWriter {
 			jd(out,
 					"The list of all states from the state machine for this entity.",
 					"    ");
-			out.format("    private static enum State {\n");
+			out.format("    public static enum State {\n");
 			boolean first = true;
 			out.format("        ");
 			for (String state : info.getStateNames()) {
@@ -861,7 +861,7 @@ public class ClassWriter {
 	private void writeBehaviourFactoryInterface(PrintStream out, ClassInfo info) {
 		if (info.getEvents().size() == 0)
 			return;
-		out.format("    public interface BehaviourFactory {\n\n");
+		out.format("    public static interface BehaviourFactory {\n\n");
 		out.format("        Behaviour create(%s entity);\n\n",
 				info.getJavaClassSimpleName());
 		out.format("    }\n\n");
