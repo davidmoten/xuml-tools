@@ -6,11 +6,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-import moten.david.util.database.derby.DerbyUtil;
 
 import org.junit.Test;
 
 import xuml.tools.model.compiler.runtime.actor.Signaller;
+import xuml.tools.util.database.DerbyUtil;
 import abc.A;
 import abc.A.AId;
 import abc.A.Events.Create;
