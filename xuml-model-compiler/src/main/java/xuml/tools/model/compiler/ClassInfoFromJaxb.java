@@ -348,14 +348,19 @@ public class ClassInfoFromJaxb extends ClassInfo {
 		List<MyTransition> list = Lists.newArrayList();
 		for (Transition transition : cls.getLifecycle().getTransition()) {
 			// TODO what to do about event name? Event inheritance is involved.
-			list.add(new MyTransition(getEventName(transition.getEventID()),
-					transition.getEventID().toString(), transition.getState(),
-					transition.getDestination()));
+			String eventName = getEventName(transition.getEventID());
+			list.add(new MyTransition(eventName, Util
+					.toClassSimpleName(eventName), transition.getEventID()
+					.toString(), transition.getState(), transition
+					.getDestination()));
+
 		}
 		CreationEvent creation = getCreationEvent();
 		if (creation != null) {
-			list.add(new MyTransition(getEventName(creation.getID()), creation
-					.getID().toString(), null, creation.getState()));
+			String eventName = getEventName(creation.getID());
+			list.add(new MyTransition(eventName, Util
+					.toClassSimpleName(eventName), creation.getID().toString(),
+					null, creation.getState()));
 		}
 		return list;
 	}

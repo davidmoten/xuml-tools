@@ -18,6 +18,7 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Embeddable;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.EntityManager;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
@@ -82,6 +83,8 @@ public class ClassWriter {
 		writeStates(out, info);
 		writeEvents(out, info);
 		writeEventCallMethods(out, info);
+		writeStaticCreateMethods(out, info);
+		writeMergeMethod(out, info);
 		writeBehaviourInterface(out, info);
 		writeBehaviourFactoryInterface(out, info);
 
@@ -93,6 +96,35 @@ public class ClassWriter {
 		out.close();
 		header.close();
 		return headerBytes.toString() + bytes.toString();
+	}
+
+	private void writeStaticCreateMethods(PrintStream out, ClassInfo info) {
+		if (hasBehaviour(info)) {
+			for (MyTransition t : info.getTransitions()) {
+				if (t.isCreationTransition()) {
+					out.format(
+							"    public static %s create(%s em, Events.%s event) {\n",
+							info.getJavaClassSimpleName(),
+							info.addType(EntityManager.class), t.getEventName());
+					out.format("        %s entity = new %s();\n",
+							info.getJavaClassSimpleName(),
+							info.getJavaClassSimpleName());
+					out.format("        entity.event(event);\n");
+					out.format("        em.persist(entity);\n");
+					out.format("        return entity;\n");
+					out.format("    }\n\n");
+				}
+			}
+		}
+	}
+
+	private void writeMergeMethod(PrintStream out, ClassInfo info) {
+		out.format("    public %s merge(%s em) {\n",
+				info.getJavaClassSimpleName(),
+				info.addType(EntityManager.class));
+		out.format("        em.merge(this);\n");
+		out.format("        return this;\n");
+		out.format("    }\n\n");
 	}
 
 	private void writeSuperclassValidationCheck(PrintStream out, ClassInfo info) {

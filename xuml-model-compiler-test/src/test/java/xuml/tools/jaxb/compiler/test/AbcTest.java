@@ -54,17 +54,9 @@ public class AbcTest {
 
 		EntityManager em = emf.createEntityManager();
 
-		A a1 = new A()
-				.event(new A.Events.Create("value1.1", "value2.1", "1234"));
-		em.persist(a1);
-
-		A a2 = new A()
-				.event(new A.Events.Create("value1.2", "value2.2", "1234"));
-		em.persist(a2);
-
-		A a3 = new A()
-				.event(new A.Events.Create("value1.3", "value2.3", "1234"));
-		em.persist(a3);
+		A a1 = A.create(em, new A.Events.Create("value1.1", "value2.1", "1234"));
+		A a2 = A.create(em, new A.Events.Create("value1.2", "value2.2", "1234"));
+		A a3 = A.create(em, new A.Events.Create("value1.3", "value2.3", "1234"));
 
 		em.close();
 

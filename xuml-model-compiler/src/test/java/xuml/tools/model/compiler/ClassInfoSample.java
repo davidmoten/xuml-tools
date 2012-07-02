@@ -149,7 +149,8 @@ public class ClassInfoSample extends ClassInfo {
 	@Override
 	public List<MyTransition> getTransitions() {
 		List<MyTransition> list = newArrayList();
-		list.add(new MyTransition("Validation Error", "2", "Valid", "Invalid"));
+		list.add(new MyTransition("Validation Error", "ValidationError", "2",
+				"Valid", "Invalid"));
 		return list;
 	}
 

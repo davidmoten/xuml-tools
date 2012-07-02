@@ -473,20 +473,26 @@ public abstract class ClassInfo {
 
 	public static class MyTransition {
 		private final String eventName;
+		private final String eventSimpleClassName;
 		private final String fromState;
 		private final String toState;
 		private final String eventId;
+
+		public MyTransition(String eventName, String eventSimpleClassName,
+				String eventId, String fromState, String toState) {
+			this.eventName = eventName;
+			this.eventSimpleClassName = eventSimpleClassName;
+			this.eventId = eventId;
+			this.fromState = fromState;
+			this.toState = toState;
+		}
 
 		public String getEventName() {
 			return eventName;
 		}
 
-		public MyTransition(String eventName, String eventId, String fromState,
-				String toState) {
-			this.eventName = eventName;
-			this.eventId = eventId;
-			this.fromState = fromState;
-			this.toState = toState;
+		public String getEventSimpleClassName() {
+			return eventSimpleClassName;
 		}
 
 		public String getEventId() {
@@ -499,6 +505,10 @@ public abstract class ClassInfo {
 
 		public String getToState() {
 			return toState;
+		}
+
+		public boolean isCreationTransition() {
+			return fromState == null;
 		}
 
 		@Override
