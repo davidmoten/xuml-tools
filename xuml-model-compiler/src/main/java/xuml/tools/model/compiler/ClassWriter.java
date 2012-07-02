@@ -583,7 +583,7 @@ public class ClassWriter {
 						+ event.getStateSignatureInterfaceSimpleName();
 			else
 				extraImplements = "";
-			out.format("    @%s(\"serial\")\n",
+			out.format("        @%s(\"serial\")\n",
 					info.addType(SuppressWarnings.class));
 			out.format(
 					"        public static class %s implements %s<%s>,%s%s {\n\n",
