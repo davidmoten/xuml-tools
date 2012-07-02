@@ -63,7 +63,7 @@ public class AbcTest {
 		a1.signal(new A.Events.SomethingDone("12a"));
 		a2.signal(new A.Events.SomethingDone("12b"));
 		a3.signal(new A.Events.SomethingDone("12c"));
-		Thread.sleep(5000);
+		Thread.sleep(2000);
 
 		em = emf.createEntityManager();
 		assertEquals("12a", a1.merge(em).getAThree());
