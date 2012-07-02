@@ -18,6 +18,13 @@ import abc.A.Events.StateSignature_DoneSomething;
 
 public class AbcTest {
 
+	/**
+	 * Demonstrates the major aspects of a system lifecycle including reloading
+	 * signals not fully processed at time of last shutdown, creation of
+	 * entities and asynchronous signalling.
+	 * 
+	 * @throws InterruptedException
+	 */
 	@Test
 	public void testCreateEntityManagerFactoryAndCreateAndSignalEntities()
 			throws InterruptedException {
