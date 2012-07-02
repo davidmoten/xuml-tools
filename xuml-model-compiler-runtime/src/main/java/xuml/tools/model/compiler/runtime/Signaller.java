@@ -1,8 +1,11 @@
 package xuml.tools.model.compiler.runtime;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -53,6 +56,10 @@ public class Signaller {
 	public <T, R> void signal(Entity<T> entity, Event<T> event) {
 		long id = persistSignal(entity.getId(), event);
 		Signal<T> signal = new Signal<T>(entity, event, id);
+		signal(signal);
+	}
+
+	private <T> void signal(Signal<T> signal) {
 		if (signalInitiatedFromEvent()) {
 			info.get().getCurrentEntity().helper().queueSignal(signal);
 		} else {
@@ -60,11 +67,34 @@ public class Signaller {
 		}
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public void sendSignalsInQueue() {
+		EntityManager em = emf.createEntityManager();
+		List<SignalQueue> signals = em.createQuery(
+				"select s from " + SignalQueue.class.getSimpleName()
+						+ " s order by id").getResultList();
+		for (SignalQueue sig : signals) {
+			Event event = (Event) toObject(sig.eventContent);
+			Object id = toObject(sig.idContent);
+			Class<?> eventClass;
+			try {
+				eventClass = Class.forName(sig.className);
+			} catch (ClassNotFoundException e) {
+				throw new RuntimeException(e);
+			}
+			Entity entity = (Entity) em.find(eventClass, id);
+			if (entity != null) {
+				signal(new Signal(entity, event, sig.id));
+			}
+		}
+		em.close();
+	}
+
 	private <T> long persistSignal(Object id, Event<T> event) {
 		byte[] idBytes = toBytes(id);
 		byte[] eventBytes = toBytes(event);
-		SignalQueue signal = new SignalQueue(id.getClass()
-				.getName(), idBytes, event.getClass().getName(), eventBytes);
+		SignalQueue signal = new SignalQueue(id.getClass().getName(), idBytes,
+				event.getClass().getName(), eventBytes);
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
 		em.persist(signal);
@@ -83,6 +113,20 @@ public class Signaller {
 			throw new RuntimeException(e);
 		}
 		return bytes.toByteArray();
+	}
+
+	private Object toObject(byte[] bytes) {
+		ByteArrayInputStream in = new ByteArrayInputStream(bytes);
+		Object object;
+		try {
+			ObjectInputStream ois = new ObjectInputStream(in);
+			object = ois.readObject();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException(e);
+		}
+		return object;
 	}
 
 	private boolean signalInitiatedFromEvent() {

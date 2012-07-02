@@ -6,7 +6,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-
 import org.junit.Test;
 
 import xuml.tools.model.compiler.runtime.Signaller;
@@ -50,6 +49,8 @@ public class AbcTest {
 				};
 			}
 		});
+
+		Signaller.getInstance().sendSignalsInQueue();
 
 		EntityManager em = emf.createEntityManager();
 
