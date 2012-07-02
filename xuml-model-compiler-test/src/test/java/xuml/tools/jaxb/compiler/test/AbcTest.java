@@ -66,12 +66,9 @@ public class AbcTest {
 		Thread.sleep(5000);
 
 		em = emf.createEntityManager();
-		em.merge(a1);
-		assertEquals("12a", a1.getAThree());
-		em.merge(a2);
-		assertEquals("12b", a2.getAThree());
-		em.merge(a3);
-		assertEquals("12c", a3.getAThree());
+		assertEquals("12a", a1.merge(em).getAThree());
+		assertEquals("12b", a2.merge(em).getAThree());
+		assertEquals("12c", a3.merge(em).getAThree());
 		em.close();
 
 		Signaller.getInstance().stop();
