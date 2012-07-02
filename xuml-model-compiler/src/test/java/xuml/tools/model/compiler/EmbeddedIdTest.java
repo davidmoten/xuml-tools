@@ -8,7 +8,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import xuml.tools.model.compiler.runtime.SignalPersistence;
+import xuml.tools.model.compiler.runtime.SignalQueue;
 import xuml.tools.util.database.DerbyUtil;
 
 public class EmbeddedIdTest {
@@ -19,7 +19,7 @@ public class EmbeddedIdTest {
 		EntityManagerFactory emf = Persistence
 				.createEntityManagerFactory("embeddedIdTest");
 		EntityManager em = emf.createEntityManager();
-		SignalPersistence signal = new SignalPersistence(
+		SignalQueue signal = new SignalQueue(
 				String.class.getName(), "id stuff".getBytes(), "event stuff",
 				"event.class.name".getBytes());
 		em.getTransaction().begin();

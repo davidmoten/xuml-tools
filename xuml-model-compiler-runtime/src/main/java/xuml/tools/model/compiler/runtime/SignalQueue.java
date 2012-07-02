@@ -8,14 +8,14 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "xuml_signal")
-public class SignalPersistence {
+@Table(name = "xuml_signal_queue")
+public class SignalQueue {
 
-	public SignalPersistence() {
+	public SignalQueue() {
 		// jpa requires no-arg constructor
 	}
 
-	public SignalPersistence(String idClassName, byte[] idContent,
+	public SignalQueue(String idClassName, byte[] idContent,
 			String className, byte[] eventContent) {
 		this.idClassName = idClassName;
 		this.className = className;

@@ -63,7 +63,7 @@ public class Signaller {
 	private <T> long persistSignal(Object id, Event<T> event) {
 		byte[] idBytes = toBytes(id);
 		byte[] eventBytes = toBytes(event);
-		SignalPersistence signal = new SignalPersistence(id.getClass()
+		SignalQueue signal = new SignalQueue(id.getClass()
 				.getName(), idBytes, event.getClass().getName(), eventBytes);
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();

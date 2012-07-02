@@ -5,6 +5,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 
 import xuml.tools.model.compiler.runtime.Entity;
+import xuml.tools.model.compiler.runtime.SignalQueue;
 import xuml.tools.model.compiler.runtime.message.CloseEntityActor;
 import xuml.tools.model.compiler.runtime.message.Signal;
 import xuml.tools.model.compiler.runtime.message.StopEntityActor;
@@ -54,7 +55,9 @@ public class EntityActor extends UntypedActor {
 					+ signal.getEvent().getClass().getSimpleName());
 			entity.event(signal.getEvent());
 			log.info("removing signal from persistence");
-			em.createQuery("delete from SignalPersistence where id=:id")
+			em.createQuery(
+					"delete from " + SignalQueue.class.getSimpleName()
+							+ " where id=:id")
 					.setParameter("id", signal.getId()).executeUpdate();
 			tx.commit();
 			log.info("commited");

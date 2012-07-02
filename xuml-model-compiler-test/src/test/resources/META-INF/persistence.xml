@@ -8,7 +8,7 @@
 		<class>abc.A</class>
 		<class>abc.B</class>
 		<class>abc.C</class>
-		<class>xuml.tools.model.compiler.runtime.SignalPersistence</class>
+		<class>xuml.tools.model.compiler.runtime.SignalQueue</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.DerbyDialect" />
