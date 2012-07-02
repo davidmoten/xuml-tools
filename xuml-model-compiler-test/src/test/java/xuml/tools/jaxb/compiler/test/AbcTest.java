@@ -15,8 +15,6 @@ import abc.A;
 import abc.A.AId;
 import abc.A.Events.Create;
 import abc.A.Events.StateSignature_DoneSomething;
-import abc.behaviour.ABehaviour;
-import abc.behaviour.ABehaviourFactory;
 
 public class AbcTest {
 
@@ -28,13 +26,13 @@ public class AbcTest {
 				.createEntityManagerFactory("abc");
 		Signaller.getInstance().setEntityManagerFactory(emf);
 
-		A.setBehaviourFactory(new ABehaviourFactory() {
+		A.setBehaviourFactory(new A.BehaviourFactory() {
 			@Override
-			public ABehaviour create(A cls) {
-				return new ABehaviour() {
+			public A.Behaviour create(final A entity) {
+				return new A.Behaviour() {
 
 					@Override
-					public void onEntryHasStarted(A entity, Create event) {
+					public void onEntryHasStarted(Create event) {
 						AId id = new AId();
 						id.setAOne(event.getAOne());
 						id.setATwo(event.getATwo());
@@ -44,7 +42,7 @@ public class AbcTest {
 					}
 
 					@Override
-					public void onEntryDoneSomething(A entity,
+					public void onEntryDoneSomething(
 							StateSignature_DoneSomething event) {
 						entity.setAThree(event.getTheCount());
 						System.out.println(event.getTheCount());

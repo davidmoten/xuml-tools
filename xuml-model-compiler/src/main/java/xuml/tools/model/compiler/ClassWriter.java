@@ -44,6 +44,7 @@ import xuml.tools.model.compiler.ClassInfo.MySubclassRole;
 import xuml.tools.model.compiler.ClassInfo.MyTransition;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 public class ClassWriter {
@@ -79,6 +80,8 @@ public class ClassWriter {
 		writeStates(out, info);
 		writeEvents(out, info);
 		writeEventCallMethods(out, info);
+		writeBehaviourInterface(out, info);
+		writeBehaviourFactoryInterface(out, info);
 
 		writeClassClose(out);
 		ByteArrayOutputStream headerBytes = new ByteArrayOutputStream();
@@ -189,13 +192,11 @@ public class ClassWriter {
 		}
 		out.format("    }\n\n");
 		if (hasBehaviour(info)) {
-			String factoryTypeName = info.addType(info
-					.getBehaviourFactoryFullClassName());
+			String factoryTypeName = "BehaviourFactory";
 
 			jd(out, "If behaviour is not explicitly specified then the\n"
 					+ "behaviour factory is used to create behaviour.", "    ");
-			String behaviourTypeName = info.addType(info
-					.getBehaviourFullClassName());
+			String behaviourTypeName = "Behaviour";
 			out.format("    @%s\n", info.addType(Transient.class));
 			out.format("    private static %s _behaviourFactory;\n\n",
 					factoryTypeName);
@@ -566,7 +567,7 @@ public class ClassWriter {
 					event.getStateSignatureInterfaceSimpleName());
 			// getters
 			for (MyParameter p : event.getParameters()) {
-				out.format("            public %s get%s();\n\n",
+				out.format("            %s get%s();\n\n",
 						info.addType(p.getType()), upperFirst(p.getFieldName()));
 
 			}
@@ -804,7 +805,7 @@ public class ClassWriter {
 										.getToState()));
 						out.format("            synchronized(this) {\n");
 						out.format(
-								"                _behaviour.onEntry%s(this, event);\n",
+								"                _behaviour.onEntry%s(event);\n",
 								Util.upperFirst(Util
 										.toJavaIdentifier(transition
 												.getToState())));
@@ -812,9 +813,58 @@ public class ClassWriter {
 						out.format("        }\n");
 					}
 				}
-				out.format("    }\n");
+				out.format("    }\n\n");
 			}
 		}
+	}
+
+	private void writeBehaviourInterface(PrintStream out, ClassInfo info) {
+
+		if (info.getEvents().size() == 0)
+			return;
+
+		out.format("    public static interface Behaviour {\n\n");
+
+		// write state names that have signatures
+		Map<String, MyEvent> stateEvent = Maps.newLinkedHashMap();
+		for (MyEvent event : info.getEvents()) {
+			if (event.getStateName() != null)
+				stateEvent.put(event.getStateName(), event);
+		}
+		List<MyEvent> nonStateEvents = Lists.newArrayList();
+		for (MyEvent event : info.getEvents()) {
+			if (event.getStateName() == null)
+				nonStateEvents.add(event);
+		}
+
+		for (String state : stateEvent.keySet()) {
+			MyEvent event = stateEvent.get(state);
+			out.format("        void onEntry%s(Events.%s event);\n\n", Util
+					.upperFirst(Util.toJavaIdentifier(event.getStateName())),
+					event.getStateSignatureInterfaceSimpleName());
+		}
+
+		for (MyEvent event : nonStateEvents) {
+			for (MyTransition transition : info.getTransitions()) {
+				// constraint is no event overloading
+				if (transition.getEventName().equals(event.getName())) {
+					out.format("        void onEntry%s(Events.%s event);\n\n",
+							Util.upperFirst(Util.toJavaIdentifier(transition
+									.getToState())), event.getSimpleClassName());
+				}
+			}
+		}
+
+		out.format("    }\n\n");
+	}
+
+	private void writeBehaviourFactoryInterface(PrintStream out, ClassInfo info) {
+		if (info.getEvents().size() == 0)
+			return;
+		out.format("    public interface BehaviourFactory {\n\n");
+		out.format("        Behaviour create(%s entity);\n\n",
+				info.getJavaClassSimpleName());
+		out.format("    }\n\n");
 	}
 
 	private void writeIndependentAttributeMember(PrintStream out,

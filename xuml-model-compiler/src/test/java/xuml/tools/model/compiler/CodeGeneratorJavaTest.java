@@ -7,8 +7,6 @@ import miuml.jaxb.Marshaller;
 
 import org.junit.Test;
 
-import xuml.tools.model.compiler.CodeGeneratorJava;
-
 public class CodeGeneratorJavaTest {
 
 	@Test

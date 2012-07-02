@@ -1,12 +1,8 @@
 package xuml.tools.model.compiler;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
-import java.util.List;
-import java.util.Map;
 
 import javax.xml.bind.JAXBElement;
 
@@ -15,11 +11,6 @@ import miuml.jaxb.Domains;
 import miuml.jaxb.ModeledDomain;
 import miuml.jaxb.Subsystem;
 import miuml.jaxb.SubsystemElement;
-import xuml.tools.model.compiler.ClassInfo.MyEvent;
-import xuml.tools.model.compiler.ClassInfo.MyTransition;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 /**
  * Generates code associated with one modeled domain.
@@ -53,9 +44,6 @@ public class CodeGeneratorJava {
 					Class cls = (Class) element.getValue();
 					// create classes (impls)
 					createImplementation(cls, destination, lookups);
-					// create behaviour interfaces
-					createBehaviourInterface(cls, destination);
-					createBehaviourFactoryInterface(cls, destination);
 				}
 			}
 
@@ -83,89 +71,6 @@ public class CodeGeneratorJava {
 		Lookups lookups = new Lookups(domains, domain);
 		return new ClassInfoFromJaxb(cls, domainPackageName, "description",
 				domainSchema, lookups);
-	}
-
-	private void createBehaviourInterface(Class cls, File destination) {
-
-		ClassInfo info = createClassInfo(cls);
-		if (info.getEvents().size() == 0)
-			return;
-
-		destination.mkdirs();
-		// add operations, performOnEntry methods
-		File file = new File(destination, getClassBehaviourFilename(cls));
-
-		TypeRegister types = new TypeRegister();
-		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-		PrintStream out = new PrintStream(bytes);
-		String pkg = getPackage(cls);
-		out.format("public interface %sBehaviour {\n\n", cls.getName());
-
-		// write state names that have signatures
-		Map<String, MyEvent> stateEvent = Maps.newLinkedHashMap();
-		for (MyEvent event : info.getEvents()) {
-			if (event.getStateName() != null)
-				stateEvent.put(event.getStateName(), event);
-		}
-		List<MyEvent> nonStateEvents = Lists.newArrayList();
-		for (MyEvent event : info.getEvents()) {
-			if (event.getStateName() == null)
-				nonStateEvents.add(event);
-		}
-
-		for (String state : stateEvent.keySet()) {
-			MyEvent event = stateEvent.get(state);
-			out.format("    void onEntry%s(%s entity, %s event);\n\n", Util
-					.upperFirst(Util.toJavaIdentifier(event.getStateName())),
-					types.addType(info.getClassFullName()), types.addType(info
-							.getClassFullName()
-							+ ".Events."
-							+ event.getStateSignatureInterfaceSimpleName()));
-		}
-
-		for (MyEvent event : nonStateEvents) {
-			for (MyTransition transition : info.getTransitions()) {
-				// constraint is no event overloading
-				if (transition.getEventName().equals(event.getName())) {
-					out.format("    void onEntry%s(%s entity, %s event);\n\n",
-							Util.upperFirst(Util.toJavaIdentifier(transition
-									.getToState())), types.addType(info
-									.getClassFullName()), types.addType(info
-									.getClassFullName()
-									+ ".Events."
-									+ event.getSimpleClassName()));
-				}
-			}
-		}
-
-		out.format("}");
-		out.close();
-
-		String java = "package " + pkg + ".behaviour;\n\n";
-		java += types.getImports(info.getBehaviourFullClassName());
-		java += "\n";
-		String all = java + bytes.toString();
-		writeToFile(all.getBytes(), file);
-	}
-
-	private void createBehaviourFactoryInterface(Class cls, File destination) {
-		TypeRegister types = new TypeRegister();
-		ClassInfo info = createClassInfo(cls);
-		if (info.getEvents().size() == 0)
-			return;
-
-		String java = "package " + getPackage(cls) + ".behaviour;\n\n";
-		java += "IMPORTS_HERE\n";
-		java += "public interface " + cls.getName() + "BehaviourFactory {\n\n";
-		types.addType(getFullClassName(cls) + "Behaviour");
-		types.addType(getFullClassName(cls));
-		java += "    " + getClassJavaSimpleName(cls) + "Behaviour create("
-				+ info.addType(info.getClassFullName()) + " cls);\n";
-		java += "}";
-		java = java.replace("IMPORTS_HERE",
-				info.getImports(info.getBehaviourFactoryFullClassName()));
-		File file = new File(destination, getClassBehaviourFactoryFilename(cls));
-		writeToFile(java.getBytes(), file);
 	}
 
 	//
