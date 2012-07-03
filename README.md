@@ -40,7 +40,7 @@ To generate your own JPA classes from xml compliant with the miUML schema add th
 	</plugins>
 </build>
 ```
-The module ''xuml-model-compiler-test'' demonstrates usage. In particular the test class [AbcTest](https://github.com/davidmoten/xuml-tools/blob/master/xuml-model-compiler-test/src/test/java/xuml/tools/jaxb/compiler/test/AbcTest.java) demonstrates normal system lifecycle.
+The module ''xuml-model-compiler-test'' demonstrates usage. In particular the test class [AbcTest.java](https://github.com/davidmoten/xuml-tools/blob/master/xuml-model-compiler-test/src/test/java/xuml/tools/jaxb/compiler/test/AbcTest.java) demonstrates normal system lifecycle.
 
 
 
