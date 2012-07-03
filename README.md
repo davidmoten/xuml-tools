@@ -50,6 +50,8 @@ Models are defined in xml that is compliant to the miUML xuml-tools [schema](htt
 
 Java model compiler
 -------------------
+With the model compiler we seek to implement the approach taken by Mellor & Ballcer in their super book Executable UML.
+
 The java model compiler includes the following features:
 
 * Generates JPA entities
