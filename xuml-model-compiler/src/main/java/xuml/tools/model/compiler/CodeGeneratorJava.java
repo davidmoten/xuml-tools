@@ -14,6 +14,8 @@ import miuml.jaxb.Domains;
 import miuml.jaxb.ModeledDomain;
 import miuml.jaxb.Subsystem;
 import miuml.jaxb.SubsystemElement;
+import xuml.tools.model.compiler.runtime.CreationEvent;
+import xuml.tools.model.compiler.runtime.Entity;
 import xuml.tools.model.compiler.runtime.Signaller;
 
 /**
@@ -72,7 +74,21 @@ public class CodeGeneratorJava {
 				types.addType(Signaller.class));
 		out.format("        return signaller;\n");
 		out.format("    }\n\n");
-		out.format("    public static %s createSignaller(%s emf) {\n\n",
+		out.format("    public static void sendSignalsInQueue() {\n");
+		out.format("        signaller.sendSignalsInQueue();\n");
+		out.format("    }\n\n");
+		out.format("    public static void stop() {\n");
+		out.format("        signaller.stop();\n");
+		out.format("    }\n\n");
+		out.format(
+				"    public static <T extends %s<T>> T create(%s<T> cls, %s<T> event) {\n",
+				types.addType(Entity.class),
+				types.addType(java.lang.Class.class),
+				types.addType(CreationEvent.class));
+		out.format("        return signaller.create(cls,event);\n");
+		out.format("    }\n\n");
+		out.format(
+				"    public static %s setEntityManagerFactory(%s emf) {\n\n",
 				types.addType(Signaller.class),
 				types.addType(EntityManagerFactory.class));
 		out.format("        signaller = new %s(emf);\n",

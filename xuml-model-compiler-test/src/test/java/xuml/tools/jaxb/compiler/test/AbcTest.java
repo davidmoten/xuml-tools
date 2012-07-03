@@ -8,7 +8,6 @@ import javax.persistence.Persistence;
 
 import org.junit.Test;
 
-import xuml.tools.model.compiler.runtime.Signaller;
 import xuml.tools.util.database.DerbyUtil;
 import abc.A;
 import abc.A.AId;
@@ -36,20 +35,20 @@ public class AbcTest {
 				.createEntityManagerFactory("abc");
 
 		// create a signaller using the EntityManagerFactory
-		Signaller signaller = Context.createSignaller(emf);
+		Context.setEntityManagerFactory(emf);
 
 		// set the behaviour factory for the class A
 		A.setBehaviourFactory(createBehaviourFactory());
 
 		// send any signals not processed from last shutdown
-		signaller.sendSignalsInQueue();
+		Context.sendSignalsInQueue();
 
 		// create some entities (this happens synchronously)
-		A a1 = signaller.create(A.class, new A.Events.Create("value1.1",
+		A a1 = Context.create(A.class, new A.Events.Create("value1.1",
 				"value2.1", "1234"));
-		A a2 = signaller.create(A.class, new A.Events.Create("value1.2",
+		A a2 = Context.create(A.class, new A.Events.Create("value1.2",
 				"value2.2", "1234"));
-		A a3 = signaller.create(A.class, new A.Events.Create("value1.3",
+		A a3 = Context.create(A.class, new A.Events.Create("value1.3",
 				"value2.3", "1234"));
 
 		// send asynchronous signals to the entities
@@ -81,7 +80,7 @@ public class AbcTest {
 		em.close();
 
 		// shutdown the actor system
-		signaller.stop();
+		Context.stop();
 
 	}
 
