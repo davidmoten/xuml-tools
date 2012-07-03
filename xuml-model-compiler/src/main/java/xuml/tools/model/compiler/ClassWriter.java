@@ -272,7 +272,7 @@ public class ClassWriter {
 		out.format("    private static %s signaller;\n\n",
 				info.addType(Signaller.class));
 
-		out.format("    public static void setSignaller_(%s sig) {\n",
+		out.format("    static void setSignaller_(%s sig) {\n",
 				info.addType(Signaller.class));
 		out.format("        signaller = sig;\n");
 		out.format("    }\n\n");

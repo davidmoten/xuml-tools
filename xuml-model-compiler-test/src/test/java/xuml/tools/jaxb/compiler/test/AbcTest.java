@@ -15,6 +15,7 @@ import abc.A.AId;
 import abc.A.BehaviourFactory;
 import abc.A.Events.Create;
 import abc.A.Events.StateSignature_DoneSomething;
+import abc.Context;
 
 public class AbcTest {
 
@@ -36,13 +37,13 @@ public class AbcTest {
 
 		// get the singleton Signaller
 		Signaller signaller = new Signaller();
-
 		// set the entity manager factory to be used by all signals
 		signaller.setEntityManagerFactory(emf);
+		// get all entities to use this signaller
+		Context.setSignaller(signaller);
 
 		// set the behaviour factory for the class A
 		A.setBehaviourFactory(createBehaviourFactory());
-		A.setSignaller_(signaller);
 
 		// send any signals not processed from last shutdown
 		signaller.sendSignalsInQueue();
