@@ -101,7 +101,7 @@ public class ClassWriter {
 	}
 
 	private void writeStaticCreateMethods(PrintStream out, ClassInfo info) {
-		if (hasBehaviour(info)) {
+		if (info.hasBehaviour()) {
 			for (MyTransition t : info.getTransitions()) {
 				if (t.isCreationTransition()) {
 					out.format(
@@ -220,7 +220,7 @@ public class ClassWriter {
 		jd(out, "No argument constructor required by JPA.", "    ");
 		out.format("    public %s(){\n", info.getJavaClassSimpleName());
 		out.format("        //JPA requires no-arg constructor\n");
-		if (hasBehaviour(info)) {
+		if (info.hasBehaviour()) {
 			out.format("        %s.checkNotNull(_behaviourFactory,\n",
 					info.addType(Preconditions.class));
 			out.format(
@@ -229,7 +229,7 @@ public class ClassWriter {
 			out.format("        _behaviour = _behaviourFactory.create(this);\n");
 		}
 		out.format("    }\n\n");
-		if (hasBehaviour(info)) {
+		if (info.hasBehaviour()) {
 			String factoryTypeName = "BehaviourFactory";
 
 			jd(out, "If behaviour is not explicitly specified then the\n"
@@ -261,10 +261,6 @@ public class ClassWriter {
 			out.format("    }\n\n");
 		}
 
-	}
-
-	private boolean hasBehaviour(ClassInfo info) {
-		return info.getEvents().size() > 0;
 	}
 
 	private boolean hasEmbeddedId() {
@@ -383,7 +379,7 @@ public class ClassWriter {
 	}
 
 	private void writeStateMember(PrintStream out, ClassInfo info) {
-		if (hasBehaviour(info)) {
+		if (info.hasBehaviour()) {
 			info.addType(Column.class);
 			jd(out, STATE_COMMENT, "    ");
 			out.format("    @%s(name=\"state\",nullable=false)\n",
@@ -564,7 +560,7 @@ public class ClassWriter {
 	}
 
 	private void writeStateGetterAndSetter(PrintStream out, ClassInfo info) {
-		if (hasBehaviour(info)) {
+		if (info.hasBehaviour()) {
 			jd(out, STATE_COMMENT, "    ");
 			out.format("    public String getState(){\n");
 			out.format("        return state;\n");
@@ -577,7 +573,7 @@ public class ClassWriter {
 	}
 
 	private void writeStates(PrintStream out, ClassInfo info) {
-		if (hasBehaviour(info)) {
+		if (info.hasBehaviour()) {
 			jd(out,
 					"The list of all states from the state machine for this entity.",
 					"    ");
@@ -804,7 +800,7 @@ public class ClassWriter {
 		out.format("    public %s signal(%s<%s> event){\n",
 				info.getJavaClassSimpleName(), info.addType(Event.class),
 				info.getJavaClassSimpleName());
-		if (hasBehaviour(info))
+		if (info.hasBehaviour())
 			out.format("        helper().signal(event);\n");
 		else
 			out.format("        //no behaviour for this class\n");
@@ -815,7 +811,7 @@ public class ClassWriter {
 		out.format("    public %s event(%s<%s> event){\n\n",
 				info.getJavaClassSimpleName(), info.addType(Event.class),
 				info.getJavaClassSimpleName());
-		if (hasBehaviour(info)) {
+		if (info.hasBehaviour()) {
 			out.format("        helper().beforeEvent();\n\n");
 			out.format("        // process the event\n");
 			boolean first = true;
@@ -835,7 +831,7 @@ public class ClassWriter {
 		}
 		out.format("        return this;\n");
 		out.format("    }\n\n");
-		if (hasBehaviour(info)) {
+		if (info.hasBehaviour()) {
 			for (MyEvent event : info.getEvents()) {
 
 				jd(out, "Synchronously perform the change.", "    ");

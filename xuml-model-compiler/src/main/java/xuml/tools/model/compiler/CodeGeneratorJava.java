@@ -1,8 +1,10 @@
 package xuml.tools.model.compiler;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 
 import javax.xml.bind.JAXBElement;
 
@@ -11,6 +13,7 @@ import miuml.jaxb.Domains;
 import miuml.jaxb.ModeledDomain;
 import miuml.jaxb.Subsystem;
 import miuml.jaxb.SubsystemElement;
+import xuml.tools.model.compiler.runtime.Signaller;
 
 /**
  * Generates code associated with one modeled domain.
@@ -48,11 +51,52 @@ public class CodeGeneratorJava {
 			}
 
 			// create object factory
-			// createObjectFactory(domain, destination);
 
 			// createPersitenceXml(domain.getClazz(), resourcesDirectory);
 		}
+		createContext(domain, destination, lookups);
 		log("finished generation");
+	}
+
+	private void createContext(ModeledDomain domain, File destination,
+			Lookups lookups) {
+		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+		PrintStream out = new PrintStream(bytes);
+
+		TypeRegister types = new TypeRegister();
+		out.format("public class Context {\n\n");
+		out.format("    public static void setSignaller(%s sig) {\n\n",
+				types.addType(Signaller.class));
+		for (Subsystem subsystem : domain.getSubsystem()) {
+			for (JAXBElement<? extends SubsystemElement> element : subsystem
+					.getSubsystemElement()) {
+				if (element.getValue() instanceof Class) {
+					Class cls = (Class) element.getValue();
+					// create classes (impls)
+					ClassInfo info = createClassInfo(cls);
+					if (info.hasBehaviour())
+						out.format("        %s.setSignaller_(sig);\n",
+								types.addType(info.getClassFullName()));
+				}
+			}
+		}
+		out.format("    }\n");
+		out.format("}");
+		out.close();
+
+		String s = "package " + domainPackageName + ";\n\n";
+		s += types.getImports(domainPackageName + ".Context") + "\n";
+		s += bytes.toString();
+
+		String filename = domainPackageName.replace(".", "/") + "/Context.java";
+		try {
+			FileOutputStream fos = new FileOutputStream(new File(destination,
+					filename));
+			fos.write(s.getBytes());
+			fos.close();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	private void log(String message) {

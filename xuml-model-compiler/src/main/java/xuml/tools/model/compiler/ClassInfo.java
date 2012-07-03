@@ -541,4 +541,7 @@ public abstract class ClassInfo {
 		return "id";
 	}
 
+	public boolean hasBehaviour() {
+		return getEvents().size() > 0;
+	}
 }
