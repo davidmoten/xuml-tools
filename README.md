@@ -5,6 +5,7 @@ Executable UML tools (xml schema, java model compiler, java+javascript model vie
 
 This project is still in development and has not reached alpha release status yet.
 
+<img src="https://github.com/davidmoten/xuml-tools/raw/master/xuml-diagrams/src/docs/class-diagram.png">
 
 Getting started
 ---------------
