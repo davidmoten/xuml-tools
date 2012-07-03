@@ -70,10 +70,6 @@ public class CodeGeneratorJava {
 		out.format("public class Context {\n\n");
 		out.format("    private static %s signaller;\n\n",
 				types.addType(Signaller.class));
-		out.format("    public static %s signaller() {\n",
-				types.addType(Signaller.class));
-		out.format("        return signaller;\n");
-		out.format("    }\n\n");
 		out.format("    public static void sendSignalsInQueue() {\n");
 		out.format("        signaller.sendSignalsInQueue();\n");
 		out.format("    }\n\n");
@@ -88,8 +84,7 @@ public class CodeGeneratorJava {
 		out.format("        return signaller.create(cls,event);\n");
 		out.format("    }\n\n");
 		out.format(
-				"    public static %s setEntityManagerFactory(%s emf) {\n\n",
-				types.addType(Signaller.class),
+				"    public static void setEntityManagerFactory(%s emf) {\n",
 				types.addType(EntityManagerFactory.class));
 		out.format("        signaller = new %s(emf);\n",
 				types.addType(Signaller.class), types.addType(Signaller.class));
@@ -106,7 +101,6 @@ public class CodeGeneratorJava {
 				}
 			}
 		}
-		out.format("        return signaller;\n");
 		out.format("    }\n");
 		out.format("}");
 		out.close();
