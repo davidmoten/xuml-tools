@@ -5,6 +5,7 @@ Executable UML tools (xml schema, java model compiler, java+javascript model vie
 
 This project is still in development and has not reached alpha release status yet.
 
+<img src="https://github.com/davidmoten/xuml-tools/raw/master/xuml-diagrams/src/docs/class-diagram.png">
 
 Getting started
 ---------------
@@ -74,4 +75,6 @@ Web Class Diagram Viewer
 
     cd xuml-tools/xuml-diagrams
     mvn clean gae:run
+If you encounter an error about the gae sdk then run
+    mvn gae:unpack
 Then open [http://localhost:8080]() in a browser. An early draft is released at [http://xuml-tools.appspot.com]() on Google App Engine.
