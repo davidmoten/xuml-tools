@@ -1,6 +1,7 @@
 package xuml.tools.jaxb.compiler.test;
 
 import static org.junit.Assert.assertEquals;
+import static xuml.tools.util.database.DerbyUtil.disableDerbyLog;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -8,7 +9,6 @@ import javax.persistence.Persistence;
 
 import org.junit.Test;
 
-import xuml.tools.util.database.DerbyUtil;
 import abc.A;
 import abc.A.AId;
 import abc.A.BehaviourFactory;
@@ -29,12 +29,13 @@ public class AbcTest {
 	public void testCreateEntityManagerFactoryAndCreateAndSignalEntities()
 			throws InterruptedException {
 
+		disableDerbyLog();
+
 		// create the entity manager factory
-		DerbyUtil.disableDerbyLog();
 		EntityManagerFactory emf = Persistence
 				.createEntityManagerFactory("abc");
 
-		// create a signaller using the EntityManagerFactory
+		// pass the EntityManagerFactory to the generated xuml Context
 		Context.setEntityManagerFactory(emf);
 
 		// set the behaviour factory for the class A
