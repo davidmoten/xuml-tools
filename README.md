@@ -53,19 +53,16 @@ Java model compiler
 With the model compiler we seek to implement the approach taken by Mellor & Balcer in their super book [*Executable UML - A Foundation for Model Driven Architecture*](http://www.executableumlbook.com/).
 
 The java model compiler includes the following features:
-
 * Generates JPA entities
 * All association types
 * Composite primary keys
 * Asynchronous persistent signalling
 * Auto-detection of signals to self
 * Uses Akka actors to handle concurrency
-
 The todo list includes:
 * Event polymorphism
 * Comprehensive unit testing
 * Synchronous signalling (?) 
-
 The items that may be left out:
 * Structured types
 * Bridges
