@@ -70,6 +70,12 @@ public class AbcTest {
 		// check that the signals had an effect. We need an entity manager this
 		// time.
 
+		assertEquals("12a", a1.getAThree());
+		assertEquals("12b", a2.getAThree());
+		assertEquals("12c", a3.getAThree());
+
+		// Just to be sure refresh the entities from the database using the
+		// merge method and assert the same
 		EntityManager em = emf.createEntityManager();
 		// note that the merge method below updates the entity with the latest
 		// state from the database using the entity manager em.
