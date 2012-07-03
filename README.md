@@ -50,7 +50,7 @@ Models are defined in xml that is compliant to the miUML xuml-tools [schema](htt
 
 Java model compiler
 -------------------
-With the model compiler we seek to implement the approach taken by Mellor & Balcer in their super book [*Executable UML - A Foundation for Model Driven Architecture*](http://www.executableumlbook.com/)
+With the model compiler we seek to implement the approach taken by Mellor & Balcer in their super book [*Executable UML - A Foundation for Model Driven Architecture*](http://www.executableumlbook.com/).
 
 The java model compiler includes the following features:
 
