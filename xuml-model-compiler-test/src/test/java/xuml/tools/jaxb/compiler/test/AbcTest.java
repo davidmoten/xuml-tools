@@ -40,7 +40,7 @@ public class AbcTest {
 		// set the entity manager factory to be used by all signals
 		signaller.setEntityManagerFactory(emf);
 
-		// set the behaviour factory for the class A
+		// set the behaviour factory for the class A now
 		A.setBehaviourFactory(createBehaviourFactory());
 		A.setSignaller_(signaller);
 
