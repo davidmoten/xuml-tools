@@ -57,6 +57,7 @@ The java model compiler includes the following features from Executable UML:
 * Composite primary keys
 * Asynchronous persistent signalling
 * Auto-detection of signals to self
+* Uses akka actors to handle concurrency
 
 The todo list includes:
 * Event polymorphism
