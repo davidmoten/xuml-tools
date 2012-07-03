@@ -421,6 +421,12 @@
 				<IndependentAttribute Name="A two" Type="string">
 					<Identifier Number="1" />
 				</IndependentAttribute>
+				<ReferentialAttribute Name="A B one">
+					<ToOneReference Relationship="1" Attribute="B one" />
+				</ReferentialAttribute>
+				<ReferentialAttribute Name="A B two">
+					<ToOneReference Relationship="1" Attribute="B two" />
+				</ReferentialAttribute>
 			</NonSpecializedClass>
 
 			<NonSpecializedClass Name="B">
