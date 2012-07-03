@@ -8,7 +8,7 @@ This project is still in development and has not reached alpha release status ye
 
 Getting started
 ---------------
-Until the project has matured enough to release artifacts to Maven Central repository this is how to locally install the artfacts from source:
+Until the project has matured enough to release artifacts to Maven Central repository this is how to locally install the artfacts from source (Maven 3 required):
 
     git clone https://github.com/davidmoten/xuml-tools.git
     cd xuml-tools
@@ -40,9 +40,7 @@ To generate your own JPA classes from xml compliant with the miUML schema add th
 	</plugins>
 </build>
 ```
-The module ''xuml-model-compiler-test'' demonstrates usage. In particular the test class [AbcTest.java](https://github.com/davidmoten/xuml-tools/blob/master/xuml-model-compiler-test/src/test/java/xuml/tools/jaxb/compiler/test/AbcTest.java) demonstrates normal system lifecycle.
-
-
+The module [**xuml-model-compiler-test**](https://github.com/davidmoten/xuml-tools/tree/master/xuml-model-compiler-test) demonstrates usage. In particular the test class [AbcTest.java](https://github.com/davidmoten/xuml-tools/blob/master/xuml-model-compiler-test/src/test/java/xuml/tools/jaxb/compiler/test/AbcTest.java) demonstrates normal system lifecycle.
 
 Model schema
 ------------
@@ -53,7 +51,6 @@ Java model compiler
 With the model compiler we seek to implement the approach taken by Mellor & Balcer in their super book [*Executable UML - A Foundation for Model Driven Architecture*](http://www.executableumlbook.com/).
 
 The java model compiler includes the following features:
-
 * Generates JPA entities
 * All association types
 * Composite primary keys
