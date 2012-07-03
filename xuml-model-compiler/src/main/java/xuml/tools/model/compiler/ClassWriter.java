@@ -46,6 +46,7 @@ import xuml.tools.model.compiler.ClassInfo.MyTransition;
 import xuml.tools.model.compiler.runtime.CreationEvent;
 import xuml.tools.model.compiler.runtime.EntityHelper;
 import xuml.tools.model.compiler.runtime.Event;
+import xuml.tools.model.compiler.runtime.Signaller;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
@@ -272,10 +273,21 @@ public class ClassWriter {
 
 	private void writeEntityHelper(PrintStream out, ClassInfo info) {
 		out.format("    @%s\n", info.addType(Transient.class));
-		out.format("    private final %s _helper = new %s(this);\n\n",
-				info.addType(EntityHelper.class),
+		out.format("    private static %s signaller;\n\n",
+				info.addType(Signaller.class));
+
+		out.format("    public static void setSignaller_(%s sig) {\n",
+				info.addType(Signaller.class));
+		out.format("        signaller = sig;\n");
+		out.format("    }\n\n");
+
+		out.format("    @%s\n", info.addType(Transient.class));
+		out.format("    private %s _helper;\n\n",
 				info.addType(EntityHelper.class));
-		out.format("    public %s helper() {\n",
+		out.format("    public synchronized %s helper() {\n",
+				info.addType(EntityHelper.class));
+		out.format("        if (_helper==null)\n");
+		out.format("            _helper = new %s(signaller,this);\n",
 				info.addType(EntityHelper.class));
 		out.format("        return _helper;\n");
 		out.format("    }\n\n");
@@ -793,7 +805,7 @@ public class ClassWriter {
 				info.getJavaClassSimpleName(), info.addType(Event.class),
 				info.getJavaClassSimpleName());
 		if (hasBehaviour(info))
-			out.format("        _helper.signal(event);\n");
+			out.format("        helper().signal(event);\n");
 		else
 			out.format("        //no behaviour for this class\n");
 		out.format("        return this;\n");
@@ -804,7 +816,7 @@ public class ClassWriter {
 				info.getJavaClassSimpleName(), info.addType(Event.class),
 				info.getJavaClassSimpleName());
 		if (hasBehaviour(info)) {
-			out.format("        _helper.beforeEvent();\n\n");
+			out.format("        helper().beforeEvent();\n\n");
 			out.format("        // process the event\n");
 			boolean first = true;
 			for (MyEvent event : info.getEvents()) {
@@ -819,7 +831,7 @@ public class ClassWriter {
 				first = false;
 			}
 			out.println();
-			out.format("        _helper.afterEvent();\n");
+			out.format("        helper().afterEvent();\n");
 		}
 		out.format("        return this;\n");
 		out.format("    }\n\n");

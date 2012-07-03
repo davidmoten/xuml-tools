@@ -30,16 +30,7 @@ public class Signaller {
 			new Props(RootActor.class), "root");
 	private EntityManagerFactory emf;
 
-	private static Signaller instance;
-
-	public static Signaller getInstance() {
-		if (null == instance) {
-			instance = new Signaller();
-		}
-		return instance;
-	}
-
-	private Signaller() {
+	public Signaller() {
 	}
 
 	/**

@@ -35,13 +35,14 @@ public class AbcTest {
 				.createEntityManagerFactory("abc");
 
 		// get the singleton Signaller
-		Signaller signaller = Signaller.getInstance();
+		Signaller signaller = new Signaller();
 
 		// set the entity manager factory to be used by all signals
 		signaller.setEntityManagerFactory(emf);
 
 		// set the behaviour factory for the class A
 		A.setBehaviourFactory(createBehaviourFactory());
+		A.setSignaller_(signaller);
 
 		// send any signals not processed from last shutdown
 		signaller.sendSignalsInQueue();
@@ -77,7 +78,7 @@ public class AbcTest {
 		em.close();
 
 		// shutdown the actor system
-		Signaller.getInstance().stop();
+		signaller.stop();
 
 	}
 

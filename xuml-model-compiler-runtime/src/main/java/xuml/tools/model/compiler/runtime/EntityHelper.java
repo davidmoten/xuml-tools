@@ -19,20 +19,22 @@ public class EntityHelper {
 	private final Entity entity;
 	private final Stack<Call> stack = new Stack<Call>();
 	private final List<Signal> signalsToOther = Lists.newArrayList();
+	private final Signaller signaller;
 
-	public EntityHelper(Entity entity) {
+	public EntityHelper(Signaller signaller, Entity entity) {
+		this.signaller = signaller;
 		this.entity = entity;
 	}
 
 	public void beforeEvent() {
 
 		stack.push(new Call());
-		Info info = Signaller.getInstance().getInfo();
+		Info info = signaller.getInfo();
 		info.setCurrentEntity(entity);
 	}
 
 	public <T> void signal(Event<T> event) {
-		Info info = Signaller.getInstance().getInfo();
+		Info info = signaller.getInfo();
 		// do an object equals because RootActor will guarantee that only one
 		// instance is being used to refer to a database entity at any given
 		// time.
@@ -40,7 +42,7 @@ public class EntityHelper {
 		if (isSignalToSelf)
 			stack.peek().getEventsToSelf().add(event);
 		else
-			Signaller.getInstance().signal(entity, event);
+			signaller.signal(entity, event);
 	}
 
 	public <T> void queueSignal(Signal<T> signal) {
@@ -49,8 +51,7 @@ public class EntityHelper {
 
 	public void sendQueuedSignals() {
 		for (Signal signal : signalsToOther) {
-			Signaller.getInstance().signal(signal.getEntity(),
-					signal.getEvent());
+			signaller.signal(signal.getEntity(), signal.getEvent());
 		}
 	}
 
@@ -65,7 +66,7 @@ public class EntityHelper {
 		}
 		stack.pop();
 		if (stack.size() == 0) {
-			Info info = Signaller.getInstance().getInfo();
+			Info info = signaller.getInfo();
 			// reset the thread local variable so that the next use of this
 			// thread will not make an assumption about the current entity
 			info.setCurrentEntity(null);

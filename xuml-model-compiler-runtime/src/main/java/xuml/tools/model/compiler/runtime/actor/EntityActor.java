@@ -6,6 +6,7 @@ import javax.persistence.EntityTransaction;
 
 import xuml.tools.model.compiler.runtime.Entity;
 import xuml.tools.model.compiler.runtime.QueuedSignal;
+import xuml.tools.model.compiler.runtime.Signaller;
 import xuml.tools.model.compiler.runtime.message.CloseEntityActor;
 import xuml.tools.model.compiler.runtime.message.Signal;
 import xuml.tools.model.compiler.runtime.message.StopEntityActor;
@@ -18,6 +19,7 @@ public class EntityActor extends UntypedActor {
 	private EntityManagerFactory emf;
 	private boolean closed = false;
 	private final LoggingAdapter log;
+	private Signaller signaller;
 
 	public EntityActor() {
 		log = Logging.getLogger(getContext().system(), this);
