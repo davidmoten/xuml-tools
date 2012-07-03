@@ -59,10 +59,12 @@ The java model compiler includes the following features:
 * Asynchronous persistent signalling
 * Auto-detection of signals to self
 * Uses Akka actors to handle concurrency
+
 The todo list includes:
 * Event polymorphism
 * Comprehensive unit testing
 * Synchronous signalling (?) 
+
 The items that may be left out:
 * Structured types
 * Bridges
