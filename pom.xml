@@ -12,8 +12,8 @@
 		<compiler.plugin.version>2.3.2</compiler.plugin.version>
 		<maven.compiler.source>1.6</maven.compiler.source>
 		<maven.compiler.target>1.6</maven.compiler.target>
-		<gae.version>1.6.3</gae.version>
-		<gae.plugin.version>0.9.2</gae.plugin.version>
+		<gae.version>1.7.0</gae.version>
+		<gae.plugin.version>0.9.4</gae.plugin.version>
 	</properties>
 
 	<modules>
