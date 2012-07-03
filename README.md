@@ -50,7 +50,7 @@ Models are defined in xml that is compliant to the miUML xuml-tools [schema](htt
 
 Java model compiler
 -------------------
-The java model compiler includes the following features from Executable UML:
+The java model compiler includes the following features:
 
 * Generates JPA entities
 * All association types
