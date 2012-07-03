@@ -430,6 +430,12 @@
 				<IndependentAttribute Name="B one" Type="string">
 					<Identifier Number="1" />
 				</IndependentAttribute>
+				<ReferentialAttribute Name="B A one">
+					<ToOneReference Relationship="1" Attribute="A one" />
+				</ReferentialAttribute>
+				<ReferentialAttribute Name="B A two">
+					<ToOneReference Relationship="1" Attribute="A two" />
+				</ReferentialAttribute>
 			</NonSpecializedClass>
 
 			<BinaryAssociation Rnum="1">
