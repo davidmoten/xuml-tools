@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 
+import javax.persistence.EntityManagerFactory;
 import javax.xml.bind.JAXBElement;
 
 import miuml.jaxb.Class;
@@ -65,8 +66,17 @@ public class CodeGeneratorJava {
 
 		TypeRegister types = new TypeRegister();
 		out.format("public class Context {\n\n");
-		out.format("    public static void setSignaller(%s sig) {\n\n",
+		out.format("    private static %s signaller;\n\n",
 				types.addType(Signaller.class));
+		out.format("    public static %s signaller() {\n",
+				types.addType(Signaller.class));
+		out.format("        return signaller;\n");
+		out.format("    }\n\n");
+		out.format("    public static %s createSignaller(%s emf) {\n\n",
+				types.addType(Signaller.class),
+				types.addType(EntityManagerFactory.class));
+		out.format("        signaller = new %s(emf);\n",
+				types.addType(Signaller.class), types.addType(Signaller.class));
 		for (Subsystem subsystem : domain.getSubsystem()) {
 			for (JAXBElement<? extends SubsystemElement> element : subsystem
 					.getSubsystemElement()) {
@@ -75,11 +85,12 @@ public class CodeGeneratorJava {
 					// create classes (impls)
 					ClassInfo info = createClassInfo(cls);
 					if (info.hasBehaviour())
-						out.format("        %s.setSignaller_(sig);\n",
+						out.format("        %s.setSignaller_(signaller);\n",
 								types.addType(info.getClassFullName()));
 				}
 			}
 		}
+		out.format("        return signaller;\n");
 		out.format("    }\n");
 		out.format("}");
 		out.close();

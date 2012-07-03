@@ -35,12 +35,8 @@ public class AbcTest {
 		EntityManagerFactory emf = Persistence
 				.createEntityManagerFactory("abc");
 
-		// get the singleton Signaller
-		Signaller signaller = new Signaller();
-		// set the entity manager factory to be used by all signals
-		signaller.setEntityManagerFactory(emf);
-		// get all entities to use this signaller
-		Context.setSignaller(signaller);
+		// create a signaller using the EntityManagerFactory
+		Signaller signaller = Context.createSignaller(emf);
 
 		// set the behaviour factory for the class A
 		A.setBehaviourFactory(createBehaviourFactory());

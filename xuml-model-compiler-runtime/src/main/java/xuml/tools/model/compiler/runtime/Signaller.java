@@ -28,18 +28,9 @@ public class Signaller {
 	private final ActorSystem actorSystem = ActorSystem.create();
 	private final ActorRef root = actorSystem.actorOf(
 			new Props(RootActor.class), "root");
-	private EntityManagerFactory emf;
+	private final EntityManagerFactory emf;
 
-	public Signaller() {
-	}
-
-	/**
-	 * Sets the entity manager factory for all database interaction managed by
-	 * the signaller.
-	 * 
-	 * @param emf
-	 */
-	public void setEntityManagerFactory(EntityManagerFactory emf) {
+	public Signaller(EntityManagerFactory emf) {
 		this.emf = emf;
 		root.tell(emf);
 	}
