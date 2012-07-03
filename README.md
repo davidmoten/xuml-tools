@@ -74,7 +74,9 @@ Web Class Diagram Viewer
 ------------------------
 
     cd xuml-tools/xuml-diagrams
+    mvn gae:unpack 
     mvn clean gae:run
-If you encounter an error about the gae sdk then run
-    mvn gae:unpack
+    
+Note that gae:unpack need only be run once to download the sdk.
+
 Then open [http://localhost:8080]() in a browser. An early draft is released at [http://xuml-tools.appspot.com]() on Google App Engine.
