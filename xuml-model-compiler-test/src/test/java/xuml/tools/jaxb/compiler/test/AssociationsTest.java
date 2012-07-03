@@ -28,4 +28,24 @@ public class AssociationsTest {
 	public void testManyToMany() {
 		// TODO
 	}
+
+	@Test
+	public void testOneManyToMany() {
+		// TODO
+	}
+
+	@Test
+	public void testOneManyToOneMany() {
+		// TODO
+	}
+
+	@Test
+	public void testUnaryOne() {
+		// TODO
+	}
+
+	@Test
+	public void testUnaryMany() {
+		// TODO
+	}
 }

@@ -409,4 +409,37 @@
 		</Subsystem>
 	</ModeledDomain>
 
+	<ModeledDomain Name="one-to-one">
+
+		<Subsystem Name="one-to-one" Floor="81" Ceiling="100">
+
+			<NonSpecializedClass Name="A">
+
+				<IndependentAttribute Name="A one" Type="string">
+					<Identifier Number="1" />
+				</IndependentAttribute>
+				<IndependentAttribute Name="A two" Type="string">
+					<Identifier Number="1" />
+				</IndependentAttribute>
+			</NonSpecializedClass>
+
+			<NonSpecializedClass Name="B">
+				<IndependentAttribute Name="B one" Type="string">
+					<Identifier Number="1" />
+				</IndependentAttribute>
+				<IndependentAttribute Name="B one" Type="string">
+					<Identifier Number="1" />
+				</IndependentAttribute>
+			</NonSpecializedClass>
+
+			<BinaryAssociation Rnum="1">
+				<ActivePerspective Phrase="characterizes"
+					ViewedClass="B" OnePerspective="true" Conditional="false" />
+				<PassivePerspective Phrase="is characterized by"
+					ViewedClass="A" OnePerspective="true" Conditional="false" />
+			</BinaryAssociation>
+
+		</Subsystem>
+	</ModeledDomain>
+
 </Domains>

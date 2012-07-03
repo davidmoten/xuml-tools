@@ -42,7 +42,7 @@
 				<version>${project.version}</version>
 				<executions>
 					<execution>
-						<id>generate-jpa</id>
+						<id>abc</id>
 						<goals>
 							<goal>generate-jpa</goal>
 						</goals>
@@ -51,6 +51,18 @@
 							<domain>Nested composite id example</domain>
 							<schema>abc</schema>
 							<packageName>abc</packageName>
+						</configuration>
+					</execution>
+					<execution>
+						<id>one-to-one</id>
+						<goals>
+							<goal>generate-jpa</goal>
+						</goals>
+						<configuration>
+							<domainsXml>/samples.xml</domainsXml>
+							<domain>one-to-one</domain>
+							<schema>one_to_one</schema>
+							<packageName>one_to_one</packageName>
 						</configuration>
 					</execution>
 				</executions>
