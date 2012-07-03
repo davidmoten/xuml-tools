@@ -271,6 +271,7 @@ public class ClassInfoFromJaxb extends ClassInfo {
 		if (cls.getLifecycle() == null)
 			return newArrayList();
 		List<MyEvent> list = newArrayList();
+		CreationEvent creationEvent = getCreationEvent();
 		for (JAXBElement<? extends Event> element : cls.getLifecycle()
 				.getEvent()) {
 			Event event = element.getValue();
@@ -317,7 +318,8 @@ public class ClassInfoFromJaxb extends ClassInfo {
 
 			MyEvent myEvent = new MyEvent(event.getName(),
 					Util.toClassSimpleName(event.getName()), parameters,
-					stateName, getStateSignatureInterfaceName(stateName));
+					stateName, getStateSignatureInterfaceName(stateName),
+					event == creationEvent);
 			list.add(myEvent);
 		}
 		return list;

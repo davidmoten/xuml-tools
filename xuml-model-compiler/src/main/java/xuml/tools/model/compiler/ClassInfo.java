@@ -229,6 +229,7 @@ public abstract class ClassInfo {
 		private final List<MyParameter> parameters;
 		private final String stateName;
 		private final String stateSignatureInterfaceSimpleName;
+		private final boolean creates;
 
 		public List<MyParameter> getParameters() {
 			return parameters;
@@ -236,11 +237,12 @@ public abstract class ClassInfo {
 
 		public MyEvent(String name, String simpleClassName,
 				List<MyParameter> parameters, String stateName,
-				String stateSignatureInterfaceSimpleName) {
+				String stateSignatureInterfaceSimpleName, boolean creates) {
 			this.name = name;
 			this.simpleClassName = simpleClassName;
 			this.stateName = stateName;
 			this.stateSignatureInterfaceSimpleName = stateSignatureInterfaceSimpleName;
+			this.creates = creates;
 			if (parameters == null)
 				this.parameters = newArrayList();
 			else
@@ -272,6 +274,10 @@ public abstract class ClassInfo {
 
 		public String getStateSignatureInterfaceSimpleName() {
 			return stateSignatureInterfaceSimpleName;
+		}
+
+		public boolean getCreates() {
+			return creates;
 		}
 	}
 

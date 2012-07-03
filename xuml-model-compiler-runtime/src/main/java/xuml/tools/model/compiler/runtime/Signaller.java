@@ -53,6 +53,32 @@ public class Signaller {
 		root.tell(emf);
 	}
 
+	/**
+	 * Returns a new instance of type T using the given {@link CreationEvent}.
+	 * This is a synchronous creation using a newly created then closed
+	 * EntityManager for persisting the entity. If you need finer grained
+	 * control of commits then open your own entity manager and do the the
+	 * persist yourself.
+	 * 
+	 * @param cls
+	 * @param event
+	 * @return
+	 */
+	public <T extends Entity<T>> T create(Class<T> cls, CreationEvent<T> event) {
+		try {
+			T t = cls.newInstance();
+			EntityManager em = emf.createEntityManager();
+			t.event(event);
+			em.persist(t);
+			em.close();
+			return t;
+		} catch (InstantiationException e) {
+			throw new RuntimeException(e);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	public <T, R> void signal(Entity<T> entity, Event<T> event) {
 		long id = persistSignal(entity.getId(), event);
 		Signal<T> signal = new Signal<T>(entity, event, id);

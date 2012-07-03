@@ -34,32 +34,43 @@ public class AbcTest {
 		EntityManagerFactory emf = Persistence
 				.createEntityManagerFactory("abc");
 
+		// get the singleton Signaller
+		Signaller signaller = Signaller.getInstance();
+
 		// set the entity manager factory to be used by all signals
-		Signaller.getInstance().setEntityManagerFactory(emf);
+		signaller.setEntityManagerFactory(emf);
 
 		// set the behaviour factory for the class A
 		A.setBehaviourFactory(createBehaviourFactory());
 
 		// send any signals not processed from last shutdown
-		Signaller.getInstance().sendSignalsInQueue();
+		signaller.sendSignalsInQueue();
 
 		// create some entities (this happens synchronously)
-		EntityManager em = emf.createEntityManager();
-		A a1 = A.create(em, new A.Events.Create("value1.1", "value2.1", "1234"));
-		A a2 = A.create(em, new A.Events.Create("value1.2", "value2.2", "1234"));
-		A a3 = A.create(em, new A.Events.Create("value1.3", "value2.3", "1234"));
-		em.close();
+		A a1 = signaller.create(A.class, new A.Events.Create("value1.1",
+				"value2.1", "1234"));
+		A a2 = signaller.create(A.class, new A.Events.Create("value1.2",
+				"value2.2", "1234"));
+		A a3 = signaller.create(A.class, new A.Events.Create("value1.3",
+				"value2.3", "1234"));
 
 		// send asynchronous signals to the entities
 		a1.signal(new A.Events.SomethingDone("12a"));
 		a2.signal(new A.Events.SomethingDone("12b"));
 		a3.signal(new A.Events.SomethingDone("12c"));
 
+		// Notice that all the above could be done without explicitly creating
+		// EntityManagers at all. Nice!
+
 		// wait a bit for all signals to be processed
 		Thread.sleep(2000);
 
-		// check that the signals had an effect
-		em = emf.createEntityManager();
+		// check that the signals had an effect. We need an entity manager this
+		// time.
+
+		EntityManager em = emf.createEntityManager();
+		// note that the merge method below updates the entity with the latest
+		// state from the database using the entity manager em.
 		assertEquals("12a", a1.merge(em).getAThree());
 		assertEquals("12b", a2.merge(em).getAThree());
 		assertEquals("12c", a3.merge(em).getAThree());

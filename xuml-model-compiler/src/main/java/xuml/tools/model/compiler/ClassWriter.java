@@ -43,6 +43,7 @@ import xuml.tools.model.compiler.ClassInfo.MyPrimaryIdAttribute;
 import xuml.tools.model.compiler.ClassInfo.MyReferenceMember;
 import xuml.tools.model.compiler.ClassInfo.MySubclassRole;
 import xuml.tools.model.compiler.ClassInfo.MyTransition;
+import xuml.tools.model.compiler.runtime.CreationEvent;
 import xuml.tools.model.compiler.runtime.EntityHelper;
 import xuml.tools.model.compiler.runtime.Event;
 
@@ -103,9 +104,11 @@ public class ClassWriter {
 			for (MyTransition t : info.getTransitions()) {
 				if (t.isCreationTransition()) {
 					out.format(
-							"    public static %s create(%s em, Events.%s event) {\n",
+							"    public static %s create(%s em, %s<%s> event) {\n",
 							info.getJavaClassSimpleName(),
-							info.addType(EntityManager.class), t.getEventName());
+							info.addType(EntityManager.class),
+							info.addType(CreationEvent.class),
+							info.getJavaClassSimpleName());
 					out.format("        %s entity = new %s();\n",
 							info.getJavaClassSimpleName(),
 							info.getJavaClassSimpleName());
@@ -609,19 +612,27 @@ public class ClassWriter {
 		}
 
 		for (MyEvent event : info.getEvents()) {
-			String extraImplements;
+			String stateSignatureImplements;
 			if (event.getStateName() != null)
-				extraImplements = ", "
+				stateSignatureImplements = ", "
 						+ event.getStateSignatureInterfaceSimpleName();
 			else
-				extraImplements = "";
+				stateSignatureImplements = "";
+			String creationEventImplements;
+			if (event.getCreates()) {
+				creationEventImplements = ", "
+						+ info.addType(CreationEvent.class) + "<"
+						+ info.getJavaClassSimpleName() + ">";
+			} else
+				creationEventImplements = "";
 			out.format("        @%s(\"serial\")\n",
 					info.addType(SuppressWarnings.class));
 			out.format(
-					"        public static class %s implements %s<%s>,%s%s {\n\n",
+					"        public static class %s implements %s<%s>, %s%s%s {\n\n",
 					event.getSimpleClassName(), info.addType(Event.class),
 					info.getJavaClassSimpleName(),
-					info.addType(Serializable.class), extraImplements);
+					info.addType(Serializable.class), stateSignatureImplements,
+					creationEventImplements);
 
 			StringBuilder constructorBody = new StringBuilder();
 			for (MyParameter p : event.getParameters()) {
