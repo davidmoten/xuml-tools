@@ -8,7 +8,7 @@ This project is still in development and has not reached alpha release status ye
 
 Getting started
 ---------------
-Until the project has matured enough to release artifacts to Maven Central repository this is how to locally install the artfacts from source:
+Until the project has matured enough to release artifacts to Maven Central repository this is how to locally install the artfacts from source (Maven 3 required):
 
     git clone https://github.com/davidmoten/xuml-tools.git
     cd xuml-tools
