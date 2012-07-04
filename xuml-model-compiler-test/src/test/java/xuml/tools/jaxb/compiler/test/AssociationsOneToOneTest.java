@@ -5,7 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.persistence.RollbackException;
+import javax.persistence.PersistenceException;
 
 import one_to_one.A;
 import one_to_one.B;
@@ -34,34 +34,35 @@ public class AssociationsOneToOneTest {
 			em.getTransaction().commit();
 			em.close();
 		}
-		B b = new B();
-		b.setId(new BId("some", "thing"));
 		{
+			B b = new B();
+			b.setId(new BId("some", "thing"));
 			EntityManager em = emf.createEntityManager();
 			em.getTransaction().begin();
-			em.persist(b);
 			try {
-				em.getTransaction().commit();
+				em.persist(b);
 				Assert.fail();
-			} catch (RollbackException e) {
+			} catch (PersistenceException e) {
+				em.getTransaction().rollback();
 			}
 			em.close();
 		}
 		{
 			EntityManager em = emf.createEntityManager();
 			em.getTransaction().begin();
-			em.merge(b);
-			em.merge(a);
-			a.setB(b);
-			b.setA(a);
+			A a2 = em.find(A.class, new A.AId("hello", "there"));
+			B b = new B();
+			b.setId(new BId("some2", "thing2"));
+			b.setA(a2);
+			em.persist(b);
 			em.getTransaction().commit();
 			em.close();
 		}
 		{
 			EntityManager em = emf.createEntityManager();
 			em.getTransaction().begin();
-			em.merge(b);
-			assertNotNull(b.getA());
+			A a2 = em.find(A.class, new A.AId("hello", "there"));
+			assertNotNull(a2.getB());
 			em.getTransaction().commit();
 			em.close();
 		}

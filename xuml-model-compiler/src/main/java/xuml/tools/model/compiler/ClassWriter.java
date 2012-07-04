@@ -439,7 +439,7 @@ public class ClassWriter {
 				out.format(
 						"    @OneToOne(targetEntity=%s.class,cascade=CascadeType.ALL,fetch=FetchType.LAZY)\n",
 						info.addType(ref.getFullClassName()));
-				writeJoinColumnsAnnotation(out, ref, false);
+				writeJoinColumnsAnnotation(out, ref, false, true, true);
 				writeField(out, ref);
 			} else if (isRelationship(ref, Mult.ONE, Mult.MANY)) {
 				info.addType(OneToMany.class);
@@ -549,6 +549,12 @@ public class ClassWriter {
 
 	private void writeJoinColumnsAnnotation(PrintStream out,
 			MyReferenceMember ref, boolean nullable) {
+		writeJoinColumnsAnnotation(out, ref, nullable, false, false);
+	}
+
+	private void writeJoinColumnsAnnotation(PrintStream out,
+			MyReferenceMember ref, boolean nullable, boolean insertable,
+			boolean updatable) {
 		info.addType(JoinColumns.class);
 		out.format("    @JoinColumns(value={\n");
 		boolean first = true;
@@ -558,8 +564,9 @@ public class ClassWriter {
 				out.format(",\n");
 			first = false;
 			out.format(
-					"        @JoinColumn(name=\"%s\",referencedColumnName=\"%s\",nullable=%s,insertable=false,updatable=false)",
-					col.getThisColumnName(), col.getOtherColumnName(), nullable);
+					"        @JoinColumn(name=\"%s\",referencedColumnName=\"%s\",nullable=%s,insertable=%s,updatable=%s)",
+					col.getThisColumnName(), col.getOtherColumnName(),
+					nullable, insertable, updatable);
 		}
 		out.format("})\n");
 	}
