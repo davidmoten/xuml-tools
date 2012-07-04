@@ -51,7 +51,7 @@ Java model compiler
 -------------------
 With the model compiler we seek to implement the approach taken by Mellor & Balcer in their super book [*Executable UML - A Foundation for Model Driven Architecture*](http://www.executableumlbook.com/).
 
-The java model compiler includes/will include the following features:
+The java model compiler includes/will include the following features ( <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png"> denotest done):
 * Generates JPA entities
 * All association types
  * 1 to 1
