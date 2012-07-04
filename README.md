@@ -7,8 +7,6 @@ This project is still in development and has not reached alpha release status ye
 
 <img src="https://github.com/davidmoten/xuml-tools/raw/master/xuml-diagrams/src/docs/class-diagram.png">
 
-<img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
-
 Getting started
 ---------------
 Until the project has matured enough to release artifacts to Maven Central repository this is how to locally install the artfacts from source (Maven 3 required):
@@ -56,8 +54,15 @@ With the model compiler we seek to implement the approach taken by Mellor & Balc
 The java model compiler includes/will include the following features:
 * Generates JPA entities
 * All association types
-* Composite primary keys
-* Asynchronous persistent signalling
+ * 1 to 1
+ * 0..1 to 1
+ * 1 to *
+ * 0..1 to *
+ * 1 to 1..*
+ * 0..1 to 1..*
+ * * to *
+* Composite primary keys  <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png"> 
+* Asynchronous persistent signalling  <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png"> 
 * Auto-detection of signals to self <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
 * Uses Akka actors to handle concurrency <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
 
