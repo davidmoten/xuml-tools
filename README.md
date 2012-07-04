@@ -7,6 +7,8 @@ This project is still in development and has not reached alpha release status ye
 
 <img src="https://github.com/davidmoten/xuml-tools/raw/master/xuml-diagrams/src/docs/class-diagram.png">
 
+<img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
+
 Getting started
 ---------------
 Until the project has matured enough to release artifacts to Maven Central repository this is how to locally install the artfacts from source (Maven 3 required):
