@@ -56,7 +56,7 @@ The java model compiler includes the following features (<img src="https://githu
 * Generates State Machine  <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png"> 
 * All association types
  * 1 to 1
- * 0..1 to 1
+ * 0..1 to 1 <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png"> 
  * 1 to *
  * 0..1 to *
  * 1 to 1..*
