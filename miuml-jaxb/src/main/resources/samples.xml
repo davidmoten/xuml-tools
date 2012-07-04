@@ -446,7 +446,7 @@
 
 			<BinaryAssociation Rnum="1">
 				<ActivePerspective Phrase="characterizes"
-					ViewedClass="B" OnePerspective="true" Conditional="false" />
+					ViewedClass="B" OnePerspective="true" Conditional="true" />
 				<PassivePerspective Phrase="is characterized by"
 					ViewedClass="A" OnePerspective="true" Conditional="false" />
 			</BinaryAssociation>

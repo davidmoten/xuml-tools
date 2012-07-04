@@ -306,6 +306,33 @@ public class ClassWriter {
 			out.format("    public static class %s implements %s {\n\n",
 					info.getEmbeddedIdSimpleClassName(),
 					info.addType(Serializable.class));
+			out.format("        public %s() {\n",
+					info.getEmbeddedIdSimpleClassName());
+			out.format("            //JPA requires no-arg constructor\n");
+			out.format("        }\n\n");
+
+			// write constructor
+			out.format("        public %s(",
+					info.getEmbeddedIdSimpleClassName());
+			boolean first = true;
+			for (MyPrimaryIdAttribute member : info
+					.getPrimaryIdAttributeMembers()) {
+				if (!first)
+					out.format(", ");
+				out.format("%s %s", info.addType(member.getType()),
+						member.getFieldName());
+				first = false;
+			}
+			out.format(") {\n");
+			first = true;
+			for (MyPrimaryIdAttribute member : info
+					.getPrimaryIdAttributeMembers()) {
+				out.format("            this.%s = %s;\n",
+						member.getFieldName(), member.getFieldName());
+				first = false;
+			}
+			out.format("        }\n\n");
+
 			for (MyPrimaryIdAttribute member : info
 					.getPrimaryIdAttributeMembers()) {
 				if (member.getReferenceClass() == null)
@@ -393,7 +420,10 @@ public class ClassWriter {
 			jd(out, ref.getThisMult() + " " + info.getJavaClassSimpleName()
 					+ " " + ref.getThatVerbClause() + " " + ref.getThatMult()
 					+ " " + ref.getSimpleClassName(), "    ");
-			if (isRelationship(ref, Mult.ONE, Mult.ZERO_ONE)) {
+			if (isRelationship(ref, Mult.ONE, Mult.ONE)) {
+				// TODO
+				throw new RuntimeException("not implemented");
+			} else if (isRelationship(ref, Mult.ONE, Mult.ZERO_ONE)) {
 				info.addType(OneToOne.class);
 				info.addType(FetchType.class);
 				out.format(

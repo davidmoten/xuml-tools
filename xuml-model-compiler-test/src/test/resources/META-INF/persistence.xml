@@ -3,8 +3,8 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
     http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
 	version="1.0">
-	
-	<persistence-unit name="abc" >
+
+	<persistence-unit name="abc">
 		<class>abc.A</class>
 		<class>abc.B</class>
 		<class>abc.C</class>
@@ -15,9 +15,24 @@
 			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
 			<property name="hibernate.connection.driver_class" value="org.apache.derby.jdbc.EmbeddedDriver" />
 			<property name="hibernate.connection.url" value="jdbc:derby:target/abc-db;create=true" />
-			<property name="hibernate.connection.pool_size" value= "5"/>
-			<property name="hibernate.show_sql" value="false"/>
-			<property name="hibernate.format_sql" value="true"/>
+			<property name="hibernate.connection.pool_size" value="5" />
+			<property name="hibernate.show_sql" value="false" />
+			<property name="hibernate.format_sql" value="true" />
+		</properties>
+	</persistence-unit>
+	<persistence-unit name="one-to-one">
+		<class>one_to_one.A</class>
+		<class>one_to_one.B</class>
+		<class>xuml.tools.model.compiler.runtime.QueuedSignal</class>
+		<exclude-unlisted-classes>true</exclude-unlisted-classes>
+		<properties>
+			<property name="hibernate.dialect" value="org.hibernate.dialect.DerbyDialect" />
+			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
+			<property name="hibernate.connection.driver_class" value="org.apache.derby.jdbc.EmbeddedDriver" />
+			<property name="hibernate.connection.url" value="jdbc:derby:target/abc-db;create=true" />
+			<property name="hibernate.connection.pool_size" value="5" />
+			<property name="hibernate.show_sql" value="false" />
+			<property name="hibernate.format_sql" value="true" />
 		</properties>
 	</persistence-unit>
 
