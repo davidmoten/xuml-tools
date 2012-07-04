@@ -433,7 +433,7 @@
 				<IndependentAttribute Name="B one" Type="string">
 					<Identifier Number="1" />
 				</IndependentAttribute>
-				<IndependentAttribute Name="B one" Type="string">
+				<IndependentAttribute Name="B two" Type="string">
 					<Identifier Number="1" />
 				</IndependentAttribute>
 				<ReferentialAttribute Name="B A one">
