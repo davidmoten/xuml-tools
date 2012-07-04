@@ -62,6 +62,10 @@ The java model compiler includes the following features (<img src="https://githu
  * 1 to 1..*
  * 0..1 to 1..*
  * * to *
+ * Unary 1
+ * Unary 0..1
+ * Unary *
+ * Unary 1..*
 * Composite primary keys  <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png"> 
 * Asynchronous persistent signalling  <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png"> 
 * Auto-detection of signals to self <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
