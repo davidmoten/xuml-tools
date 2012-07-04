@@ -58,8 +58,8 @@ The java model compiler includes/will include the following features:
 * All association types
 * Composite primary keys
 * Asynchronous persistent signalling
-* Auto-detection of signals to self
-* Uses Akka actors to handle concurrency
+* Auto-detection of signals to self <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
+* Uses Akka actors to handle concurrency <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
 
 The todo list includes:
 * Event polymorphism
