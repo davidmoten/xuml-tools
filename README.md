@@ -70,6 +70,8 @@ The java model compiler includes the following features (<img src="https://githu
  * Unary 0..1
  * Unary *
  * Unary 1..*
+* Event and State signatures
+* Convenience methods including method chaining and static typing (generics)
 * Composite primary keys  <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png"> 
 * Asynchronous persistent signalling  <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png"> 
 * Auto-detection of signals to self <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
