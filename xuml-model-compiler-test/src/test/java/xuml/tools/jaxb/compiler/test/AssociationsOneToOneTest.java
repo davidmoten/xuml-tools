@@ -8,6 +8,7 @@ import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
 
 import one_to_one.A;
+import one_to_one.A.AId;
 import one_to_one.B;
 import one_to_one.B.BId;
 import one_to_one.Context;
@@ -65,7 +66,8 @@ public class AssociationsOneToOneTest {
 		{
 			EntityManager em = emf.createEntityManager();
 			em.getTransaction().begin();
-			A a2 = em.find(A.class, new A.AId("hello", "there"));
+			A a2 = new A();
+			a2.setId(new AId("boo", "baa"));
 			B b = new B();
 			b.setId(new BId("some2", "thing2"));
 			b.setA(a2);
@@ -76,7 +78,7 @@ public class AssociationsOneToOneTest {
 		{
 			EntityManager em = emf.createEntityManager();
 			em.getTransaction().begin();
-			A a2 = em.find(A.class, new A.AId("hello", "there"));
+			A a2 = em.find(A.class, new A.AId("boo", "baa"));
 			assertNotNull(a2.getB());
 			em.getTransaction().commit();
 			em.close();

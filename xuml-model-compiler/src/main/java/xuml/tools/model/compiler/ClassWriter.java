@@ -48,6 +48,7 @@ import xuml.tools.model.compiler.runtime.EntityHelper;
 import xuml.tools.model.compiler.runtime.Event;
 import xuml.tools.model.compiler.runtime.Signaller;
 
+import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -296,88 +297,157 @@ public class ClassWriter {
 			writeIndependentAttributeMember(out, info
 					.getPrimaryIdAttributeMembers().get(0), "    ");
 		} else {
-			out.format("    @%s\n", info.addType(EmbeddedId.class));
-			out.format("    private %s %s;\n\n",
-					info.getEmbeddedIdSimpleClassName(),
-					info.getEmbeddedIdAttributeName());
-			out.format("    @%s\n", info.addType(Embeddable.class));
-			out.format("    @%s(\"serial\")\n",
-					info.addType(SuppressWarnings.class));
-			out.format("    public static class %s implements %s {\n\n",
-					info.getEmbeddedIdSimpleClassName(),
-					info.addType(Serializable.class));
-			out.format("        public %s() {\n",
-					info.getEmbeddedIdSimpleClassName());
-			out.format("            //JPA requires no-arg constructor\n");
-			out.format("        }\n\n");
+			writeEmbeddedIdField(out, info);
 
-			// write constructor
-			out.format("        public %s(",
-					info.getEmbeddedIdSimpleClassName());
-			boolean first = true;
-			for (MyPrimaryIdAttribute member : info
-					.getPrimaryIdAttributeMembers()) {
-				if (!first)
-					out.format(", ");
-				out.format("%s %s", info.addType(member.getType()),
-						member.getFieldName());
-				first = false;
-			}
-			out.format(") {\n");
-			first = true;
-			for (MyPrimaryIdAttribute member : info
-					.getPrimaryIdAttributeMembers()) {
-				out.format("            this.%s = %s;\n",
-						member.getFieldName(), member.getFieldName());
-				first = false;
-			}
-			out.format("        }\n\n");
+			writeEmbeddedIdDeclaration(out, info);
 
-			for (MyPrimaryIdAttribute member : info
-					.getPrimaryIdAttributeMembers()) {
-				if (member.getReferenceClass() == null)
-					out.format("        @%s(name=\"%s\")\n",
-							info.addType(Column.class), member.getColumnName());
-				else {
-					out.format(
-							"        @%s(name=\"%s\",insertable=false,updatable=false)\n",
-							info.addType(Column.class), member.getColumnName());
-				}
-				out.format("%sprivate %s %s;\n\n", "        ",
-						info.addType(member.getType()), member.getFieldName());
-			}
-			for (MyPrimaryIdAttribute member : info
-					.getPrimaryIdAttributeMembers()) {
-				out.format("%spublic %s get%s(){\n", "        ",
-						info.addType(member.getType()),
-						Util.upperFirst(member.getFieldName()));
-				out.format("%sreturn %s;\n", "            ",
-						member.getFieldName());
-				out.format("%s}\n\n", "        ");
+			writeEmbeddedIdConstructor(out, info);
 
-				out.format("%spublic void set%s(%s %s){\n", "        ",
-						Util.upperFirst(member.getFieldName()),
-						info.addType(member.getType()), member.getFieldName());
-				out.format("%sthis.%s=%s;\n", "            ",
-						member.getFieldName(), member.getFieldName());
-				out.format("%s}\n\n", "        ");
-			}
-			out.format("%s@%s\n", "        ", info.addType(Override.class));
-			out.format("%spublic %s toString(){\n", "        ",
-					info.addType(String.class));
-			out.format("%s%s _s = new %s();\n", "            ",
-					info.addType(StringBuffer.class),
-					info.addType(StringBuffer.class));
-			for (MyPrimaryIdAttribute member : info
-					.getPrimaryIdAttributeMembers()) {
-				out.format("%s_s.append(%s.toString());\n", "            ",
-						member.getFieldName());
-				out.format("%s_s.append(\";\");\n", "            ");
-			}
-			out.format("%sreturn _s.toString();\n", "            ");
-			out.format("%s}\n\n", "        ");
+			writeEmbeddedIdFields(out, info);
+
+			writeEmbeddedIdGettersAndSetters(out, info);
+
+			writeEmbeddedIdToString(out, info);
+
+			writeEmbeddedIdEquals(out, info);
+
+			writeEmbeddedIdHashCode(out, info);
+
 			out.format("    }\n\n");
 		}
+	}
+
+	private void writeEmbeddedIdEquals(PrintStream out, ClassInfo info) {
+		out.format("        @%s\n", info.addType(Override.class));
+		out.format("        public boolean equals(Object obj) {\n");
+		out.format("            if (obj==null)\n");
+		out.format("                return false;\n");
+		out.format("            if (getClass() != obj.getClass())\n");
+		out.format("                return false;\n");
+		out.format("            final %1$s other = (%1$s) obj;\n",
+				info.getEmbeddedIdSimpleClassName());
+		out.format("            return ");
+		boolean first = true;
+		for (MyPrimaryIdAttribute member : info.getPrimaryIdAttributeMembers()) {
+			if (!first) {
+				out.println();
+				out.format("                && ");
+			}
+			out.format("%s.equal(this.%2$s, other.%2$s)",
+					info.addType(Objects.class), member.getFieldName());
+			first = false;
+		}
+		out.format(";\n");
+
+		out.format("        }\n\n");
+	}
+
+	private void writeEmbeddedIdHashCode(PrintStream out, ClassInfo info) {
+		out.format("        @%s\n", info.addType(Override.class));
+		out.format("        public int hashCode() {\n");
+		out.format("            return %s.hashCode(\n",
+				info.addType(Objects.class));
+		boolean first = true;
+		for (MyPrimaryIdAttribute member : info.getPrimaryIdAttributeMembers()) {
+			if (!first) {
+				out.format(",\n");
+			}
+			out.format("                ");
+			out.format("this.%s", member.getFieldName());
+			first = false;
+		}
+		out.format(");\n");
+		out.format("        }\n\n");
+	}
+
+	private void writeEmbeddedIdDeclaration(PrintStream out, ClassInfo info) {
+		out.format("    @%s\n", info.addType(Embeddable.class));
+		out.format("    @%s(\"serial\")\n",
+				info.addType(SuppressWarnings.class));
+		out.format("    public static class %s implements %s {\n\n",
+				info.getEmbeddedIdSimpleClassName(),
+				info.addType(Serializable.class));
+		out.format("        public %s() {\n",
+				info.getEmbeddedIdSimpleClassName());
+		out.format("            //JPA requires no-arg constructor\n");
+		out.format("        }\n\n");
+	}
+
+	private void writeEmbeddedIdToString(PrintStream out, ClassInfo info) {
+		out.format("%s@%s\n", "        ", info.addType(Override.class));
+		out.format("%spublic %s toString(){\n", "        ",
+				info.addType(String.class));
+		out.format("%s%s _s = new %s();\n", "            ",
+				info.addType(StringBuffer.class),
+				info.addType(StringBuffer.class));
+		for (MyPrimaryIdAttribute member : info.getPrimaryIdAttributeMembers()) {
+			out.format("%s_s.append(%s.toString());\n", "            ",
+					member.getFieldName());
+			out.format("%s_s.append(\";\");\n", "            ");
+		}
+		out.format("%sreturn _s.toString();\n", "            ");
+		out.format("%s}\n\n", "        ");
+	}
+
+	private void writeEmbeddedIdGettersAndSetters(PrintStream out,
+			ClassInfo info) {
+		for (MyPrimaryIdAttribute member : info.getPrimaryIdAttributeMembers()) {
+			out.format("%spublic %s get%s(){\n", "        ",
+					info.addType(member.getType()),
+					Util.upperFirst(member.getFieldName()));
+			out.format("%sreturn %s;\n", "            ", member.getFieldName());
+			out.format("%s}\n\n", "        ");
+
+			out.format("%spublic void set%s(%s %s){\n", "        ",
+					Util.upperFirst(member.getFieldName()),
+					info.addType(member.getType()), member.getFieldName());
+			out.format("%sthis.%s=%s;\n", "            ",
+					member.getFieldName(), member.getFieldName());
+			out.format("%s}\n\n", "        ");
+		}
+	}
+
+	private void writeEmbeddedIdField(PrintStream out, ClassInfo info) {
+		out.format("    @%s\n", info.addType(EmbeddedId.class));
+		out.format("    private %s %s;\n\n",
+				info.getEmbeddedIdSimpleClassName(),
+				info.getEmbeddedIdAttributeName());
+	}
+
+	private void writeEmbeddedIdFields(PrintStream out, ClassInfo info) {
+		for (MyPrimaryIdAttribute member : info.getPrimaryIdAttributeMembers()) {
+			if (member.getReferenceClass() == null)
+				out.format("        @%s(name=\"%s\")\n",
+						info.addType(Column.class), member.getColumnName());
+			else {
+				out.format(
+						"        @%s(name=\"%s\",insertable=false,updatable=false)\n",
+						info.addType(Column.class), member.getColumnName());
+			}
+			out.format("%sprivate %s %s;\n\n", "        ",
+					info.addType(member.getType()), member.getFieldName());
+		}
+	}
+
+	private void writeEmbeddedIdConstructor(PrintStream out, ClassInfo info) {
+		// write constructor
+		out.format("        public %s(", info.getEmbeddedIdSimpleClassName());
+		boolean first = true;
+		for (MyPrimaryIdAttribute member : info.getPrimaryIdAttributeMembers()) {
+			if (!first)
+				out.format(", ");
+			out.format("%s %s", info.addType(member.getType()),
+					member.getFieldName());
+			first = false;
+		}
+		out.format(") {\n");
+		first = true;
+		for (MyPrimaryIdAttribute member : info.getPrimaryIdAttributeMembers()) {
+			out.format("            this.%s = %s;\n", member.getFieldName(),
+					member.getFieldName());
+			first = false;
+		}
+		out.format("        }\n\n");
 	}
 
 	private void writeUniqueIdMethod(PrintStream out, ClassInfo info) {
