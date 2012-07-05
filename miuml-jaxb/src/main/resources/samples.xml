@@ -335,7 +335,7 @@
 				<IndependentAttribute Name="A three" Type="string" />
 				<Lifecycle>
 					<State Name="Has Started" />
-					<State Name="Done Something" >
+					<State Name="Done Something">
 						<StateSignature>
 							<StateModelParameter Name="The count" Type="Count" />
 						</StateSignature>
@@ -453,7 +453,7 @@
 
 		</Subsystem>
 	</ModeledDomain>
-	
+
 	<ModeledDomain Name="one-to-many">
 
 		<Subsystem Name="one-to-many" Floor="101" Ceiling="120">

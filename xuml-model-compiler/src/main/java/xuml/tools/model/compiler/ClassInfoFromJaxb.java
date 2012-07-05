@@ -493,11 +493,11 @@ public class ClassInfoFromJaxb extends ClassInfo {
 		if (p.isConditional() && p.isOnePerspective())
 			return Mult.ZERO_ONE;
 		else if (p.isConditional() && !p.isOnePerspective())
-			return Mult.ONE_MANY;
+			return Mult.MANY;
 		else if (p.isOnePerspective())
 			return Mult.ONE;
 		else
-			return Mult.MANY;
+			return Mult.ONE_MANY;
 	}
 
 	@Override
