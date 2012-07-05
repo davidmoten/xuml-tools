@@ -40,7 +40,7 @@
 		<module>hibernate</module>
 		<module>xuml-jaxb</module>
 		<module>xuml-diagrams</module>
-		<module>xuml-compiler-migrator</module>
+		<!--<module>xuml-compiler-migrator</module> -->
 		<module>xuml-model-compiler</module>
 		<module>xuml-model-compiler-runtime</module>
 		<module>xuml-model-compiler-test</module>
