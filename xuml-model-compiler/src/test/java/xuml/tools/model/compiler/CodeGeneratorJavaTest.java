@@ -22,7 +22,8 @@ public class CodeGeneratorJavaTest {
 
 	@Test
 	public void testCodeGenerationForOneToOne() throws FileNotFoundException {
-		generateClassesForDomain("one-to-one", "one_to_one", "one_to_one");
+		generateClassesForDomain("one-to-zero-one", "one_to_zero_one",
+				"one_to_zero_one");
 	}
 
 	private void generateClassesForDomain(String domainName,

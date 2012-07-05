@@ -14,6 +14,18 @@
 	    <comments>A business-friendly OSS license</comments>
 	  </license>
 	</licenses>
+	<developers>
+	    <developer>
+	      <id>dave</id>
+	      <name>Dave Moten</name>
+	      <url>https://github.com/davidmoten/</url>
+	      <roles>
+		<role>architect</role>
+		<role>developer</role>
+	      </roles>
+	      <timezone>+10</timezone>
+	    </developer>
+	</developers>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<compiler.plugin.version>2.3.2</compiler.plugin.version>

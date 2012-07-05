@@ -409,9 +409,9 @@
 		</Subsystem>
 	</ModeledDomain>
 
-	<ModeledDomain Name="one-to-one">
+	<ModeledDomain Name="one-to-zero-one">
 
-		<Subsystem Name="one-to-one" Floor="81" Ceiling="100">
+		<Subsystem Name="one-to-zero-one" Floor="81" Ceiling="100">
 
 			<NonSpecializedClass Name="A">
 
@@ -447,6 +447,51 @@
 			<BinaryAssociation Rnum="1">
 				<ActivePerspective Phrase="characterizes"
 					ViewedClass="B" OnePerspective="true" Conditional="true" />
+				<PassivePerspective Phrase="is characterized by"
+					ViewedClass="A" OnePerspective="true" Conditional="false" />
+			</BinaryAssociation>
+
+		</Subsystem>
+	</ModeledDomain>
+	
+	<ModeledDomain Name="one-to-many">
+
+		<Subsystem Name="one-to-many" Floor="101" Ceiling="120">
+
+			<NonSpecializedClass Name="A">
+
+				<IndependentAttribute Name="A one" Type="string">
+					<Identifier Number="1" />
+				</IndependentAttribute>
+				<IndependentAttribute Name="A two" Type="string">
+					<Identifier Number="1" />
+				</IndependentAttribute>
+				<ReferentialAttribute Name="A B one">
+					<ToOneReference Relationship="1" Attribute="B one" />
+				</ReferentialAttribute>
+				<ReferentialAttribute Name="A B two">
+					<ToOneReference Relationship="1" Attribute="B two" />
+				</ReferentialAttribute>
+			</NonSpecializedClass>
+
+			<NonSpecializedClass Name="B">
+				<IndependentAttribute Name="B one" Type="string">
+					<Identifier Number="1" />
+				</IndependentAttribute>
+				<IndependentAttribute Name="B two" Type="string">
+					<Identifier Number="1" />
+				</IndependentAttribute>
+				<ReferentialAttribute Name="B A one">
+					<ToOneReference Relationship="1" Attribute="A one" />
+				</ReferentialAttribute>
+				<ReferentialAttribute Name="B A two">
+					<ToOneReference Relationship="1" Attribute="A two" />
+				</ReferentialAttribute>
+			</NonSpecializedClass>
+
+			<BinaryAssociation Rnum="1">
+				<ActivePerspective Phrase="characterizes"
+					ViewedClass="B" OnePerspective="false" Conditional="true" />
 				<PassivePerspective Phrase="is characterized by"
 					ViewedClass="A" OnePerspective="true" Conditional="false" />
 			</BinaryAssociation>

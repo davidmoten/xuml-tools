@@ -54,15 +54,27 @@
 						</configuration>
 					</execution>
 					<execution>
-						<id>one-to-one</id>
+						<id>one-to-zero-one</id>
 						<goals>
 							<goal>generate-jpa</goal>
 						</goals>
 						<configuration>
 							<domainsXml>/samples.xml</domainsXml>
-							<domain>one-to-one</domain>
-							<schema>one_to_one</schema>
-							<packageName>one_to_one</packageName>
+							<domain>one-to-zero-one</domain>
+							<schema>one_to_zero_one</schema>
+							<packageName>one_to_zero_one</packageName>
+						</configuration>
+					</execution>
+					<execution>
+						<id>one-to-many</id>
+						<goals>
+							<goal>generate-jpa</goal>
+						</goals>
+						<configuration>
+							<domainsXml>/samples.xml</domainsXml>
+							<domain>one-to-many</domain>
+							<schema>one_to_many</schema>
+							<packageName>one_to_many</packageName>
 						</configuration>
 					</execution>
 				</executions>

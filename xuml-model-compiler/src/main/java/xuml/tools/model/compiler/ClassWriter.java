@@ -52,6 +52,7 @@ import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 public class ClassWriter {
 
@@ -543,7 +544,7 @@ public class ClassWriter {
 				out.format(
 						"    @ManyToOne(targetEntity=%s.class,fetch=FetchType.LAZY)\n",
 						ref.getSimpleClassName());
-				writeJoinColumnsAnnotation(out, ref, false);
+				writeJoinColumnsAnnotation(out, ref, false, true, true);
 				writeField(out, ref);
 			} else if (isRelationship(ref, Mult.ONE, Mult.ONE_MANY)) {
 				info.addType(OneToMany.class);
@@ -907,9 +908,10 @@ public class ClassWriter {
 	}
 
 	private void writeMultipleField(PrintStream out, MyReferenceMember ref) {
-		out.format("    private %s %s;\n\n", info.addType(new Type(Set.class
-				.getName(), new Type(ref.getFullClassName()))), ref
-				.getFieldName());
+		out.format("    private %s %s = %s.newHashSet();\n\n", info
+				.addType(new Type(Set.class.getName(), new Type(ref
+						.getFullClassName()))), ref.getFieldName(), info
+				.addType(Sets.class));
 		writeGetterAndSetter(out, info, ref.getSimpleClassName(),
 				ref.getFullClassName(), ref.getFieldName(), true);
 	}

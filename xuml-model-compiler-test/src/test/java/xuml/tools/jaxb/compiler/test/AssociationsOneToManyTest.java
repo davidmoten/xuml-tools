@@ -1,17 +1,17 @@
 package xuml.tools.jaxb.compiler.test;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertEquals;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
 
-import one_to_zero_one.A;
-import one_to_zero_one.A.AId;
-import one_to_zero_one.B;
-import one_to_zero_one.B.BId;
-import one_to_zero_one.Context;
+import one_to_many.A;
+import one_to_many.A.AId;
+import one_to_many.B;
+import one_to_many.B.BId;
+import one_to_many.Context;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -19,14 +19,14 @@ import org.junit.Test;
 
 import xuml.tools.util.database.DerbyUtil;
 
-public class AssociationsOneToOneTest {
+public class AssociationsOneToManyTest {
 
 	private static EntityManagerFactory emf;
 
 	@BeforeClass
 	public static void setup() {
 		DerbyUtil.disableDerbyLog();
-		emf = Persistence.createEntityManagerFactory("one-to-zero-one");
+		emf = Persistence.createEntityManagerFactory("one-to-many");
 		Context.setEntityManagerFactory(emf);
 	}
 
@@ -60,14 +60,20 @@ public class AssociationsOneToOneTest {
 	}
 
 	@Test
-	public void testCreateAWithBAndIsPersistedProperly() {
+	public void testCreateAWithMultipleBAndIsPersistedProperly() {
 		{
 			EntityManager em = emf.createEntityManager();
 			em.getTransaction().begin();
-			A a2 = A.create(new AId("boo", "baa"));
+			A a = A.create(new AId("boo", "baa"));
 			B b = B.create(new BId("some2", "thing2"));
-			b.setA(a2);
+			B b2 = B.create(new BId("some3", "thing3"));
+			a.getB().add(b);
+			a.getB().add(b2);
+			b.setA(a);
+			b2.setA(a);
+			em.persist(a);
 			em.persist(b);
+			em.persist(b2);
 			em.getTransaction().commit();
 			em.close();
 		}
@@ -75,7 +81,7 @@ public class AssociationsOneToOneTest {
 			EntityManager em = emf.createEntityManager();
 			em.getTransaction().begin();
 			A a2 = em.find(A.class, new A.AId("boo", "baa"));
-			assertNotNull(a2.getB());
+			assertEquals(2, a2.getB().size());
 			em.getTransaction().commit();
 			em.close();
 		}
