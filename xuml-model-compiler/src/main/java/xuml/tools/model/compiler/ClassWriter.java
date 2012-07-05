@@ -67,6 +67,7 @@ public class ClassWriter {
 	}
 
 	public String generate() {
+		List<String> validationMethods = Lists.newArrayList();
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		PrintStream out = new PrintStream(bytes);
 		writeClassJavadoc(out, info);
@@ -78,9 +79,9 @@ public class ClassWriter {
 		writeUniqueIdMethod(out, info);
 		writeNonIdIndependentAttributeMembers(out, info);
 		writeStateMember(out, info);
-		writeReferenceMembers(out, info);
+		writeReferenceMembers(out, info, validationMethods);
 		writeSuperclassValidationCheck(out, info);
-		writeAtLeastOneFieldChecks(out, info);
+		writePreUpdateCheck(out, info, validationMethods);
 		writeIdGetterAndSetter(out, info);
 		writeNonIdIndependentAttributeGettersAndSetters(out, info);
 		writeStateGetterAndSetter(out, info);
@@ -502,14 +503,45 @@ public class ClassWriter {
 		}
 	}
 
-	private void writeReferenceMembers(PrintStream out, ClassInfo info) {
+	private void writeReferenceMembers(PrintStream out, ClassInfo info,
+			List<String> validationMethods) {
 		for (MyReferenceMember ref : info.getReferenceMembers()) {
 			jd(out, ref.getThisMult() + " " + info.getJavaClassSimpleName()
 					+ " " + ref.getThatVerbClause() + " " + ref.getThatMult()
 					+ " " + ref.getSimpleClassName(), "    ");
 			if (isRelationship(ref, Mult.ONE, Mult.ONE)) {
-				// TODO
-				throw new RuntimeException("not implemented");
+				// make an arbitrary deterministic decision about which side is
+				// annotated in which way
+				if (info.getJavaClassSimpleName().compareTo(
+						ref.getSimpleClassName()) < 0) {
+					validationMethods.add("_validate"
+							+ Util.upperFirst(ref.getFieldName()));
+					out.format("    private void _validate%s() {\n",
+							Util.upperFirst(ref.getFieldName()));
+					out.format("        if (%s == null)\n", ref.getFieldName());
+					out.format(
+							"            throw new %s(\"relationship not established\");\n",
+							info.addType(RuntimeException.class));
+					out.format("    }\n\n");
+
+					info.addType(OneToOne.class);
+					info.addType(FetchType.class);
+					out.format(
+							"    @OneToOne(mappedBy=\"%s\",fetch=FetchType.LAZY,targetEntity=%s.class)\n",
+							ref.getThisFieldName(),
+							info.addType(ref.getFullClassName()));
+					writeField(out, ref);
+				} else {
+					info.addType(OneToOne.class);
+					info.addType(FetchType.class);
+					info.addType(JoinColumn.class);
+					info.addType(CascadeType.class);
+					out.format(
+							"    @OneToOne(targetEntity=%s.class,cascade=CascadeType.ALL,fetch=FetchType.LAZY)\n",
+							info.addType(ref.getFullClassName()));
+					writeJoinColumnsAnnotation(out, ref, false, true, true);
+					writeField(out, ref);
+				}
 			} else if (isRelationship(ref, Mult.ONE, Mult.ZERO_ONE)) {
 				info.addType(OneToOne.class);
 				info.addType(FetchType.class);
@@ -658,13 +690,6 @@ public class ClassWriter {
 		out.format("})\n");
 	}
 
-	private void writeAtLeastOneFieldChecks(PrintStream out, ClassInfo info) {
-		for (String fieldName : info.getAtLeastOneFieldChecks()) {
-			writeAtLeastOneCheck(out, fieldName);
-		}
-		writePreUpdateCheck(out, info);
-	}
-
 	private void writeIdGetterAndSetter(PrintStream out, ClassInfo info) {
 		out.format("    public %s getId() {\n", info.addType(getIdType(info)));
 		out.format("        return id;\n");
@@ -804,36 +829,21 @@ public class ClassWriter {
 		out.format("    }\n\n");
 	}
 
-	private void writePreUpdateCheck(PrintStream out, ClassInfo info) {
+	private void writePreUpdateCheck(PrintStream out, ClassInfo info,
+			List<String> validationMethods) {
 		info.addType(Transient.class);
 		info.addType(PreUpdate.class);
 		out.format("    @Transient\n");
 		out.format("    @PreUpdate\n");
 		out.format("    void validateBeforeUpdate(){\n");
-		for (String fieldName : info.getAtLeastOneFieldChecks()) {
-			out.format("        check%sValid();\n", upperFirst(fieldName));
-		}
+		for (String methodName : validationMethods)
+			out.format("        %s();\n", methodName);
 		out.format("    }\n\n");
-
 	}
 
 	private boolean isRelationship(MyReferenceMember ref, Mult here, Mult there) {
 		return ref.getThisMult().equals(here)
 				&& ref.getThatMult().equals(there);
-	}
-
-	private void writeAtLeastOneCheck(PrintStream out, String fieldName) {
-		jd(out,
-				"Throws RuntimeException if the field collection is empty and should contain at least one value.",
-				"    ");
-		info.addType(Transient.class);
-		out.format("    @Transient\n");
-		out.format("    private void check%sValid() {\n", upperFirst(fieldName));
-		out.format("         if (this.%s.size()==0)\n", fieldName);
-		out.format(
-				"             throw new RuntimeException(\"%s collection cannot be empty\");\n",
-				fieldName);
-		out.format("     }\n\n");
 	}
 
 	private void writeManyToMany(PrintStream out, ClassInfo info,

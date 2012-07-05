@@ -79,6 +79,7 @@ public abstract class ClassInfo {
 
 	abstract List<MyReferenceMember> getReferenceMembers();
 
+	// TODO chuck this
 	abstract Set<String> getAtLeastOneFieldChecks();
 
 	abstract String getImports(String relativeToClass);

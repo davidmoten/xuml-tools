@@ -66,6 +66,18 @@
 						</configuration>
 					</execution>
 					<execution>
+						<id>one-to-one</id>
+						<goals>
+							<goal>generate-jpa</goal>
+						</goals>
+						<configuration>
+							<domainsXml>/samples.xml</domainsXml>
+							<domain>one-to-one</domain>
+							<schema>one_to_one</schema>
+							<packageName>one_to_one</packageName>
+						</configuration>
+					</execution>
+					<execution>
 						<id>one-to-many</id>
 						<goals>
 							<goal>generate-jpa</goal>
