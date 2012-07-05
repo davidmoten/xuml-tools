@@ -50,7 +50,7 @@
 			<property name="hibernate.format_sql" value="true" />
 		</properties>
 	</persistence-unit>
-	<persistence-unit name="one-to-many">
+	<persistence-unit name="one-to-one">
 		<class>one_to_one.A</class>
 		<class>one_to_one.B</class>
 		<class>xuml.tools.model.compiler.runtime.QueuedSignal</class>

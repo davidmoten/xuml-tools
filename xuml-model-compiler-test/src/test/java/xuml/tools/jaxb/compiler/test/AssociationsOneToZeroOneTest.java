@@ -7,11 +7,11 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
 
-import one_to_one.A;
-import one_to_one.A.AId;
-import one_to_one.B;
-import one_to_one.B.BId;
-import one_to_one.Context;
+import one_to_zero_one.A;
+import one_to_zero_one.A.AId;
+import one_to_zero_one.B;
+import one_to_zero_one.B.BId;
+import one_to_zero_one.Context;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -19,13 +19,14 @@ import org.junit.Test;
 
 import xuml.tools.util.database.DerbyUtil;
 
-public class AssociationsOneToOneTest {
+public class AssociationsOneToZeroOneTest {
+
 	private static EntityManagerFactory emf;
 
 	@BeforeClass
 	public static void setup() {
 		DerbyUtil.disableDerbyLog();
-		emf = Persistence.createEntityManagerFactory("one-to-one");
+		emf = Persistence.createEntityManagerFactory("one-to-zero-one");
 		Context.setEntityManagerFactory(emf);
 	}
 
@@ -79,4 +80,5 @@ public class AssociationsOneToOneTest {
 			em.close();
 		}
 	}
+
 }
