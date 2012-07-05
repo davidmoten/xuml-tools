@@ -17,6 +17,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import xuml.tools.model.compiler.runtime.RelationshipNotEstablished;
 import xuml.tools.util.database.DerbyUtil;
 
 public class AssociationsOneToOneTest {
@@ -34,7 +35,7 @@ public class AssociationsOneToOneTest {
 		emf.close();
 	}
 
-	@Test
+	@Test(expected = RelationshipNotEstablished.class)
 	public void testCreateAWithoutB() {
 
 		A a = A.create(new A.AId("hello", "there"));
@@ -63,9 +64,10 @@ public class AssociationsOneToOneTest {
 		{
 			EntityManager em = emf.createEntityManager();
 			em.getTransaction().begin();
-			A a2 = A.create(new AId("boo", "baa"));
+			A a = A.create(new AId("boo", "baa"));
 			B b = B.create(new BId("some2", "thing2"));
-			b.setA(a2);
+			b.setA(a);
+			a.setB(b);
 			em.persist(b);
 			em.getTransaction().commit();
 			em.close();
@@ -73,8 +75,8 @@ public class AssociationsOneToOneTest {
 		{
 			EntityManager em = emf.createEntityManager();
 			em.getTransaction().begin();
-			A a2 = em.find(A.class, new A.AId("boo", "baa"));
-			assertNotNull(a2.getB());
+			A a = em.find(A.class, new A.AId("boo", "baa"));
+			assertNotNull(a.getB());
 			em.getTransaction().commit();
 			em.close();
 		}

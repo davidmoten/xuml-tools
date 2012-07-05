@@ -30,6 +30,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -46,6 +47,7 @@ import xuml.tools.model.compiler.ClassInfo.MyTransition;
 import xuml.tools.model.compiler.runtime.CreationEvent;
 import xuml.tools.model.compiler.runtime.EntityHelper;
 import xuml.tools.model.compiler.runtime.Event;
+import xuml.tools.model.compiler.runtime.RelationshipNotEstablished;
 import xuml.tools.model.compiler.runtime.Signaller;
 
 import com.google.common.base.Objects;
@@ -520,8 +522,8 @@ public class ClassWriter {
 							Util.upperFirst(ref.getFieldName()));
 					out.format("        if (%s == null)\n", ref.getFieldName());
 					out.format(
-							"            throw new %s(\"relationship not established\");\n",
-							info.addType(RuntimeException.class));
+							"            throw new %s(\"%s not established and is mandatory\");\n",
+							info.addType(RelationshipNotEstablished.class), "?");
 					out.format("    }\n\n");
 
 					info.addType(OneToOne.class);
@@ -831,11 +833,15 @@ public class ClassWriter {
 
 	private void writePreUpdateCheck(PrintStream out, ClassInfo info,
 			List<String> validationMethods) {
-		info.addType(Transient.class);
-		info.addType(PreUpdate.class);
-		out.format("    @Transient\n");
-		out.format("    @PreUpdate\n");
+		out.format("    @%s\n", info.addType(Transient.class));
+		out.format("    @%s\n", info.addType(PreUpdate.class));
 		out.format("    void validateBeforeUpdate(){\n");
+		for (String methodName : validationMethods)
+			out.format("        %s();\n", methodName);
+		out.format("    }\n\n");
+		out.format("    @%s\n", info.addType(Transient.class));
+		out.format("    @%s\n", info.addType(PrePersist.class));
+		out.format("    void validateBeforePersist(){\n");
 		for (String methodName : validationMethods)
 			out.format("        %s();\n", methodName);
 		out.format("    }\n\n");
