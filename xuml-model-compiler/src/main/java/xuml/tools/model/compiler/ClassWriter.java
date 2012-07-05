@@ -262,6 +262,20 @@ public class ClassWriter {
 			out.format("    }\n\n");
 		}
 
+		// constructor using Id
+		out.format("    public %s(%s id) {\n", info.getJavaClassSimpleName(),
+				info.getEmbeddedIdSimpleClassName());
+		out.format("        this.id = id;\n");
+		out.format("    }\n\n");
+
+		// static creator using Id
+		out.format("    public static %s create(%s id) {\n",
+				info.getJavaClassSimpleName(),
+				info.getEmbeddedIdSimpleClassName());
+		out.format("        return new %s(id);\n",
+				info.getJavaClassSimpleName());
+		out.format("    }\n\n");
+
 	}
 
 	private boolean hasEmbeddedId() {
@@ -381,6 +395,8 @@ public class ClassWriter {
 				info.addType(StringBuffer.class),
 				info.addType(StringBuffer.class));
 		for (MyPrimaryIdAttribute member : info.getPrimaryIdAttributeMembers()) {
+			out.format("%s_s.append(\"%s=\");\n", "            ",
+					member.getFieldName());
 			out.format("%s_s.append(%s.toString());\n", "            ",
 					member.getFieldName());
 			out.format("%s_s.append(\";\");\n", "            ");
