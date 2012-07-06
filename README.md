@@ -7,9 +7,9 @@ This project is still in development and has not reached alpha release status ye
 
 <img src="https://github.com/davidmoten/xuml-tools/raw/master/xuml-diagrams/src/docs/class-diagram.png">
 
-Continuous integration with Jenkins is [here](https://xuml-tools.ci.cloudbees.com/).
+Continuous integration with Jenkins for this project is [here](https://xuml-tools.ci.cloudbees.com/).
 
-<img  src="http://web-static-cloudfront.s3.amazonaws.com/images/badges/BuiltOnDEV.png"/>
+<a href="https://xuml-tools.ci.cloudbees.com/"><img  src="http://web-static-cloudfront.s3.amazonaws.com/images/badges/BuiltOnDEV.png"/></a>
 
 Getting started
 ---------------
@@ -62,7 +62,7 @@ The java model compiler includes the following features (<img src="https://githu
  * 1 to 1 <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
  * 0..1 to 1 <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png"> 
  * 1 to * <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
- * 0..1 to *
+ * 0..1 to * <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
  * 1 to 1..*
  * 0..1 to 1..*
  * * to *
@@ -70,8 +70,8 @@ The java model compiler includes the following features (<img src="https://githu
  * Unary 0..1
  * Unary *
  * Unary 1..*
-* Event and State signatures
-* Concise usage
+* Event and State signatures <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
+* Concise usage <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
 * Composite primary keys  <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png"> 
 * Asynchronous persistent signalling  <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png"> 
 * Auto-detection of signals to self <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
