@@ -125,6 +125,18 @@
 							<packageName>zero_one_to_one_many</packageName>
 						</configuration>
 					</execution>
+					<execution>
+						<id>unary-one</id>
+						<goals>
+							<goal>generate-jpa</goal>
+						</goals>
+						<configuration>
+							<domainsXml>/samples.xml</domainsXml>
+							<domain>unary-one</domain>
+							<schema>unary_one</schema>
+							<packageName>unary_one</packageName>
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
 		</plugins>

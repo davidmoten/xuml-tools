@@ -32,6 +32,11 @@ public class CodeGeneratorJavaTest {
 		generateClassesForDomain("one-to-one", "one_to_one", "one_to_one");
 	}
 
+	@Test
+	public void testCodeGenerationForUnaryToOne() throws FileNotFoundException {
+		generateClassesForDomain("unary-one", "unary_one", "unary_one");
+	}
+
 	private void generateClassesForDomain(String domainName,
 			String domainPackageName, String schema) {
 		miuml.jaxb.Domains domains = new Marshaller().unmarshal(getClass()

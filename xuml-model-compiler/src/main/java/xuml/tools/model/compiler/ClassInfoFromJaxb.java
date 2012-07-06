@@ -22,12 +22,14 @@ import miuml.jaxb.Generalization;
 import miuml.jaxb.IdentifierAttribute;
 import miuml.jaxb.IndependentAttribute;
 import miuml.jaxb.NativeAttribute;
+import miuml.jaxb.Perspective;
 import miuml.jaxb.Reference;
 import miuml.jaxb.ReferentialAttribute;
 import miuml.jaxb.Relationship;
 import miuml.jaxb.State;
 import miuml.jaxb.StateModelParameter;
 import miuml.jaxb.StateModelSignature;
+import miuml.jaxb.SymmetricPerspective;
 import miuml.jaxb.Transition;
 import miuml.jaxb.UnaryAssociation;
 
@@ -431,8 +433,24 @@ public class ClassInfoFromJaxb extends ClassInfo {
 
 	private MyReferenceMember createMyReferenceMember(UnaryAssociation a,
 			Class cls) {
-		// TODO implement unary association to MyReferenceMember
-		return null;
+		SymmetricPerspective p = a.getSymmetricPerspective();
+		String fieldName = nameManager.toFieldName(cls.getName(),
+				p.getPhrase(), a.getRnum());
+		List<JoinColumn> joins = newArrayList();
+		if (p.isOnePerspective())
+			for (MyPrimaryIdAttribute member : getPrimaryIdAttributeMembers()) {
+				String attributeName = member.getAttributeName() + " R"
+						+ a.getRnum();
+				JoinColumn jc = new JoinColumn(nameManager.toColumnName(
+						cls.getName(), attributeName), member.getColumnName());
+				System.out.println(jc);
+				joins.add(jc);
+			}
+
+		return new MyReferenceMember(getJavaClassSimpleName(),
+				getClassFullName(), Mult.ONE, toMult(p), "inverse of"
+						+ p.getPhrase(), p.getPhrase(), fieldName, joins,
+				"this", null, false);
 	}
 
 	private MyReferenceMember createMyReferenceMember(BinaryAssociation a,
@@ -505,7 +523,7 @@ public class ClassInfoFromJaxb extends ClassInfo {
 				+ cls.getName() + " R" + rNum + " " + otherAttributeName);
 	}
 
-	private static Mult toMult(AsymmetricPerspective p) {
+	private static Mult toMult(Perspective p) {
 		if (p.isConditional() && p.isOnePerspective())
 			return Mult.ZERO_ONE;
 		else if (p.isConditional() && !p.isOnePerspective())

@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import abc.A;
@@ -28,8 +29,6 @@ public class AbcTest {
 	@Test
 	public void testCreateEntityManagerFactoryAndCreateAndSignalEntities()
 			throws InterruptedException {
-
-		disableDerbyLog();
 
 		// create the entity manager factory
 		EntityManagerFactory emf = Persistence
@@ -113,4 +112,10 @@ public class AbcTest {
 		A.setBehaviourFactory(null);
 		new A();
 	}
+
+	@BeforeClass
+	public void setup() {
+		disableDerbyLog();
+	}
+
 }

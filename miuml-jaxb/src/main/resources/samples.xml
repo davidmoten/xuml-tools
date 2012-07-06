@@ -636,7 +636,7 @@
 	
 	<ModeledDomain Name="zero-one-to-one-many">
 
-		<Subsystem Name="zero-one-to-one-many" Floor="181" Ceiling="201">
+		<Subsystem Name="zero-one-to-one-many" Floor="181" Ceiling="200">
 
 			<NonSpecializedClass Name="A">
 
@@ -679,6 +679,31 @@
 		</Subsystem>
 	</ModeledDomain>
 	
+	<ModeledDomain Name="unary-one">
 
+		<Subsystem Name="unary-one" Floor="201" Ceiling="220">
+
+			<NonSpecializedClass Name="A">
+
+				<IndependentAttribute Name="A one" Type="string">
+					<Identifier Number="1" />
+				</IndependentAttribute>
+				<IndependentAttribute Name="A two" Type="string">
+					<Identifier Number="1" />
+				</IndependentAttribute>
+				<ReferentialAttribute Name="A B one">
+					<ToOneReference Relationship="1" Attribute="B one" />
+				</ReferentialAttribute>
+				<ReferentialAttribute Name="A B two">
+					<ToOneReference Relationship="1" Attribute="B two" />
+				</ReferentialAttribute>
+			</NonSpecializedClass>
+
+			<UnaryAssociation Rnum="1" >
+				<SymmetricPerspective OnePerspective="true" Conditional="false" ViewedClass="A" Phrase="has parent"/>
+			</UnaryAssociation>
+
+		</Subsystem>
+	</ModeledDomain>
 
 </Domains>

@@ -712,11 +712,6 @@ public class ClassWriter {
 	}
 
 	private void writeJoinColumnsAnnotation(PrintStream out,
-			MyReferenceMember ref, boolean nullable) {
-		writeJoinColumnsAnnotation(out, ref, nullable, false, false);
-	}
-
-	private void writeJoinColumnsAnnotation(PrintStream out,
 			MyReferenceMember ref, boolean nullable, boolean insertable,
 			boolean updatable) {
 		out.format("    @%s(value={\n", info.addType(JoinColumns.class));
