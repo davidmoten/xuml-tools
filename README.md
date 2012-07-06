@@ -66,7 +66,7 @@ The java model compiler includes the following features (<img src="https://githu
  * 1 to 1..* <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
  * 0..1 to 1..* <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
  * * to *
- * Unary 1
+ * Unary 1 <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
  * Unary 0..1
  * Unary *
  * Unary 1..*
