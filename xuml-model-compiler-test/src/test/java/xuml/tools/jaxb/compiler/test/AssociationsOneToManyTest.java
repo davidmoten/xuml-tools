@@ -38,21 +38,20 @@ public class AssociationsOneToManyTest {
 	@Test
 	public void testCreateAWithoutB() {
 
-		A a = A.create(new A.AId("hello", "there"));
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
-		em.persist(a);
+		A.create(new A.AId("hello", "there")).persist(em);
 		em.getTransaction().commit();
 		em.close();
 	}
 
 	@Test(expected = PersistenceException.class)
 	public void testCannotCreateBWithoutA() {
-		B b = B.create(new BId("some", "thing"));
+
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
 		try {
-			em.persist(b);
+			B.create(new BId("some", "thing")).persist(em);
 		} finally {
 			em.getTransaction().rollback();
 			em.close();
@@ -71,9 +70,9 @@ public class AssociationsOneToManyTest {
 			a.getB().add(b2);
 			b.setA(a);
 			b2.setA(a);
-			em.persist(a);
-			em.persist(b);
-			em.persist(b2);
+			a.persist(em);
+			b.persist(em);
+			b2.persist(em);
 			em.getTransaction().commit();
 			em.close();
 		}

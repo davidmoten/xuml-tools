@@ -63,9 +63,7 @@ public class AbcTest {
 		// wait a bit for all signals to be processed
 		Thread.sleep(2000);
 
-		// check that the signals had an effect. We need an entity manager this
-		// time.
-
+		// check that the signals had an effect.
 		assertEquals("12a", a1.getAThree());
 		assertEquals("12b", a2.getAThree());
 		assertEquals("12c", a3.getAThree());
@@ -74,7 +72,8 @@ public class AbcTest {
 		// merge method and assert the same
 		EntityManager em = emf.createEntityManager();
 		// note that the merge method below updates the entity with the latest
-		// state from the database using the entity manager em.
+		// state from the database using the entity manager em (you could also
+		// do em.merge(a1) but you don't get method chaining).
 		assertEquals("12a", a1.merge(em).getAThree());
 		assertEquals("12b", a2.merge(em).getAThree());
 		assertEquals("12c", a3.merge(em).getAThree());
@@ -93,10 +92,7 @@ public class AbcTest {
 
 					@Override
 					public void onEntryHasStarted(Create event) {
-						AId id = new AId();
-						id.setAOne(event.getAOne());
-						id.setATwo(event.getATwo());
-						entity.setId(id);
+						entity.setId(new AId(event.getATwo(), event.getAOne()));
 						entity.setAThree(event.getAccountNumber());
 						System.out.println("created");
 					}

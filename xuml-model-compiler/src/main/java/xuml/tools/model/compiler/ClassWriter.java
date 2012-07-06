@@ -92,6 +92,8 @@ public class ClassWriter {
 		writeEventCallMethods(out, info);
 		writeStaticCreateMethods(out, info);
 		writeMergeMethod(out, info);
+		writePersistMethod(out, info);
+		writeRefreshMethod(out, info);
 		writeBehaviourInterface(out, info);
 		writeBehaviourFactoryInterface(out, info);
 
@@ -132,6 +134,24 @@ public class ClassWriter {
 				info.getJavaClassSimpleName(),
 				info.addType(EntityManager.class));
 		out.format("        em.merge(this);\n");
+		out.format("        return this;\n");
+		out.format("    }\n\n");
+	}
+
+	private void writePersistMethod(PrintStream out, ClassInfo info) {
+		out.format("    public %s persist(%s em) {\n",
+				info.getJavaClassSimpleName(),
+				info.addType(EntityManager.class));
+		out.format("        em.persist(this);\n");
+		out.format("        return this;\n");
+		out.format("    }\n\n");
+	}
+
+	private void writeRefreshMethod(PrintStream out, ClassInfo info) {
+		out.format("    public %s refresh(%s em) {\n",
+				info.getJavaClassSimpleName(),
+				info.addType(EntityManager.class));
+		out.format("        em.refresh(this);\n");
 		out.format("        return this;\n");
 		out.format("    }\n\n");
 	}
