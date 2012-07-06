@@ -9,7 +9,7 @@ This project is still in development and has not reached alpha release status ye
 
 Continuous integration with Jenkins for this project is [here](https://xuml-tools.ci.cloudbees.com/).
 
-<img  src="http://web-static-cloudfront.s3.amazonaws.com/images/badges/BuiltOnDEV.png"/>
+<a href="https://xuml-tools.ci.cloudbees.com/"><img  src="http://web-static-cloudfront.s3.amazonaws.com/images/badges/BuiltOnDEV.png"/></a>
 
 Getting started
 ---------------
