@@ -536,16 +536,8 @@ public class ClassWriter {
 				// annotated in which way
 				if (info.getJavaClassSimpleName().compareTo(
 						ref.getSimpleClassName()) < 0) {
-					validationMethods.add("_validate"
-							+ Util.upperFirst(ref.getFieldName()));
-					out.format("    private void _validate%s() {\n",
-							Util.upperFirst(ref.getFieldName()));
-					out.format("        if (%s == null)\n", ref.getFieldName());
-					out.format(
-							"            throw new %s(\"%s not established and is mandatory\");\n",
-							info.addType(RelationshipNotEstablished.class), "?");
-					out.format("    }\n\n");
-
+					writeValidationNotNull(out, ref.getFieldName(),
+							validationMethods);
 					info.addType(OneToOne.class);
 					info.addType(FetchType.class);
 					out.format(
@@ -556,7 +548,6 @@ public class ClassWriter {
 				} else {
 					info.addType(OneToOne.class);
 					info.addType(FetchType.class);
-					info.addType(JoinColumn.class);
 					info.addType(CascadeType.class);
 					out.format(
 							"    @OneToOne(targetEntity=%s.class,cascade=CascadeType.ALL,fetch=FetchType.LAZY)\n",
@@ -575,7 +566,6 @@ public class ClassWriter {
 			} else if (isRelationship(ref, Mult.ZERO_ONE, Mult.ONE)) {
 				info.addType(OneToOne.class);
 				info.addType(FetchType.class);
-				info.addType(JoinColumn.class);
 				info.addType(CascadeType.class);
 				out.format(
 						"    @OneToOne(targetEntity=%s.class,cascade=CascadeType.ALL,fetch=FetchType.LAZY)\n",
@@ -594,16 +584,16 @@ public class ClassWriter {
 			} else if (isRelationship(ref, Mult.MANY, Mult.ONE)) {
 				info.addType(ManyToOne.class);
 				info.addType(FetchType.class);
-				info.addType(JoinColumn.class);
 				out.format(
 						"    @ManyToOne(targetEntity=%s.class,fetch=FetchType.LAZY)\n",
 						ref.getSimpleClassName());
 				writeJoinColumnsAnnotation(out, ref, false, true, true);
 				writeField(out, ref);
 			} else if (isRelationship(ref, Mult.ONE, Mult.ONE_MANY)) {
+				writeValidationNotEmpty(out, ref.getFieldName(),
+						validationMethods);
 				info.addType(OneToMany.class);
 				info.addType(FetchType.class);
-				info.addType(JoinColumn.class);
 				info.addType(CascadeType.class);
 				out.format(
 						"    @OneToMany(mappedBy=\"%s\",cascade=CascadeType.ALL,fetch=FetchType.LAZY,targetEntity=%s.class)\n",
@@ -611,11 +601,12 @@ public class ClassWriter {
 						info.addType(ref.getFullClassName()));
 				writeMultipleField(out, ref);
 			} else if (isRelationship(ref, Mult.ONE_MANY, Mult.ONE)) {
+				writeValidationNotNull(out, ref.getFieldName(),
+						validationMethods);
 				info.addType(ManyToOne.class);
-				info.addType(JoinColumn.class);
 				out.format("    @ManyToOne(targetEntity=%s.class)\n",
 						info.addType(ref.getFullClassName()));
-				writeJoinColumnsAnnotation(out, ref, false);
+				writeJoinColumnsAnnotation(out, ref, false, true, true);
 				writeField(out, ref);
 			} else if (isRelationship(ref, Mult.ZERO_ONE, Mult.ZERO_ONE)) {
 				if (info.getJavaClassSimpleName().compareTo(
@@ -632,7 +623,6 @@ public class ClassWriter {
 					// secondary
 					out.format("    //secondary side of relationship\n");
 					info.addType(OneToOne.class);
-					info.addType(JoinColumn.class);
 					info.addType(FetchType.class);
 					out.format(
 							"    @OneToOne(targetEntity=%s.class,fetch=FetchType.LAZY)\n",
@@ -652,7 +642,6 @@ public class ClassWriter {
 			} else if (isRelationship(ref, Mult.MANY, Mult.ZERO_ONE)) {
 				info.addTypes(ManyToOne.class);
 				info.addType(FetchType.class);
-				info.addType(JoinColumn.class);
 				out.format(
 						"    @ManyToOne(targetEntity=%s.class,fetch=FetchType.LAZY)\n",
 						info.addType(ref.getFullClassName()));
@@ -670,7 +659,6 @@ public class ClassWriter {
 			} else if (isRelationship(ref, Mult.ONE_MANY, Mult.ZERO_ONE)) {
 				info.addType(ManyToOne.class);
 				info.addType(FetchType.class);
-				info.addType(JoinColumn.class);
 				out.format(
 						"    @ManyToOne(targetEntity=%s.class,fetch=FetchType.LAZY)\n",
 						info.addType(ref.getFullClassName()));
@@ -688,6 +676,31 @@ public class ClassWriter {
 		}
 	}
 
+	private void writeValidationNotEmpty(PrintStream out, String fieldName,
+			List<String> validationMethods) {
+		validationMethods.add("_validate" + Util.upperFirst(fieldName));
+		out.format("    private void _validate%s() {\n",
+				Util.upperFirst(fieldName));
+		out.format("        if (%s.isEmpty())\n", fieldName);
+		out.format(
+				"            throw new %s(\"%s not established and is mandatory\");\n",
+				info.addType(RelationshipNotEstablished.class), "?");
+		out.format("    }\n\n");
+
+	}
+
+	private void writeValidationNotNull(PrintStream out, String fieldName,
+			List<String> validationMethods) {
+		validationMethods.add("_validate" + Util.upperFirst(fieldName));
+		out.format("    private void _validate%s() {\n",
+				Util.upperFirst(fieldName));
+		out.format("        if (%s == null)\n", fieldName);
+		out.format(
+				"            throw new %s(\"%s not established and is mandatory\");\n",
+				info.addType(RelationshipNotEstablished.class), "?");
+		out.format("    }\n\n");
+	}
+
 	private void writeJoinColumnsAnnotation(PrintStream out,
 			MyReferenceMember ref, boolean nullable) {
 		writeJoinColumnsAnnotation(out, ref, nullable, false, false);
@@ -696,8 +709,7 @@ public class ClassWriter {
 	private void writeJoinColumnsAnnotation(PrintStream out,
 			MyReferenceMember ref, boolean nullable, boolean insertable,
 			boolean updatable) {
-		info.addType(JoinColumns.class);
-		out.format("    @JoinColumns(value={\n");
+		out.format("    @%s(value={\n", info.addType(JoinColumns.class));
 		boolean first = true;
 		for (xuml.tools.model.compiler.ClassInfo.JoinColumn col : ref
 				.getJoinColumns()) {
@@ -705,9 +717,9 @@ public class ClassWriter {
 				out.format(",\n");
 			first = false;
 			out.format(
-					"        @JoinColumn(name=\"%s\",referencedColumnName=\"%s\",nullable=%s,insertable=%s,updatable=%s)",
-					col.getThisColumnName(), col.getOtherColumnName(),
-					nullable, insertable, updatable);
+					"        @%s(name=\"%s\",referencedColumnName=\"%s\",nullable=%s,insertable=%s,updatable=%s)",
+					info.addType(JoinColumn.class), col.getThisColumnName(),
+					col.getOtherColumnName(), nullable, insertable, updatable);
 		}
 		out.format("})\n");
 	}

@@ -1,17 +1,16 @@
 package xuml.tools.jaxb.compiler.test;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertEquals;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.persistence.PersistenceException;
 
-import one_to_one.A;
-import one_to_one.A.AId;
-import one_to_one.B;
-import one_to_one.B.BId;
-import one_to_one.Context;
+import one_to_one_many.A;
+import one_to_one_many.A.AId;
+import one_to_one_many.B;
+import one_to_one_many.B.BId;
+import one_to_one_many.Context;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -20,13 +19,14 @@ import org.junit.Test;
 import xuml.tools.model.compiler.runtime.RelationshipNotEstablished;
 import xuml.tools.util.database.DerbyUtil;
 
-public class AssociationsOneToOneTest {
+public class AssociationsOneToOneManyTest {
+
 	private static EntityManagerFactory emf;
 
 	@BeforeClass
 	public static void setup() {
 		DerbyUtil.disableDerbyLog();
-		emf = Persistence.createEntityManagerFactory("one-to-one");
+		emf = Persistence.createEntityManagerFactory("one-to-one-many");
 		Context.setEntityManagerFactory(emf);
 	}
 
@@ -45,7 +45,7 @@ public class AssociationsOneToOneTest {
 		em.close();
 	}
 
-	@Test(expected = PersistenceException.class)
+	@Test(expected = RelationshipNotEstablished.class)
 	public void testCannotCreateBWithoutA() {
 
 		EntityManager em = emf.createEntityManager();
@@ -59,25 +59,31 @@ public class AssociationsOneToOneTest {
 	}
 
 	@Test
-	public void testCreateAWithBAndIsPersistedProperly() {
+	public void testCreateAWithMultipleBAndIsPersistedProperly() {
 		{
 			EntityManager em = emf.createEntityManager();
 			em.getTransaction().begin();
 			A a = A.create(new AId("boo", "baa"));
 			B b = B.create(new BId("some2", "thing2"));
+			B b2 = B.create(new BId("some3", "thing3"));
+			a.getB().add(b);
+			a.getB().add(b2);
 			b.setA(a);
-			a.setB(b);
-			em.persist(b);
+			b2.setA(a);
+			a.persist(em);
+			b.persist(em);
+			b2.persist(em);
 			em.getTransaction().commit();
 			em.close();
 		}
 		{
 			EntityManager em = emf.createEntityManager();
 			em.getTransaction().begin();
-			A a = em.find(A.class, new A.AId("boo", "baa"));
-			assertNotNull(a.getB());
+			A a2 = em.find(A.class, new A.AId("boo", "baa"));
+			assertEquals(2, a2.getB().size());
 			em.getTransaction().commit();
 			em.close();
 		}
 	}
+
 }

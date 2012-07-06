@@ -101,6 +101,18 @@
 							<packageName>zero_one_to_many</packageName>
 						</configuration>
 					</execution>
+					<execution>
+						<id>one-to-one-many</id>
+						<goals>
+							<goal>generate-jpa</goal>
+						</goals>
+						<configuration>
+							<domainsXml>/samples.xml</domainsXml>
+							<domain>one-to-one-many</domain>
+							<schema>one_to_one_many</schema>
+							<packageName>one_to_one_many</packageName>
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
 		</plugins>

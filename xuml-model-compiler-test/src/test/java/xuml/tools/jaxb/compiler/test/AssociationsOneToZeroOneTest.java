@@ -40,7 +40,7 @@ public class AssociationsOneToZeroOneTest {
 
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
-		A a = A.create(new A.AId("hello", "there")).persist(em);
+		A.create(new A.AId("hello", "there")).persist(em);
 		em.getTransaction().commit();
 		em.close();
 	}
@@ -51,7 +51,7 @@ public class AssociationsOneToZeroOneTest {
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
 		try {
-			B b = B.create(new BId("some", "thing")).persist(em);
+			B.create(new BId("some", "thing")).persist(em);
 		} finally {
 			em.getTransaction().rollback();
 			em.close();
