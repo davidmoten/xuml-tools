@@ -38,21 +38,20 @@ public class AssociationsOneToZeroOneTest {
 	@Test
 	public void testCreateAWithoutB() {
 
-		A a = A.create(new A.AId("hello", "there"));
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
-		em.persist(a);
+		A a = A.create(new A.AId("hello", "there")).persist(em);
 		em.getTransaction().commit();
 		em.close();
 	}
 
 	@Test(expected = PersistenceException.class)
 	public void testCannotCreateBWithoutA() {
-		B b = B.create(new BId("some", "thing"));
+
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
 		try {
-			em.persist(b);
+			B b = B.create(new BId("some", "thing")).persist(em);
 		} finally {
 			em.getTransaction().rollback();
 			em.close();
