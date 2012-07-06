@@ -467,10 +467,26 @@ public class ClassInfoFromJaxb extends ClassInfo {
 		// other class
 		String thisFieldName = nameManager.toFieldName(otherClassName,
 				cls.getName(), a.getRnum());
+		boolean inPrimaryId = inPrimaryId(a.getRnum());
 		return new MyReferenceMember(pThat.getViewedClass(),
 				infoOther.getClassFullName(), toMult(pThis), toMult(pThat),
 				pThis.getPhrase(), pThat.getPhrase(), fieldName, joins,
-				thisFieldName, "thatName", (MyManyToMany) null);
+				thisFieldName, (MyManyToMany) null, inPrimaryId);
+	}
+
+	private boolean inPrimaryId(BigInteger rnum) {
+		for (JAXBElement<? extends Attribute> element : cls.getAttribute()) {
+			Attribute a = element.getValue();
+			if (a instanceof ReferentialAttribute) {
+				ReferentialAttribute r = (ReferentialAttribute) a;
+				if (r.getReference().getValue().getRelationship().equals(rnum))
+					for (IdentifierAttribute ia : r.getIdentifier()) {
+						if (ia.getNumber().equals(BigInteger.ONE))
+							return true;
+					}
+			}
+		}
+		return false;
 	}
 
 	private String getMatchingAttributeName(BigInteger rNum,

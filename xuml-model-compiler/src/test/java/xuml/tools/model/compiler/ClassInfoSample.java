@@ -208,63 +208,63 @@ public class ClassInfoSample extends ClassInfo {
 		List<MyReferenceMember> list = newArrayList();
 		list.add(new MyReferenceMember("Domain", getPackage() + ".Domain",
 				Mult.ONE, Mult.ZERO_ONE, "models", "is modelled in", "domain",
-				null, "class", null, null));
+				null, null, null, false));
 		list.add(new MyReferenceMember("Barge", getPackage() + ".Barge",
 				Mult.ZERO_ONE, Mult.ONE, "carries", "is carried by", "barge",
 				newArrayList(new JoinColumn("barge_id", "barge_id"),
 						new JoinColumn("region_id", "region_id")), null, null,
-				null));
+				false));
 		list.add(new MyReferenceMember("Wheel", getPackage() + ".Wheel",
 				Mult.ONE, Mult.MANY, "helps move", "moves on", "wheel", null,
-				"class", null, null));
+				null, null, false));
 		list.add(new MyReferenceMember("Insect", getPackage() + ".Insect",
 				Mult.MANY, Mult.ONE, "bites", "is bitten by", "insect",
 				newArrayList(new JoinColumn("insect_id", "insect_id")), null,
-				null, null));
+				null, false));
 		list.add(new MyReferenceMember("Train", getPackage() + ".Train",
 				Mult.ONE, Mult.ONE_MANY, "carries", "is carried by", "train",
-				null, "class", null, null));
+				null, null, null, false));
 		list.add(new MyReferenceMember("Light", getPackage() + ".Light",
 				Mult.ONE_MANY, Mult.ONE, "lights", "is lit by", "light",
 				newArrayList(new JoinColumn("light_id", "light_id")), null,
-				null, null));
+				null, false));
 		list.add(new MyReferenceMember("Mouse", getPackage() + ".Mouse",
 				Mult.ZERO_ONE, Mult.ZERO_ONE, "scares", "is scared by",
-				"mouse", null, "class", null, null));
+				"mouse", null, null, null, false));
 		list.add(new MyReferenceMember("Ant", getPackage() + ".Ant",
 				Mult.ZERO_ONE, Mult.ZERO_ONE, "nibbles", "is nibbled by",
 				"ant", newArrayList(new JoinColumn("ant_id", "ant_id")), null,
-				null, null));
+				null, false));
 		list.add(new MyReferenceMember("Aircraft", getPackage() + ".Aircraft",
 				Mult.ZERO_ONE, Mult.MANY, "flies", "is flown by", "aircraft",
-				null, "class", null, null));
+				null, null, null, false));
 		list.add(new MyReferenceMember("Balloon", getPackage() + ".Balloon",
 				Mult.MANY, Mult.ZERO_ONE, "floats", "is floated by", "balloon",
 				newArrayList(new JoinColumn("balloon_id", "balloon_id")), null,
-				null, null));
+				null, false));
 		list.add(new MyReferenceMember("Mower", getPackage() + ".Mower",
 				Mult.ZERO_ONE, Mult.MANY, "mows", "is mown by", "mower", null,
-				"class", null, null));
+				null, null, false));
 		list.add(new MyReferenceMember("Chair", getPackage() + ".Chair",
 				Mult.ONE_MANY, Mult.ZERO_ONE, "is sat on by", "sits on",
 				"chair", newArrayList(new JoinColumn("chair_id", "chair_id")),
-				null, null, null));
+				null, null, false));
 		list.add(new MyReferenceMember("Lemon", getPackage() + ".Lemon",
 				Mult.MANY, Mult.MANY, "is sucked by", "sucks", "lemon", null,
-				null, null, new MyManyToMany("class_lemon", getSchema(),
-						"class_id", "lemon_id")));
+				null, new MyManyToMany("class_lemon", getSchema(), "class_id",
+						"lemon_id"), false));
 		list.add(new MyReferenceMember("Abacus", getPackage() + ".Abacus",
 				Mult.MANY, Mult.MANY, "is clicked by", "clicks", "abacus",
-				null, "class", null, new MyManyToMany("class_lemon",
-						getSchema(), "class_id", "abacus_id")));
+				null, "class", new MyManyToMany("class_lemon", getSchema(),
+						"class_id", "abacus_id"), false));
 		list.add(new MyReferenceMember("Lemon", getPackage() + ".Lemon",
 				Mult.ONE_MANY, Mult.ONE_MANY, "is sucked by", "sucks", "lemon",
-				null, null, null, new MyManyToMany("class_lemon", getSchema(),
-						"class_id", "lemon_id")));
+				null, null, new MyManyToMany("class_lemon", getSchema(),
+						"class_id", "lemon_id"), false));
 		list.add(new MyReferenceMember("Abacus", getPackage() + ".Abacus",
 				Mult.ONE_MANY, Mult.ONE_MANY, "is clicked by", "clicks",
-				"abacus", null, "class", null, new MyManyToMany("class_lemon",
-						getSchema(), "class_id", "abacus_id")));
+				"abacus", null, "class", new MyManyToMany("class_lemon",
+						getSchema(), "class_id", "abacus_id"), false));
 		return list;
 	}
 

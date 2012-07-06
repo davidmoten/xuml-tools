@@ -345,19 +345,18 @@ public abstract class ClassInfo {
 		private final String thatVerbClause;
 		private final String fieldName;
 		private final List<JoinColumn> joinColumns;
+		private final boolean inPrimaryId;
 		/**
 		 * Gets used for mappedBy field in a OneToMany annotation for example.
 		 */
 		private final String thisFieldName;
-		// TODO remove this if not needed
-		private final String otherName;
 		private final MyManyToMany manyToMany;
 
 		public MyReferenceMember(String simpleClassName, String fullClassName,
 				Mult thisMult, Mult thatMult, String thisVerbClause,
 				String thatVerbClause, String fieldName,
 				List<JoinColumn> joinColumns, String thisFieldName,
-				String otherName, MyManyToMany manyToMany) {
+				MyManyToMany manyToMany, boolean inPrimaryId) {
 			this.simpleClassName = simpleClassName;
 			this.fullClassName = fullClassName;
 			this.thisMult = thisMult;
@@ -367,8 +366,12 @@ public abstract class ClassInfo {
 			this.fieldName = fieldName;
 			this.joinColumns = joinColumns;
 			this.thisFieldName = thisFieldName;
-			this.otherName = otherName;
 			this.manyToMany = manyToMany;
+			this.inPrimaryId = inPrimaryId;
+		}
+
+		public boolean isInPrimaryId() {
+			return inPrimaryId;
 		}
 
 		public String getFieldName() {
@@ -377,10 +380,6 @@ public abstract class ClassInfo {
 
 		public String getThisFieldName() {
 			return thisFieldName;
-		}
-
-		public String getOtherName() {
-			return otherName;
 		}
 
 		public List<JoinColumn> getJoinColumns() {
@@ -434,10 +433,10 @@ public abstract class ClassInfo {
 			builder.append(fieldName);
 			builder.append(", joinColumns=");
 			builder.append(joinColumns);
+			builder.append(", inPrimaryId=");
+			builder.append(inPrimaryId);
 			builder.append(", thisFieldName=");
 			builder.append(thisFieldName);
-			builder.append(", otherName=");
-			builder.append(otherName);
 			builder.append(", manyToMany=");
 			builder.append(manyToMany);
 			builder.append("]");
