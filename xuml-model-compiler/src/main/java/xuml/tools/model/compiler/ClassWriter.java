@@ -656,7 +656,7 @@ public class ClassWriter {
 				out.format(
 						"    @ManyToOne(targetEntity=%s.class,fetch=FetchType.LAZY)\n",
 						info.addType(ref.getFullClassName()));
-				writeJoinColumnsAnnotation(out, ref, true);
+				writeJoinColumnsAnnotation(out, ref, true, true, true);
 				writeField(out, ref);
 			} else if (isRelationship(ref, Mult.ZERO_ONE, Mult.ONE_MANY)) {
 				info.addType(OneToMany.class);
