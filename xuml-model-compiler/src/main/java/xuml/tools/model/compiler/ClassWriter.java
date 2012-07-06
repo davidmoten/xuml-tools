@@ -655,6 +655,8 @@ public class ClassWriter {
 						!ref.isInPrimaryId(), !ref.isInPrimaryId());
 				writeField(out, ref);
 			} else if (isRelationship(ref, Mult.ZERO_ONE, Mult.ONE_MANY)) {
+				writeValidationNotEmpty(out, ref.getFieldName(),
+						validationMethods);
 				info.addType(OneToMany.class);
 				info.addType(CascadeType.class);
 				info.addType(FetchType.class);
