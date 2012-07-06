@@ -5,28 +5,27 @@ import static org.junit.Assert.assertEquals;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.persistence.PersistenceException;
-
-import one_to_many.A;
-import one_to_many.A.AId;
-import one_to_many.B;
-import one_to_many.B.BId;
-import one_to_many.Context;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import xuml.tools.model.compiler.runtime.RelationshipNotEstablished;
 import xuml.tools.util.database.DerbyUtil;
+import zero_one_to_one_many.A;
+import zero_one_to_one_many.A.AId;
+import zero_one_to_one_many.B;
+import zero_one_to_one_many.B.BId;
+import zero_one_to_one_many.Context;
 
-public class AssociationsOneToManyTest {
+public class BinaryAssociationZeroOneToOneManyTest {
 
 	private static EntityManagerFactory emf;
 
 	@BeforeClass
 	public static void setup() {
 		DerbyUtil.disableDerbyLog();
-		emf = Persistence.createEntityManagerFactory("one-to-many");
+		emf = Persistence.createEntityManagerFactory("zero-one-to-one-many");
 		Context.setEntityManagerFactory(emf);
 	}
 
@@ -35,27 +34,27 @@ public class AssociationsOneToManyTest {
 		emf.close();
 	}
 
-	@Test
+	@Test(expected = RelationshipNotEstablished.class)
 	public void testCreateAWithoutB() {
 
 		EntityManager em = emf.createEntityManager();
-		em.getTransaction().begin();
-		A.create(new A.AId("hello", "there")).persist(em);
-		em.getTransaction().commit();
-		em.close();
+		try {
+			em.getTransaction().begin();
+			A.create(new A.AId("hello", "there")).persist(em);
+			em.getTransaction().commit();
+		} finally {
+			em.close();
+		}
 	}
 
-	@Test(expected = PersistenceException.class)
-	public void testCannotCreateBWithoutA() {
+	@Test
+	public void testCanCreateBWithoutA() {
 
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
-		try {
-			B.create(new BId("some", "thing")).persist(em);
-		} finally {
-			em.getTransaction().rollback();
-			em.close();
-		}
+		B.create(new BId("some", "thing")).persist(em);
+		em.getTransaction().commit();
+		em.close();
 	}
 
 	@Test

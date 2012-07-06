@@ -17,7 +17,7 @@ import zero_one_to_many.B;
 import zero_one_to_many.B.BId;
 import zero_one_to_many.Context;
 
-public class AssociationsZeroOneToManyTest {
+public class BinaryAssociationZeroOneToManyTest {
 
 	private static EntityManagerFactory emf;
 

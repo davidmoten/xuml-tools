@@ -5,28 +5,28 @@ import static org.junit.Assert.assertEquals;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.PersistenceException;
 
-import one_to_one_many.A;
-import one_to_one_many.A.AId;
-import one_to_one_many.B;
-import one_to_one_many.B.BId;
-import one_to_one_many.Context;
+import one_to_many.A;
+import one_to_many.A.AId;
+import one_to_many.B;
+import one_to_many.B.BId;
+import one_to_many.Context;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import xuml.tools.model.compiler.runtime.RelationshipNotEstablished;
 import xuml.tools.util.database.DerbyUtil;
 
-public class AssociationsOneToOneManyTest {
+public class BinaryAssociationOneToManyTest {
 
 	private static EntityManagerFactory emf;
 
 	@BeforeClass
 	public static void setup() {
 		DerbyUtil.disableDerbyLog();
-		emf = Persistence.createEntityManagerFactory("one-to-one-many");
+		emf = Persistence.createEntityManagerFactory("one-to-many");
 		Context.setEntityManagerFactory(emf);
 	}
 
@@ -35,7 +35,7 @@ public class AssociationsOneToOneManyTest {
 		emf.close();
 	}
 
-	@Test(expected = RelationshipNotEstablished.class)
+	@Test
 	public void testCreateAWithoutB() {
 
 		EntityManager em = emf.createEntityManager();
@@ -45,7 +45,7 @@ public class AssociationsOneToOneManyTest {
 		em.close();
 	}
 
-	@Test(expected = RelationshipNotEstablished.class)
+	@Test(expected = PersistenceException.class)
 	public void testCannotCreateBWithoutA() {
 
 		EntityManager em = emf.createEntityManager();

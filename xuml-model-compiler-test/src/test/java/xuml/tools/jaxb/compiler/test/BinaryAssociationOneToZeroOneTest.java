@@ -19,7 +19,7 @@ import org.junit.Test;
 
 import xuml.tools.util.database.DerbyUtil;
 
-public class AssociationsOneToZeroOneTest {
+public class BinaryAssociationOneToZeroOneTest {
 
 	private static EntityManagerFactory emf;
 

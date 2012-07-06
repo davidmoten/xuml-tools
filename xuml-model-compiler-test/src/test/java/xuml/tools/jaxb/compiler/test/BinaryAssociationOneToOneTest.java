@@ -20,7 +20,7 @@ import org.junit.Test;
 import xuml.tools.model.compiler.runtime.RelationshipNotEstablished;
 import xuml.tools.util.database.DerbyUtil;
 
-public class AssociationsOneToOneTest {
+public class BinaryAssociationOneToOneTest {
 	private static EntityManagerFactory emf;
 
 	@BeforeClass
