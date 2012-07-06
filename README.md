@@ -7,7 +7,7 @@ This project is still in development and has not reached alpha release status ye
 
 <img src="https://github.com/davidmoten/xuml-tools/raw/master/xuml-diagrams/src/docs/class-diagram.png">
 
-Continuous integration with Jenkins is [here](https://xuml-tools.ci.cloudbees.com/).
+Continuous integration with Jenkins for this project is [here](https://xuml-tools.ci.cloudbees.com/).
 
 <img  src="http://web-static-cloudfront.s3.amazonaws.com/images/badges/BuiltOnDEV.png"/>
 
