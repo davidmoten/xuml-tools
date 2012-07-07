@@ -579,30 +579,27 @@ public class ClassWriter {
 					writeField(out, ref);
 				}
 			} else if (isRelationship(ref, Mult.ZERO_ONE, Mult.ONE)) {
-				info.addType(OneToOne.class);
-				info.addType(FetchType.class);
-				info.addType(CascadeType.class);
 				out.format(
-						"    @OneToOne(targetEntity=%s.class,cascade=CascadeType.ALL,fetch=FetchType.LAZY)\n",
-						info.addType(ref.getFullClassName()));
+						"    @%s(targetEntity=%s.class,cascade=%s.ALL,fetch=%s.LAZY)\n",
+						info.addType(OneToOne.class),
+						info.addType(ref.getFullClassName()),
+						info.addType(CascadeType.class),
+						info.addType(FetchType.class));
 				writeJoinColumnsAnnotation(out, ref, false,
 						!ref.isInPrimaryId(), !ref.isInPrimaryId());
 				writeField(out, ref);
 			} else if (isRelationship(ref, Mult.ONE, Mult.MANY)) {
-				info.addType(OneToMany.class);
-				info.addType(CascadeType.class);
-				info.addType(FetchType.class);
 				out.format(
-						"    @OneToMany(mappedBy=\"%s\",cascade=CascadeType.ALL,fetch=FetchType.LAZY,targetEntity=%s.class)\n",
-						ref.getThisFieldName(),
+						"    @%s(mappedBy=\"%s\",cascade=%s.ALL,fetch=%s.LAZY,targetEntity=%s.class)\n",
+						info.addType(OneToMany.class), ref.getThisFieldName(),
+						info.addType(CascadeType.class),
+						info.addType(FetchType.class),
 						info.addType(ref.getFullClassName()));
 				writeMultipleField(out, ref);
 			} else if (isRelationship(ref, Mult.MANY, Mult.ONE)) {
-				info.addType(ManyToOne.class);
-				info.addType(FetchType.class);
-				out.format(
-						"    @ManyToOne(targetEntity=%s.class,fetch=FetchType.LAZY)\n",
-						ref.getSimpleClassName());
+				out.format("    @%s(targetEntity=%s.class,fetch=%s.LAZY)\n",
+						info.addType(ManyToOne.class),
+						ref.getSimpleClassName(), info.addType(FetchType.class));
 				writeJoinColumnsAnnotation(out, ref, false,
 						!ref.isInPrimaryId(), !ref.isInPrimaryId());
 				writeField(out, ref);
