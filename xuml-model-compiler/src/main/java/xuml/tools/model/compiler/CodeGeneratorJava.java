@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.List;
 
 import javax.persistence.EntityManagerFactory;
 import javax.xml.bind.JAXBElement;
@@ -17,6 +18,8 @@ import miuml.jaxb.SubsystemElement;
 import xuml.tools.model.compiler.runtime.CreationEvent;
 import xuml.tools.model.compiler.runtime.Entity;
 import xuml.tools.model.compiler.runtime.Signaller;
+
+import com.google.common.collect.Lists;
 
 /**
  * Generates code associated with one modeled domain.
@@ -43,22 +46,31 @@ public class CodeGeneratorJava {
 
 		ModeledDomain md = domain;
 		Lookups lookups = new Lookups(domains, md);
-		for (Subsystem subsystem : md.getSubsystem()) {
+		for (Class cls : getClasses(md))
+			createImplementation(cls, destination, lookups);
+		createPersistenceXml(domain, "target/persistence.xml");
+		createContext(domain, destination, lookups);
+		log("finished generation");
+	}
+
+	private void createPersistenceXml(ModeledDomain domain, String filename) {
+		for (Class cls : getClasses(domain)) {
+			// TODO write persistence xml
+		}
+	}
+
+	private List<Class> getClasses(ModeledDomain domain) {
+		List<Class> list = Lists.newArrayList();
+		for (Subsystem subsystem : domain.getSubsystem()) {
 			for (JAXBElement<? extends SubsystemElement> element : subsystem
 					.getSubsystemElement()) {
 				if (element.getValue() instanceof Class) {
 					Class cls = (Class) element.getValue();
-					// create classes (impls)
-					createImplementation(cls, destination, lookups);
+					list.add(cls);
 				}
 			}
-
-			// create object factory
-
-			// createPersitenceXml(domain.getClazz(), resourcesDirectory);
 		}
-		createContext(domain, destination, lookups);
-		log("finished generation");
+		return list;
 	}
 
 	private void createContext(ModeledDomain domain, File destination,
