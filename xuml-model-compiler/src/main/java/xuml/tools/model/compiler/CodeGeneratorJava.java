@@ -134,7 +134,7 @@ public class CodeGeneratorJava {
 
 	private ClassInfo createClassInfo(Class cls) {
 		Lookups lookups = new Lookups(domains, domain);
-		return new ClassInfoFromJaxb(cls, domainPackageName, "description",
+		return new ClassInfo(cls, domainPackageName, "description",
 				domainSchema, lookups);
 	}
 

@@ -36,14 +36,14 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
-import xuml.tools.model.compiler.ClassInfo.Mult;
-import xuml.tools.model.compiler.ClassInfo.MyEvent;
-import xuml.tools.model.compiler.ClassInfo.MyIndependentAttribute;
-import xuml.tools.model.compiler.ClassInfo.MyParameter;
-import xuml.tools.model.compiler.ClassInfo.MyPrimaryIdAttribute;
-import xuml.tools.model.compiler.ClassInfo.MyReferenceMember;
-import xuml.tools.model.compiler.ClassInfo.MySubclassRole;
-import xuml.tools.model.compiler.ClassInfo.MyTransition;
+import xuml.tools.model.compiler.ClassInfoBase.Mult;
+import xuml.tools.model.compiler.ClassInfoBase.MyEvent;
+import xuml.tools.model.compiler.ClassInfoBase.MyIdAttribute;
+import xuml.tools.model.compiler.ClassInfoBase.MyIndependentAttribute;
+import xuml.tools.model.compiler.ClassInfoBase.MyParameter;
+import xuml.tools.model.compiler.ClassInfoBase.MyReferenceMember;
+import xuml.tools.model.compiler.ClassInfoBase.MySubclassRole;
+import xuml.tools.model.compiler.ClassInfoBase.MyTransition;
 import xuml.tools.model.compiler.runtime.CreationEvent;
 import xuml.tools.model.compiler.runtime.EntityHelper;
 import xuml.tools.model.compiler.runtime.Event;
@@ -366,7 +366,7 @@ public class ClassWriter {
 				info.getEmbeddedIdSimpleClassName());
 		out.format("            return ");
 		boolean first = true;
-		for (MyPrimaryIdAttribute member : info.getPrimaryIdAttributeMembers()) {
+		for (MyIdAttribute member : info.getPrimaryIdAttributeMembers()) {
 			if (!first) {
 				out.println();
 				out.format("                && ");
@@ -386,7 +386,7 @@ public class ClassWriter {
 		out.format("            return %s.hashCode(\n",
 				info.addType(Objects.class));
 		boolean first = true;
-		for (MyPrimaryIdAttribute member : info.getPrimaryIdAttributeMembers()) {
+		for (MyIdAttribute member : info.getPrimaryIdAttributeMembers()) {
 			if (!first) {
 				out.format(",\n");
 			}
@@ -418,7 +418,7 @@ public class ClassWriter {
 		out.format("%s%s _s = new %s();\n", "            ",
 				info.addType(StringBuffer.class),
 				info.addType(StringBuffer.class));
-		for (MyPrimaryIdAttribute member : info.getPrimaryIdAttributeMembers()) {
+		for (MyIdAttribute member : info.getPrimaryIdAttributeMembers()) {
 			out.format("%s_s.append(\"%s=\");\n", "            ",
 					member.getFieldName());
 			out.format("%s_s.append(%s.toString());\n", "            ",
@@ -431,7 +431,7 @@ public class ClassWriter {
 
 	private void writeEmbeddedIdGettersAndSetters(PrintStream out,
 			ClassInfo info) {
-		for (MyPrimaryIdAttribute member : info.getPrimaryIdAttributeMembers()) {
+		for (MyIdAttribute member : info.getPrimaryIdAttributeMembers()) {
 			out.format("%spublic %s get%s(){\n", "        ",
 					info.addType(member.getType()),
 					Util.upperFirst(member.getFieldName()));
@@ -455,7 +455,7 @@ public class ClassWriter {
 	}
 
 	private void writeEmbeddedIdFields(PrintStream out, ClassInfo info) {
-		for (MyPrimaryIdAttribute member : info.getPrimaryIdAttributeMembers()) {
+		for (MyIdAttribute member : info.getPrimaryIdAttributeMembers()) {
 			if (member.getReferenceClass() == null)
 				out.format("        @%s(name=\"%s\")\n",
 						info.addType(Column.class), member.getColumnName());
@@ -473,7 +473,7 @@ public class ClassWriter {
 		// write constructor
 		out.format("        public %s(", info.getEmbeddedIdSimpleClassName());
 		boolean first = true;
-		for (MyPrimaryIdAttribute member : info.getPrimaryIdAttributeMembers()) {
+		for (MyIdAttribute member : info.getPrimaryIdAttributeMembers()) {
 			if (!first)
 				out.format(", ");
 			out.format("%s %s", info.addType(member.getType()),
@@ -482,7 +482,7 @@ public class ClassWriter {
 		}
 		out.format(") {\n");
 		first = true;
-		for (MyPrimaryIdAttribute member : info.getPrimaryIdAttributeMembers()) {
+		for (MyIdAttribute member : info.getPrimaryIdAttributeMembers()) {
 			out.format("            this.%s = %s;\n", member.getFieldName(),
 					member.getFieldName());
 			first = false;
@@ -501,7 +501,7 @@ public class ClassWriter {
 	}
 
 	private void writeIndependentAttributeMember(PrintStream out,
-			MyPrimaryIdAttribute attribute, String indent) {
+			MyIdAttribute attribute, String indent) {
 		writeIndependentAttributeMember(out, attribute.getFieldName(),
 				attribute.getColumnName(), false, "    ",
 				info.addType(attribute.getType()));

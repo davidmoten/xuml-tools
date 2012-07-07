@@ -1,547 +1,571 @@
 package xuml.tools.model.compiler;
 
+import static com.google.common.collect.Collections2.transform;
+import static com.google.common.collect.HashMultimap.create;
 import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Sets.newHashSet;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Set;
 
-import miuml.jaxb.EventSignature;
-import miuml.jaxb.StateSignature;
+import javax.xml.bind.JAXBElement;
 
-public abstract class ClassInfo {
+import miuml.jaxb.Association;
+import miuml.jaxb.AsymmetricPerspective;
+import miuml.jaxb.Attribute;
+import miuml.jaxb.BinaryAssociation;
+import miuml.jaxb.Class;
+import miuml.jaxb.CreationEvent;
+import miuml.jaxb.Event;
+import miuml.jaxb.Generalization;
+import miuml.jaxb.IdentifierAttribute;
+import miuml.jaxb.IndependentAttribute;
+import miuml.jaxb.NativeAttribute;
+import miuml.jaxb.Perspective;
+import miuml.jaxb.Reference;
+import miuml.jaxb.ReferentialAttribute;
+import miuml.jaxb.Relationship;
+import miuml.jaxb.State;
+import miuml.jaxb.StateModelParameter;
+import miuml.jaxb.StateModelSignature;
+import miuml.jaxb.SymmetricPerspective;
+import miuml.jaxb.Transition;
+import miuml.jaxb.UnaryAssociation;
 
-	abstract String getPackage();
+import com.google.common.base.Function;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
-	abstract String getClassDescription();
+public class ClassInfo extends ClassInfoBase {
 
-	abstract List<List<String>> getUniqueConstraintColumnNames();
+	private final Class cls;
+	private final String packageName;
+	private final String classDescription;
+	private final String schema;
+	private final TypeRegister typeRegister = new TypeRegister();
+	private final Lookups lookups;
+	private static NameManager nameManager = NameManager.getInstance();
 
-	abstract String getSchema();
-
-	abstract String getTable();
-
-	abstract String getJavaClassSimpleName();
-
-	abstract List<String> getOperations();
-
-	abstract TypeRegister getTypes();
-
-	final public String getBehaviourPackage() {
-		return getPackage() + ".behaviour";
+	public ClassInfo(Class cls, String packageName, String classDescription,
+			String schema, Lookups lookups) {
+		this.cls = cls;
+		this.packageName = packageName;
+		// TODO is this property needed?
+		this.classDescription = classDescription;
+		this.schema = schema;
+		this.lookups = lookups;
 	}
 
-	final public String getBehaviourFactoryFullClassName() {
-		return getBehaviourPackage() + "." + getBehaviourFactorySimpleName();
+	@Override
+	String getPackage() {
+		return packageName;
 	}
 
-	final public String getBehaviourFullClassName() {
-		return getBehaviourPackage() + "." + getJavaClassSimpleName()
-				+ "Behaviour";
+	@Override
+	String getClassDescription() {
+		return classDescription;
 	}
 
-	final public String getBehaviourFactorySimpleName() {
-		return getJavaClassSimpleName() + "BehaviourFactory";
+	@Override
+	List<List<String>> getUniqueConstraintColumnNames() {
+		HashMultimap<BigInteger, String> map = getIdentifierAttributeNames();
+		List<List<String>> list = newArrayList();
+		for (BigInteger i : map.keySet())
+			list.add(newArrayList(map.get(i)));
+		return list;
 	}
 
-	final public String addType(java.lang.Class<?> cls) {
-		return getTypes().addType(cls);
+	private HashMultimap<BigInteger, String> getIdentifierAttributeNames() {
+		HashMultimap<BigInteger, Attribute> map = getIdentifierAttributes();
+		HashMultimap<BigInteger, String> m = create();
+		for (BigInteger i : map.keySet()) {
+			m.putAll(i, getNames(map.get(i)));
+		}
+		return m;
 	}
 
-	final public void addTypes(java.lang.Class<?>... classes) {
-		getTypes().addTypes(classes);
+	private static Function<Attribute, String> attributeName = new Function<Attribute, String>() {
+		@Override
+		public String apply(Attribute a) {
+			return a.getName();
+		}
+	};
+
+	private Set<String> getNames(Set<Attribute> attributes) {
+		return newHashSet(transform(attributes, attributeName));
 	}
 
-	final public String addType(String fullClassName) {
-		return getTypes().addType(fullClassName);
+	private HashMultimap<BigInteger, Attribute> getIdentifierAttributes() {
+		HashMultimap<BigInteger, Attribute> map = HashMultimap.create();
+		for (JAXBElement<? extends Attribute> element : cls.getAttribute()) {
+			Attribute attribute = element.getValue();
+			for (IdentifierAttribute id : attribute.getIdentifier()) {
+				map.put(id.getNumber(), attribute);
+			}
+		}
+		return map;
 	}
 
-	final public String addType(Type type) {
-		return getTypes().addType(type);
+	@Override
+	String getSchema() {
+		return schema;
 	}
 
-	abstract List<MyPrimaryIdAttribute> getPrimaryIdAttributeMembers();
-
-	abstract List<MyIndependentAttribute> getNonIdIndependentAttributeMembers();
-
-	abstract List<MyEvent> getEvents();
-
-	abstract List<String> getStateNames();
-
-	abstract List<MyTransition> getTransitions();
-
-	abstract String getStateAsJavaIdentifier(String state);
-
-	abstract boolean isSuperclass();
-
-	abstract boolean isSubclass();
-
-	abstract MySubclassRole getSubclassRole();
-
-	abstract List<MyReferenceMember> getReferenceMembers();
-
-	// TODO chuck this
-	abstract Set<String> getAtLeastOneFieldChecks();
-
-	abstract String getImports(String relativeToClass);
-
-	abstract String getIdColumnName();
-
-	abstract String getContextPackageName();
-
-	abstract Type getType(String name);
-
-	final public String getContextFullClassName() {
-		return getContextPackageName() + ".Context";
+	@Override
+	String getTable() {
+		return nameManager.toTableName(schema, cls.getName());
 	}
 
-	final public String getBehaviourFactoryFullName() {
-		return getBehaviourPackage() + "." + getBehaviourFactorySimpleName();
+	@Override
+	String getJavaClassSimpleName() {
+		return Util.toClassSimpleName(cls.getName());
 	}
 
-	final public String getBehaviourFactoryFieldName() {
-		return Util.toJavaIdentifier(getBehaviourFactorySimpleName());
+	@Override
+	List<String> getOperations() {
+		// TODO review operations, not supported by miUML. Should be using
+		// derived attributes.
+		return Lists.newArrayList();
 	}
 
-	final public String getClassFullName() {
-
-		return getPackage() + "." + getJavaClassSimpleName();
+	@Override
+	List<MyIdAttribute> getPrimaryIdAttributeMembers() {
+		Set<Attribute> list = getIdentifierAttributes().get(BigInteger.ONE);
+		return getMyIdAttributes(list);
 	}
 
-	public static class MyPrimaryIdAttributeMember extends
-			MyIndependentAttribute {
-
-		public MyPrimaryIdAttributeMember(String fieldName, String columnName,
-				Type type, boolean nullable, String description) {
-			super(fieldName, columnName, type, nullable, description);
+	private List<MyIdAttribute> getMyIdAttributes(Set<Attribute> list) {
+		List<MyIdAttribute> result = newArrayList();
+		for (Attribute attribute : list) {
+			MyIdAttribute id;
+			if (attribute instanceof NativeAttribute) {
+				NativeAttribute a = (NativeAttribute) attribute;
+				id = createMyIdAttribute(a);
+			} else {
+				ReferentialAttribute a = (ReferentialAttribute) attribute;
+				id = createMyIdAttribute(a);
+			}
+			result.add(id);
 		}
-
+		return result;
 	}
 
-	public static class MyPrimaryIdAttribute {
-		private final String fieldName;
-		private final String columnName;
-		private final String referenceClass;
-		private final String referenceColumnName;
-		private final Type type;
-		private final String attributeName;
-
-		public String getAttributeName() {
-			return attributeName;
-		}
-
-		public MyPrimaryIdAttribute(String attributeName, String fieldName,
-				String columnName, String referenceClass,
-				String referenceColumnName, Type type) {
-			this.attributeName = attributeName;
-			this.fieldName = fieldName;
-			this.columnName = columnName;
-			this.referenceClass = referenceClass;
-			this.referenceColumnName = referenceColumnName;
-			this.type = type;
-		}
-
-		public MyPrimaryIdAttribute(String attributeName, String fieldName,
-				String columnName, Type type) {
-			this(attributeName, fieldName, columnName, null, null, type);
-		}
-
-		public String getFieldName() {
-			return fieldName;
-		}
-
-		public String getColumnName() {
-			return columnName;
-		}
-
-		public String getReferenceClass() {
-			return referenceClass;
-		}
-
-		public String getReferenceColumnName() {
-			return referenceColumnName;
-		}
-
-		public Type getType() {
-			return type;
-		}
-
+	private MyIdAttribute createMyIdAttribute(ReferentialAttribute a) {
+		Reference ref = a.getReference().getValue();
+		Relationship rel = lookups.getRelationship(ref.getRelationship());
+		String otherClassName = getOtherClassName(rel);
+		return getPrimaryIdAttribute(a, ref, otherClassName);
 	}
 
-	public static class MyIndependentAttribute {
-		private final String fieldName;
-		private final String columnName;
-		private final Type type;
-		private final boolean nullable;
-		private final String description;
-
-		public boolean isNullable() {
-			return nullable;
-		}
-
-		public MyIndependentAttribute(String fieldName, String columnName,
-				Type type, boolean nullable, String description) {
-			super();
-			this.fieldName = fieldName;
-			this.columnName = columnName;
-			this.type = type;
-			this.nullable = nullable;
-			this.description = description;
-		}
-
-		public String getDescription() {
-			return description;
-		}
-
-		public String getFieldName() {
-			return fieldName;
-		}
-
-		public String getColumnName() {
-			return columnName;
-		}
-
-		public Type getType() {
-			return type;
-		}
-	}
-
-	public static class MyParameter {
-		private final String fieldName;
-		private final String type;
-
-		public String getFieldName() {
-			return fieldName;
-		}
-
-		public String getType() {
-			return type;
-		}
-
-		public MyParameter(String fieldName, String type) {
-			super();
-			this.fieldName = fieldName;
-			this.type = type;
-		}
-	}
-
-	public static class MyEvent {
-		private final String name;
-		private String simpleClassName;
-		private final List<MyParameter> parameters;
-		private final String stateName;
-		private final String stateSignatureInterfaceSimpleName;
-		private final boolean creates;
-
-		public List<MyParameter> getParameters() {
-			return parameters;
-		}
-
-		public MyEvent(String name, String simpleClassName,
-				List<MyParameter> parameters, String stateName,
-				String stateSignatureInterfaceSimpleName, boolean creates) {
-			this.name = name;
-			this.simpleClassName = simpleClassName;
-			this.stateName = stateName;
-			this.stateSignatureInterfaceSimpleName = stateSignatureInterfaceSimpleName;
-			this.creates = creates;
-			if (parameters == null)
-				this.parameters = newArrayList();
+	private String getOtherClassName(Relationship rel) {
+		String otherClassName;
+		if (rel instanceof BinaryAssociation) {
+			BinaryAssociation b = (BinaryAssociation) rel;
+			if (isActiveSide(b))
+				otherClassName = b.getPassivePerspective().getViewedClass();
 			else
-				this.parameters = parameters;
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public String getSimpleClassName() {
-			return simpleClassName;
-		}
-
-		public void setSimpleClassName(String simpleClassName) {
-			this.simpleClassName = simpleClassName;
-		}
-
-		/**
-		 * If the parameter list was obtained from the {@link StateSignature}
-		 * rather than the {@link EventSignature} then this returns the state
-		 * name.
-		 * 
-		 * @return
-		 */
-		public String getStateName() {
-			return stateName;
-		}
-
-		public String getStateSignatureInterfaceSimpleName() {
-			return stateSignatureInterfaceSimpleName;
-		}
-
-		public boolean getCreates() {
-			return creates;
-		}
+				otherClassName = b.getActivePerspective().getViewedClass();
+		} else if (rel instanceof UnaryAssociation) {
+			// TODO
+			throw new RuntimeException("not sure how to do this one yet");
+		} else if (rel instanceof Generalization) {
+			Generalization g = (Generalization) rel;
+			if (cls.getName().equals(g.getSuperclass()))
+				throw new RuntimeException(
+						"cannot use an id from a specialization as primary id member: "
+								+ g.getRnum());
+			else
+				otherClassName = g.getSuperclass();
+		} else
+			throw new RuntimeException(
+					"this relationship type not implemented: "
+							+ rel.getClass().getName());
+		return otherClassName;
 	}
 
-	public static class MySubclassRole {
-		private final String superclassJavaFullClassName;
-		private final String discriminatorValue;
-
-		public MySubclassRole(String superclassJavaFullClassName,
-				String discriminatorValue) {
-			super();
-			this.superclassJavaFullClassName = superclassJavaFullClassName;
-			this.discriminatorValue = discriminatorValue;
-		}
-
-		public String getSuperclassJavaFullClassName() {
-			return superclassJavaFullClassName;
-		}
-
-		public String getDiscriminatorValue() {
-			return discriminatorValue;
-		}
+	private MyIdAttribute getPrimaryIdAttribute(ReferentialAttribute a,
+			Reference ref, String otherClassName) {
+		MyIdAttribute p = getOtherPrimaryIdAttribute(a, ref, otherClassName);
+		if (p != null)
+			return new MyIdAttribute(a.getName(), nameManager.toFieldName(
+					cls.getName(), a.getName()), nameManager.toColumnName(
+					cls.getName(), a.getName()), otherClassName,
+					nameManager.toColumnName(otherClassName,
+							p.getAttributeName()), p.getType());
+		else
+			throw new RuntimeException("attribute not found!");
 	}
 
-	public static enum Mult {
-		ONE, ZERO_ONE, MANY, ONE_MANY;
-	}
-
-	public static class JoinColumn {
-		private final String thisColumnName;
-		private final String otherColumnName;
-
-		public JoinColumn(String thisColumnName, String otherColumnName) {
-			this.thisColumnName = thisColumnName;
-			this.otherColumnName = otherColumnName;
+	private MyIdAttribute getOtherPrimaryIdAttribute(ReferentialAttribute a,
+			Reference ref, String otherClassName) {
+		ClassInfo otherInfo = getClassInfo(otherClassName);
+		// look for attribute
+		String otherAttributeName;
+		if (ref.getAttribute() == null)
+			otherAttributeName = a.getName();
+		else
+			otherAttributeName = ref.getAttribute();
+		List<MyIdAttribute> members = otherInfo.getPrimaryIdAttributeMembers();
+		for (MyIdAttribute p : members) {
+			if (otherAttributeName.equals(p.getAttributeName())) {
+				return p;
+			}
 		}
-
-		public String getThisColumnName() {
-			return thisColumnName;
-		}
-
-		public String getOtherColumnName() {
-			return otherColumnName;
-		}
-
-		@Override
-		public String toString() {
-			StringBuilder builder = new StringBuilder();
-			builder.append("JoinColumn [thisColumnName=");
-			builder.append(thisColumnName);
-			builder.append(", otherColumnName=");
-			builder.append(otherColumnName);
-			builder.append("]");
-			return builder.toString();
-		}
+		// not found
+		throw new RuntimeException("could not find attribute <"
+				+ ref.getAttribute() + " in class " + otherClassName);
 
 	}
 
-	public static class MyReferenceMember {
-		private final String simpleClassName;
-		private final String fullClassName;
-		private final Mult thisMult;
-		private final Mult thatMult;
-		private final String thisVerbClause;
-		private final String thatVerbClause;
-		private final String fieldName;
-		private final List<JoinColumn> joinColumns;
-		private final boolean inPrimaryId;
-		/**
-		 * Gets used for mappedBy field in a OneToMany annotation for example.
-		 */
-		private final String thisFieldName;
-		private final MyManyToMany manyToMany;
-
-		public MyReferenceMember(String simpleClassName, String fullClassName,
-				Mult thisMult, Mult thatMult, String thisVerbClause,
-				String thatVerbClause, String fieldName,
-				List<JoinColumn> joinColumns, String thisFieldName,
-				MyManyToMany manyToMany, boolean inPrimaryId) {
-			this.simpleClassName = simpleClassName;
-			this.fullClassName = fullClassName;
-			this.thisMult = thisMult;
-			this.thatMult = thatMult;
-			this.thisVerbClause = thisVerbClause;
-			this.thatVerbClause = thatVerbClause;
-			this.fieldName = fieldName;
-			this.joinColumns = joinColumns;
-			this.thisFieldName = thisFieldName;
-			this.manyToMany = manyToMany;
-			this.inPrimaryId = inPrimaryId;
-		}
-
-		public boolean isInPrimaryId() {
-			return inPrimaryId;
-		}
-
-		public String getFieldName() {
-			return fieldName;
-		}
-
-		public String getThisFieldName() {
-			return thisFieldName;
-		}
-
-		public List<JoinColumn> getJoinColumns() {
-			return joinColumns;
-		}
-
-		public String getSimpleClassName() {
-			return simpleClassName;
-		}
-
-		public String getFullClassName() {
-			return fullClassName;
-		}
-
-		public Mult getThisMult() {
-			return thisMult;
-		}
-
-		public Mult getThatMult() {
-			return thatMult;
-		}
-
-		public String getThisVerbClause() {
-			return thisVerbClause;
-		}
-
-		public String getThatVerbClause() {
-			return thatVerbClause;
-		}
-
-		public MyManyToMany getManyToMany() {
-			return manyToMany;
-		}
-
-		@Override
-		public String toString() {
-			StringBuilder builder = new StringBuilder();
-			builder.append("MyReferenceMember [simpleClassName=");
-			builder.append(simpleClassName);
-			builder.append(", fullClassName=");
-			builder.append(fullClassName);
-			builder.append(", thisMult=");
-			builder.append(thisMult);
-			builder.append(", thatMult=");
-			builder.append(thatMult);
-			builder.append(", thisVerbClause=");
-			builder.append(thisVerbClause);
-			builder.append(", thatVerbClause=");
-			builder.append(thatVerbClause);
-			builder.append(", fieldName=");
-			builder.append(fieldName);
-			builder.append(", joinColumns=");
-			builder.append(joinColumns);
-			builder.append(", inPrimaryId=");
-			builder.append(inPrimaryId);
-			builder.append(", thisFieldName=");
-			builder.append(thisFieldName);
-			builder.append(", manyToMany=");
-			builder.append(manyToMany);
-			builder.append("]");
-			return builder.toString();
-		}
-
+	private ClassInfo getClassInfo(String otherClassName) {
+		ClassInfo otherInfo = new ClassInfo(
+				lookups.getClassByName(otherClassName), packageName, "unknown",
+				schema, lookups);
+		return otherInfo;
 	}
 
-	public static class MyManyToMany {
-		private final String joinTable;
-		private final String joinTableSchema;
-		private final String thisColumnName;
-		private final String thatColumnName;
+	private boolean isActiveSide(BinaryAssociation b) {
+		return b.getActivePerspective().getViewedClass().equals(cls.getName());
+	}
 
-		public String getThatColumnName() {
-			return thatColumnName;
+	private MyIdAttribute createMyIdAttribute(NativeAttribute a) {
+		return new MyIdAttribute(a.getName(),
+				Util.toJavaIdentifier(a.getName()), Util.toColumnName(a
+						.getName()), getType(a.getType()));
+	}
+
+	private MyIndependentAttribute createMyIndependentAttribute(
+			NativeAttribute a) {
+		// TODO what to do with isNullable
+		boolean isNullable = true;
+		return new MyIndependentAttribute(Util.toJavaIdentifier(a.getName()),
+				Util.toColumnName(a.getName()), getType(a.getType()),
+				isNullable, "description");
+	}
+
+	@Override
+	List<MyIndependentAttribute> getNonIdIndependentAttributeMembers() {
+		List<MyIndependentAttribute> list = newArrayList();
+		for (JAXBElement<? extends Attribute> element : cls.getAttribute()) {
+			if (element.getValue() instanceof IndependentAttribute) {
+				IndependentAttribute a = (IndependentAttribute) element
+						.getValue();
+				if (!isMemberOfPrimaryIdentifier(a)) {
+					list.add(createMyIndependentAttribute(a));
+				}
+			}
 		}
+		return list;
+	}
 
-		public MyManyToMany(String joinTable, String joinTableSchema,
-				String thisColumnName, String thatColumnName) {
-			super();
-			this.joinTable = joinTable;
-			this.joinTableSchema = joinTableSchema;
-			this.thisColumnName = thisColumnName;
-			this.thatColumnName = thatColumnName;
+	private boolean isMemberOfPrimaryIdentifier(IndependentAttribute a) {
+		for (IdentifierAttribute idAttribute : a.getIdentifier()) {
+			if (idAttribute.getNumber().intValue() == 1) {
+				return true;
+			}
 		}
+		return false;
+	}
 
-		public String getJoinTable() {
-			return joinTable;
+	@Override
+	List<MyEvent> getEvents() {
+		if (cls.getLifecycle() == null)
+			return newArrayList();
+		List<MyEvent> list = newArrayList();
+		CreationEvent creationEvent = getCreationEvent();
+		for (JAXBElement<? extends Event> element : cls.getLifecycle()
+				.getEvent()) {
+			Event event = element.getValue();
+
+			final StateModelSignature signature;
+			final String stateName;
+
+			if (event.getEventSignature() != null) {
+				signature = event.getEventSignature();
+				stateName = null;
+			} else {
+				// TODO of eventSignature is null then get signature from
+				// destination state
+				State destinationState = null;
+
+				for (MyTransition transition : getTransitions()) {
+					if (transition.getEventId()
+							.equals(event.getID().toString())) {
+						for (State state : cls.getLifecycle().getState()) {
+							if (transition.getToState().equals(state.getName())) {
+								destinationState = state;
+							}
+						}
+					}
+				}
+				if (destinationState != null) {
+					signature = destinationState.getStateSignature();
+					stateName = destinationState.getName();
+				} else {
+					signature = null;
+					stateName = null;
+				}
+			}
+
+			if (signature == null)
+				throw new RuntimeException("signature not found for class="
+						+ cls.getName() + ",event=" + event.getName());
+
+			List<MyParameter> parameters = Lists.newArrayList();
+			for (StateModelParameter p : signature.getStateModelParameter()) {
+				parameters.add(new MyParameter(Util.toJavaIdentifier(p
+						.getName()), lookups.getJavaType(p.getType())));
+			}
+
+			MyEvent myEvent = new MyEvent(event.getName(),
+					Util.toClassSimpleName(event.getName()), parameters,
+					stateName, getStateSignatureInterfaceName(stateName),
+					event == creationEvent);
+			list.add(myEvent);
 		}
+		return list;
+	}
 
-		public String getJoinTableSchema() {
-			return joinTableSchema;
-		}
+	private String getStateSignatureInterfaceName(final String stateName) {
+		if (stateName == null)
+			return null;
+		else
+			return "StateSignature_"
+					+ Util.upperFirst(Util.toJavaIdentifier(stateName));
+	}
 
-		public String getThisColumnName() {
-			return thisColumnName;
+	@Override
+	List<String> getStateNames() {
+		List<String> list = Lists.newArrayList();
+		if (cls.getLifecycle() == null)
+			return newArrayList();
+		else {
+			for (State state : cls.getLifecycle().getState())
+				list.add(state.getName());
+			return list;
 		}
 	}
 
-	public static class MyTransition {
-		private final String eventName;
-		private final String eventSimpleClassName;
-		private final String fromState;
-		private final String toState;
-		private final String eventId;
+	@Override
+	List<MyTransition> getTransitions() {
+		List<MyTransition> list = Lists.newArrayList();
+		for (Transition transition : cls.getLifecycle().getTransition()) {
+			// TODO what to do about event name? Event inheritance is involved.
+			String eventName = getEventName(transition.getEventID());
+			list.add(new MyTransition(eventName, Util
+					.toClassSimpleName(eventName), transition.getEventID()
+					.toString(), transition.getState(), transition
+					.getDestination()));
 
-		public MyTransition(String eventName, String eventSimpleClassName,
-				String eventId, String fromState, String toState) {
-			this.eventName = eventName;
-			this.eventSimpleClassName = eventSimpleClassName;
-			this.eventId = eventId;
-			this.fromState = fromState;
-			this.toState = toState;
 		}
-
-		public String getEventName() {
-			return eventName;
+		CreationEvent creation = getCreationEvent();
+		if (creation != null) {
+			String eventName = getEventName(creation.getID());
+			list.add(new MyTransition(eventName, Util
+					.toClassSimpleName(eventName), creation.getID().toString(),
+					null, creation.getState()));
 		}
-
-		public String getEventSimpleClassName() {
-			return eventSimpleClassName;
-		}
-
-		public String getEventId() {
-			return eventId;
-		}
-
-		public String getFromState() {
-			return fromState;
-		}
-
-		public String getToState() {
-			return toState;
-		}
-
-		public boolean isCreationTransition() {
-			return fromState == null;
-		}
-
-		@Override
-		public String toString() {
-			StringBuilder builder = new StringBuilder();
-			builder.append("MyTransition [eventName=");
-			builder.append(eventName);
-			builder.append(", fromState=");
-			builder.append(fromState);
-			builder.append(", toState=");
-			builder.append(toState);
-			builder.append(", eventId=");
-			builder.append(eventId);
-			builder.append("]");
-			return builder.toString();
-		}
+		return list;
 	}
 
-	public String getEmbeddedIdSimpleClassName() {
-		return getJavaClassSimpleName() + "Id";
+	private CreationEvent getCreationEvent() {
+		for (JAXBElement<? extends Event> element : cls.getLifecycle()
+				.getEvent()) {
+			if (element.getValue() instanceof CreationEvent)
+				return (CreationEvent) element.getValue();
+		}
+		return null;
 	}
 
-	public String getEmbeddedIdAttributeName() {
-		return "id";
+	private String getEventName(BigInteger eventId) {
+		for (JAXBElement<? extends Event> ev : cls.getLifecycle().getEvent()) {
+			if (ev.getValue().getID().equals(eventId))
+				return ev.getValue().getName();
+		}
+		return null;
 	}
 
-	public boolean hasBehaviour() {
-		return getEvents().size() > 0;
+	@Override
+	String getStateAsJavaIdentifier(String stateName) {
+		for (State state : cls.getLifecycle().getState())
+			if (state.getName().equals(stateName))
+				// TODO use nameManager
+				return Util.toJavaConstantIdentifier(stateName);
+		throw new RuntimeException("state not found: " + stateName);
+	}
+
+	@Override
+	boolean isSuperclass() {
+		return lookups.isSuperclass(cls.getName());
+	}
+
+	@Override
+	boolean isSubclass() {
+		return lookups.isSpecialization(cls.getName());
+	}
+
+	@Override
+	MySubclassRole getSubclassRole() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	List<MyReferenceMember> getReferenceMembers() {
+
+		List<MyReferenceMember> list = Lists.newArrayList();
+		List<Association> associations = lookups.getAssociations(cls);
+		for (Association a : associations) {
+			MyReferenceMember m = createMyReferenceMember(a, cls);
+			System.out.println("created " + m);
+			list.add(m);
+		}
+		return list;
+	}
+
+	private MyReferenceMember createMyReferenceMember(Association a, Class cls) {
+		if (a instanceof BinaryAssociation)
+			return createMyReferenceMember((BinaryAssociation) a, cls);
+		else
+			return createMyReferenceMember((UnaryAssociation) a, cls);
+	}
+
+	private MyReferenceMember createMyReferenceMember(UnaryAssociation a,
+			Class cls) {
+		SymmetricPerspective p = a.getSymmetricPerspective();
+		String fieldName = nameManager.toFieldName(cls.getName(),
+				p.getPhrase(), a.getRnum());
+		List<JoinColumn> joins = newArrayList();
+		if (p.isOnePerspective())
+			for (MyIdAttribute member : getPrimaryIdAttributeMembers()) {
+				String attributeName = member.getAttributeName() + " R"
+						+ a.getRnum();
+				JoinColumn jc = new JoinColumn(nameManager.toColumnName(
+						cls.getName(), attributeName), member.getColumnName());
+				System.out.println(jc);
+				joins.add(jc);
+			}
+
+		return new MyReferenceMember(getJavaClassSimpleName(),
+				getClassFullName(), Mult.ONE, toMult(p), "inverse of"
+						+ p.getPhrase(), p.getPhrase(), fieldName, joins,
+				"this", null, false);
+	}
+
+	private MyReferenceMember createMyReferenceMember(BinaryAssociation a,
+			Class cls) {
+		AsymmetricPerspective pThis;
+		AsymmetricPerspective pThat;
+
+		if (a.getActivePerspective().getViewedClass().equals(cls.getName())) {
+			pThis = a.getActivePerspective();
+			pThat = a.getPassivePerspective();
+		} else {
+			pThis = a.getPassivePerspective();
+			pThat = a.getActivePerspective();
+		}
+		String otherClassName = pThat.getViewedClass();
+		ClassInfo infoOther = getClassInfo(otherClassName);
+		List<JoinColumn> joins = newArrayList();
+		if (pThat.isOnePerspective())
+			for (MyIdAttribute member : infoOther
+					.getPrimaryIdAttributeMembers()) {
+				String attributeName = getMatchingAttributeName(a.getRnum(),
+						member.getAttributeName());
+				JoinColumn jc = new JoinColumn(nameManager.toColumnName(
+						cls.getName(), attributeName), member.getColumnName());
+				System.out.println(jc);
+				joins.add(jc);
+			}
+
+		String fieldName = nameManager.toFieldName(cls.getName(),
+				pThat.getViewedClass(), a.getRnum());
+		// now establish the name of the field for this class as seen in the
+		// other class
+		String thisFieldName = nameManager.toFieldName(otherClassName,
+				cls.getName(), a.getRnum());
+		boolean inPrimaryId = inPrimaryId(a.getRnum());
+		return new MyReferenceMember(pThat.getViewedClass(),
+				infoOther.getClassFullName(), toMult(pThis), toMult(pThat),
+				pThis.getPhrase(), pThat.getPhrase(), fieldName, joins,
+				thisFieldName, (MyManyToMany) null, inPrimaryId);
+	}
+
+	private boolean inPrimaryId(BigInteger rnum) {
+		for (JAXBElement<? extends Attribute> element : cls.getAttribute()) {
+			Attribute a = element.getValue();
+			if (a instanceof ReferentialAttribute) {
+				ReferentialAttribute r = (ReferentialAttribute) a;
+				if (r.getReference().getValue().getRelationship().equals(rnum))
+					for (IdentifierAttribute ia : r.getIdentifier()) {
+						if (ia.getNumber().equals(BigInteger.ONE))
+							return true;
+					}
+			}
+		}
+		return false;
+	}
+
+	private String getMatchingAttributeName(BigInteger rNum,
+			String otherAttributeName) {
+		for (JAXBElement<? extends Attribute> element : cls.getAttribute()) {
+			Attribute a = element.getValue();
+			if (a instanceof ReferentialAttribute) {
+				ReferentialAttribute r = (ReferentialAttribute) a;
+				if (r.getReference().getValue().getRelationship().equals(rNum)
+						&& r.getReference().getValue().getAttribute()
+								.equals(otherAttributeName))
+					return r.getName();
+			}
+		}
+		throw new RuntimeException("could not find matching attribute "
+				+ cls.getName() + " R" + rNum + " " + otherAttributeName);
+	}
+
+	private static Mult toMult(Perspective p) {
+		if (p.isConditional() && p.isOnePerspective())
+			return Mult.ZERO_ONE;
+		else if (p.isConditional() && !p.isOnePerspective())
+			return Mult.MANY;
+		else if (p.isOnePerspective())
+			return Mult.ONE;
+		else
+			return Mult.ONE_MANY;
+	}
+
+	@Override
+	Set<String> getAtLeastOneFieldChecks() {
+		// TODO Auto-generated method stub
+		return Sets.newHashSet();
+	}
+
+	@Override
+	String getImports(String relativeToClass) {
+		return getTypes().getImports(relativeToClass);
+	}
+
+	@Override
+	String getIdColumnName() {
+		// TODO Auto-generated method stub
+		return "ID";
+	}
+
+	@Override
+	String getContextPackageName() {
+		// TODO Auto-generated method stub
+		return packageName;
+	}
+
+	@Override
+	TypeRegister getTypes() {
+		return typeRegister;
+	}
+
+	@Override
+	Type getType(String name) {
+		String javaClassName = lookups.getJavaType(name);
+		return new Type(javaClassName);
 	}
 }
