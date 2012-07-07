@@ -137,9 +137,20 @@
 							<packageName>unary_one</packageName>
 						</configuration>
 					</execution>
+					<execution>
+						<id>unary-zero-one</id>
+						<goals>
+							<goal>generate-jpa</goal>
+						</goals>
+						<configuration>
+							<domainsXml>/samples.xml</domainsXml>
+							<domain>unary-zero-one</domain>
+							<schema>unary_zero_one</schema>
+							<packageName>unary_zero_one</packageName>
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
-<!--
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
@@ -147,11 +158,10 @@
 				<configuration>
 					<forkMode>always</forkMode>
 					<argLine>-Xms512m -Xmx512m</argLine>
-					<parallel>classes</parallel>
+					<!-- <parallel>classes</parallel> -->
 					<threadCount>4</threadCount>
 				</configuration>
 			</plugin>
--->
 		</plugins>
 	</build>
 	<repositories>

@@ -705,5 +705,32 @@
 
 		</Subsystem>
 	</ModeledDomain>
+	
+		<ModeledDomain Name="unary-zero-one">
+
+		<Subsystem Name="unary-zero-one" Floor="220" Ceiling="210">
+
+			<NonSpecializedClass Name="A">
+
+				<IndependentAttribute Name="A one" Type="string">
+					<Identifier Number="1" />
+				</IndependentAttribute>
+				<IndependentAttribute Name="A two" Type="string">
+					<Identifier Number="1" />
+				</IndependentAttribute>
+				<ReferentialAttribute Name="A B one">
+					<ToOneReference Relationship="1" Attribute="B one" />
+				</ReferentialAttribute>
+				<ReferentialAttribute Name="A B two">
+					<ToOneReference Relationship="1" Attribute="B two" />
+				</ReferentialAttribute>
+			</NonSpecializedClass>
+
+			<UnaryAssociation Rnum="1" >
+				<SymmetricPerspective OnePerspective="true" Conditional="true" ViewedClass="A" Phrase="has parent"/>
+			</UnaryAssociation>
+
+		</Subsystem>
+	</ModeledDomain>
 
 </Domains>
