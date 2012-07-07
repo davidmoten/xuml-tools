@@ -1,7 +1,7 @@
 xuml-tools 
 ==========
 
-Executable UML tools (xml schema, java model compiler, java+javascript model viewer) based on miUML metamodels.
+Executable UML tools (xml schema, java model compiler, java+javascript model viewer) based on [miUML](http://www.miuml.org) metamodels.
 
 This project is **still in development** and has not reached alpha release status yet.
 
