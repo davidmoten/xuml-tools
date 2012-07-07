@@ -107,55 +107,6 @@ public class ClassWriter {
 		return headerBytes.toString() + bytes.toString();
 	}
 
-	private void writeStaticCreateMethods(PrintStream out, ClassInfo info) {
-		if (info.hasBehaviour()) {
-			for (MyTransition t : info.getTransitions()) {
-				if (t.isCreationTransition()) {
-					out.format(
-							"    public static %s create(%s em, %s<%s> event) {\n",
-							info.getJavaClassSimpleName(),
-							info.addType(EntityManager.class),
-							info.addType(CreationEvent.class),
-							info.getJavaClassSimpleName());
-					out.format("        %s entity = new %s();\n",
-							info.getJavaClassSimpleName(),
-							info.getJavaClassSimpleName());
-					out.format("        entity.event(event);\n");
-					out.format("        em.persist(entity);\n");
-					out.format("        return entity;\n");
-					out.format("    }\n\n");
-				}
-			}
-		}
-	}
-
-	private void writeMergeMethod(PrintStream out, ClassInfo info) {
-		out.format("    public %s merge(%s em) {\n",
-				info.getJavaClassSimpleName(),
-				info.addType(EntityManager.class));
-		out.format("        em.merge(this);\n");
-		out.format("        return this;\n");
-		out.format("    }\n\n");
-	}
-
-	private void writePersistMethod(PrintStream out, ClassInfo info) {
-		out.format("    public %s persist(%s em) {\n",
-				info.getJavaClassSimpleName(),
-				info.addType(EntityManager.class));
-		out.format("        em.persist(this);\n");
-		out.format("        return this;\n");
-		out.format("    }\n\n");
-	}
-
-	private void writeRefreshMethod(PrintStream out, ClassInfo info) {
-		out.format("    public %s refresh(%s em) {\n",
-				info.getJavaClassSimpleName(),
-				info.addType(EntityManager.class));
-		out.format("        em.refresh(this);\n");
-		out.format("        return this;\n");
-		out.format("    }\n\n");
-	}
-
 	private void writeSuperclassValidationCheck(PrintStream out, ClassInfo info) {
 		if (info.isSuperclass()) {
 			// TODO write superclass validation check
@@ -285,17 +236,22 @@ public class ClassWriter {
 			out.format("        _behaviourFactory = factory;\n");
 			out.format("    }\n\n");
 		}
+		String idClassName;
+		if (!hasEmbeddedId()) {
+			idClassName = info.addType(info.getPrimaryIdAttributeMembers()
+					.get(0).getType());
+		} else
+			idClassName = info.getEmbeddedIdSimpleClassName();
 
 		// constructor using Id
 		out.format("    public %s(%s id) {\n", info.getJavaClassSimpleName(),
-				info.getEmbeddedIdSimpleClassName());
+				idClassName);
 		out.format("        this.id = id;\n");
 		out.format("    }\n\n");
 
 		// static creator using Id
 		out.format("    public static %s create(%s id) {\n",
-				info.getJavaClassSimpleName(),
-				info.getEmbeddedIdSimpleClassName());
+				info.getJavaClassSimpleName(), idClassName);
 		out.format("        return new %s(id);\n",
 				info.getJavaClassSimpleName());
 		out.format("    }\n\n");
@@ -332,8 +288,12 @@ public class ClassWriter {
 		jd(out, "Primary key", "    ");
 		if (!hasEmbeddedId()) {
 			out.format("    @%s\n", info.addType(Id.class));
-			writeIndependentAttributeMember(out, info
-					.getPrimaryIdAttributeMembers().get(0), "    ");
+			MyIdAttribute attribute = info.getPrimaryIdAttributeMembers()
+					.get(0);
+			// override attribute field name to 'id'
+			writeIndependentAttributeMember(out, "id",
+					attribute.getColumnName(), false, "    ",
+					info.addType(attribute.getType()));
 		} else {
 			writeEmbeddedIdField(out, info);
 
@@ -1056,6 +1016,55 @@ public class ClassWriter {
 				out.format("    }\n\n");
 			}
 		}
+	}
+
+	private void writeStaticCreateMethods(PrintStream out, ClassInfo info) {
+		if (info.hasBehaviour()) {
+			for (MyTransition t : info.getTransitions()) {
+				if (t.isCreationTransition()) {
+					out.format(
+							"    public static %s create(%s em, %s<%s> event) {\n",
+							info.getJavaClassSimpleName(),
+							info.addType(EntityManager.class),
+							info.addType(CreationEvent.class),
+							info.getJavaClassSimpleName());
+					out.format("        %s entity = new %s();\n",
+							info.getJavaClassSimpleName(),
+							info.getJavaClassSimpleName());
+					out.format("        entity.event(event);\n");
+					out.format("        em.persist(entity);\n");
+					out.format("        return entity;\n");
+					out.format("    }\n\n");
+				}
+			}
+		}
+	}
+
+	private void writeMergeMethod(PrintStream out, ClassInfo info) {
+		out.format("    public %s merge(%s em) {\n",
+				info.getJavaClassSimpleName(),
+				info.addType(EntityManager.class));
+		out.format("        em.merge(this);\n");
+		out.format("        return this;\n");
+		out.format("    }\n\n");
+	}
+
+	private void writePersistMethod(PrintStream out, ClassInfo info) {
+		out.format("    public %s persist(%s em) {\n",
+				info.getJavaClassSimpleName(),
+				info.addType(EntityManager.class));
+		out.format("        em.persist(this);\n");
+		out.format("        return this;\n");
+		out.format("    }\n\n");
+	}
+
+	private void writeRefreshMethod(PrintStream out, ClassInfo info) {
+		out.format("    public %s refresh(%s em) {\n",
+				info.getJavaClassSimpleName(),
+				info.addType(EntityManager.class));
+		out.format("        em.refresh(this);\n");
+		out.format("        return this;\n");
+		out.format("    }\n\n");
 	}
 
 	private void writeBehaviourInterface(PrintStream out, ClassInfo info) {

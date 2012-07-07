@@ -149,6 +149,18 @@
 							<packageName>unary_zero_one</packageName>
 						</configuration>
 					</execution>
+					<execution>
+						<id>secondary-identifiers</id>
+						<goals>
+							<goal>generate-jpa</goal>
+						</goals>
+						<configuration>
+							<domainsXml>/samples.xml</domainsXml>
+							<domain>secondary-identifiers</domain>
+							<schema>secondary_identifiers</schema>
+							<packageName>secondary_identifiers</packageName>
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
 			<plugin>

@@ -543,7 +543,7 @@
 
 		</Subsystem>
 	</ModeledDomain>
-	
+
 	<ModeledDomain Name="zero-one-to-many">
 
 		<Subsystem Name="zero-one-to-many" Floor="141" Ceiling="160">
@@ -588,7 +588,7 @@
 
 		</Subsystem>
 	</ModeledDomain>
-	
+
 	<ModeledDomain Name="one-to-one-many">
 
 		<Subsystem Name="one-to-one-many" Floor="161" Ceiling="180">
@@ -633,7 +633,7 @@
 
 		</Subsystem>
 	</ModeledDomain>
-	
+
 	<ModeledDomain Name="zero-one-to-one-many">
 
 		<Subsystem Name="zero-one-to-one-many" Floor="181" Ceiling="200">
@@ -678,7 +678,7 @@
 
 		</Subsystem>
 	</ModeledDomain>
-	
+
 	<ModeledDomain Name="unary-one">
 
 		<Subsystem Name="unary-one" Floor="201" Ceiling="220">
@@ -699,16 +699,17 @@
 				</ReferentialAttribute>
 			</NonSpecializedClass>
 
-			<UnaryAssociation Rnum="1" >
-				<SymmetricPerspective OnePerspective="true" Conditional="false" ViewedClass="A" Phrase="has parent"/>
+			<UnaryAssociation Rnum="1">
+				<SymmetricPerspective OnePerspective="true"
+					Conditional="false" ViewedClass="A" Phrase="has parent" />
 			</UnaryAssociation>
 
 		</Subsystem>
 	</ModeledDomain>
-	
-		<ModeledDomain Name="unary-zero-one">
 
-		<Subsystem Name="unary-zero-one" Floor="220" Ceiling="210">
+	<ModeledDomain Name="unary-zero-one">
+
+		<Subsystem Name="unary-zero-one" Floor="221" Ceiling="240">
 
 			<NonSpecializedClass Name="A">
 
@@ -726,9 +727,35 @@
 				</ReferentialAttribute>
 			</NonSpecializedClass>
 
-			<UnaryAssociation Rnum="1" >
-				<SymmetricPerspective OnePerspective="true" Conditional="true" ViewedClass="A" Phrase="has parent"/>
+			<UnaryAssociation Rnum="1">
+				<SymmetricPerspective OnePerspective="true"
+					Conditional="true" ViewedClass="A" Phrase="has parent" />
 			</UnaryAssociation>
+
+		</Subsystem>
+	</ModeledDomain>
+
+	<ModeledDomain Name="secondary-identifiers">
+
+		<Subsystem Name="secondary-identifiers" Floor="260" Ceiling="281">
+
+			<NonSpecializedClass Name="A">
+				<IndependentAttribute Name="A one" Type="string">
+					<Identifier Number="1" />
+				</IndependentAttribute>
+				<IndependentAttribute Name="A two" Type="string">
+					<Identifier Number="2" />
+				</IndependentAttribute>
+				<IndependentAttribute Name="A three" Type="string">
+					<Identifier Number="2" />
+				</IndependentAttribute>
+				<IndependentAttribute Name="A four" Type="string">
+					<Identifier Number="3" />
+				</IndependentAttribute>
+				<IndependentAttribute Name="A five" Type="string">
+					<Identifier Number="3" />
+				</IndependentAttribute>
+			</NonSpecializedClass>
 
 		</Subsystem>
 	</ModeledDomain>
