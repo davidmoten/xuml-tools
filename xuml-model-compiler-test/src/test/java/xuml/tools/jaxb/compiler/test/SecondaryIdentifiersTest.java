@@ -4,8 +4,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
+import javax.persistence.RollbackException;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -29,7 +32,7 @@ public class SecondaryIdentifiersTest {
 	}
 
 	@Test(expected = PersistenceException.class)
-	public void testCreateAOtherRequiredIds() {
+	public void testCreateAWithNullSecondaryIdentifiersShouldFail() {
 
 		EntityManager em = emf.createEntityManager();
 		try {
@@ -41,6 +44,55 @@ public class SecondaryIdentifiersTest {
 		} finally {
 			em.close();
 		}
+	}
+
+	@Test
+	public void testCreateWithAllIdentifiersSpecified() {
+		EntityManager em = emf.createEntityManager();
+		try {
+			em.getTransaction().begin();
+			A a = A.create("one");
+			a.setATwo("two");
+			a.setAThree("three");
+			a.setAFour("four");
+			a.setAFive("five");
+			a.persist(em);
+			em.getTransaction().commit();
+		} finally {
+			em.close();
+		}
+
+	}
+
+	@Test(expected = ConstraintViolationException.class)
+	public void testPersistWithNonUniqueSecondaryIdentifiersFails() {
+		EntityManager em = emf.createEntityManager();
+		try {
+			em.getTransaction().begin();
+			{
+				A a = A.create("one2");
+				a.setATwo("two2");
+				a.setAThree("three2");
+				a.setAFour("four2");
+				a.setAFive("five2");
+				a.persist(em);
+			}
+			{
+				A a = A.create("one3");
+				a.setATwo("two2");
+				a.setAThree("three2");
+				a.setAFour("four3");
+				a.setAFive("five3");
+				a.persist(em);
+			}
+			em.getTransaction().commit();
+			Assert.fail();
+		} catch (RollbackException e) {
+			throw (RuntimeException) e.getCause().getCause();
+		} finally {
+			em.close();
+		}
+
 	}
 
 }
