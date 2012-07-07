@@ -60,7 +60,6 @@ public class ClassWriter {
 
 	private static final String BEHAVIOUR_COMMENT = "All actions like onEntry actions and defined\noperations are performed by this Behaviour class.";
 	private static final String STATE_COMMENT = "For internal use only by the state machine but is persisted by the jpa provider.";
-	private static final String NO_IDENTIFIERS = "no identifiers";
 	public static boolean modelInheritanceWithZeroOneToOneAssociations = true;
 	private final ClassInfo info;
 
@@ -457,13 +456,6 @@ public class ClassWriter {
 				info.getJavaClassSimpleName());
 		out.format("    }\n\n");
 
-	}
-
-	private void writeIndependentAttributeMember(PrintStream out,
-			MyIdAttribute attribute, String indent) {
-		writeIndependentAttributeMember(out, attribute.getFieldName(),
-				attribute.getColumnName(), false, "    ",
-				info.addType(attribute.getType()));
 	}
 
 	private void writeNonIdIndependentAttributeMembers(PrintStream out,
