@@ -558,13 +558,26 @@ public class ClassWriter {
 					writeField(out, ref);
 				}
 			} else if (isRelationship(ref, Mult.ONE, Mult.ZERO_ONE)) {
-				info.addType(OneToOne.class);
-				info.addType(FetchType.class);
-				out.format(
-						"    @OneToOne(mappedBy=\"%s\",fetch=FetchType.LAZY,targetEntity=%s.class)\n",
-						ref.getThisFieldName(),
-						info.addType(ref.getFullClassName()));
-				writeField(out, ref);
+				if (isUnary(ref, info)) {
+					info.addType(OneToOne.class);
+					info.addType(FetchType.class);
+					info.addType(CascadeType.class);
+					out.format(
+							"    @OneToOne(targetEntity=%s.class,cascade=CascadeType.ALL,fetch=FetchType.LAZY)\n",
+							info.addType(ref.getFullClassName()));
+
+					writeJoinColumnsAnnotation(out, ref, true,
+							!ref.isInPrimaryId(), !ref.isInPrimaryId());
+					writeField(out, ref);
+				} else {
+					info.addType(OneToOne.class);
+					info.addType(FetchType.class);
+					out.format(
+							"    @OneToOne(mappedBy=\"%s\",fetch=FetchType.LAZY,targetEntity=%s.class)\n",
+							ref.getThisFieldName(),
+							info.addType(ref.getFullClassName()));
+					writeField(out, ref);
+				}
 			} else if (isRelationship(ref, Mult.ZERO_ONE, Mult.ONE)) {
 				info.addType(OneToOne.class);
 				info.addType(FetchType.class);
@@ -684,6 +697,10 @@ public class ClassWriter {
 				writeManyToManyPrimarySide(out, info, ref);
 			}
 		}
+	}
+
+	private boolean isUnary(MyReferenceMember ref, ClassInfo info) {
+		return ref.getFullClassName().equals(info.getClassFullName());
 	}
 
 	private void writeValidationNotEmpty(PrintStream out, String fieldName,

@@ -5,24 +5,24 @@ import static org.junit.Assert.assertNotNull;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.persistence.PersistenceException;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import unary_one.A;
-import unary_one.A.AId;
-import unary_one.Context;
+import unary_zero_one.A;
+import unary_zero_one.A.AId;
+import unary_zero_one.Context;
 import xuml.tools.util.database.DerbyUtil;
 
-public class UnaryAssociationToOneTest {
+public class UnaryAssociationToZeroOneTest {
+
 	private static EntityManagerFactory emf;
 
 	@BeforeClass
 	public static void setup() {
 		DerbyUtil.disableDerbyLog();
-		emf = Persistence.createEntityManagerFactory("unary-one");
+		emf = Persistence.createEntityManagerFactory("unary-zero-one");
 		Context.setEntityManagerFactory(emf);
 	}
 
@@ -31,17 +31,14 @@ public class UnaryAssociationToOneTest {
 		emf.close();
 	}
 
-	@Test(expected = PersistenceException.class)
-	public void testCreateAWithoutParent() {
+	@Test
+	public void testCanCreateAWithoutParent() {
 
 		EntityManager em = emf.createEntityManager();
-		try {
-			em.getTransaction().begin();
-			A.create(new A.AId("hello", "there")).persist(em);
-			em.getTransaction().commit();
-		} finally {
-			em.close();
-		}
+		em.getTransaction().begin();
+		A.create(new A.AId("hello", "there")).persist(em);
+		em.getTransaction().commit();
+		em.close();
 	}
 
 	@Test
@@ -52,7 +49,6 @@ public class UnaryAssociationToOneTest {
 			A a = A.create(new AId("boo", "baa"));
 			A parent = A.create(new AId("boo2", "baa2"));
 			a.setHasParent(parent);
-			parent.setHasParent(parent);
 			em.persist(a);
 			em.getTransaction().commit();
 			em.close();
