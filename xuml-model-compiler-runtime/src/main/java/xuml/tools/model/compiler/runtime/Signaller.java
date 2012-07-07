@@ -123,7 +123,8 @@ public class Signaller {
 		return signal.id;
 	}
 
-	private byte[] toBytes(Object object) {
+	// TODO move to Util
+	public static byte[] toBytes(Object object) {
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		try {
 			ObjectOutputStream oos = new ObjectOutputStream(bytes);
@@ -135,7 +136,8 @@ public class Signaller {
 		return bytes.toByteArray();
 	}
 
-	private Object toObject(byte[] bytes) {
+	// TODO move to util
+	public static Object toObject(byte[] bytes) {
 		ByteArrayInputStream in = new ByteArrayInputStream(bytes);
 		Object object;
 		try {

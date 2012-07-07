@@ -17,6 +17,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import xuml.tools.model.compiler.runtime.Signaller;
 import xuml.tools.util.database.DerbyUtil;
 
 public class BinaryAssociationOneToZeroOneTest {
@@ -42,6 +43,42 @@ public class BinaryAssociationOneToZeroOneTest {
 		em.getTransaction().begin();
 		A.create(new A.AId("hello", "there")).persist(em);
 		em.getTransaction().commit();
+		em.close();
+	}
+
+	@Test
+	public void testSignalPersistence() throws ClassNotFoundException {
+
+		EntityManager em = emf.createEntityManager();
+		em.getTransaction().begin();
+		A.create(new A.AId("hello2", "there2")).persist(em);
+		em.getTransaction().commit();
+
+		// now test can find using id
+		em.getTransaction().begin();
+		assertNotNull(em.find(A.class, new A.AId("hello2", "there2")));
+		em.getTransaction().commit();
+
+		// now test can find using id and Class.forName
+		em.getTransaction().begin();
+		assertNotNull(em.find(Class.forName(A.class.getName()), new A.AId(
+				"hello2", "there2")));
+		em.getTransaction().commit();
+
+		em.close();
+
+		// now test can find using new em, Class.forName and reconstituded id
+		em = emf.createEntityManager();
+		em.getTransaction().begin();
+		AId id = new A.AId("hello2", "there2");
+		Object id2 = Signaller.toObject(Signaller.toBytes(id));
+		assertNotNull(em.find(Class.forName(A.class.getName()), id2));
+		em.getTransaction().commit();
+
+		// Context.persistSignal(a3.getId(), (Class<Entity<A>>) a3.getClass(),
+		// new A.Events.SomethingDone("12c"));
+		// Context.sendSignalsInQueue();
+
 		em.close();
 	}
 
