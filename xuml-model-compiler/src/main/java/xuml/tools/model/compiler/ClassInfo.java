@@ -72,8 +72,12 @@ public class ClassInfo extends ClassInfoBase {
 	List<List<String>> getUniqueConstraintColumnNames() {
 		HashMultimap<BigInteger, String> map = getIdentifierAttributeNames();
 		List<List<String>> list = newArrayList();
-		for (BigInteger i : map.keySet())
-			list.add(newArrayList(map.get(i)));
+		for (BigInteger i : map.keySet()) {
+			List<String> cols = newArrayList();
+			for (String attribute : map.get(i))
+				cols.add(nameManager.toColumnName(cls.getName(), attribute));
+			list.add(cols);
+		}
 		return list;
 	}
 
