@@ -61,8 +61,9 @@ public class Signaller {
 		}
 	}
 
-	public <T, R> void signal(Entity<T> entity, Event<T> event) {
-		long id = persistSignal(entity.getId(), event);
+	public <T> void signal(Entity<T> entity, Event<T> event) {
+		long id = persistSignal(entity.getId(),
+				(Class<Entity<T>>) entity.getClass(), event);
 		Signal<T> signal = new Signal<T>(entity, event, id);
 		signal(signal);
 	}
@@ -91,23 +92,24 @@ public class Signaller {
 	private void signal(EntityManager em, QueuedSignal sig) {
 		Event event = (Event) toObject(sig.eventContent);
 		Object id = toObject(sig.idContent);
-		Class<?> eventClass;
+		Class<?> entityClass;
 		try {
-			eventClass = Class.forName(sig.eventClassName);
+			entityClass = Class.forName(sig.entityClassName);
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException(e);
 		}
-		Entity entity = (Entity) em.find(eventClass, id);
+		Entity entity = (Entity) em.find(entityClass, id);
 		if (entity != null) {
 			signal(new Signal(entity, event, sig.id));
 		}
 	}
 
-	private <T> long persistSignal(Object id, Event<T> event) {
+	public <T> long persistSignal(Object id, Class<Entity<T>> cls,
+			Event<T> event) {
 		byte[] idBytes = toBytes(id);
 		byte[] eventBytes = toBytes(event);
-		QueuedSignal signal = new QueuedSignal(idBytes, event.getClass()
-				.getName(), eventBytes);
+		QueuedSignal signal = new QueuedSignal(idBytes, cls.getName(), event
+				.getClass().getName(), eventBytes);
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
 		em.persist(signal);

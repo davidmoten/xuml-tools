@@ -15,9 +15,11 @@ public class QueuedSignal {
 		// jpa requires no-arg constructor
 	}
 
-	public QueuedSignal(byte[] idContent, String eventClassName, byte[] eventContent) {
-		this.eventClassName = eventClassName;
+	public QueuedSignal(byte[] idContent, String entityClassName,
+			String eventClassName, byte[] eventContent) {
 		this.idContent = idContent;
+		this.entityClassName = entityClassName;
+		this.eventClassName = eventClassName;
 		this.eventContent = eventContent;
 	}
 
@@ -26,7 +28,10 @@ public class QueuedSignal {
 	@Column(name = "signal_id")
 	public Long id;
 
-	@Column(name = "class_name", nullable = false)
+	@Column(name = "entity_class_name", nullable = false)
+	public String entityClassName;
+
+	@Column(name = "event_class_name", nullable = false)
 	public String eventClassName;
 
 	@Column(name = "id_content", nullable = false)

@@ -18,6 +18,7 @@ import miuml.jaxb.Subsystem;
 import miuml.jaxb.SubsystemElement;
 import xuml.tools.model.compiler.runtime.CreationEvent;
 import xuml.tools.model.compiler.runtime.Entity;
+import xuml.tools.model.compiler.runtime.Event;
 import xuml.tools.model.compiler.runtime.Signaller;
 
 import com.google.common.collect.Lists;
@@ -109,6 +110,11 @@ public class CodeGeneratorJava {
 				types.addType(Signaller.class));
 		out.format("    public static void sendSignalsInQueue() {\n");
 		out.format("        signaller.sendSignalsInQueue();\n");
+		out.format("    }\n\n");
+		out.format(
+				"    public static <T> long persistSignal(Object id, Class<Entity<T>> cls, %s<T> event) {\n",
+				types.addType(Event.class));
+		out.format("        return signaller.persistSignal(id,cls,event);\n");
 		out.format("    }\n\n");
 		out.format("    public static void stop() {\n");
 		out.format("        signaller.stop();\n");
