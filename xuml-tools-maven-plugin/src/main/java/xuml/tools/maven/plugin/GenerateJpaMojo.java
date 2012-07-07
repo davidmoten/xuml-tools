@@ -36,7 +36,7 @@ import xuml.tools.model.compiler.CodeGeneratorJava;
 public class GenerateJpaMojo extends AbstractMojo {
 
 	/**
-	 * @parameter expression="${project}"
+	 * @parameter default-value="${project}"
 	 * @required
 	 * @readonly
 	 * @since 1.0
@@ -46,8 +46,7 @@ public class GenerateJpaMojo extends AbstractMojo {
 	/**
 	 * Location to place generated java source.
 	 * 
-	 * @parameter expression="${project.build.directory}/generated-sources"
-	 * @required
+	 * @parameter default-value="${project.build.directory}/generated-sources"
 	 */
 	private File outputSourceDirectory;
 
@@ -55,7 +54,7 @@ public class GenerateJpaMojo extends AbstractMojo {
 	 * Location of miUML schema compliant xml (classpath checked first then
 	 * filesystem)
 	 * 
-	 * @parameter expression="/domains.xml"
+	 * @parameter default-value="/domains.xml"
 	 * @required
 	 */
 	private String domainsXml;
@@ -63,7 +62,7 @@ public class GenerateJpaMojo extends AbstractMojo {
 	/**
 	 * Specific domain in domains xml to generate from.
 	 * 
-	 * @parameter expression="/domains.xml"
+	 * @parameter default-value="/domains.xml"
 	 * @required
 	 */
 	private String domain;
@@ -71,15 +70,30 @@ public class GenerateJpaMojo extends AbstractMojo {
 	/**
 	 * Schema name.
 	 * 
-	 * @parameter expression="xuml"
+	 * @parameter default-value="xuml"
 	 * @required
 	 */
 	private String schema;
 
 	/**
+	 * Resources directory.
+	 * 
+	 * @parameter default-value="target/generated-resources"
+	 */
+	private String resourcesDirectory;
+
+	/**
+	 * If and only if true generate META-INF/persistence.xml in
+	 * resourcesDirectory.
+	 * 
+	 * @parameter default-value="true"
+	 */
+	private boolean generatePersistenceXml;
+
+	/**
 	 * Root package name of the generated classes.
 	 * 
-	 * @parameter expression="xuml"
+	 * @parameter default-value="xuml"
 	 * @required
 	 */
 	private String packageName;
@@ -93,8 +107,10 @@ public class GenerateJpaMojo extends AbstractMojo {
 		}
 		miuml.jaxb.Domains domains = new Marshaller().unmarshal(getClass()
 				.getResourceAsStream(domainsXml));
-		new CodeGeneratorJava(domains, domain, packageName, schema)
+		new CodeGeneratorJava(domains, domain, packageName, schema,
+				resourcesDirectory, generatePersistenceXml)
 				.generate(outputSourceDirectory);
 		project.addCompileSourceRoot(outputSourceDirectory.getAbsolutePath());
+		// TODO add resourcesDirectory to resources
 	}
 }

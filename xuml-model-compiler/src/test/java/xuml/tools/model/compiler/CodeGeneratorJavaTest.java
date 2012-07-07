@@ -44,7 +44,7 @@ public class CodeGeneratorJavaTest {
 		File resources = new File("target/generated-resources");
 		if (!resources.exists())
 			resources.mkdirs();
-		new CodeGeneratorJava(domains, domainName, domainPackageName, schema)
-				.generate(new File("target/generated/"));
+		new CodeGeneratorJava(domains, domainName, domainPackageName, schema,
+				"target", true).generate(new File("target/generated/"));
 	}
 }

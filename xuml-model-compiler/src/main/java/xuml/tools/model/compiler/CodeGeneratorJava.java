@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.List;
 
@@ -33,10 +34,15 @@ public class CodeGeneratorJava {
 	private final String domainPackageName;
 	private final String domainSchema;
 	private final Domains domains;
+	private final String resourcesDirectory;
+	private final boolean generatePersistenceXml;
 
 	public CodeGeneratorJava(Domains domains, String domainName,
-			String domainPackageName, String domainSchema) {
+			String domainPackageName, String domainSchema,
+			String resourcesDirectory, boolean generatePersistenceXml) {
 		this.domains = domains;
+		this.resourcesDirectory = resourcesDirectory;
+		this.generatePersistenceXml = generatePersistenceXml;
 		this.domain = Util.getModeledDomain(domains, domainName);
 		this.domainPackageName = domainPackageName;
 		this.domainSchema = domainSchema;
@@ -48,15 +54,34 @@ public class CodeGeneratorJava {
 		Lookups lookups = new Lookups(domains, md);
 		for (Class cls : getClasses(md))
 			createImplementation(cls, destination, lookups);
-		createPersistenceXml(domain, "target/persistence.xml");
+		if (generatePersistenceXml)
+			createPersistenceXml(domain, new File(resourcesDirectory,
+					"META-INF/persistence.xml"));
 		createContext(domain, destination, lookups);
 		log("finished generation");
 	}
 
-	private void createPersistenceXml(ModeledDomain domain, String filename) {
-		for (Class cls : getClasses(domain)) {
-			// TODO write persistence xml
+	private void createPersistenceXml(ModeledDomain domain, File file) {
+		OutputStream out;
+		try {
+			file.getParentFile().mkdirs();
+			out = new FileOutputStream(file);
+			String xml = generatePersistenceXml(domain);
+			out.write(xml.toString().getBytes());
+			out.close();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
+	}
+
+	private String generatePersistenceXml(ModeledDomain domain) {
+		List<String> classes = Lists.newArrayList();
+		for (Class cls : getClasses(domain)) {
+			ClassInfo info = createClassInfo(cls);
+			classes.add(info.getClassFullName());
+		}
+		String xml = new PersistenceXmlWriter().generate(classes);
+		return xml;
 	}
 
 	private List<Class> getClasses(ModeledDomain domain) {
