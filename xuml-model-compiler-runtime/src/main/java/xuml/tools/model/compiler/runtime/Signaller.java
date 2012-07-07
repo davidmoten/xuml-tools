@@ -62,6 +62,7 @@ public class Signaller {
 	}
 
 	public <T> void signal(Entity<T> entity, Event<T> event) {
+		@SuppressWarnings("unchecked")
 		long id = persistSignal(entity.getId(),
 				(Class<Entity<T>>) entity.getClass(), event);
 		Signal<T> signal = new Signal<T>(entity, event, id);
@@ -79,12 +80,14 @@ public class Signaller {
 	@SuppressWarnings({ "unchecked" })
 	public void sendSignalsInQueue() {
 		EntityManager em = emf.createEntityManager();
+		em.getTransaction().begin();
 		List<QueuedSignal> signals = em.createQuery(
 				"select s from " + QueuedSignal.class.getSimpleName()
 						+ " s order by id").getResultList();
 		for (QueuedSignal sig : signals) {
 			signal(em, sig);
 		}
+		em.getTransaction().commit();
 		em.close();
 	}
 
@@ -101,7 +104,9 @@ public class Signaller {
 		Entity entity = (Entity) em.find(entityClass, id);
 		if (entity != null) {
 			signal(new Signal(entity, event, sig.id));
-		}
+		} else
+			System.out.println("ENTITY NOT FOUND for entityClassName="
+					+ sig.entityClassName + ",id=" + id);
 	}
 
 	public <T> long persistSignal(Object id, Class<Entity<T>> cls,
