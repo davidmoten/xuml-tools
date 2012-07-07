@@ -73,10 +73,12 @@ public class ClassInfo extends ClassInfoBase {
 		HashMultimap<BigInteger, String> map = getIdentifierAttributeNames();
 		List<List<String>> list = newArrayList();
 		for (BigInteger i : map.keySet()) {
-			List<String> cols = newArrayList();
-			for (String attribute : map.get(i))
-				cols.add(nameManager.toColumnName(cls.getName(), attribute));
-			list.add(cols);
+			if (!i.equals(BigInteger.ONE)) {
+				List<String> cols = newArrayList();
+				for (String attribute : map.get(i))
+					cols.add(nameManager.toColumnName(cls.getName(), attribute));
+				list.add(cols);
+			}
 		}
 		return list;
 	}
@@ -242,8 +244,14 @@ public class ClassInfo extends ClassInfoBase {
 
 	private MyIndependentAttribute createMyIndependentAttribute(
 			NativeAttribute a) {
-		// TODO what to do with isNullable
-		boolean isNullable = true;
+
+		boolean inIdentifier = false;
+		for (Attribute attribute : getIdentifierAttributes().values()) {
+			if (a.getName().equals(attribute.getName()))
+				inIdentifier = true;
+		}
+		boolean isNullable = !inIdentifier;
+
 		return new MyIndependentAttribute(Util.toJavaIdentifier(a.getName()),
 				Util.toColumnName(a.getName()), getType(a.getType()),
 				isNullable, "description");

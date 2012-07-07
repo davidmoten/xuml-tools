@@ -121,8 +121,7 @@ public class ClassWriter {
 		out.format("@%s\n", info.addType(Entity.class));
 		List<List<String>> uniqueConstraints = info
 				.getUniqueConstraintColumnNames();
-		Preconditions.checkState(uniqueConstraints.size() > 0, NO_IDENTIFIERS);
-		if (uniqueConstraints.size() > 1) {
+		if (uniqueConstraints.size() >= 1) {
 			out.format("@%s(schema=\"%s\",name=\"%s\",\n",
 					info.addType(Table.class), info.getSchema(),
 					info.getTable());
