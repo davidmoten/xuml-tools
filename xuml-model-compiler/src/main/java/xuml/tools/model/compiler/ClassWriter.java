@@ -538,20 +538,20 @@ public class ClassWriter {
 						ref.getSimpleClassName()) < 0) {
 					writeValidationNotNull(out, ref.getFieldName(),
 							validationMethods);
-					info.addType(OneToOne.class);
-					info.addType(FetchType.class);
 					out.format(
-							"    @OneToOne(mappedBy=\"%s\",fetch=FetchType.LAZY,targetEntity=%s.class)\n",
+							"    @%s(mappedBy=\"%s\",fetch=%s.LAZY,targetEntity=%s.class)\n",
+							info.addType(OneToOne.class),
 							ref.getThisFieldName(),
+							info.addType(FetchType.class),
 							info.addType(ref.getFullClassName()));
 					writeField(out, ref);
 				} else {
-					info.addType(OneToOne.class);
-					info.addType(FetchType.class);
-					info.addType(CascadeType.class);
 					out.format(
-							"    @OneToOne(targetEntity=%s.class,cascade=CascadeType.ALL,fetch=FetchType.LAZY)\n",
-							info.addType(ref.getFullClassName()));
+							"    @%s(targetEntity=%s.class,cascade=%s.ALL,fetch=%s.LAZY)\n",
+							info.addType(OneToOne.class),
+							info.addType(ref.getFullClassName()),
+							info.addType(CascadeType.class),
+							info.addType(FetchType.class));
 
 					writeJoinColumnsAnnotation(out, ref, false,
 							!ref.isInPrimaryId(), !ref.isInPrimaryId());
@@ -559,22 +559,22 @@ public class ClassWriter {
 				}
 			} else if (isRelationship(ref, Mult.ONE, Mult.ZERO_ONE)) {
 				if (isUnary(ref, info)) {
-					info.addType(OneToOne.class);
-					info.addType(FetchType.class);
-					info.addType(CascadeType.class);
 					out.format(
-							"    @OneToOne(targetEntity=%s.class,cascade=CascadeType.ALL,fetch=FetchType.LAZY)\n",
-							info.addType(ref.getFullClassName()));
+							"    @%s(targetEntity=%s.class,cascade=%s.ALL,fetch=%s.LAZY)\n",
+							info.addType(OneToOne.class),
+							info.addType(ref.getFullClassName()),
+							info.addType(CascadeType.class),
+							info.addType(FetchType.class));
 
 					writeJoinColumnsAnnotation(out, ref, true,
 							!ref.isInPrimaryId(), !ref.isInPrimaryId());
 					writeField(out, ref);
 				} else {
-					info.addType(OneToOne.class);
-					info.addType(FetchType.class);
 					out.format(
-							"    @OneToOne(mappedBy=\"%s\",fetch=FetchType.LAZY,targetEntity=%s.class)\n",
+							"    @%s(mappedBy=\"%s\",fetch=%s.LAZY,targetEntity=%s.class)\n",
+							info.addType(OneToOne.class),
 							ref.getThisFieldName(),
+							info.addType(FetchType.class),
 							info.addType(ref.getFullClassName()));
 					writeField(out, ref);
 				}
