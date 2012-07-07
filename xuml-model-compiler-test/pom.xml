@@ -14,10 +14,10 @@
 			<artifactId>xuml-model-compiler-runtime</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
-		<dependency>
+<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.8.2</version>
+			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

@@ -33,6 +33,7 @@
 		<maven.compiler.target>1.6</maven.compiler.target>
 		<gae.version>1.7.0</gae.version>
 		<gae.plugin.version>0.9.4</gae.plugin.version>
+		<junit.version>4.10</junit.version>
 	</properties>
 
 	<modules>
