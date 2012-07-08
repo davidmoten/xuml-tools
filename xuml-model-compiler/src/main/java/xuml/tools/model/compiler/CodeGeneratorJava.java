@@ -108,8 +108,8 @@ public class CodeGeneratorJava {
 		out.format("public class Context {\n\n");
 		out.format("    private static %s signaller;\n\n",
 				types.addType(Signaller.class));
-		out.format("    public static void sendSignalsInQueue() {\n");
-		out.format("        signaller.sendSignalsInQueue();\n");
+		out.format("    public static int sendSignalsInQueue() {\n");
+		out.format("        return signaller.sendSignalsInQueue();\n");
 		out.format("    }\n\n");
 		out.format(
 				"    public static <T extends %s<T>> long persistSignal(Object id, Class<T> cls, %s<T> event) {\n",

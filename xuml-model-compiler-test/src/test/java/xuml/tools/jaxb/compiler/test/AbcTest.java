@@ -53,10 +53,6 @@ public class AbcTest {
 		A a3 = Context.create(A.class, new A.Events.Create("value1.3",
 				"value2.3", "1234"));
 
-		// send asynchronous signals to the entities
-		a1.signal(new A.Events.SomethingDone("12a"));
-		a2.signal(new A.Events.SomethingDone("12b"));
-
 		{
 			EntityManager em = emf.createEntityManager();
 			assertNotNull(em.find(A.class, new A.AId("value1.3", "value2.3")));
@@ -67,17 +63,20 @@ public class AbcTest {
 		if (true) {
 			Context.persistSignal(a3.getId(), A.class,
 					new A.Events.SomethingDone("12c"));
-			Context.sendSignalsInQueue();
-
+			assertEquals(1, Context.sendSignalsInQueue());
 		}// or send directly
 		else
 			a3.signal(new A.Events.SomethingDone("12c"));
+
+		// send asynchronous signals to the entities
+		a1.signal(new A.Events.SomethingDone("12a"));
+		a2.signal(new A.Events.SomethingDone("12b"));
 
 		// Notice that all the above could be done without explicitly creating
 		// EntityManagers at all. Nice!
 
 		// wait a bit for all signals to be processed
-		Thread.sleep(5000);
+		Thread.sleep(2000);
 
 		// // check that the signals had an effect.
 		// assertEquals("12a", a1.getAThree());
@@ -90,9 +89,9 @@ public class AbcTest {
 		// note that the merge method below updates the entity with the latest
 		// state from the database using the entity manager em (you could also
 		// do em.merge(a1) but you don't get method chaining).
-		assertEquals("12a", a1.merge(em).getAThree());
-		assertEquals("12b", a2.merge(em).getAThree());
-		assertEquals("12c", a3.merge(em).getAThree());
+		assertEquals("12a", a1.merge(em).refresh(em).getAThree());
+		assertEquals("12b", a2.merge(em).refresh(em).getAThree());
+		assertEquals("12c", a3.merge(em).refresh(em).getAThree());
 		em.close();
 
 		// shutdown the actor system

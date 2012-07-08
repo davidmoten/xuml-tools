@@ -75,7 +75,7 @@ public class Signaller {
 	}
 
 	@SuppressWarnings({ "unchecked" })
-	public void sendSignalsInQueue() {
+	public int sendSignalsInQueue() {
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
 		List<QueuedSignal> signals = em.createQuery(
@@ -89,6 +89,7 @@ public class Signaller {
 		for (QueuedSignal sig : signals) {
 			signal(sig);
 		}
+		return signals.size();
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -110,7 +111,7 @@ public class Signaller {
 					+ sig.entityClassName + ",id=" + id);
 	}
 
-	private Class getClassForName(String className) {
+	private Class<?> getClassForName(String className) {
 		try {
 			return Class.forName(className);
 		} catch (ClassNotFoundException e) {

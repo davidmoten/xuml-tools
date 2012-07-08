@@ -44,13 +44,14 @@ public class EntityActor extends UntypedActor {
 		} else if (emf != null) {
 			// otherwise perform the event on the entity after it has been
 			// refreshed within the scope of the current entity manager
-			Entity<?> entity = signal.getEntity();
+
 			EntityManager em = emf.createEntityManager();
 			EntityTransaction tx = em.getTransaction();
 			tx.begin();
 			log.info("started transaction");
-			em.merge(signal.getEntity());
+			Entity<?> entity = em.merge(signal.getEntity());
 			log.info("merged");
+			em.refresh(entity);
 			log.info("calling event "
 					+ signal.getEvent().getClass().getSimpleName()
 					+ " on entity id = " + signal.getEntity().getId());

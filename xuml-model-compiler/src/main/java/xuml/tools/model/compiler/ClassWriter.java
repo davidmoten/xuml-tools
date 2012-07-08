@@ -1035,8 +1035,7 @@ public class ClassWriter {
 		out.format("    public %s merge(%s em) {\n",
 				info.getJavaClassSimpleName(),
 				info.addType(EntityManager.class));
-		out.format("        em.merge(this);\n");
-		out.format("        return this;\n");
+		out.format("        return em.merge(this);\n");
 		out.format("    }\n\n");
 	}
 
