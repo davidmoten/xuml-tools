@@ -50,11 +50,15 @@ public class AbcTest {
 		a2.signal(new A.Events.SomethingDone("12b"));
 		a3.signal(new A.Events.SomethingDone("12c"));
 
-		// Notice that all the above could be done without explicitly creating
-		// EntityManagers at all. Nice!
-
 		// wait a bit for all signals to be processed
 		Thread.sleep(2000);
+
+		assertEquals("12a", a1.load().getAThree());
+		assertEquals("12b", a2.load().getAThree());
+		assertEquals("12c", a3.load().getAThree());
+
+		// Notice that all the above could be done without explicitly creating
+		// EntityManagers at all. Nice!
 
 		// Refresh the entities from the database using the
 		// load method and check the signals were processed

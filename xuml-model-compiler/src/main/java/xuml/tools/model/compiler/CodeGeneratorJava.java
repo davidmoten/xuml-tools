@@ -159,7 +159,7 @@ public class CodeGeneratorJava {
 		out.format("        %s em = createEntityManager();\n",
 				types.addType(EntityManager.class));
 		out.format("        T t = em.merge(entity);\n");
-		out.format("        em.refresh(entity);\n");
+		out.format("        em.refresh(t);\n");
 		out.format("        em.close();\n");
 		out.format("        return t;\n");
 		out.format("    }\n\n");

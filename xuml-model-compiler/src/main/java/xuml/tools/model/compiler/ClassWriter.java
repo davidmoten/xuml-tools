@@ -1064,6 +1064,11 @@ public class ClassWriter {
 				info.addType(EntityManager.class));
 		out.format("        return merge(em).refresh(em);\n");
 		out.format("    }\n\n");
+
+		out.format("    public %s load() {\n", info.getJavaClassSimpleName());
+		out.format("        return Context.load(this);\n");
+		out.format("    }\n\n");
+
 	}
 
 	private void writeBehaviourInterface(PrintStream out, ClassInfo info) {
