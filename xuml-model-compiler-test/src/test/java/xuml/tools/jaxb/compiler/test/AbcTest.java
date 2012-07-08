@@ -88,8 +88,8 @@ public class AbcTest {
 		// shutdown the actor system
 		Context.stop();
 
-		// close the entity manager factory
-		emf.close();
+		// close the entity manager factory if desired
+		Context.close();
 	}
 
 	@Test
