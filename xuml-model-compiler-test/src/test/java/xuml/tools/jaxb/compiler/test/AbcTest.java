@@ -1,6 +1,7 @@
 package xuml.tools.jaxb.compiler.test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static xuml.tools.util.database.DerbyUtil.disableDerbyLog;
 
 import javax.persistence.EntityManager;
@@ -56,7 +57,21 @@ public class AbcTest {
 		a1.signal(new A.Events.SomethingDone("12a"));
 		a2.signal(new A.Events.SomethingDone("12b"));
 
-		a3.signal(new A.Events.SomethingDone("12c"));
+		{
+			EntityManager em = emf.createEntityManager();
+			assertNotNull(em.find(A.class, new A.AId("value1.3", "value2.3")));
+			em.close();
+		}
+
+		// either persist signal then resend
+		if (true) {
+			Context.persistSignal(a3.getId(), A.class,
+					new A.Events.SomethingDone("12c"));
+			Context.sendSignalsInQueue();
+
+		}// or send directly
+		else
+			a3.signal(new A.Events.SomethingDone("12c"));
 
 		// Notice that all the above could be done without explicitly creating
 		// EntityManagers at all. Nice!
@@ -93,7 +108,7 @@ public class AbcTest {
 
 					@Override
 					public void onEntryHasStarted(Create event) {
-						entity.setId(new AId(event.getATwo(), event.getAOne()));
+						entity.setId(new AId(event.getAOne(), event.getATwo()));
 						entity.setAThree(event.getAccountNumber());
 						System.out.println("created");
 					}
@@ -102,7 +117,10 @@ public class AbcTest {
 					public void onEntryDoneSomething(
 							StateSignature_DoneSomething event) {
 						entity.setAThree(event.getTheCount());
-						System.out.println(event.getTheCount());
+						System.out
+								.println("setting A.athree="
+										+ entity.getAThree() + " for "
+										+ entity.getId());
 					}
 				};
 			}

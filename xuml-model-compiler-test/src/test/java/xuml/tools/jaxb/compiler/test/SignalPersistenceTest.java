@@ -14,7 +14,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import xuml.tools.model.compiler.runtime.Signaller;
+import xuml.tools.model.compiler.runtime.Util;
 import xuml.tools.util.database.DerbyUtil;
 
 public class SignalPersistenceTest {
@@ -58,13 +58,9 @@ public class SignalPersistenceTest {
 		em = emf.createEntityManager();
 		em.getTransaction().begin();
 		AId id = new A.AId("hello2", "there2");
-		Object id2 = Signaller.toObject(Signaller.toBytes(id));
+		Object id2 = Util.toObject(Util.toBytes(id));
 		assertNotNull(em.find(Class.forName(A.class.getName()), id2));
 		em.getTransaction().commit();
-
-		// Context.persistSignal(a3.getId(), (Class<Entity<A>>) a3.getClass(),
-		// new A.Events.SomethingDone("12c"));
-		// Context.sendSignalsInQueue();
 
 		em.close();
 	}

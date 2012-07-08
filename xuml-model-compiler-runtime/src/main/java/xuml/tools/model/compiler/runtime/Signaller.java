@@ -1,10 +1,5 @@
 package xuml.tools.model.compiler.runtime;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -50,8 +45,10 @@ public class Signaller {
 		try {
 			T t = cls.newInstance();
 			EntityManager em = emf.createEntityManager();
+			em.getTransaction().begin();
 			t.event(event);
 			em.persist(t);
+			em.getTransaction().commit();
 			em.close();
 			return t;
 		} catch (InstantiationException e) {
@@ -61,10 +58,10 @@ public class Signaller {
 		}
 	}
 
-	public <T> void signal(Entity<T> entity, Event<T> event) {
+	public <T extends Entity<T>> void signal(Entity<T> entity, Event<T> event) {
 		@SuppressWarnings("unchecked")
-		long id = persistSignal(entity.getId(),
-				(Class<Entity<T>>) entity.getClass(), event);
+		long id = persistSignal(entity.getId(), (Class<T>) entity.getClass(),
+				event);
 		Signal<T> signal = new Signal<T>(entity, event, id);
 		signal(signal);
 	}
@@ -84,24 +81,28 @@ public class Signaller {
 		List<QueuedSignal> signals = em.createQuery(
 				"select s from " + QueuedSignal.class.getSimpleName()
 						+ " s order by id").getResultList();
-		for (QueuedSignal sig : signals) {
-			signal(em, sig);
-		}
 		em.getTransaction().commit();
 		em.close();
+		// close transaction before signalling because EntityActor will attempt
+		// to delete the QueuedSignal within its transaction processing the
+		// event
+		for (QueuedSignal sig : signals) {
+			signal(sig);
+		}
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private void signal(EntityManager em, QueuedSignal sig) {
-		Event event = (Event) toObject(sig.eventContent);
-		Object id = toObject(sig.idContent);
+	private void signal(QueuedSignal sig) {
+		EntityManager em = emf.createEntityManager();
+		em.getTransaction().begin();
+		System.out.println("sending " + sig);
+		Event event = (Event) Util.toObject(sig.eventContent);
+		Object id = Util.toObject(sig.idContent);
 		Class<?> entityClass;
-		try {
-			entityClass = Class.forName(sig.entityClassName);
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeException(e);
-		}
+		entityClass = getClassForName(sig.entityClassName);
 		Entity entity = (Entity) em.find(entityClass, id);
+		em.getTransaction().commit();
+		em.close();
 		if (entity != null) {
 			signal(new Signal(entity, event, sig.id));
 		} else
@@ -109,10 +110,18 @@ public class Signaller {
 					+ sig.entityClassName + ",id=" + id);
 	}
 
-	public <T> long persistSignal(Object id, Class<Entity<T>> cls,
+	private Class getClassForName(String className) {
+		try {
+			return Class.forName(className);
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public <T extends Entity<T>> long persistSignal(Object id, Class<T> cls,
 			Event<T> event) {
-		byte[] idBytes = toBytes(id);
-		byte[] eventBytes = toBytes(event);
+		byte[] idBytes = Util.toBytes(id);
+		byte[] eventBytes = Util.toBytes(event);
 		QueuedSignal signal = new QueuedSignal(idBytes, cls.getName(), event
 				.getClass().getName(), eventBytes);
 		EntityManager em = emf.createEntityManager();
@@ -121,34 +130,6 @@ public class Signaller {
 		em.getTransaction().commit();
 		em.close();
 		return signal.id;
-	}
-
-	// TODO move to Util
-	public static byte[] toBytes(Object object) {
-		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-		try {
-			ObjectOutputStream oos = new ObjectOutputStream(bytes);
-			oos.writeObject(object);
-			oos.close();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-		return bytes.toByteArray();
-	}
-
-	// TODO move to util
-	public static Object toObject(byte[] bytes) {
-		ByteArrayInputStream in = new ByteArrayInputStream(bytes);
-		Object object;
-		try {
-			ObjectInputStream ois = new ObjectInputStream(in);
-			object = ois.readObject();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeException(e);
-		}
-		return object;
 	}
 
 	private boolean signalInitiatedFromEvent() {

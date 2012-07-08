@@ -52,7 +52,8 @@ public class EntityActor extends UntypedActor {
 			em.merge(signal.getEntity());
 			log.info("merged");
 			log.info("calling event "
-					+ signal.getEvent().getClass().getSimpleName());
+					+ signal.getEvent().getClass().getSimpleName()
+					+ " on entity id = " + signal.getEntity().getId());
 			entity.event(signal.getEvent());
 			log.info("removing signal from persistence");
 			em.createQuery(

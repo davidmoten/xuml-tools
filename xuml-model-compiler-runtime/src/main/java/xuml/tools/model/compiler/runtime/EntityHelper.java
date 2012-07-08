@@ -33,7 +33,7 @@ public class EntityHelper {
 		info.setCurrentEntity(entity);
 	}
 
-	public <T> void signal(Event<T> event) {
+	public <T extends Entity<T>> void signal(Event<T> event) {
 		Info info = signaller.getInfo();
 		// do an object equals because RootActor will guarantee that only one
 		// instance is being used to refer to a database entity at any given

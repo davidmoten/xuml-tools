@@ -39,4 +39,18 @@ public class QueuedSignal {
 
 	@Column(name = "event_content", nullable = false)
 	public byte[] eventContent;
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("QueuedSignal [id=");
+		builder.append(id);
+		builder.append(", entityClassName=");
+		builder.append(entityClassName);
+		builder.append(", eventClassName=");
+		builder.append(eventClassName);
+		builder.append("]");
+		return builder.toString();
+	}
+
 }
