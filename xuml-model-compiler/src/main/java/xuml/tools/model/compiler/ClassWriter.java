@@ -94,6 +94,7 @@ public class ClassWriter {
 		writePersistMethod(out, info);
 		writeRefreshMethod(out, info);
 		writeLoadMethod(out, info);
+		writeToStringMethod(out, info);
 		writeBehaviourInterface(out, info);
 		writeBehaviourFactoryInterface(out, info);
 
@@ -1075,6 +1076,10 @@ public class ClassWriter {
 		out.format("        return Context.load(this);\n");
 		out.format("    }\n\n");
 
+	}
+
+	private void writeToStringMethod(PrintStream out, ClassInfo info) {
+		// TODO
 	}
 
 	private void writeBehaviourInterface(PrintStream out, ClassInfo info) {
