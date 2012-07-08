@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.List;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.xml.bind.JAXBElement;
 
@@ -145,6 +146,10 @@ public class CodeGeneratorJava {
 			}
 		}
 		out.format("    }\n");
+		out.format("    public static %s createEntityManager() {\n",
+				types.addType(EntityManager.class));
+		out.format("        return signaller.getEntityManagerFactory().createEntityManager();\n");
+		out.format("    }\n\n");
 		out.format("}");
 		out.close();
 

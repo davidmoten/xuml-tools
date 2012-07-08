@@ -30,6 +30,10 @@ public class Signaller {
 		root.tell(emf);
 	}
 
+	public EntityManagerFactory getEntityManagerFactory() {
+		return emf;
+	}
+
 	/**
 	 * Returns a new instance of type T using the given {@link CreationEvent}.
 	 * This is a synchronous creation using a newly created then closed
