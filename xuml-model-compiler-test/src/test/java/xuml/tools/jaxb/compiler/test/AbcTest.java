@@ -53,6 +53,11 @@ public class AbcTest {
 		// wait a bit for all signals to be processed
 		Thread.sleep(2000);
 
+		// Check the signals were processed
+
+		// The load method reloads the entity using a fresh entity manager and
+		// then closes the entity manager. As a consequence only non-proxied
+		// fields of the entity will be retrievable using the load method.
 		assertEquals("12a", a1.load().getAThree());
 		assertEquals("12b", a2.load().getAThree());
 		assertEquals("12c", a3.load().getAThree());
@@ -61,7 +66,7 @@ public class AbcTest {
 		// EntityManagers at all. Nice!
 
 		// Refresh the entities from the database using the
-		// load method and check the signals were processed
+		// load(em) method and check the signals were processed
 		EntityManager em = Context.createEntityManager();
 		// note that the load method below does an em merge and refresh and
 		// returns a new entity for use within the current entity manager
