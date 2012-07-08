@@ -377,13 +377,19 @@ public class ClassWriter {
 		out.format("%s%s _s = new %s();\n", "            ",
 				info.addType(StringBuffer.class),
 				info.addType(StringBuffer.class));
+		out.format("            _s.append(\"%s [\");\n",
+				info.getEmbeddedIdSimpleClassName());
+		boolean first = true;
 		for (MyIdAttribute member : info.getPrimaryIdAttributeMembers()) {
+			if (!first)
+				out.format("%s_s.append(\",\");\n", "            ");
 			out.format("%s_s.append(\"%s=\");\n", "            ",
 					member.getFieldName());
 			out.format("%s_s.append(%s.toString());\n", "            ",
 					member.getFieldName());
-			out.format("%s_s.append(\";\");\n", "            ");
+			first = false;
 		}
+		out.format("            _s.append(\"]\");\n");
 		out.format("%sreturn _s.toString();\n", "            ");
 		out.format("%s}\n\n", "        ");
 	}
