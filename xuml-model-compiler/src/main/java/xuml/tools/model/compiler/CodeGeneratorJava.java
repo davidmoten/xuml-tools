@@ -150,6 +150,9 @@ public class CodeGeneratorJava {
 				types.addType(EntityManager.class));
 		out.format("        return signaller.getEntityManagerFactory().createEntityManager();\n");
 		out.format("    }\n\n");
+		out.format("    public static void close() {\n");
+		out.format("        signaller.close();\n");
+		out.format("    }\n\n");
 		out.format("}");
 		out.close();
 

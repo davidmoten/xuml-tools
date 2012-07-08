@@ -152,4 +152,8 @@ public class Signaller {
 	public void stop() {
 		actorSystem.shutdown();
 	}
+
+	public void close() {
+		emf.close();
+	}
 }

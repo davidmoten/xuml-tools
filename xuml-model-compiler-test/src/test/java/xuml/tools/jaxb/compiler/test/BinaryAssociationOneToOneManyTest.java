@@ -32,7 +32,7 @@ public class BinaryAssociationOneToOneManyTest {
 
 	@AfterClass
 	public static void shutdown() {
-		emf.close();
+		Context.stop();
 	}
 
 	@Test(expected = RelationshipNotEstablished.class)
