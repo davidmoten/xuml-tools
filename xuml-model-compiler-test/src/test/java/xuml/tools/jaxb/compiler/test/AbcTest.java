@@ -53,24 +53,21 @@ public class AbcTest {
 		A a3 = Context.create(A.class, new A.Events.Create("value1.3",
 				"value2.3", "1234"));
 
+		// check that the entity a3 was persisted
 		{
 			EntityManager em = emf.createEntityManager();
 			assertNotNull(em.find(A.class, new A.AId("value1.3", "value2.3")));
 			em.close();
 		}
 
-		// either persist signal then resend
-		if (true) {
-			Context.persistSignal(a3.getId(), A.class,
-					new A.Events.SomethingDone("12c"));
-			assertEquals(1, Context.sendSignalsInQueue());
-		}// or send directly
-		else
-			a3.signal(new A.Events.SomethingDone("12c"));
+		// test the reloading of a persisted signal to a1
+		Context.persistSignal(a1.getId(), A.class, new A.Events.SomethingDone(
+				"12a"));
+		assertEquals(1, Context.sendSignalsInQueue());
 
-		// send asynchronous signals to the entities
-		a1.signal(new A.Events.SomethingDone("12a"));
+		// send asynchronous signals to the a2 and a3
 		a2.signal(new A.Events.SomethingDone("12b"));
+		a3.signal(new A.Events.SomethingDone("12c"));
 
 		// Notice that all the above could be done without explicitly creating
 		// EntityManagers at all. Nice!
@@ -78,20 +75,14 @@ public class AbcTest {
 		// wait a bit for all signals to be processed
 		Thread.sleep(2000);
 
-		// // check that the signals had an effect.
-		// assertEquals("12a", a1.getAThree());
-		// assertEquals("12b", a2.getAThree());
-		// assertEquals("12c", a3.getAThree());
-
-		// Just to be sure refresh the entities from the database using the
-		// merge method and assert the same
+		// Refresh the entities from the database using the
+		// load method and check the signals were processed
 		EntityManager em = emf.createEntityManager();
-		// note that the merge method below updates the entity with the latest
-		// state from the database using the entity manager em (you could also
-		// do em.merge(a1) but you don't get method chaining).
-		assertEquals("12a", a1.merge(em).refresh(em).getAThree());
-		assertEquals("12b", a2.merge(em).refresh(em).getAThree());
-		assertEquals("12c", a3.merge(em).refresh(em).getAThree());
+		// note that the load method below does an em merge and refresh and
+		// returns a new entity for use within the current entity manager
+		assertEquals("12a", a1.load(em).getAThree());
+		assertEquals("12b", a2.load(em).getAThree());
+		assertEquals("12c", a3.load(em).getAThree());
 		em.close();
 
 		// shutdown the actor system

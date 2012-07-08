@@ -93,6 +93,7 @@ public class ClassWriter {
 		writeMergeMethod(out, info);
 		writePersistMethod(out, info);
 		writeRefreshMethod(out, info);
+		writeLoadMethod(out, info);
 		writeBehaviourInterface(out, info);
 		writeBehaviourFactoryInterface(out, info);
 
@@ -1054,6 +1055,14 @@ public class ClassWriter {
 				info.addType(EntityManager.class));
 		out.format("        em.refresh(this);\n");
 		out.format("        return this;\n");
+		out.format("    }\n\n");
+	}
+
+	private void writeLoadMethod(PrintStream out, ClassInfo info) {
+		out.format("    public %s load(%s em) {\n",
+				info.getJavaClassSimpleName(),
+				info.addType(EntityManager.class));
+		out.format("        return merge(em).refresh(em);\n");
 		out.format("    }\n\n");
 	}
 
