@@ -130,13 +130,6 @@ public class ClassInfo extends ClassInfoBase {
 	}
 
 	@Override
-	List<String> getOperations() {
-		// TODO review operations, not supported by miUML. Should be using
-		// derived attributes.
-		return Lists.newArrayList();
-	}
-
-	@Override
 	List<MyIdAttribute> getPrimaryIdAttributeMembers() {
 		Set<Attribute> list = getIdentifierAttributes().get(BigInteger.ONE);
 		return getMyIdAttributes(list);

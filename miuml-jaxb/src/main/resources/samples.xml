@@ -16,6 +16,7 @@
 		UpperLimit="99999999999" LowerLimit="-9999999999999" />
 	<IntegerType Name="arbitraryId" Units="None" DefaultValue="1"
 		UpperLimit="99999999999" LowerLimit="1" />
+	<BooleanType Name="boolean" />
 
 	<IntegerType Name="Nominal" Units="None" DefaultValue="1"
 		UpperLimit="99999999999" LowerLimit="1" />
@@ -737,7 +738,7 @@
 
 	<ModeledDomain Name="secondary-identifiers">
 
-		<Subsystem Name="secondary-identifiers" Floor="260" Ceiling="281">
+		<Subsystem Name="secondary-identifiers" Floor="241" Ceiling="260">
 
 			<NonSpecializedClass Name="A">
 				<IndependentAttribute Name="A one" Type="string">
@@ -759,5 +760,24 @@
 
 		</Subsystem>
 	</ModeledDomain>
+
+	<ModeledDomain Name="all-types">
+
+		<Subsystem Name="all-types" Floor="261" Ceiling="280">
+
+			<NonSpecializedClass Name="A">
+				<IndependentAttribute Name="A one" Type="string">
+					<Identifier Number="1" />
+				</IndependentAttribute>
+				<IndependentAttribute Name="one" Type="boolean"/>
+				<IndependentAttribute Name="two" Type="integer"/>
+				<IndependentAttribute Name="three" Type="real"/>
+				<IndependentAttribute Name="four" Type="date"/>
+				<IndependentAttribute Name="five" Type="timestamp"/>
+				<IndependentAttribute Name="six" Type="arbitraryId"/>
+			</NonSpecializedClass>
+		</Subsystem>
+	</ModeledDomain>
+
 
 </Domains>

@@ -136,7 +136,6 @@ class Lookups {
 			if (element.getValue() instanceof AtomicType) {
 				AtomicType t = (AtomicType) element.getValue();
 				result = getJavaType(t);
-
 			} else
 				throw new RuntimeException(
 						"Structure types not implemented yet");

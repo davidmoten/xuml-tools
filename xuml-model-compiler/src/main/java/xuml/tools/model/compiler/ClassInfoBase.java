@@ -22,8 +22,6 @@ public abstract class ClassInfoBase {
 
 	abstract String getJavaClassSimpleName();
 
-	abstract List<String> getOperations();
-
 	abstract TypeRegister getTypes();
 
 	final public String getBehaviourPackage() {
