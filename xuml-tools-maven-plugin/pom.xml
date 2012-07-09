@@ -39,12 +39,13 @@
 	</dependencies>
 	<build>
 		<plugins>
+		<!-- 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-plugin-plugin</artifactId>
 				<version>3.1</version>
 				<configuration>
-					<goalPrefix>xuml-tools-maven-plugin</goalPrefix>
+					<goalPrefix>xuml-tools</goalPrefix>
 				</configuration>
 				<executions>
 					<execution>
@@ -54,7 +55,7 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>
+			</plugin>  -->
 		</plugins>
 	</build>
 	<reporting>
