@@ -33,6 +33,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
@@ -44,6 +46,7 @@ import xuml.tools.model.compiler.ClassInfoBase.MyParameter;
 import xuml.tools.model.compiler.ClassInfoBase.MyReferenceMember;
 import xuml.tools.model.compiler.ClassInfoBase.MySubclassRole;
 import xuml.tools.model.compiler.ClassInfoBase.MyTransition;
+import xuml.tools.model.compiler.ClassInfoBase.MyTypeDefinition;
 import xuml.tools.model.compiler.runtime.CreationEvent;
 import xuml.tools.model.compiler.runtime.EntityHelper;
 import xuml.tools.model.compiler.runtime.Event;
@@ -294,7 +297,7 @@ public class ClassWriter {
 			// override attribute field name to 'id'
 			writeIndependentAttributeMember(out, "id",
 					attribute.getColumnName(), false, "    ",
-					info.addType(attribute.getType().getType()));
+					attribute.getType());
 		} else {
 			writeEmbeddedIdField(out, info);
 
@@ -1136,10 +1139,9 @@ public class ClassWriter {
 
 	private void writeIndependentAttributeMember(PrintStream out,
 			MyIndependentAttribute attribute, String indent) {
-		String type = info.addType(attribute.getType().getType());
-		info.addType(Column.class);
 		writeIndependentAttributeMember(out, attribute.getFieldName(),
-				attribute.getColumnName(), attribute.isNullable(), indent, type);
+				attribute.getColumnName(), attribute.isNullable(), indent,
+				attribute.getType());
 	}
 
 	public static class MyType {
@@ -1161,10 +1163,21 @@ public class ClassWriter {
 
 	private void writeIndependentAttributeMember(PrintStream out,
 			String fieldName, String columnName, boolean isNullable,
-			String indent, String type) {
-		out.format("%s@Column(name=\"%s\",nullable=%s)\n", indent, columnName,
-				isNullable);
-		out.format("%sprivate %s %s;\n\n", indent, type, fieldName);
+			String indent, MyTypeDefinition type) {
+		out.format("%s@%s(name=\"%s\",nullable=%s)\n", indent,
+				info.addType(Column.class), columnName, isNullable);
+		if (type.getMyType().equals(
+				xuml.tools.model.compiler.ClassInfoBase.MyType.DATE))
+			out.format("%s@%s(%s.DATE)\n", indent,
+					info.addType(Temporal.class),
+					info.addType(TemporalType.class));
+		else if (type.getMyType().equals(
+				xuml.tools.model.compiler.ClassInfoBase.MyType.TIMESTAMP))
+			out.format("%s@%s(%s.TIMESTAMP)\n", indent,
+					info.addType(Temporal.class),
+					info.addType(TemporalType.class));
+		out.format("%sprivate %s %s;\n\n", indent,
+				info.addType(type.getType()), fieldName);
 	}
 
 	private void writeIndependentAttributeGetterAndSetter(PrintStream out,
