@@ -11,6 +11,8 @@ Continuous integration with Jenkins for this project is [here](https://xuml-tool
 
 <a href="https://xuml-tools.ci.cloudbees.com/"><img  src="http://web-static-cloudfront.s3.amazonaws.com/images/badges/BuiltOnDEV.png"/></a>
 
+Maven site is [here](https://xuml-tools.ci.cloudbees.com/job/xuml-tools_site/site/). Not filled out yet though.
+
 Getting started
 ---------------
 Until the project has matured enough to release artifacts to Maven Central repository this is how to locally install the artfacts from source (Maven 3 required):
