@@ -111,11 +111,11 @@ public class AbcTest {
 
 		A a = Context.create(A.class, new A.Events.Create("value1.4",
 				"value2.4", "1234"));
-		// check that the entity a3 was persisted
+		// check that the entity was persisted
 		{
 			EntityManager em = Context.createEntityManager();
-			Assert.assertNotNull(em.find(A.class, new A.AId("value1.3",
-					"value2.3")));
+			Assert.assertNotNull(em.find(A.class, new A.AId("value1.4",
+					"value2.4")));
 			em.close();
 		}
 
