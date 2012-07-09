@@ -874,7 +874,9 @@
 			<annotation>
 				<documentation>R706</documentation>
 			</annotation>
-			<extension base="t:AtomicType"></extension>
+			<extension base="t:AtomicType">
+				<attribute name="DefaultValue" type="boolean" use="required" />
+			</extension>
 		</complexContent>
 	</complexType>
 
@@ -1104,9 +1106,11 @@
 	<complexType name="Event">
 		<annotation>
 			<documentation>
-			A large portion of the Polymorphism Subsystem has been
-				collapsed by the relationship of Event to Event Signature. The
-				collapsed portion serves validation purposes only.
+				A large portion of the Polymorphism Subsystem has been
+				collapsed by
+				the relationship of Event to Event Signature. The
+				collapsed portion
+				serves validation purposes only.
 			</documentation>
 		</annotation>
 		<sequence>

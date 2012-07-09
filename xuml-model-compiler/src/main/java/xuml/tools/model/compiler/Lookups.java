@@ -119,25 +119,28 @@ class Lookups {
 	}
 
 	public String getJavaType(String typeName) {
+		return getJavaType(getAtomicType(typeName), typeName);
+	}
+
+	public AtomicType getAtomicType(String typeName) {
 		// check domain class types then if not found check global types
-		String result = getJavaType(domain.getConstrainedType(), typeName);
+		AtomicType result = getAtomicType(domain.getConstrainedType(), typeName);
 		if (result == null)
-			result = getJavaType(domains.getConstrainedType(), typeName);
+			result = getAtomicType(domains.getConstrainedType(), typeName);
 		if (result == null)
 			throw new RuntimeException("type not found: " + typeName);
 		else
 			return result;
-
 	}
 
-	private String getJavaType(
+	private AtomicType getAtomicType(
 			List<JAXBElement<? extends ConstrainedType>> types, String typeName) {
-		String result = null;
+		AtomicType result = null;
 		for (JAXBElement<? extends ConstrainedType> element : types) {
 			if (element.getValue() instanceof AtomicType) {
 				AtomicType t = (AtomicType) element.getValue();
 				if (typeName.equals(t.getName()))
-					result = getJavaType(t, typeName);
+					result = t;
 			} else
 				throw new RuntimeException(
 						"Structure types not implemented yet");

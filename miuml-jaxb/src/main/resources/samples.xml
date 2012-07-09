@@ -18,7 +18,7 @@
 		UpperLimit="99999999999" LowerLimit="-9999999999999" />
 	<IntegerType Name="arbitraryId" Units="None" DefaultValue="1"
 		UpperLimit="99999999999" LowerLimit="1" />
-	<BooleanType Name="boolean" />
+	<BooleanType Name="boolean" DefaultValue="false" />
 	<RealType Name="real" UpperLimit="99999999999" LowerLimit="-9999999999999"
 		Precision="20" Units="none" DefaultValue="0" />
 

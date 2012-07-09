@@ -5,7 +5,9 @@ import static com.google.common.collect.HashMultimap.create;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Sets.newHashSet;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -13,22 +15,28 @@ import javax.xml.bind.JAXBElement;
 
 import miuml.jaxb.Association;
 import miuml.jaxb.AsymmetricPerspective;
+import miuml.jaxb.AtomicType;
 import miuml.jaxb.Attribute;
 import miuml.jaxb.BinaryAssociation;
+import miuml.jaxb.BooleanType;
 import miuml.jaxb.Class;
 import miuml.jaxb.CreationEvent;
+import miuml.jaxb.EnumeratedType;
 import miuml.jaxb.Event;
 import miuml.jaxb.Generalization;
 import miuml.jaxb.IdentifierAttribute;
 import miuml.jaxb.IndependentAttribute;
+import miuml.jaxb.IntegerType;
 import miuml.jaxb.NativeAttribute;
 import miuml.jaxb.Perspective;
+import miuml.jaxb.RealType;
 import miuml.jaxb.Reference;
 import miuml.jaxb.ReferentialAttribute;
 import miuml.jaxb.Relationship;
 import miuml.jaxb.State;
 import miuml.jaxb.StateModelParameter;
 import miuml.jaxb.StateModelSignature;
+import miuml.jaxb.SymbolicType;
 import miuml.jaxb.SymmetricPerspective;
 import miuml.jaxb.Transition;
 import miuml.jaxb.UnaryAssociation;
@@ -232,7 +240,7 @@ public class ClassInfo extends ClassInfoBase {
 	private MyIdAttribute createMyIdAttribute(NativeAttribute a) {
 		return new MyIdAttribute(a.getName(),
 				Util.toJavaIdentifier(a.getName()), Util.toColumnName(a
-						.getName()), getType(a.getType()));
+						.getName()), getTypeDefinition(a.getType()));
 	}
 
 	private MyIndependentAttribute createMyIndependentAttribute(
@@ -246,7 +254,7 @@ public class ClassInfo extends ClassInfoBase {
 		boolean isNullable = !inIdentifier;
 
 		return new MyIndependentAttribute(Util.toJavaIdentifier(a.getName()),
-				Util.toColumnName(a.getName()), getType(a.getType()),
+				Util.toColumnName(a.getName()), getTypeDefinition(a.getType()),
 				isNullable, "description");
 	}
 
@@ -572,5 +580,88 @@ public class ClassInfo extends ClassInfoBase {
 	Type getType(String name) {
 		String javaClassName = lookups.getJavaType(name);
 		return new Type(javaClassName);
+	}
+
+	public MyTypeDefinition getTypeDefinition(String name) {
+		AtomicType t = lookups.getAtomicType(name);
+		if (t instanceof SymbolicType)
+			return getTypeDefinition((SymbolicType) t);
+		else if (t instanceof BooleanType)
+			return getTypeDefinition((BooleanType) t);
+		else if (t instanceof EnumeratedType)
+			return getTypeDefinition((EnumeratedType) t);
+		else if (t instanceof IntegerType)
+			return getTypeDefinition((IntegerType) t);
+		else if (t instanceof RealType)
+			return getTypeDefinition((RealType) t);
+		else
+			throw new RuntimeException("unexpected");
+	}
+
+	private MyTypeDefinition getTypeDefinition(RealType t) {
+		return new MyTypeDefinition(t.getName(), MyType.REAL, new Type(
+				Double.class), t.getUnits(), t.getPrecision(),
+				t.getLowerLimit(), t.getUpperLimit(), t.getDefaultValue() + "",
+				null, null, null, null, null, null);
+	}
+
+	private MyTypeDefinition getTypeDefinition(IntegerType t) {
+		MyType myType;
+		Type type;
+
+		if ("date".equals(t.getName())) {
+			myType = MyType.DATE;
+			type = new Type(Date.class);
+		} else if ("timestamp".equals(t.getName())) {
+			myType = MyType.TIMESTAMP;
+			type = new Type(Date.class);
+		} else {
+			myType = MyType.INTEGER;
+			type = new Type(Integer.class);
+		}
+
+		return new MyTypeDefinition(t.getName(), myType, type, t.getUnits(),
+				null, toBigDecimal(t.getLowerLimit()),
+				toBigDecimal(t.getUpperLimit()), toString(t.getDefaultValue()),
+				null, null, null, null, null, null);
+	}
+
+	private static BigDecimal toBigDecimal(BigInteger n) {
+		if (n == null)
+			return null;
+		else
+			return new BigDecimal(n);
+	}
+
+	private static String toString(BigInteger n) {
+		if (n == null)
+			return null;
+		else
+			return n.toString();
+	}
+
+	private static String toString(BigDecimal n) {
+		if (n == null)
+			return null;
+		else
+			return n.toString();
+	}
+
+	private MyTypeDefinition getTypeDefinition(EnumeratedType t) {
+		return null;
+	}
+
+	private MyTypeDefinition getTypeDefinition(BooleanType t) {
+		return new MyTypeDefinition(t.getName(), MyType.BOOLEAN, new Type(
+				Boolean.class), null, null, null, null,
+				((Boolean) t.isDefaultValue()).toString(), null, null, null,
+				null, null, null);
+	}
+
+	private MyTypeDefinition getTypeDefinition(SymbolicType t) {
+		return new MyTypeDefinition(t.getName(), MyType.STRING, new Type(
+				String.class), null, null, null, null, t.getDefaultValue()
+				.toString(), null, t.getMinLength(), t.getMaxLength(),
+				t.getPrefix(), t.getSuffix(), t.getValidationPattern());
 	}
 }

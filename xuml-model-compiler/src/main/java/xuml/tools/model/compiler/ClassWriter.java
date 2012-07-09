@@ -187,7 +187,8 @@ public class ClassWriter {
 					+ info.getJavaClassSimpleName() + "."
 					+ info.getEmbeddedIdSimpleClassName());
 		else
-			idType = info.getPrimaryIdAttributeMembers().get(0).getType();
+			idType = info.getPrimaryIdAttributeMembers().get(0).getType()
+					.getType();
 		return idType;
 	}
 
@@ -239,7 +240,7 @@ public class ClassWriter {
 		String idClassName;
 		if (!hasEmbeddedId()) {
 			idClassName = info.addType(info.getPrimaryIdAttributeMembers()
-					.get(0).getType());
+					.get(0).getType().getType());
 		} else
 			idClassName = info.getEmbeddedIdSimpleClassName();
 
@@ -293,7 +294,7 @@ public class ClassWriter {
 			// override attribute field name to 'id'
 			writeIndependentAttributeMember(out, "id",
 					attribute.getColumnName(), false, "    ",
-					info.addType(attribute.getType()));
+					info.addType(attribute.getType().getType()));
 		} else {
 			writeEmbeddedIdField(out, info);
 
@@ -399,14 +400,15 @@ public class ClassWriter {
 			ClassInfo info) {
 		for (MyIdAttribute member : info.getPrimaryIdAttributeMembers()) {
 			out.format("%spublic %s get%s(){\n", "        ",
-					info.addType(member.getType()),
+					info.addType(member.getType().getType()),
 					Util.upperFirst(member.getFieldName()));
 			out.format("%sreturn %s;\n", "            ", member.getFieldName());
 			out.format("%s}\n\n", "        ");
 
 			out.format("%spublic void set%s(%s %s){\n", "        ",
 					Util.upperFirst(member.getFieldName()),
-					info.addType(member.getType()), member.getFieldName());
+					info.addType(member.getType().getType()),
+					member.getFieldName());
 			out.format("%sthis.%s=%s;\n", "            ",
 					member.getFieldName(), member.getFieldName());
 			out.format("%s}\n\n", "        ");
@@ -431,7 +433,8 @@ public class ClassWriter {
 						info.addType(Column.class), member.getColumnName());
 			}
 			out.format("%sprivate %s %s;\n\n", "        ",
-					info.addType(member.getType()), member.getFieldName());
+					info.addType(member.getType().getType()),
+					member.getFieldName());
 		}
 	}
 
@@ -442,7 +445,7 @@ public class ClassWriter {
 		for (MyIdAttribute member : info.getPrimaryIdAttributeMembers()) {
 			if (!first)
 				out.format(", ");
-			out.format("%s %s", info.addType(member.getType()),
+			out.format("%s %s", info.addType(member.getType().getType()),
 					member.getFieldName());
 			first = false;
 		}
@@ -1133,7 +1136,7 @@ public class ClassWriter {
 
 	private void writeIndependentAttributeMember(PrintStream out,
 			MyIndependentAttribute attribute, String indent) {
-		String type = info.addType(attribute.getType());
+		String type = info.addType(attribute.getType().getType());
 		info.addType(Column.class);
 		writeIndependentAttributeMember(out, attribute.getFieldName(),
 				attribute.getColumnName(), attribute.isNullable(), indent, type);
@@ -1166,7 +1169,7 @@ public class ClassWriter {
 
 	private void writeIndependentAttributeGetterAndSetter(PrintStream out,
 			MyIndependentAttribute attribute) {
-		String type = info.addType(attribute.getType());
+		String type = info.addType(attribute.getType().getType());
 		jd(out, "Returns " + attribute.getFieldName() + ".", "    ");
 		if (attribute.getFieldName().equals("id")) {
 			info.addType(Override.class);

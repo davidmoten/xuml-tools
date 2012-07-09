@@ -2,6 +2,8 @@ package xuml.tools.model.compiler;
 
 import static com.google.common.collect.Lists.newArrayList;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Set;
 
@@ -109,7 +111,7 @@ public abstract class ClassInfoBase {
 			MyIndependentAttribute {
 
 		public MyPrimaryIdAttributeMember(String fieldName, String columnName,
-				Type type, boolean nullable, String description) {
+				MyTypeDefinition type, boolean nullable, String description) {
 			super(fieldName, columnName, type, nullable, description);
 		}
 
@@ -120,7 +122,7 @@ public abstract class ClassInfoBase {
 		private final String columnName;
 		private final String referenceClass;
 		private final String referenceColumnName;
-		private final Type type;
+		private final MyTypeDefinition type;
 		private final String attributeName;
 
 		public String getAttributeName() {
@@ -129,7 +131,7 @@ public abstract class ClassInfoBase {
 
 		public MyIdAttribute(String attributeName, String fieldName,
 				String columnName, String referenceClass,
-				String referenceColumnName, Type type) {
+				String referenceColumnName, MyTypeDefinition type) {
 			this.attributeName = attributeName;
 			this.fieldName = fieldName;
 			this.columnName = columnName;
@@ -139,7 +141,7 @@ public abstract class ClassInfoBase {
 		}
 
 		public MyIdAttribute(String attributeName, String fieldName,
-				String columnName, Type type) {
+				String columnName, MyTypeDefinition type) {
 			this(attributeName, fieldName, columnName, null, null, type);
 		}
 
@@ -159,7 +161,7 @@ public abstract class ClassInfoBase {
 			return referenceColumnName;
 		}
 
-		public Type getType() {
+		public MyTypeDefinition getType() {
 			return type;
 		}
 
@@ -168,7 +170,7 @@ public abstract class ClassInfoBase {
 	public static class MyIndependentAttribute {
 		private final String fieldName;
 		private final String columnName;
-		private final Type type;
+		private final MyTypeDefinition type;
 		private final boolean nullable;
 		private final String description;
 
@@ -177,7 +179,7 @@ public abstract class ClassInfoBase {
 		}
 
 		public MyIndependentAttribute(String fieldName, String columnName,
-				Type type, boolean nullable, String description) {
+				MyTypeDefinition type, boolean nullable, String description) {
 			super();
 			this.fieldName = fieldName;
 			this.columnName = columnName;
@@ -198,7 +200,7 @@ public abstract class ClassInfoBase {
 			return columnName;
 		}
 
-		public Type getType() {
+		public MyTypeDefinition getType() {
 			return type;
 		}
 	}
@@ -328,6 +330,139 @@ public abstract class ClassInfoBase {
 			builder.append(thisColumnName);
 			builder.append(", otherColumnName=");
 			builder.append(otherColumnName);
+			builder.append("]");
+			return builder.toString();
+		}
+
+	}
+
+	public static enum MyType {
+		BOOLEAN, INTEGER, REAL, DATE, TIMESTAMP, STRING, ARBITRARY_ID, ENUMERATION
+	}
+
+	public final static class MyTypeDefinition {
+		private final String name;
+		private final MyType myType;
+		private final Type type;
+		private final String units;
+		private final BigInteger precision;
+		private final BigDecimal lowerLimit;
+		private final BigDecimal upperLimit;
+		private final String defaultValue;
+		private final List<String> enumeration;
+		private final BigInteger minLength;
+		private final BigInteger maxLength;
+		private final String prefix;
+		private final String suffix;
+		private final String validationPattern;
+
+		public MyTypeDefinition(String name, MyType myType, Type type,
+				String units, BigInteger precision, BigDecimal lowerLimit,
+				BigDecimal upperLimit, String defaultValue,
+				List<String> enumeration, BigInteger minLength,
+				BigInteger maxLength, String prefix, String suffix,
+				String validationPattern) {
+			this.name = name;
+			this.myType = myType;
+			this.type = type;
+			this.units = units;
+			this.precision = precision;
+			this.lowerLimit = lowerLimit;
+			this.upperLimit = upperLimit;
+			this.defaultValue = defaultValue;
+			this.enumeration = enumeration;
+			this.minLength = minLength;
+			this.maxLength = maxLength;
+			this.prefix = prefix;
+			this.suffix = suffix;
+			this.validationPattern = validationPattern;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public MyType getMyType() {
+			return myType;
+		}
+
+		public Type getType() {
+			return type;
+		}
+
+		public String getUnits() {
+			return units;
+		}
+
+		public BigInteger getPrecision() {
+			return precision;
+		}
+
+		public BigDecimal getLowerLimit() {
+			return lowerLimit;
+		}
+
+		public BigDecimal getUpperLimit() {
+			return upperLimit;
+		}
+
+		public String getDefaultValue() {
+			return defaultValue;
+		}
+
+		public List<String> getEnumeration() {
+			return enumeration;
+		}
+
+		public BigInteger getMinLength() {
+			return minLength;
+		}
+
+		public BigInteger getMaxLength() {
+			return maxLength;
+		}
+
+		public String getPrefix() {
+			return prefix;
+		}
+
+		public String getSuffix() {
+			return suffix;
+		}
+
+		public String getValidationPattern() {
+			return validationPattern;
+		}
+
+		@Override
+		public String toString() {
+			StringBuilder builder = new StringBuilder();
+			builder.append("MyTypeDefinition [name=");
+			builder.append(name);
+			builder.append(", type=");
+			builder.append(type);
+			builder.append(", units=");
+			builder.append(units);
+			builder.append(", precision=");
+			builder.append(precision);
+			builder.append(", lowerLimit=");
+			builder.append(lowerLimit);
+			builder.append(", upperLimit=");
+			builder.append(upperLimit);
+			builder.append(", defaultValue=");
+			builder.append(defaultValue);
+			builder.append(", enumeration=");
+			builder.append(enumeration);
+			builder.append(", minLength=");
+			builder.append(minLength);
+			builder.append(", maxLength=");
+			builder.append(maxLength);
+			builder.append(", prefix=");
+			builder.append(prefix);
+			builder.append(", suffix=");
+			builder.append(suffix);
+			builder.append(", validationPattern=");
+			builder.append(validationPattern);
 			builder.append("]");
 			return builder.toString();
 		}
