@@ -161,6 +161,18 @@
 							<packageName>secondary_identifiers</packageName>
 						</configuration>
 					</execution>
+					<execution>
+						<id>all-types</id>
+						<goals>
+							<goal>generate-jpa</goal>
+						</goals>
+						<configuration>
+							<domainsXml>/samples.xml</domainsXml>
+							<domain>all-types</domain>
+							<schema>all_types</schema>
+							<packageName>all_types</packageName>
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
 			<plugin>

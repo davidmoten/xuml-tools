@@ -49,9 +49,9 @@ public class AbcTest {
 				"value2.3", "1234"));
 
 		// send asynchronous signals to the a2 and a3
-		a1.signal(new A.Events.SomethingDone("12a"));
-		a2.signal(new A.Events.SomethingDone("12b"));
-		a3.signal(new A.Events.SomethingDone("12c"));
+		a1.signal(new A.Events.SomethingDone(11));
+		a2.signal(new A.Events.SomethingDone(12));
+		a3.signal(new A.Events.SomethingDone(13));
 
 		// wait a bit for all signals to be processed
 		Thread.sleep(2000);
@@ -61,9 +61,9 @@ public class AbcTest {
 		// The load method reloads the entity using a fresh entity manager and
 		// then closes the entity manager. As a consequence only non-proxied
 		// fields of the entity will be retrievable using the load method.
-		assertEquals("12a", a1.load().getAThree());
-		assertEquals("12b", a2.load().getAThree());
-		assertEquals("12c", a3.load().getAThree());
+		assertEquals("11", a1.load().getAThree());
+		assertEquals("12", a2.load().getAThree());
+		assertEquals("13", a3.load().getAThree());
 
 		// Notice that all the above could be done without explicitly creating
 		// EntityManagers at all. Nice!
@@ -73,9 +73,9 @@ public class AbcTest {
 		EntityManager em = Context.createEntityManager();
 		// note that the load method below does an em merge and refresh and
 		// returns a new entity for use within the current entity manager
-		assertEquals("12a", a1.load(em).getAThree());
-		assertEquals("12b", a2.load(em).getAThree());
-		assertEquals("12c", a3.load(em).getAThree());
+		assertEquals("11", a1.load(em).getAThree());
+		assertEquals("12", a2.load(em).getAThree());
+		assertEquals("13", a3.load(em).getAThree());
 		em.close();
 
 	}
@@ -120,8 +120,8 @@ public class AbcTest {
 		}
 
 		// test the reloading of a persisted signal to a1
-		Context.persistSignal(a.getId(), A.class, new A.Events.SomethingDone(
-				"12d"));
+		Context.persistSignal(a.getId(), A.class,
+				new A.Events.SomethingDone(14));
 		assertEquals(1, Context.sendSignalsInQueue());
 		// wait a bit for all signals to be processed
 		Thread.sleep(2000);
@@ -131,7 +131,7 @@ public class AbcTest {
 		EntityManager em = Context.createEntityManager();
 		// note that the load method below does an em merge and refresh and
 		// returns a new entity for use within the current entity manager
-		assertEquals("12d", a.load(em).getAThree());
+		assertEquals("14", a.load(em).getAThree());
 		em.close();
 
 	}
@@ -152,7 +152,7 @@ public class AbcTest {
 					@Override
 					public void onEntryDoneSomething(
 							StateSignature_DoneSomething event) {
-						entity.setAThree(event.getTheCount());
+						entity.setAThree(event.getTheCount() + "");
 						System.out
 								.println("setting A.athree="
 										+ entity.getAThree() + " for "

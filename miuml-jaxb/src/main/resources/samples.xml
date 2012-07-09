@@ -8,6 +8,8 @@
 
 	<SymbolicType Name="string" MinLength="1" MaxLength="4096"
 		Prefix="" Suffix="" ValidationPattern="?.*" DefaultValue="" />
+	<IntegerType Name="integer" Units="none" DefaultValue="0"
+		UpperLimit="99999999999" LowerLimit="-9999999999999" />
 	<IntegerType Name="date" Units="epoch ms" DefaultValue="0"
 		UpperLimit="99999999999" LowerLimit="-9999999999999" />
 	<IntegerType Name="timestamp" Units="epoch ms"
@@ -17,6 +19,8 @@
 	<IntegerType Name="arbitraryId" Units="None" DefaultValue="1"
 		UpperLimit="99999999999" LowerLimit="1" />
 	<BooleanType Name="boolean" />
+	<RealType Name="real" UpperLimit="99999999999" LowerLimit="-9999999999999"
+		Precision="20" Units="none" DefaultValue="0" />
 
 	<IntegerType Name="Nominal" Units="None" DefaultValue="1"
 		UpperLimit="99999999999" LowerLimit="1" />
@@ -769,12 +773,12 @@
 				<IndependentAttribute Name="A one" Type="string">
 					<Identifier Number="1" />
 				</IndependentAttribute>
-				<IndependentAttribute Name="one" Type="boolean"/>
-				<IndependentAttribute Name="two" Type="integer"/>
-				<IndependentAttribute Name="three" Type="real"/>
-				<IndependentAttribute Name="four" Type="date"/>
-				<IndependentAttribute Name="five" Type="timestamp"/>
-				<IndependentAttribute Name="six" Type="arbitraryId"/>
+				<IndependentAttribute Name="one" Type="boolean" />
+				<IndependentAttribute Name="two" Type="integer" />
+				<IndependentAttribute Name="three" Type="real" />
+				<IndependentAttribute Name="four" Type="date" />
+				<IndependentAttribute Name="five" Type="timestamp" />
+				<IndependentAttribute Name="six" Type="arbitraryId" />
 			</NonSpecializedClass>
 		</Subsystem>
 	</ModeledDomain>

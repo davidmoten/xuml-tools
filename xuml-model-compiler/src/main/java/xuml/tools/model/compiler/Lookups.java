@@ -2,6 +2,7 @@ package xuml.tools.model.compiler;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -119,9 +120,9 @@ class Lookups {
 
 	public String getJavaType(String typeName) {
 		// check domain class types then if not found check global types
-		String result = getJavaType(domain.getConstrainedType());
+		String result = getJavaType(domain.getConstrainedType(), typeName);
 		if (result == null)
-			result = getJavaType(domains.getConstrainedType());
+			result = getJavaType(domains.getConstrainedType(), typeName);
 		if (result == null)
 			throw new RuntimeException("type not found: " + typeName);
 		else
@@ -130,12 +131,13 @@ class Lookups {
 	}
 
 	private String getJavaType(
-			List<JAXBElement<? extends ConstrainedType>> types) {
+			List<JAXBElement<? extends ConstrainedType>> types, String typeName) {
 		String result = null;
 		for (JAXBElement<? extends ConstrainedType> element : types) {
 			if (element.getValue() instanceof AtomicType) {
 				AtomicType t = (AtomicType) element.getValue();
-				result = getJavaType(t);
+				if (typeName.equals(t.getName()))
+					result = getJavaType(t, typeName);
 			} else
 				throw new RuntimeException(
 						"Structure types not implemented yet");
@@ -143,12 +145,16 @@ class Lookups {
 		return result;
 	}
 
-	private String getJavaType(AtomicType t) {
+	private String getJavaType(AtomicType t, String name) {
 		String result;
 		if (t instanceof BooleanType)
 			result = Boolean.class.getName();
 		else if (t instanceof EnumeratedType)
 			result = String.class.getName();
+		else if (t instanceof IntegerType && "date".equals(name))
+			result = Date.class.getName();
+		else if (t instanceof IntegerType && "timestamp".equals(name))
+			result = Date.class.getName();
 		else if (t instanceof IntegerType)
 			result = Integer.class.getName();
 		else if (t instanceof RealType)
