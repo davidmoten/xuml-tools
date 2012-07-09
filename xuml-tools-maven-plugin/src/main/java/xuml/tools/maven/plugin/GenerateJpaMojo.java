@@ -78,7 +78,7 @@ public class GenerateJpaMojo extends AbstractMojo {
 	/**
 	 * Resources directory.
 	 * 
-	 * @parameter default-value="target/generated-resources"
+	 * @parameter default-value="${project.build.directory}/generated-resources"
 	 */
 	private String resourcesDirectory;
 
