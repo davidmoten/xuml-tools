@@ -6,25 +6,35 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>${project.artifactId}</name>
 	<packaging>pom</packaging>
+	<url>https://xuml-tools.ci.cloudbees.com/job/xuml-tools_site/site/index.html</url>
 	<licenses>
-	  <license>
-	    <name>The Apache Software License, Version 2.0</name>
-	    <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-	    <distribution>repo</distribution>
-	    <comments>A business-friendly OSS license</comments>
-	  </license>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+			<comments>A business-friendly OSS license</comments>
+		</license>
 	</licenses>
+	<ciManagement>
+		<system>CloudBees</system>
+		<url>https://xuml-tools.ci.cloudbees.com</url>
+	</ciManagement>
+	<issueManagement>
+		<system>GitHub</system>
+		<url>https://github.com/davidmoten/xuml-tools/issues</url>
+	</issueManagement>
+	<inceptionYear>2012</inceptionYear>
 	<developers>
-	    <developer>
-	      <id>dave</id>
-	      <name>Dave Moten</name>
-	      <url>https://github.com/davidmoten/</url>
-	      <roles>
-		<role>architect</role>
-		<role>developer</role>
-	      </roles>
-	      <timezone>+10</timezone>
-	    </developer>
+		<developer>
+			<id>dave</id>
+			<name>Dave Moten</name>
+			<url>https://github.com/davidmoten/</url>
+			<roles>
+				<role>architect</role>
+				<role>developer</role>
+			</roles>
+			<timezone>+10</timezone>
+		</developer>
 	</developers>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -65,7 +75,8 @@
 		</plugins>
 		<pluginManagement>
 			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>
