@@ -34,6 +34,9 @@ public class AbcTest {
 	public void testCreateEntityManagerFactoryAndCreateAndSignalEntities()
 			throws InterruptedException {
 
+		// Note that the classes Context and A are generated from xml using
+		// the xuml-tools-maven-plugin
+
 		// send any signals not processed from last shutdown
 		Context.sendSignalsInQueue();
 
