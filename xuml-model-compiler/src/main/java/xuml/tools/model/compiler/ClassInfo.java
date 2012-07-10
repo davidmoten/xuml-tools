@@ -688,13 +688,6 @@ public class ClassInfo extends ClassInfoBase {
 			return n.toString();
 	}
 
-	private static String toString(BigDecimal n) {
-		if (n == null)
-			return null;
-		else
-			return n.toString();
-	}
-
 	private MyTypeDefinition getTypeDefinition(EnumeratedType t) {
 		return null;
 	}
