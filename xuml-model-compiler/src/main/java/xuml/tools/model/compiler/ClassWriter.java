@@ -427,13 +427,12 @@ public class ClassWriter {
 
 	private void writeEmbeddedIdFields(PrintStream out, ClassInfo info) {
 		for (MyIdAttribute member : info.getPrimaryIdAttributeMembers()) {
-			if (member.getReferenceClass() == null)
-				out.format("        @%s(name=\"%s\")\n",
-						info.addType(Column.class), member.getColumnName());
-			else {
-				out.format(
-						"        @%s(name=\"%s\",insertable=false,updatable=false)\n",
-						info.addType(Column.class), member.getColumnName());
+			if (member.getReferenceClass() == null) {
+				writeFieldAnnotation(out, member.getColumnName(), false,
+						"        ", member.getType(), true, true);
+			} else {
+				writeFieldAnnotation(out, member.getColumnName(), false,
+						"        ", member.getType(), false, false);
 			}
 			out.format("%sprivate %s %s;\n\n", "        ",
 					info.addType(member.getType().getType()),
@@ -1164,14 +1163,25 @@ public class ClassWriter {
 	private void writeIndependentAttributeMember(PrintStream out,
 			String fieldName, String columnName, boolean isNullable,
 			String indent, MyTypeDefinition type) {
+		writeFieldAnnotation(out, columnName, isNullable, indent, type, true,
+				true);
+		out.format("%sprivate %s %s;\n\n", indent,
+				info.addType(type.getType()), fieldName);
+	}
+
+	private void writeFieldAnnotation(PrintStream out, String columnName,
+			boolean isNullable, String indent, MyTypeDefinition type,
+			boolean insertable, boolean updatable) {
 		String length;
 		if (type.getMyType().equals(
 				xuml.tools.model.compiler.ClassInfoBase.MyType.STRING))
 			length = ",length=" + type.getMaxLength();
 		else
 			length = "";
-		out.format("%s@%s(name=\"%s\",nullable=%s%s)\n", indent,
-				info.addType(Column.class), columnName, isNullable, length);
+		out.format(
+				"%s@%s(name=\"%s\",nullable=%s%s,insertable=%s,updatable=%s)\n",
+				indent, info.addType(Column.class), columnName, isNullable,
+				length, insertable, updatable);
 		if (type.getMyType().equals(
 				xuml.tools.model.compiler.ClassInfoBase.MyType.DATE))
 			out.format("%s@%s(%s.DATE)\n", indent,
@@ -1182,8 +1192,6 @@ public class ClassWriter {
 			out.format("%s@%s(%s.TIMESTAMP)\n", indent,
 					info.addType(Temporal.class),
 					info.addType(TemporalType.class));
-		out.format("%sprivate %s %s;\n\n", indent,
-				info.addType(type.getType()), fieldName);
 	}
 
 	private void writeIndependentAttributeGetterAndSetter(PrintStream out,
