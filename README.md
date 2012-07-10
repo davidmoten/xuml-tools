@@ -86,13 +86,13 @@ The java model compiler includes the following features (<img src="https://githu
 * Generated toString method for events
 * Domain and global type constraints honoured:
  * MaxLength <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
- * MinLength
+ * MinLength <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
  * Precision <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
  * LowerLimit <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
  * UpperLimit <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
- * Prefix
- * Suffix
- * ValidationPattern
+ * Prefix <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
+ * Suffix <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
+ * ValidationPattern <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
  * DefaultValue
 
 
