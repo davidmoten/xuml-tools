@@ -435,23 +435,52 @@ public class ClassInfo extends ClassInfoBase {
 			MyReferenceMember m = createMyReferenceMember(a, cls);
 			list.add(m);
 		}
-		for (Generalization g : lookups.getGeneralizations(cls)) {
-			for (Named spec : g.getSpecializedClass()) {
-				MyReferenceMember m = createMyReferenceMember(g, spec, cls);
-				// TODO enable add when ready
-				// list.add(m);
+		for (Generalization g : lookups.getGeneralizations()) {
+			for (Named specialization : g.getSpecializedClass()) {
+				if (g.getSuperclass().equals(cls.getName()))
+					list.add(createMyReferenceMember(g, specialization, cls,
+							true));
+				else if (specialization.getName().equals(cls.getName()))
+					list.add(createMyReferenceMember(g, specialization, cls,
+							false));
 			}
 		}
 		return list;
 	}
 
 	private MyReferenceMember createMyReferenceMember(Generalization g,
-			Named spec, Class cls) {
-		// return new MyReferenceMember(pThat.getViewedClass(),
-		// infoOther.getClassFullName(), toMult(pThis), toMult(pThat),
-		// pThis.getPhrase(), pThat.getPhrase(), fieldName, joins,
-		// thisFieldName, (MyManyToMany) null, inPrimaryId);
-		return null;
+			Named spec, Class cls, boolean isSuperclass) {
+		if (isSuperclass) {
+			ClassInfo infoOther = getClassInfo(spec.getName());
+			String fieldName = nameManager.toFieldName(cls.getName(),
+					spec.getName(), g.getRnum());
+			String thisFieldName = nameManager.toFieldName(spec.getName(),
+					cls.getName(), g.getRnum());
+			return new MyReferenceMember(spec.getName(),
+					infoOther.getClassFullName(), Mult.ONE, Mult.ZERO_ONE,
+					"specializes", "generalizes", fieldName, null,
+					thisFieldName, (MyManyToMany) null, false);
+		} else {
+			ClassInfo infoOther = getClassInfo(g.getSuperclass());
+			String fieldName = nameManager.toFieldName(cls.getName(),
+					g.getSuperclass(), g.getRnum());
+			String thisFieldName = nameManager.toFieldName(g.getSuperclass(),
+					cls.getName(), g.getRnum());
+			List<JoinColumn> joins = newArrayList();
+			for (MyIdAttribute member : infoOther
+					.getPrimaryIdAttributeMembers()) {
+				String attributeName = nameManager.toFieldName(
+						g.getSuperclass(), cls.getName(), g.getRnum());
+				JoinColumn jc = new JoinColumn(nameManager.toColumnName(
+						cls.getName(), attributeName), member.getColumnName());
+				System.out.println(jc);
+				joins.add(jc);
+			}
+			return new MyReferenceMember(g.getSuperclass(),
+					infoOther.getClassFullName(), Mult.ZERO_ONE, Mult.ONE,
+					"generalizes", "specializes", fieldName, joins,
+					thisFieldName, (MyManyToMany) null, false);
+		}
 	}
 
 	private MyReferenceMember createMyReferenceMember(Association a, Class cls) {

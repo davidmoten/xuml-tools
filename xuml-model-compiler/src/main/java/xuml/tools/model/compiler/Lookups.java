@@ -109,13 +109,12 @@ class Lookups {
 		return list;
 	}
 
-	public List<Generalization> getGeneralizations(Class cls) {
+	public List<Generalization> getGeneralizations() {
 		ArrayList<Generalization> list = Lists.newArrayList();
 		for (Relationship r : relationshipsByNumber.values()) {
 			if (r instanceof Generalization) {
 				Generalization g = (Generalization) r;
-				if (g.getSuperclass().equals(cls.getName()))
-					list.add(g);
+				list.add(g);
 			}
 		}
 		return list;
