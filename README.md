@@ -84,7 +84,16 @@ The java model compiler includes the following features (<img src="https://githu
 * Generated toString, equals and hashCode methods for composite ids <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
 * Generated toString method for entities
 * Generated toString method for events
-* Domain and global type constraints honoured
+* Domain and global type constraints honoured:
+ * Max Length <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
+ * Min Length
+ * Default Value
+ * LowerLimit
+ * UpperLimit
+ * Prefix
+ * Suffix
+ * Validation Pattern
+ * Precision
 
 The todo list includes:
 * Event polymorphism
