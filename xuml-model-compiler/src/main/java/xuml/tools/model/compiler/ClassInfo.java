@@ -472,7 +472,8 @@ public class ClassInfo extends ClassInfoBase {
 				String attributeName = nameManager.toFieldName(
 						g.getSuperclass(), cls.getName(), g.getRnum());
 				JoinColumn jc = new JoinColumn(nameManager.toColumnName(
-						cls.getName(), attributeName), member.getColumnName());
+						g.getSuperclass(), member.getAttributeName()),
+						member.getColumnName());
 				System.out.println(jc);
 				joins.add(jc);
 			}
