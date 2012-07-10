@@ -1,6 +1,6 @@
 package xuml.tools.model.compiler;
 
-import static xuml.tools.model.compiler.Util.upperFirst;
+import static org.apache.commons.lang.StringEscapeUtils.escapeJava;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -81,7 +82,7 @@ public class ClassWriter {
 		writeClassDeclaration(out, info);
 		writeConstructors(out, info);
 		writeEntityHelper(out, info);
-		writeIdMember(out, info);
+		writeIdMember(out, info, validationMethods);
 		writeUniqueIdMethod(out, info);
 		writeNonIdIndependentAttributeMembers(out, info, validationMethods);
 		writeStateMember(out, info);
@@ -217,7 +218,6 @@ public class ClassWriter {
 			jd(out, "If behaviour is not explicitly specified then the\n"
 					+ "behaviour factory is used to create behaviour.", "    ");
 			String behaviourTypeName = "Behaviour";
-			out.format("    @%s\n", info.addType(Transient.class));
 			out.format("    private static %s _behaviourFactory;\n\n",
 					factoryTypeName);
 
@@ -269,7 +269,6 @@ public class ClassWriter {
 	}
 
 	private void writeEntityHelper(PrintStream out, ClassInfo info) {
-		out.format("    @%s\n", info.addType(Transient.class));
 		out.format("    private static %s signaller;\n\n",
 				info.addType(Signaller.class));
 
@@ -290,7 +289,8 @@ public class ClassWriter {
 		out.format("    }\n\n");
 	}
 
-	private void writeIdMember(PrintStream out, ClassInfo info) {
+	private void writeIdMember(PrintStream out, ClassInfo info,
+			Set<String> validationMethods) {
 		jd(out, "Primary key", "    ");
 		if (!hasEmbeddedId()) {
 			out.format("    @%s\n", info.addType(Id.class));
@@ -307,7 +307,7 @@ public class ClassWriter {
 
 			writeEmbeddedIdConstructor(out, info);
 
-			writeEmbeddedIdFields(out, info);
+			writeEmbeddedIdFields(out, info, validationMethods);
 
 			writeEmbeddedIdGettersAndSetters(out, info);
 
@@ -427,7 +427,8 @@ public class ClassWriter {
 				info.getEmbeddedIdAttributeName());
 	}
 
-	private void writeEmbeddedIdFields(PrintStream out, ClassInfo info) {
+	private void writeEmbeddedIdFields(PrintStream out, ClassInfo info,
+			Set<String> validationMethods) {
 		for (MyIdAttribute member : info.getPrimaryIdAttributeMembers()) {
 			if (member.getReferenceClass() == null) {
 				writeFieldAnnotation(out, member.getColumnName(), false,
@@ -439,6 +440,8 @@ public class ClassWriter {
 			out.format("%sprivate %s %s;\n\n", "        ",
 					info.addType(member.getType().getType()),
 					member.getFieldName());
+			writeAttributeValidationMethod(out, member.getFieldName(),
+					member.getType(), info, validationMethods, true);
 		}
 	}
 
@@ -486,43 +489,89 @@ public class ClassWriter {
 	private void writeAttributeValidationMethod(PrintStream out,
 			MyIndependentAttribute attribute, ClassInfo info,
 			Set<String> validationMethods) {
+		writeAttributeValidationMethod(out, attribute.getFieldName(),
+				attribute.getType(), info, validationMethods, false);
+	}
 
-		MyType myType = attribute.getType().getMyType();
+	private void writeAttributeValidationMethod(PrintStream out,
+			String fieldName, MyTypeDefinition type, ClassInfo info,
+			Set<String> validationMethods, boolean inEmbeddedId) {
+
+		String indent;
+		if (inEmbeddedId)
+			indent = "        ";
+		else
+			indent = "    ";
+		MyType myType = type.getMyType();
 		String attributeConstantIdentifier = Util
-				.toJavaConstantIdentifier(attribute.getFieldName());
-		if (myType.equals(MyType.REAL)) {
+				.toJavaConstantIdentifier(fieldName);
+		if (myType.equals(MyType.REAL) || myType.equals(MyType.INTEGER)) {
 			out.format(
-					"    private static final %s %s_UPPER_LIMIT=new BigDecimal(\"%s\");\n",
-					info.addType(BigDecimal.class),
-					attributeConstantIdentifier, attribute.getType()
-							.getUpperLimit());
+					"%sprivate static final %s %s_UPPER_LIMIT=new BigDecimal(\"%s\");\n",
+					indent, info.addType(BigDecimal.class),
+					attributeConstantIdentifier, type.getUpperLimit());
 			out.format(
-					"    private static final %s %s_LOWER_LIMIT=new BigDecimal(\"%s\");\n\n",
-					info.addType(BigDecimal.class),
-					attributeConstantIdentifier, attribute.getType()
-							.getLowerLimit());
-
+					"%sprivate static final %s %s_LOWER_LIMIT=new BigDecimal(\"%s\");\n\n",
+					indent, info.addType(BigDecimal.class),
+					attributeConstantIdentifier, type.getLowerLimit());
 		}
-		String validationMethodName = "validate"
-				+ Util.upperFirst(attribute.getFieldName());
-		validationMethods.add(validationMethodName);
-		out.format("    private void %s() {\n", validationMethodName);
-		if (myType.equals(MyType.REAL)) {
-			out.format("        if (%s_UPPER_LIMIT.doubleValue() < %s) \n",
-					attributeConstantIdentifier, attribute.getFieldName());
+		String validationMethodName = "validate" + Util.upperFirst(fieldName);
+		if (inEmbeddedId)
+			validationMethods.add("id." + validationMethodName);
+		else
+			validationMethods.add(validationMethodName);
+		out.format("%sprivate void %s() {\n", indent, validationMethodName);
+		if (myType.equals(MyType.REAL) || myType.equals(MyType.INTEGER)) {
+			out.format("%s    if (%s_UPPER_LIMIT.doubleValue() < %s) \n",
+					indent, attributeConstantIdentifier, fieldName);
 			out.format(
-					"            throw new %s(\"upper limit of %s failed\");\n",
-					info.addType(RuntimeException.class), attribute.getType()
+					"%s        throw new %s(\"upper limit of %s failed\");\n",
+					indent, info.addType(RuntimeException.class), type
 							.getUpperLimit().toString());
-			out.format("        if (%s_LOWER_LIMIT.doubleValue() > %s) \n",
-					attributeConstantIdentifier, attribute.getFieldName());
+			out.format("%s    if (%s_LOWER_LIMIT.doubleValue() > %s)\n",
+					indent, attributeConstantIdentifier, fieldName);
 			out.format(
-					"            throw new %s(\"lower limit of %s failed\");\n",
-					info.addType(RuntimeException.class), attribute.getType()
+					"%s         throw new %s(\"lower limit of %s failed\");\n",
+					indent, info.addType(RuntimeException.class), type
 							.getLowerLimit().toString());
+		} else if (myType.equals(MyType.STRING)) {
+			if (type.getMinLength().intValue() > 0) {
+				out.format("%s    if (%s == null || %s.length() < %s)\n",
+						indent, fieldName, fieldName, type.getMinLength()
+								.toString());
+				out.format(
+						"%s        throw new %s(\"min length constraint not met\");\n",
+						indent, info.addType(RuntimeException.class));
+			}
+			if (type.getPrefix() != null) {
+				out.format(
+						"%s     if (%s == null || !%s.startsWith(\"%s\"))\n",
+						indent, fieldName, fieldName,
+						escapeJava(type.getPrefix()));
+				out.format(
+						"%s        throw new %s(\"prefix constraint not met\");\n",
+						indent, info.addType(RuntimeException.class));
+			}
+			if (type.getSuffix() != null) {
+				out.format("%s    if (%s == null || !%s.endsWith(\"%s\"))\n",
+						indent, fieldName, fieldName,
+						escapeJava(type.getSuffix()));
+				out.format(
+						"%s        throw new %s(\"suffix constraint not met\");\n",
+						indent, info.addType(RuntimeException.class));
+			}
+			if (type.getValidationPattern() != null) {
+				out.format(
+						"%s    if (%s == null || !%s.matches(\"%s\", %s))\n",
+						indent, fieldName, info.addType(Pattern.class),
+						escapeJava(type.getValidationPattern()), fieldName);
+				out.format(
+						"%s        throw new %s(\"validation pattern constraint not met\");\n",
+						indent, info.addType(RuntimeException.class));
+			}
 		}
 
-		out.format("    }\n");
+		out.format("    }\n\n");
 	}
 
 	private void writeStateMember(PrintStream out, ClassInfo info) {
@@ -820,7 +869,8 @@ public class ClassWriter {
 			// getters
 			for (MyParameter p : event.getParameters()) {
 				out.format("            %s get%s();\n\n",
-						info.addType(p.getType()), upperFirst(p.getFieldName()));
+						info.addType(p.getType()),
+						Util.upperFirst(p.getFieldName()));
 
 			}
 			out.format("        }\n\n");
@@ -877,7 +927,8 @@ public class ClassWriter {
 			// getters
 			for (MyParameter p : event.getParameters()) {
 				out.format("            public %s get%s(){\n",
-						info.addType(p.getType()), upperFirst(p.getFieldName()));
+						info.addType(p.getType()),
+						Util.upperFirst(p.getFieldName()));
 				out.format("                return %s;\n", p.getFieldName());
 				out.format("            }\n\n");
 			}
@@ -967,11 +1018,11 @@ public class ClassWriter {
 		else
 			type = info.addType(fullClassName);
 		// write getter and setter
-		out.format("    public %s get%s(){\n", type, upperFirst(fieldName));
+		out.format("    public %s get%s(){\n", type, Util.upperFirst(fieldName));
 		out.format("        return %s;\n", fieldName);
 		out.format("    }\n\n");
-		out.format("    public void set%s(%s %s){\n", upperFirst(fieldName),
-				type, fieldName);
+		out.format("    public void set%s(%s %s){\n",
+				Util.upperFirst(fieldName), type, fieldName);
 		out.format("        this.%1$s=%1$s;\n", fieldName);
 		out.format("    }\n\n");
 	}
@@ -1245,14 +1296,14 @@ public class ClassWriter {
 			out.format("    @Override\n");
 		}
 		out.format("    public %s get%s(){\n", type,
-				upperFirst(attribute.getFieldName()));
+				Util.upperFirst(attribute.getFieldName()));
 		out.format("        return %s;\n", attribute.getFieldName());
 		out.format("    }\n\n");
 
 		jd(out, "Sets " + attribute.getFieldName() + " to the given value.",
 				"    ");
 		out.format("    public void set%s(%s %s){\n",
-				upperFirst(attribute.getFieldName()), type,
+				Util.upperFirst(attribute.getFieldName()), type,
 				attribute.getFieldName());
 		out.format("        this.%1$s=%1$s;\n", attribute.getFieldName());
 		out.format("    }\n\n");

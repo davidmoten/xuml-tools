@@ -3,7 +3,6 @@ package xuml.tools.jaxb.compiler.test;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.persistence.PersistenceException;
 import javax.persistence.RollbackException;
 
 import org.hibernate.exception.ConstraintViolationException;
@@ -31,7 +30,7 @@ public class SecondaryIdentifiersTest {
 		emf.close();
 	}
 
-	@Test(expected = PersistenceException.class)
+	@Test(expected = RuntimeException.class)
 	public void testCreateAWithNullSecondaryIdentifiersShouldFail() {
 
 		EntityManager em = emf.createEntityManager();
