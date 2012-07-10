@@ -88,8 +88,8 @@ The java model compiler includes the following features (<img src="https://githu
  * MaxLength <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
  * MinLength
  * Precision <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
- * LowerLimit
- * UpperLimit
+ * LowerLimit <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
+ * UpperLimit <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
  * Prefix
  * Suffix
  * ValidationPattern

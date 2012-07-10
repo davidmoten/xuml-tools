@@ -5,6 +5,7 @@ import static xuml.tools.model.compiler.Util.upperFirst;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +47,7 @@ import xuml.tools.model.compiler.ClassInfoBase.MyParameter;
 import xuml.tools.model.compiler.ClassInfoBase.MyReferenceMember;
 import xuml.tools.model.compiler.ClassInfoBase.MySubclassRole;
 import xuml.tools.model.compiler.ClassInfoBase.MyTransition;
+import xuml.tools.model.compiler.ClassInfoBase.MyType;
 import xuml.tools.model.compiler.ClassInfoBase.MyTypeDefinition;
 import xuml.tools.model.compiler.runtime.CreationEvent;
 import xuml.tools.model.compiler.runtime.EntityHelper;
@@ -71,7 +73,7 @@ public class ClassWriter {
 	}
 
 	public String generate() {
-		List<String> validationMethods = Lists.newArrayList();
+		Set<String> validationMethods = Sets.newTreeSet();
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		PrintStream out = new PrintStream(bytes);
 		writeClassJavadoc(out, info);
@@ -81,7 +83,7 @@ public class ClassWriter {
 		writeEntityHelper(out, info);
 		writeIdMember(out, info);
 		writeUniqueIdMethod(out, info);
-		writeNonIdIndependentAttributeMembers(out, info);
+		writeNonIdIndependentAttributeMembers(out, info, validationMethods);
 		writeStateMember(out, info);
 		writeReferenceMembers(out, info, validationMethods);
 		writeSuperclassValidationCheck(out, info);
@@ -472,11 +474,55 @@ public class ClassWriter {
 	}
 
 	private void writeNonIdIndependentAttributeMembers(PrintStream out,
-			ClassInfo info) {
+			ClassInfo info, Set<String> validationMethods) {
 		for (MyIndependentAttribute attribute : info
 				.getNonIdIndependentAttributeMembers()) {
 			writeIndependentAttributeMember(out, attribute, "    ");
+			writeAttributeValidationMethod(out, attribute, info,
+					validationMethods);
 		}
+	}
+
+	private void writeAttributeValidationMethod(PrintStream out,
+			MyIndependentAttribute attribute, ClassInfo info,
+			Set<String> validationMethods) {
+
+		MyType myType = attribute.getType().getMyType();
+		String attributeConstantIdentifier = Util
+				.toJavaConstantIdentifier(attribute.getFieldName());
+		if (myType.equals(MyType.REAL)) {
+			out.format(
+					"    private static final %s %s_UPPER_LIMIT=new BigDecimal(\"%s\");\n",
+					info.addType(BigDecimal.class),
+					attributeConstantIdentifier, attribute.getType()
+							.getUpperLimit());
+			out.format(
+					"    private static final %s %s_LOWER_LIMIT=new BigDecimal(\"%s\");\n\n",
+					info.addType(BigDecimal.class),
+					attributeConstantIdentifier, attribute.getType()
+							.getLowerLimit());
+
+		}
+		String validationMethodName = "validate"
+				+ Util.upperFirst(attribute.getFieldName());
+		validationMethods.add(validationMethodName);
+		out.format("    private void %s() {\n", validationMethodName);
+		if (myType.equals(MyType.REAL)) {
+			out.format("        if (%s_UPPER_LIMIT.doubleValue() < %s) \n",
+					attributeConstantIdentifier, attribute.getFieldName());
+			out.format(
+					"            throw new %s(\"upper limit of %s failed\");\n",
+					info.addType(RuntimeException.class), attribute.getType()
+							.getUpperLimit().toString());
+			out.format("        if (%s_LOWER_LIMIT.doubleValue() > %s) \n",
+					attributeConstantIdentifier, attribute.getFieldName());
+			out.format(
+					"            throw new %s(\"lower limit of %s failed\");\n",
+					info.addType(RuntimeException.class), attribute.getType()
+							.getLowerLimit().toString());
+		}
+
+		out.format("    }\n");
 	}
 
 	private void writeStateMember(PrintStream out, ClassInfo info) {
@@ -490,7 +536,7 @@ public class ClassWriter {
 	}
 
 	private void writeReferenceMembers(PrintStream out, ClassInfo info,
-			List<String> validationMethods) {
+			Set<String> validationMethods) {
 		for (MyReferenceMember ref : info.getReferenceMembers()) {
 			jd(out, ref.getThisMult() + " " + info.getJavaClassSimpleName()
 					+ " " + ref.getThatVerbClause() + " " + ref.getThatMult()
@@ -660,7 +706,7 @@ public class ClassWriter {
 	}
 
 	private void writeValidationNotEmpty(PrintStream out, String fieldName,
-			List<String> validationMethods) {
+			Set<String> validationMethods) {
 		validationMethods.add("_validate" + Util.upperFirst(fieldName));
 		out.format("    private void _validate%s() {\n",
 				Util.upperFirst(fieldName));
@@ -673,7 +719,7 @@ public class ClassWriter {
 	}
 
 	private void writeValidationNotNull(PrintStream out, String fieldName,
-			List<String> validationMethods) {
+			Set<String> validationMethods) {
 		validationMethods.add("_validate" + Util.upperFirst(fieldName));
 		out.format("    private void _validate%s() {\n",
 				Util.upperFirst(fieldName));
@@ -842,7 +888,7 @@ public class ClassWriter {
 	}
 
 	private void writePreUpdateCheck(PrintStream out, ClassInfo info,
-			List<String> validationMethods) {
+			Set<String> validationMethods) {
 		out.format("    @%s\n", info.addType(Transient.class));
 		out.format("    @%s\n", info.addType(PreUpdate.class));
 		out.format("    void validateBeforeUpdate(){\n");
@@ -1143,23 +1189,6 @@ public class ClassWriter {
 				attribute.getType());
 	}
 
-	public static class MyType {
-		private String javaClassFullName;
-
-		public MyType(String javaClassFullName) {
-			super();
-			this.javaClassFullName = javaClassFullName;
-		}
-
-		public String getJavaClassFullName() {
-			return javaClassFullName;
-		}
-
-		public void setJavaClassFullName(String javaClassFullName) {
-			this.javaClassFullName = javaClassFullName;
-		}
-	}
-
 	private void writeIndependentAttributeMember(PrintStream out,
 			String fieldName, String columnName, boolean isNullable,
 			String indent, MyTypeDefinition type) {
@@ -1173,8 +1202,7 @@ public class ClassWriter {
 			boolean isNullable, String indent, MyTypeDefinition type,
 			boolean insertable, boolean updatable) {
 		final String length;
-		if (type.getMyType().equals(
-				xuml.tools.model.compiler.ClassInfoBase.MyType.STRING))
+		if (type.getMyType().equals(MyType.STRING))
 			length = ",length=" + type.getMaxLength();
 		else
 			length = "";
@@ -1189,8 +1217,7 @@ public class ClassWriter {
 		else
 			updatableParameter = "";
 		final String precision;
-		if (type.getMyType().equals(
-				xuml.tools.model.compiler.ClassInfoBase.MyType.REAL))
+		if (type.getMyType().equals(MyType.REAL))
 			precision = ",precision=" + type.getPrecision();
 		else
 			precision = "";
@@ -1198,13 +1225,11 @@ public class ClassWriter {
 		out.format("%s@%s(name=\"%s\",nullable=%s%s%s%s%s)\n", indent,
 				info.addType(Column.class), columnName, isNullable, length,
 				insertableParameter, updatableParameter, precision);
-		if (type.getMyType().equals(
-				xuml.tools.model.compiler.ClassInfoBase.MyType.DATE))
+		if (type.getMyType().equals(MyType.DATE))
 			out.format("%s@%s(%s.DATE)\n", indent,
 					info.addType(Temporal.class),
 					info.addType(TemporalType.class));
-		else if (type.getMyType().equals(
-				xuml.tools.model.compiler.ClassInfoBase.MyType.TIMESTAMP))
+		else if (type.getMyType().equals(MyType.TIMESTAMP))
 			out.format("%s@%s(%s.TIMESTAMP)\n", indent,
 					info.addType(Temporal.class),
 					info.addType(TemporalType.class));
