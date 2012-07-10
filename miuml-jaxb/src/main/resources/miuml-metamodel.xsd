@@ -275,6 +275,11 @@
 							<documentation>R500</documentation>
 						</annotation>
 					</element>
+					<element name="Extension" type="t:Extension" minOccurs="0">
+						<annotation>
+							<documentation>Extension point for miuml tools</documentation>
+						</annotation>
+					</element>
 				</sequence>
 				<attribute name="Name" type="t:Name" use="required" />
 				<attribute name="Cnum" type="t:Cnum" use="optional">
@@ -359,9 +364,15 @@
 					<documentation>R22</documentation>
 				</annotation>
 			</element>
+			<element name="Extension" type="t:Extension" minOccurs="0">
+				<annotation>
+					<documentation>Extension point for miuml tools</documentation>
+				</annotation>
+			</element>
 		</sequence>
 		<attribute name="Name" type="t:Name" use="required" />
 	</complexType>
+
 
 	<element name="NativeAttribute" substitutionGroup="t:Attribute"
 		type="t:NativeAttribute" abstract="true" />
@@ -1207,6 +1218,12 @@
 
 	<complexType name="Named">
 		<attribute name="Name" type="t:Name" />
+	</complexType>
+
+	<complexType name="Extension">
+		<sequence>
+			<any processContents="strict" />
+		</sequence>
 	</complexType>
 
 	<!-- Simple types -->
