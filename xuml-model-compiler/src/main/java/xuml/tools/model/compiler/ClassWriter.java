@@ -1178,10 +1178,20 @@ public class ClassWriter {
 			length = ",length=" + type.getMaxLength();
 		else
 			length = "";
-		out.format(
-				"%s@%s(name=\"%s\",nullable=%s%s,insertable=%s,updatable=%s)\n",
-				indent, info.addType(Column.class), columnName, isNullable,
-				length, insertable, updatable);
+		String insertableParameter;
+		if (!insertable)
+			insertableParameter = ",insertable=false";
+		else
+			insertableParameter = "";
+		String updatableParameter;
+		if (!updatable)
+			updatableParameter = ",updatable=false";
+		else
+			updatableParameter = "";
+
+		out.format("%s@%s(name=\"%s\",nullable=%s%s%s%s)\n", indent,
+				info.addType(Column.class), columnName, isNullable, length,
+				insertableParameter, updatableParameter);
 		if (type.getMyType().equals(
 				xuml.tools.model.compiler.ClassInfoBase.MyType.DATE))
 			out.format("%s@%s(%s.DATE)\n", indent,
