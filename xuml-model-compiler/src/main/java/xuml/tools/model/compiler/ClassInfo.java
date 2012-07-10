@@ -469,10 +469,12 @@ public class ClassInfo extends ClassInfoBase {
 			List<JoinColumn> joins = newArrayList();
 			for (MyIdAttribute member : infoOther
 					.getPrimaryIdAttributeMembers()) {
-				String attributeName = nameManager.toFieldName(
-						g.getSuperclass(), cls.getName(), g.getRnum());
+				// TODO handle when matching attribute not found, use some
+				// default, see schema
+				String attributeName = getMatchingAttributeName(g.getRnum(),
+						member.getAttributeName());
 				JoinColumn jc = new JoinColumn(nameManager.toColumnName(
-						g.getSuperclass(), member.getAttributeName()),
+						g.getSuperclass(), attributeName),
 						member.getColumnName());
 				System.out.println(jc);
 				joins.add(jc);
