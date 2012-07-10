@@ -1172,26 +1172,32 @@ public class ClassWriter {
 	private void writeFieldAnnotation(PrintStream out, String columnName,
 			boolean isNullable, String indent, MyTypeDefinition type,
 			boolean insertable, boolean updatable) {
-		String length;
+		final String length;
 		if (type.getMyType().equals(
 				xuml.tools.model.compiler.ClassInfoBase.MyType.STRING))
 			length = ",length=" + type.getMaxLength();
 		else
 			length = "";
-		String insertableParameter;
+		final String insertableParameter;
 		if (!insertable)
 			insertableParameter = ",insertable=false";
 		else
 			insertableParameter = "";
-		String updatableParameter;
+		final String updatableParameter;
 		if (!updatable)
 			updatableParameter = ",updatable=false";
 		else
 			updatableParameter = "";
+		final String precision;
+		if (type.getMyType().equals(
+				xuml.tools.model.compiler.ClassInfoBase.MyType.REAL))
+			precision = ",precision=" + type.getPrecision();
+		else
+			precision = "";
 
-		out.format("%s@%s(name=\"%s\",nullable=%s%s%s%s)\n", indent,
+		out.format("%s@%s(name=\"%s\",nullable=%s%s%s%s%s)\n", indent,
 				info.addType(Column.class), columnName, isNullable, length,
-				insertableParameter, updatableParameter);
+				insertableParameter, updatableParameter, precision);
 		if (type.getMyType().equals(
 				xuml.tools.model.compiler.ClassInfoBase.MyType.DATE))
 			out.format("%s@%s(%s.DATE)\n", indent,
@@ -1202,6 +1208,7 @@ public class ClassWriter {
 			out.format("%s@%s(%s.TIMESTAMP)\n", indent,
 					info.addType(Temporal.class),
 					info.addType(TemporalType.class));
+
 	}
 
 	private void writeIndependentAttributeGetterAndSetter(PrintStream out,
