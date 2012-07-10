@@ -766,9 +766,7 @@
 	</ModeledDomain>
 
 	<ModeledDomain Name="all-types">
-
 		<Subsystem Name="all-types" Floor="261" Ceiling="280">
-
 			<NonSpecializedClass Name="A">
 				<IndependentAttribute Name="A one" Type="string">
 					<Identifier Number="1" />
@@ -780,6 +778,37 @@
 				<IndependentAttribute Name="five" Type="timestamp" />
 				<IndependentAttribute Name="six" Type="arbitraryId" />
 			</NonSpecializedClass>
+		</Subsystem>
+	</ModeledDomain>
+
+	<ModeledDomain Name="specialization">
+		<Subsystem Name="specialization" Floor="281" Ceiling="300">
+			<SpecializedClass Name="A">
+				<IndependentAttribute Name="one" Type="string">
+					<Identifier Number="1" />
+				</IndependentAttribute>
+				<IndependentAttribute Name="two" Type="integer" />
+			</SpecializedClass>
+
+			<NonSpecializedClass Name="B">
+				<IndependentAttribute Name="name" Type="string">
+					<Identifier Number="1" />
+				</IndependentAttribute>
+				<IndependentAttribute Name="number" Type="integer" />
+			</NonSpecializedClass>
+
+			<NonSpecializedClass Name="C">
+				<IndependentAttribute Name="category" Type="string">
+					<Identifier Number="1" />
+				</IndependentAttribute>
+				<IndependentAttribute Name="count" Type="integer" />
+			</NonSpecializedClass>
+
+			<Generalization Superclass="A" Rnum="1">
+				<SpecializedClass Name="B" />
+				<SpecializedClass Name="C" />
+			</Generalization>
+
 		</Subsystem>
 	</ModeledDomain>
 

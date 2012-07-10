@@ -27,6 +27,7 @@ import miuml.jaxb.Generalization;
 import miuml.jaxb.IdentifierAttribute;
 import miuml.jaxb.IndependentAttribute;
 import miuml.jaxb.IntegerType;
+import miuml.jaxb.Named;
 import miuml.jaxb.NativeAttribute;
 import miuml.jaxb.Perspective;
 import miuml.jaxb.RealType;
@@ -432,10 +433,25 @@ public class ClassInfo extends ClassInfoBase {
 		List<Association> associations = lookups.getAssociations(cls);
 		for (Association a : associations) {
 			MyReferenceMember m = createMyReferenceMember(a, cls);
-			System.out.println("created " + m);
 			list.add(m);
 		}
+		for (Generalization g : lookups.getGeneralizations(cls)) {
+			for (Named spec : g.getSpecializedClass()) {
+				MyReferenceMember m = createMyReferenceMember(g, spec, cls);
+				// TODO enable add when ready
+				// list.add(m);
+			}
+		}
 		return list;
+	}
+
+	private MyReferenceMember createMyReferenceMember(Generalization g,
+			Named spec, Class cls) {
+		// return new MyReferenceMember(pThat.getViewedClass(),
+		// infoOther.getClassFullName(), toMult(pThis), toMult(pThat),
+		// pThis.getPhrase(), pThat.getPhrase(), fieldName, joins,
+		// thisFieldName, (MyManyToMany) null, inPrimaryId);
+		return null;
 	}
 
 	private MyReferenceMember createMyReferenceMember(Association a, Class cls) {

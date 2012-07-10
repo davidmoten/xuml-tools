@@ -173,6 +173,18 @@
 							<packageName>all_types</packageName>
 						</configuration>
 					</execution>
+					<execution>
+						<id>specialization</id>
+						<goals>
+							<goal>generate-jpa</goal>
+						</goals>
+						<configuration>
+							<domainsXml>/samples.xml</domainsXml>
+							<domain>specialization</domain>
+							<schema>specialization</schema>
+							<packageName>specialization</packageName>
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
 			<plugin>
