@@ -1164,8 +1164,14 @@ public class ClassWriter {
 	private void writeIndependentAttributeMember(PrintStream out,
 			String fieldName, String columnName, boolean isNullable,
 			String indent, MyTypeDefinition type) {
-		out.format("%s@%s(name=\"%s\",nullable=%s)\n", indent,
-				info.addType(Column.class), columnName, isNullable);
+		String length;
+		if (type.getMyType().equals(
+				xuml.tools.model.compiler.ClassInfoBase.MyType.STRING))
+			length = ",length=" + type.getMaxLength();
+		else
+			length = "";
+		out.format("%s@%s(name=\"%s\",nullable=%s%s)\n", indent,
+				info.addType(Column.class), columnName, isNullable, length);
 		if (type.getMyType().equals(
 				xuml.tools.model.compiler.ClassInfoBase.MyType.DATE))
 			out.format("%s@%s(%s.DATE)\n", indent,
