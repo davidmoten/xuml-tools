@@ -273,12 +273,14 @@ public class ClassWriter {
 			idClassName = info.getEmbeddedIdSimpleClassName();
 
 		// constructor using Id
+		jd(out, "Constructor using id.", "    ");
 		out.format("    public %s(%s id) {\n", info.getJavaClassSimpleName(),
 				idClassName);
 		out.format("        this.id = id;\n");
 		out.format("    }\n\n");
 
 		// static creator using Id
+		jd(out, "Static creator method using id.", "    ");
 		out.format("    public static %s create(%s id) {\n",
 				info.getJavaClassSimpleName(), idClassName);
 		out.format("        return new %s(id);\n",
@@ -292,17 +294,24 @@ public class ClassWriter {
 	}
 
 	private void writeEntityHelper(PrintStream out, ClassInfo info) {
+		jd(out,
+				"The signaller used by the current Context. It will\nget injected into the EntityHelper.",
+				"    ");
 		out.format("    private static %s signaller;\n\n",
 				info.addType(Signaller.class));
 
+		jd(out, "Sets the Signaller to be used by the EntityHelper.", "    ");
 		out.format("    static void setSignaller_(%s sig) {\n",
 				info.addType(Signaller.class));
 		out.format("        signaller = sig;\n");
 		out.format("    }\n\n");
 
+		jd(out, "Helper for this class.", "    ");
 		out.format("    @%s\n", info.addType(Transient.class));
 		out.format("    private %s _helper;\n\n",
 				info.addType(EntityHelper.class));
+
+		jd(out, "Returns the Helper for this instance.", "    ");
 		out.format("    public synchronized %s helper() {\n",
 				info.addType(EntityHelper.class));
 		out.format("        if (_helper==null)\n");
@@ -314,8 +323,8 @@ public class ClassWriter {
 
 	private void writeIdMember(PrintStream out, ClassInfo info,
 			Set<String> validationMethods) {
-		jd(out, "Primary key", "    ");
 		if (!hasEmbeddedId()) {
+			jd(out, "Primary identifier", "    ");
 			out.format("    @%s\n", info.addType(Id.class));
 			MyIdAttribute attribute = info.getPrimaryIdAttributeMembers()
 					.get(0);
@@ -427,12 +436,17 @@ public class ClassWriter {
 	private void writeEmbeddedIdGettersAndSetters(PrintStream out,
 			ClassInfo info) {
 		for (MyIdAttribute member : info.getPrimaryIdAttributeMembers()) {
+			jd(out,
+					"Returns the value of the attribute '"
+							+ member.getAttributeName() + "'", "        ");
 			out.format("%spublic %s get%s(){\n", "        ",
 					info.addType(member.getType().getType()),
 					Util.upperFirst(member.getFieldName()));
 			out.format("%sreturn %s;\n", "            ", member.getFieldName());
 			out.format("%s}\n\n", "        ");
 
+			jd(out, "Sets the value of attribute '" + member.getAttributeName()
+					+ "'", "        ");
 			out.format("%spublic void set%s(%s %s){\n", "        ",
 					Util.upperFirst(member.getFieldName()),
 					info.addType(member.getType().getType()),
@@ -444,6 +458,7 @@ public class ClassWriter {
 	}
 
 	private void writeEmbeddedIdField(PrintStream out, ClassInfo info) {
+		jd(out, "Id field.", "    ");
 		out.format("    @%s\n", info.addType(EmbeddedId.class));
 		out.format("    private %s %s;\n\n",
 				info.getEmbeddedIdSimpleClassName(),
@@ -453,6 +468,8 @@ public class ClassWriter {
 	private void writeEmbeddedIdFields(PrintStream out, ClassInfo info,
 			Set<String> validationMethods) {
 		for (MyIdAttribute member : info.getPrimaryIdAttributeMembers()) {
+			jd(out, "Field for attribute '" + member.getAttributeName() + "'.",
+					"        ");
 			if (member.getReferenceClass() == null) {
 				writeFieldAnnotation(out, member.getColumnName(), false,
 						"        ", member.getType(), true, true);
@@ -470,6 +487,7 @@ public class ClassWriter {
 
 	private void writeEmbeddedIdConstructor(PrintStream out, ClassInfo info) {
 		// write constructor
+		jd(out, "Primary identifier constructor.", "        ");
 		out.format("        public %s(", info.getEmbeddedIdSimpleClassName());
 		boolean first = true;
 		for (MyIdAttribute member : info.getPrimaryIdAttributeMembers()) {
@@ -490,6 +508,9 @@ public class ClassWriter {
 	}
 
 	private void writeUniqueIdMethod(PrintStream out, ClassInfo info) {
+		jd(out,
+				"Returns a unique id for this instance as a String. \nUsed for synchronizing access to entities.",
+				"    ");
 		out.format("    @%s\n", info.addType(Transient.class));
 		out.format("    @%s\n", info.addType(Override.class));
 		out.format("    public String uniqueId(){\n");
@@ -543,6 +564,7 @@ public class ClassWriter {
 			validationMethods.add("id." + validationMethodName);
 		else
 			validationMethods.add(validationMethodName);
+		jd(out, "Validates " + fieldName + " against type constraints.", indent);
 		out.format("%sprivate void %s() {\n", indent, validationMethodName);
 		Class<? extends RuntimeException> ex = ValidationException.class;
 		if (myType.equals(MyType.REAL) || myType.equals(MyType.INTEGER)) {
@@ -821,6 +843,7 @@ public class ClassWriter {
 	}
 
 	private void writeIdGetterAndSetter(PrintStream out, ClassInfo info) {
+		jd(out, "Returns the identifier for this entity.", "    ");
 		out.format("    public %s getId() {\n", info.addType(getIdType(info)));
 		out.format("        return id;\n");
 		out.format("    }\n\n");
@@ -887,6 +910,8 @@ public class ClassWriter {
 		}
 
 		for (MyEvent event : stateEvent.values()) {
+			jd(out, "Event signature for the state '" + event.getStateName()
+					+ "'", "        ");
 			out.format("        public static interface %s {\n\n",
 					event.getStateSignatureInterfaceSimpleName());
 			// getters
@@ -913,6 +938,9 @@ public class ClassWriter {
 						+ info.getJavaClassSimpleName() + ">";
 			} else
 				creationEventImplements = "";
+			jd(out, "Event implementation for event '" + event.getName() + "'",
+					"        ");
+
 			out.format("        @%s(\"serial\")\n",
 					info.addType(SuppressWarnings.class));
 			out.format(
@@ -945,6 +973,7 @@ public class ClassWriter {
 			constructor.append(constructorBody);
 			constructor.append("            }\n");
 			out.println();
+			jd(out, "Constructor.", "            ");
 			out.println(constructor);
 
 			// getters
@@ -963,6 +992,8 @@ public class ClassWriter {
 
 	private void writePreUpdateCheck(PrintStream out, ClassInfo info,
 			Set<String> validationMethods) {
+		jd(out, "Calls all validation methods just before updating database.",
+				"    ");
 		out.format("    @%s\n", info.addType(Transient.class));
 		out.format("    @%s\n", info.addType(PreUpdate.class));
 		out.format("    void validateBeforeUpdate(){\n");
@@ -971,6 +1002,10 @@ public class ClassWriter {
 		out.format("    }\n\n");
 		out.format("    @%s\n", info.addType(Transient.class));
 		out.format("    @%s\n", info.addType(PrePersist.class));
+
+		jd(out,
+				"Calls all validation methods just before first persist of this entity.",
+				"    ");
 		out.format("    void validateBeforePersist(){\n");
 		for (String methodName : validationMethods)
 			out.format("        %s();\n", methodName);
@@ -1041,9 +1076,11 @@ public class ClassWriter {
 		else
 			type = info.addType(fullClassName);
 		// write getter and setter
+		jd(out, "Getter.", "    ");
 		out.format("    public %s get%s(){\n", type, Util.upperFirst(fieldName));
 		out.format("        return %s;\n", fieldName);
 		out.format("    }\n\n");
+		jd(out, "Setter.", "    ");
 		out.format("    public void set%s(%s %s){\n",
 				Util.upperFirst(fieldName), type, fieldName);
 		out.format("        this.%1$s=%1$s;\n", fieldName);
@@ -1062,7 +1099,9 @@ public class ClassWriter {
 	private void writeEventCallMethods(PrintStream out, ClassInfo info) {
 
 		// add event call methods
-
+		jd(out,
+				"Asychronously queues the given signal against this entity for processing.",
+				"    ");
 		out.format("    @%s\n", info.addType(Transient.class));
 		out.format("    @%s\n", info.addType(Override.class));
 		out.format("    public %s signal(%s<%s> event){\n",
@@ -1074,6 +1113,11 @@ public class ClassWriter {
 			out.format("        //no behaviour for this class\n");
 		out.format("        return this;\n");
 		out.format("    }\n\n");
+		jd(out, "Synchronously runs the on entry procedure associated\n"
+				+ "with this event and also any signals to self that are\n"
+				+ "made during the procedure. This method would not\n"
+				+ "be called directly except in a unit testing scenario\n"
+				+ "perhaps. Call signal method instead.", "    ");
 		out.format("    @%s\n", info.addType(Transient.class));
 		out.format("    @%s\n", info.addType(Override.class));
 		out.format("    public %s event(%s<%s> event){\n\n",
