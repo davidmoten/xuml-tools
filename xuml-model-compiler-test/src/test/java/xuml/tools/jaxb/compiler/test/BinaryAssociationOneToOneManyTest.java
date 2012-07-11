@@ -16,7 +16,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import xuml.tools.model.compiler.runtime.RelationshipNotEstablished;
+import xuml.tools.model.compiler.runtime.RelationshipNotEstablishedException;
 import xuml.tools.util.database.DerbyUtil;
 
 public class BinaryAssociationOneToOneManyTest {
@@ -35,7 +35,7 @@ public class BinaryAssociationOneToOneManyTest {
 		Context.stop();
 	}
 
-	@Test(expected = RelationshipNotEstablished.class)
+	@Test(expected = RelationshipNotEstablishedException.class)
 	public void testCreateAWithoutB() {
 
 		EntityManager em = emf.createEntityManager();
@@ -45,7 +45,7 @@ public class BinaryAssociationOneToOneManyTest {
 		em.close();
 	}
 
-	@Test(expected = RelationshipNotEstablished.class)
+	@Test(expected = RelationshipNotEstablishedException.class)
 	public void testCannotCreateBWithoutA() {
 
 		EntityManager em = emf.createEntityManager();

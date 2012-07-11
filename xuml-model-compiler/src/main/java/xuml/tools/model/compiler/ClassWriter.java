@@ -1,7 +1,5 @@
 package xuml.tools.model.compiler;
 
-import static org.apache.commons.lang.StringEscapeUtils.escapeJava;
-
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.io.Serializable;
@@ -40,6 +38,8 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
+import org.apache.commons.lang.StringEscapeUtils;
+
 import xuml.tools.model.compiler.ClassInfoBase.Mult;
 import xuml.tools.model.compiler.ClassInfoBase.MyEvent;
 import xuml.tools.model.compiler.ClassInfoBase.MyIdAttribute;
@@ -54,8 +54,10 @@ import xuml.tools.model.compiler.ClassInfoBase.MyTypeDefinition;
 import xuml.tools.model.compiler.runtime.CreationEvent;
 import xuml.tools.model.compiler.runtime.EntityHelper;
 import xuml.tools.model.compiler.runtime.Event;
-import xuml.tools.model.compiler.runtime.RelationshipNotEstablished;
+import xuml.tools.model.compiler.runtime.RelationshipNotEstablishedException;
 import xuml.tools.model.compiler.runtime.Signaller;
+import xuml.tools.model.compiler.runtime.TooManySpecializationsException;
+import xuml.tools.model.compiler.runtime.ValidationException;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
@@ -127,8 +129,14 @@ public class ClassWriter {
 					out.format("        if (%s != null)\n", fieldName);
 					out.format("            count++;\n");
 				}
+				out.format("        if (count == 0)\n");
+				out.format(
+						"            throw new %s(\"wrong number of specializations = \" + count);\n",
+						info.addType(RelationshipNotEstablishedException.class));
 				out.format("        if (count != 1)\n");
-				out.format("            throw new RuntimeException(\"wrong number of specializations = \" + count);\n");
+				out.format(
+						"            throw new %s(\"wrong number of specializations = \" + count);\n",
+						info.addType(TooManySpecializationsException.class));
 				out.format("        }\n\n");
 				validationMethods.add(methodName);
 			}
@@ -536,19 +544,18 @@ public class ClassWriter {
 		else
 			validationMethods.add(validationMethodName);
 		out.format("%sprivate void %s() {\n", indent, validationMethodName);
+		Class<? extends RuntimeException> ex = ValidationException.class;
 		if (myType.equals(MyType.REAL) || myType.equals(MyType.INTEGER)) {
 			out.format("%s    if (%s_UPPER_LIMIT.doubleValue() < %s) \n",
 					indent, attributeConstantIdentifier, fieldName);
 			out.format(
 					"%s        throw new %s(\"upper limit of %s failed\");\n",
-					indent, info.addType(RuntimeException.class), type
-							.getUpperLimit().toString());
+					indent, info.addType(ex), type.getUpperLimit().toString());
 			out.format("%s    if (%s_LOWER_LIMIT.doubleValue() > %s)\n",
 					indent, attributeConstantIdentifier, fieldName);
 			out.format(
 					"%s         throw new %s(\"lower limit of %s failed\");\n",
-					indent, info.addType(RuntimeException.class), type
-							.getLowerLimit().toString());
+					indent, info.addType(ex), type.getLowerLimit().toString());
 		} else if (myType.equals(MyType.STRING)) {
 			if (type.getMinLength().intValue() > 0) {
 				out.format("%s    if (%s == null || %s.length() < %s)\n",
@@ -556,33 +563,34 @@ public class ClassWriter {
 								.toString());
 				out.format(
 						"%s        throw new %s(\"min length constraint not met\");\n",
-						indent, info.addType(RuntimeException.class));
+						indent, info.addType(ex));
 			}
 			if (type.getPrefix() != null) {
 				out.format(
 						"%s     if (%s == null || !%s.startsWith(\"%s\"))\n",
 						indent, fieldName, fieldName,
-						escapeJava(type.getPrefix()));
+						StringEscapeUtils.escapeJava(type.getPrefix()));
 				out.format(
 						"%s        throw new %s(\"prefix constraint not met\");\n",
-						indent, info.addType(RuntimeException.class));
+						indent, info.addType(ex));
 			}
 			if (type.getSuffix() != null) {
 				out.format("%s    if (%s == null || !%s.endsWith(\"%s\"))\n",
 						indent, fieldName, fieldName,
-						escapeJava(type.getSuffix()));
+						StringEscapeUtils.escapeJava(type.getSuffix()));
 				out.format(
 						"%s        throw new %s(\"suffix constraint not met\");\n",
-						indent, info.addType(RuntimeException.class));
+						indent, info.addType(ex));
 			}
 			if (type.getValidationPattern() != null) {
 				out.format(
 						"%s    if (%s == null || !%s.matches(\"%s\", %s))\n",
 						indent, fieldName, info.addType(Pattern.class),
-						escapeJava(type.getValidationPattern()), fieldName);
+						StringEscapeUtils.escapeJava(type
+								.getValidationPattern()), fieldName);
 				out.format(
 						"%s        throw new %s(\"validation pattern constraint not met\");\n",
-						indent, info.addType(RuntimeException.class));
+						indent, info.addType(ex));
 			}
 		}
 
@@ -777,7 +785,7 @@ public class ClassWriter {
 		out.format("        if (%s.isEmpty())\n", fieldName);
 		out.format(
 				"            throw new %s(\"%s not established and is mandatory\");\n",
-				info.addType(RelationshipNotEstablished.class), "?");
+				info.addType(RelationshipNotEstablishedException.class), "?");
 		out.format("    }\n\n");
 
 	}
@@ -790,7 +798,7 @@ public class ClassWriter {
 		out.format("        if (%s == null)\n", fieldName);
 		out.format(
 				"            throw new %s(\"%s not established and is mandatory\");\n",
-				info.addType(RelationshipNotEstablished.class), "?");
+				info.addType(RelationshipNotEstablishedException.class), "?");
 		out.format("    }\n\n");
 	}
 
