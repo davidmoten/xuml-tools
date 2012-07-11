@@ -81,7 +81,7 @@
 				<IndependentAttribute Name="Copyright" Type="Year" />
 				<IndependentAttribute Name="Unit Price" Type="Money" />
 				<IndependentAttribute Name="Description" Type="string" />
-				<IndependentAttribute Name="Website" Type="WebsiteURL" />
+				<IndependentAttribute Name="Website" Type="Website URL" />
 			</SpecializedClass>
 
 			<SpecializedClass Name="Special Order Product"
@@ -113,16 +113,16 @@
 
 			<NonSpecializedClass Name="Publisher">
 				<IndependentAttribute Name="Group code"
-					Type="ISBNGroupIdentifier">
+					Type="ISBN Group Identifier">
 					<Identifier Number="1" />
 				</IndependentAttribute>
 				<IndependentAttribute Name="Publisher code"
-					Type="ISBNPublisherPrefix">
+					Type="ISBN Publisher Prefix">
 					<Identifier Number="1" />
 				</IndependentAttribute>
 				<IndependentAttribute Name="Name" Type="string" />
 				<IndependentAttribute Name="Address" Type="MailingAddress" />
-				<IndependentAttribute Name="Website" Type="WebsiteURL" />
+				<IndependentAttribute Name="Website" Type="Website URL" />
 			</NonSpecializedClass>
 
 			<Generalization Rnum="12" Superclass="Product">
@@ -789,10 +789,12 @@
 				</IndependentAttribute>
 				<IndependentAttribute Name="two" Type="integer" />
 				<ReferentialAttribute Name="B name">
-					<SpecializationReference Relationship="1" Attribute="name"/>
+					<SpecializationReference Relationship="1"
+						Attribute="name" />
 				</ReferentialAttribute>
 				<ReferentialAttribute Name="C name">
-					<SpecializationReference Relationship="1" Attribute="category"/>
+					<SpecializationReference Relationship="1"
+						Attribute="category" />
 				</ReferentialAttribute>
 			</SpecializedClass>
 
@@ -802,7 +804,8 @@
 				</IndependentAttribute>
 				<IndependentAttribute Name="number" Type="integer" />
 				<ReferentialAttribute Name="A one">
-					<GeneralizationReference Relationship="1" Attribute="one"/>
+					<GeneralizationReference Relationship="1"
+						Attribute="one" />
 				</ReferentialAttribute>
 			</NonSpecializedClass>
 
@@ -812,7 +815,8 @@
 				</IndependentAttribute>
 				<IndependentAttribute Name="count" Type="integer" />
 				<ReferentialAttribute Name="A one">
-					<GeneralizationReference Relationship="1" Attribute="one"/>
+					<GeneralizationReference Relationship="1"
+						Attribute="one" />
 				</ReferentialAttribute>
 			</NonSpecializedClass>
 
