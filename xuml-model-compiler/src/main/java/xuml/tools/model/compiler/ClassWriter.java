@@ -46,6 +46,7 @@ import xuml.tools.model.compiler.ClassInfoBase.MyIdAttribute;
 import xuml.tools.model.compiler.ClassInfoBase.MyIndependentAttribute;
 import xuml.tools.model.compiler.ClassInfoBase.MyParameter;
 import xuml.tools.model.compiler.ClassInfoBase.MyReferenceMember;
+import xuml.tools.model.compiler.ClassInfoBase.MySpecializations;
 import xuml.tools.model.compiler.ClassInfoBase.MySubclassRole;
 import xuml.tools.model.compiler.ClassInfoBase.MyTransition;
 import xuml.tools.model.compiler.ClassInfoBase.MyType;
@@ -66,7 +67,7 @@ public class ClassWriter {
 
 	private static final String BEHAVIOUR_COMMENT = "All actions like onEntry actions and defined\noperations are performed by this Behaviour class.";
 	private static final String STATE_COMMENT = "For internal use only by the state machine but is persisted by the jpa provider.";
-	public static boolean modelInheritanceWithZeroOneToOneAssociations = true;
+	public static boolean useJpaJoinedStrategyForSpecialization = false;
 	private final ClassInfo info;
 
 	public ClassWriter(ClassInfo info) {
@@ -87,7 +88,7 @@ public class ClassWriter {
 		writeNonIdIndependentAttributeMembers(out, info, validationMethods);
 		writeStateMember(out, info);
 		writeReferenceMembers(out, info, validationMethods);
-		writeSuperclassValidationCheck(out, info);
+		writeSuperclassValidationCheck(out, info, validationMethods);
 		writePreUpdateCheck(out, info, validationMethods);
 		writeIdGetterAndSetter(out, info);
 		writeNonIdIndependentAttributeGettersAndSetters(out, info);
@@ -114,9 +115,23 @@ public class ClassWriter {
 		return headerBytes.toString() + bytes.toString();
 	}
 
-	private void writeSuperclassValidationCheck(PrintStream out, ClassInfo info) {
+	private void writeSuperclassValidationCheck(PrintStream out,
+			ClassInfo info, Set<String> validationMethods) {
 		if (info.isSuperclass()) {
-			// TODO write superclass validation check
+			List<MySpecializations> list = info.getSpecializations();
+			for (MySpecializations sp : list) {
+				String methodName = "validateSpecializationR" + sp.getRnum();
+				out.format("    private void %s() {\n", methodName);
+				out.format("        int count = 0;\n");
+				for (String fieldName : sp.getFieldNames()) {
+					out.format("        if (%s != null)\n", fieldName);
+					out.format("            count++;\n");
+				}
+				out.format("    if (count != 1)\n");
+				out.format("        throw new RuntimeException(\"wrong number of specializations = \" + count);\n");
+				out.format("    }\n\n");
+				validationMethods.add(methodName);
+			}
 		}
 	}
 
@@ -148,7 +163,7 @@ public class ClassWriter {
 					info.getTable());
 		}
 
-		if (!modelInheritanceWithZeroOneToOneAssociations)
+		if (useJpaJoinedStrategyForSpecialization)
 			writeJpaInheritanceAnnotations(out, info);
 	}
 
@@ -174,7 +189,7 @@ public class ClassWriter {
 
 	private void writeClassDeclaration(PrintStream out, ClassInfo info) {
 		String extension;
-		if (!modelInheritanceWithZeroOneToOneAssociations && info.isSubclass()) {
+		if (useJpaJoinedStrategyForSpecialization && info.isSubclass()) {
 			MySubclassRole subclass = info.getSubclassRole();
 			extension = " extends "
 					+ info.addType(subclass.getSuperclassJavaFullClassName());
@@ -204,11 +219,6 @@ public class ClassWriter {
 		out.format("    public %s(){\n", info.getJavaClassSimpleName());
 		out.format("        //JPA requires no-arg constructor\n");
 		if (info.hasBehaviour()) {
-			out.format("        %s.checkNotNull(_behaviourFactory,\n",
-					info.addType(Preconditions.class));
-			out.format(
-					"            \"You need to call static method setBehaviourFactory before instantiating \" + %s.class.getName());\n",
-					info.getJavaClassSimpleName());
 			out.format("        _behaviour = _behaviourFactory.create(this);\n");
 		}
 		out.format("    }\n\n");
@@ -228,6 +238,11 @@ public class ClassWriter {
 			jd(out, "Constructor using Behaviour.", "    ");
 			out.format("    public %s(%s behaviour){\n",
 					info.getJavaClassSimpleName(), behaviourTypeName);
+			out.format("        %s.checkNotNull(_behaviourFactory,\n",
+					info.addType(Preconditions.class));
+			out.format(
+					"            \"You need to call static method setBehaviourFactory before instantiating \" + %s.class.getName());\n",
+					info.getJavaClassSimpleName());
 			out.format("        this._behaviour = behaviour;\n");
 			out.format("    }\n\n");
 

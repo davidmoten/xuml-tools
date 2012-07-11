@@ -630,6 +630,11 @@ public class ClassInfo extends ClassInfoBase {
 		return new Type(javaClassName);
 	}
 
+	public List<MySpecializations> getSpecializations() {
+		List<MySpecializations> list = Lists.newArrayList();
+		return list;
+	}
+
 	public MyTypeDefinition getTypeDefinition(String name) {
 		AtomicType t = lookups.getAtomicType(name);
 		if (t instanceof SymbolicType)
