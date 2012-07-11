@@ -34,10 +34,10 @@ import miuml.jaxb.RealType;
 import miuml.jaxb.Reference;
 import miuml.jaxb.ReferentialAttribute;
 import miuml.jaxb.Relationship;
+import miuml.jaxb.SpecializationReference;
 import miuml.jaxb.State;
 import miuml.jaxb.StateModelParameter;
 import miuml.jaxb.StateModelSignature;
-import miuml.jaxb.SuperclassReference;
 import miuml.jaxb.SymbolicType;
 import miuml.jaxb.SymmetricPerspective;
 import miuml.jaxb.Transition;
@@ -646,7 +646,7 @@ public class ClassInfo extends ClassInfoBase {
 							ReferentialAttribute r = (ReferentialAttribute) element
 									.getValue();
 							Reference ref = r.getReference().getValue();
-							if (ref instanceof SuperclassReference) {
+							if (ref instanceof SpecializationReference) {
 								if (ref.getRelationship().equals(g.getRnum()))
 									attributeName = r.getName();
 							}

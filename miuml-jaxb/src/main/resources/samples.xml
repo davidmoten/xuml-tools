@@ -789,10 +789,10 @@
 				</IndependentAttribute>
 				<IndependentAttribute Name="two" Type="integer" />
 				<ReferentialAttribute Name="B name">
-					<SuperclassReference Relationship="1" Attribute="name"/>
+					<SpecializationReference Relationship="1" Attribute="name"/>
 				</ReferentialAttribute>
 				<ReferentialAttribute Name="C name">
-					<SuperclassReference Relationship="1" Attribute="category"/>
+					<SpecializationReference Relationship="1" Attribute="category"/>
 				</ReferentialAttribute>
 			</SpecializedClass>
 
@@ -802,7 +802,7 @@
 				</IndependentAttribute>
 				<IndependentAttribute Name="number" Type="integer" />
 				<ReferentialAttribute Name="A one">
-					<SuperclassReference Relationship="1" Attribute="one"/>
+					<GeneralizationReference Relationship="1" Attribute="one"/>
 				</ReferentialAttribute>
 			</NonSpecializedClass>
 
@@ -812,7 +812,7 @@
 				</IndependentAttribute>
 				<IndependentAttribute Name="count" Type="integer" />
 				<ReferentialAttribute Name="A one">
-					<SuperclassReference Relationship="1" Attribute="one"/>
+					<GeneralizationReference Relationship="1" Attribute="one"/>
 				</ReferentialAttribute>
 			</NonSpecializedClass>
 

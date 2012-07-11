@@ -681,7 +681,7 @@
 		substitutionGroup="t:Reference" />
 	<element name="ToOneReference" type="t:ToOneReference"
 		substitutionGroup="t:Reference" />
-	<element name="SuperclassReference" type="t:SuperclassReference"
+	<element name="GeneralizationReference" type="t:GeneralizationReference"
 		substitutionGroup="t:Reference" />
 	<element name="SpecializationReference" type="t:SpecializationReference"
 		substitutionGroup="t:Reference" />
@@ -739,7 +739,7 @@
 		</complexContent>
 	</complexType>
 
-	<complexType name="SuperclassReference">
+	<complexType name="GeneralizationReference">
 		<complexContent>
 			<annotation>
 				<documentation>R152</documentation>
