@@ -127,9 +127,9 @@ public class ClassWriter {
 					out.format("        if (%s != null)\n", fieldName);
 					out.format("            count++;\n");
 				}
-				out.format("    if (count != 1)\n");
-				out.format("        throw new RuntimeException(\"wrong number of specializations = \" + count);\n");
-				out.format("    }\n\n");
+				out.format("        if (count != 1)\n");
+				out.format("            throw new RuntimeException(\"wrong number of specializations = \" + count);\n");
+				out.format("        }\n\n");
 				validationMethods.add(methodName);
 			}
 		}

@@ -37,6 +37,7 @@ import miuml.jaxb.Relationship;
 import miuml.jaxb.State;
 import miuml.jaxb.StateModelParameter;
 import miuml.jaxb.StateModelSignature;
+import miuml.jaxb.SuperclassReference;
 import miuml.jaxb.SymbolicType;
 import miuml.jaxb.SymmetricPerspective;
 import miuml.jaxb.Transition;
@@ -632,6 +633,37 @@ public class ClassInfo extends ClassInfoBase {
 
 	public List<MySpecializations> getSpecializations() {
 		List<MySpecializations> list = Lists.newArrayList();
+
+		for (Generalization g : lookups.getGeneralizations()) {
+			if (g.getSuperclass().equals(cls.getName())) {
+				Set<String> fieldNames = Sets.newHashSet();
+				for (Named spec : g.getSpecializedClass()) {
+					// get the attribute name
+					String attributeName = null;
+					for (JAXBElement<? extends Attribute> element : cls
+							.getAttribute()) {
+						if (element.getValue() instanceof ReferentialAttribute) {
+							ReferentialAttribute r = (ReferentialAttribute) element
+									.getValue();
+							Reference ref = r.getReference().getValue();
+							if (ref instanceof SuperclassReference) {
+								if (ref.getRelationship().equals(g.getRnum()))
+									attributeName = r.getName();
+							}
+						}
+					}
+					if (attributeName == null)
+						throw new RuntimeException(
+								"could not find attribute name for generalization "
+										+ g.getRnum() + ", specialization "
+										+ spec.getName());
+					String fieldName = nameManager.toFieldName(cls.getName(),
+							spec.getName(), g.getRnum());
+					fieldNames.add(fieldName);
+				}
+				list.add(new MySpecializations(g.getRnum(), fieldNames));
+			}
+		}
 		return list;
 	}
 

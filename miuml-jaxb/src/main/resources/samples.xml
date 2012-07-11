@@ -791,6 +791,9 @@
 				<ReferentialAttribute Name="B name">
 					<SuperclassReference Relationship="1" Attribute="name"/>
 				</ReferentialAttribute>
+				<ReferentialAttribute Name="C name">
+					<SuperclassReference Relationship="1" Attribute="category"/>
+				</ReferentialAttribute>
 			</SpecializedClass>
 
 			<NonSpecializedClass Name="B">

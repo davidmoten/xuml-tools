@@ -669,6 +669,9 @@
 		substitutionGroup="t:Reference" />
 	<element name="SuperclassReference" type="t:SuperclassReference"
 		substitutionGroup="t:Reference" />
+	<element name="SpecializationReference" type="t:SpecializationReference"
+		substitutionGroup="t:Reference" />
+	
 
 	<complexType name="Reference">
 		<annotation>
@@ -730,6 +733,16 @@
 			<extension base="t:Reference"></extension>
 		</complexContent>
 	</complexType>
+	
+	<complexType name="SpecializationReference">
+		<complexContent>
+			<annotation>
+				<documentation>R152</documentation>
+			</annotation>
+			<extension base="t:Reference"></extension>
+		</complexContent>
+	</complexType>
+	
 
 	<!--+++++++++++++++++++++++++++++++ -->
 	<!-- TYPE SUBSYSTEM +++++++++++++++ -->
