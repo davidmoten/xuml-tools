@@ -71,6 +71,12 @@
 					</documentation>
 				</annotation>
 			</element>
+			<element name="Extension" type="t:DomainExtension" minOccurs="0"
+				maxOccurs="unbounded">
+				<annotation>
+					<documentation>Extension point for miuml tools</documentation>
+				</annotation>
+			</element>
 		</sequence>
 		<attribute name="Name" type="t:Name" use="required" />
 		<attribute name="Alias" type="t:Alias" use="optional">
@@ -275,7 +281,8 @@
 							<documentation>R500</documentation>
 						</annotation>
 					</element>
-					<element name="Extension" type="t:Extension" minOccurs="0">
+					<element name="Extension" type="t:ClassExtension"
+						minOccurs="0" maxOccurs="unbounded">
 						<annotation>
 							<documentation>Extension point for miuml tools</documentation>
 						</annotation>
@@ -364,7 +371,8 @@
 					<documentation>R22</documentation>
 				</annotation>
 			</element>
-			<element name="Extension" type="t:Extension" minOccurs="0">
+			<element name="Extension" type="t:AttributeExtension"
+				minOccurs="0" maxOccurs="unbounded">
 				<annotation>
 					<documentation>Extension point for miuml tools</documentation>
 				</annotation>
@@ -671,7 +679,7 @@
 		substitutionGroup="t:Reference" />
 	<element name="SpecializationReference" type="t:SpecializationReference"
 		substitutionGroup="t:Reference" />
-	
+
 
 	<complexType name="Reference">
 		<annotation>
@@ -733,7 +741,7 @@
 			<extension base="t:Reference"></extension>
 		</complexContent>
 	</complexType>
-	
+
 	<complexType name="SpecializationReference">
 		<complexContent>
 			<annotation>
@@ -742,7 +750,7 @@
 			<extension base="t:Reference"></extension>
 		</complexContent>
 	</complexType>
-	
+
 
 	<!--+++++++++++++++++++++++++++++++ -->
 	<!-- TYPE SUBSYSTEM +++++++++++++++ -->
@@ -1227,16 +1235,39 @@
 		</complexContent>
 	</complexType>
 
-	<!-- Utility complex types -->
+	<!-- Extension point types -->
 
-	<complexType name="Named">
-		<attribute name="Name" type="t:Name" />
+	<complexType name="ClassExtension">
+		<complexContent>
+			<extension base="t:Extension">
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="AttributeExtension">
+		<complexContent>
+			<extension base="t:Extension">
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="DomainExtension">
+		<complexContent>
+			<extension base="t:Extension">
+			</extension>
+		</complexContent>
 	</complexType>
 
 	<complexType name="Extension">
 		<sequence>
-			<any processContents="strict" minOccurs="0" maxOccurs="unbounded"/>
+			<any processContents="strict" />
 		</sequence>
+	</complexType>
+
+	<!-- Utility complex types -->
+
+	<complexType name="Named">
+		<attribute name="Name" type="t:Name" />
 	</complexType>
 
 	<!-- Simple types -->
