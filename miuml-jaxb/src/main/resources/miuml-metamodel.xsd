@@ -71,8 +71,7 @@
 					</documentation>
 				</annotation>
 			</element>
-			<element name="Extension" type="t:DomainExtension" minOccurs="0"
-				maxOccurs="unbounded">
+			<element ref="t:DomainExtension" minOccurs="0" maxOccurs="unbounded">
 				<annotation>
 					<documentation>Extension point for miuml tools</documentation>
 				</annotation>
@@ -87,6 +86,9 @@
 			</annotation>
 		</attribute>
 	</complexType>
+
+	<element name="DomainExtension" type="t:DomainExtension"
+		abstract="true" />
 
 	<element name="ModeledDomain" substitutionGroup="t:Domain"
 		type="t:ModeledDomain" />
@@ -281,8 +283,7 @@
 							<documentation>R500</documentation>
 						</annotation>
 					</element>
-					<element name="Extension" type="t:ClassExtension"
-						minOccurs="0" maxOccurs="unbounded">
+					<element ref="t:ClassExtension" minOccurs="0" maxOccurs="unbounded">
 						<annotation>
 							<documentation>Extension point for miuml tools</documentation>
 						</annotation>
@@ -317,6 +318,10 @@
 			</extension>
 		</complexContent>
 	</complexType>
+
+	<element name="ClassExtension" type="t:ClassExtension"
+		abstract="true" />
+
 
 	<complexType name="DomainBuildSpecification">
 		<attribute name="Name" type="string" use="required" />
@@ -371,8 +376,7 @@
 					<documentation>R22</documentation>
 				</annotation>
 			</element>
-			<element name="Extension" type="t:AttributeExtension"
-				minOccurs="0" maxOccurs="unbounded">
+			<element ref="t:AttributeExtension" minOccurs="0" maxOccurs="unbounded">
 				<annotation>
 					<documentation>Extension point for miuml tools</documentation>
 				</annotation>
@@ -380,6 +384,8 @@
 		</sequence>
 		<attribute name="Name" type="t:Name" use="required" />
 	</complexType>
+
+	<element name="AttributeExtension" type="t:AttributeExtension" abstract="true"/>
 
 
 	<element name="NativeAttribute" substitutionGroup="t:Attribute"

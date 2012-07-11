@@ -1,0 +1,34 @@
+<schema targetNamespace="http://org.github/xuml-tools/miuml-metamodel-extensions"
+	xmlns:t="http://org.github/xuml-tools/miuml-metamodel-extensions"
+	xmlns:mi="http://www.miuml.org/metamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.miuml.org/metamodel miuml-metamodel.xsd"
+	xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="qualified">
+	
+	<import namespace="http://www.miuml.org/metamodel" schemaLocation="miuml-metamodel.xsd" />
+
+	<element name="xuml-tools-domain" substitutionGroup="mi:DomainExtension" type="t:xuml-tools-domain" />
+	<element name="xuml-tools-class" substitutionGroup="mi:ClassExtension" type="t:xuml-tools-class" />
+	<element name="xuml-tools-attribute" substitutionGroup="mi:AttributeExtension" type="t:xuml-tools-attribute" />
+
+
+	<complexType name="xuml-tools-domain">
+		<complexContent>
+			<extension base="mi:DomainExtension"></extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="xuml-tools-class">
+		<complexContent>
+			<extension base="mi:ClassExtension"></extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="xuml-tools-attribute">
+		<complexContent>
+			<extension base="mi:AttributeExtension">
+				<attribute name="generated" use="optional" type="boolean" />
+			</extension>
+		</complexContent>
+	</complexType>
+
+</schema>
