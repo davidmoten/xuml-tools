@@ -6,6 +6,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>${project.artifactId}</name>
 	<packaging>pom</packaging>
+	<description>A collection of tools for Executable UML in the style of Mellor and Balcer and miUML.org</description>
 	<url>https://xuml-tools.ci.cloudbees.com/job/xuml-tools_site/site/index.html</url>
 	<licenses>
 		<license>
