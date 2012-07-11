@@ -1249,7 +1249,7 @@ public class ClassWriter {
 
 	private void writeLoadMethod(PrintStream out, ClassInfo info) {
 		jd(out,
-				"Does a merge then a refresh and retursn a new updated merged instance.",
+				"Does a merge then a refresh and returns a new updated merged instance.",
 				"    ");
 		out.format("    public %s load(%s em) {\n",
 				info.getJavaClassSimpleName(),

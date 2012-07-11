@@ -1235,7 +1235,7 @@
 
 	<complexType name="Extension">
 		<sequence>
-			<any processContents="strict" />
+			<any processContents="strict" minOccurs="0" maxOccurs="unbounded"/>
 		</sequence>
 	</complexType>
 
