@@ -1000,12 +1000,12 @@ public class ClassWriter {
 		for (String methodName : validationMethods)
 			out.format("        %s();\n", methodName);
 		out.format("    }\n\n");
-		out.format("    @%s\n", info.addType(Transient.class));
-		out.format("    @%s\n", info.addType(PrePersist.class));
 
 		jd(out,
 				"Calls all validation methods just before first persist of this entity.",
 				"    ");
+		out.format("    @%s\n", info.addType(Transient.class));
+		out.format("    @%s\n", info.addType(PrePersist.class));
 		out.format("    void validateBeforePersist(){\n");
 		for (String methodName : validationMethods)
 			out.format("        %s();\n", methodName);
@@ -1115,7 +1115,7 @@ public class ClassWriter {
 		out.format("    }\n\n");
 		jd(out, "Synchronously runs the on entry procedure associated\n"
 				+ "with this event and also any signals to self that are\n"
-				+ "made during the procedure. This method would not\n"
+				+ "made during the procedure. This method should not\n"
 				+ "be called directly except in a unit testing scenario\n"
 				+ "perhaps. Call signal method instead.", "    ");
 		out.format("    @%s\n", info.addType(Transient.class));
@@ -1190,6 +1190,10 @@ public class ClassWriter {
 		if (info.hasBehaviour()) {
 			for (MyTransition t : info.getTransitions()) {
 				if (t.isCreationTransition()) {
+					jd(out,
+							"Static creator method associated with the creation transition to '"
+									+ t.getToState() + "' via event '"
+									+ t.getEventName() + "'.", "    ");
 					out.format(
 							"    public static %s create(%s em, %s<%s> event) {\n",
 							info.getJavaClassSimpleName(),
@@ -1209,6 +1213,9 @@ public class ClassWriter {
 	}
 
 	private void writeMergeMethod(PrintStream out, ClassInfo info) {
+		jd(out,
+				"Same as EntityManager.merge() except allows method chaining.\n"
+						+ "Returns a new merged instance.", "    ");
 		out.format("    public %s merge(%s em) {\n",
 				info.getJavaClassSimpleName(),
 				info.addType(EntityManager.class));
@@ -1217,6 +1224,9 @@ public class ClassWriter {
 	}
 
 	private void writePersistMethod(PrintStream out, ClassInfo info) {
+		jd(out,
+				"Same as EntityManager.persist() except allows method chaining. Returns this.",
+				"    ");
 		out.format("    public %s persist(%s em) {\n",
 				info.getJavaClassSimpleName(),
 				info.addType(EntityManager.class));
@@ -1226,6 +1236,9 @@ public class ClassWriter {
 	}
 
 	private void writeRefreshMethod(PrintStream out, ClassInfo info) {
+		jd(out,
+				"Same as EntityManager.refresh() except inverted to facilitate method chaining. Returns this.",
+				"    ");
 		out.format("    public %s refresh(%s em) {\n",
 				info.getJavaClassSimpleName(),
 				info.addType(EntityManager.class));
@@ -1235,6 +1248,9 @@ public class ClassWriter {
 	}
 
 	private void writeLoadMethod(PrintStream out, ClassInfo info) {
+		jd(out,
+				"Does a merge then a refresh and retursn a new updated merged instance.",
+				"    ");
 		out.format("    public %s load(%s em) {\n",
 				info.getJavaClassSimpleName(),
 				info.addType(EntityManager.class));
@@ -1255,7 +1271,7 @@ public class ClassWriter {
 
 		if (info.getEvents().size() == 0)
 			return;
-
+		jd(out, "On entry procedures for this entity.", "    ");
 		out.format("    public static interface Behaviour {\n\n");
 
 		// write state names that have signatures
@@ -1294,6 +1310,7 @@ public class ClassWriter {
 	private void writeBehaviourFactoryInterface(PrintStream out, ClassInfo info) {
 		if (info.getEvents().size() == 0)
 			return;
+		jd(out, "A factory that creates behaviour for a given entity.", "    ");
 		out.format("    public static interface BehaviourFactory {\n\n");
 		out.format("        Behaviour create(%s entity);\n\n",
 				info.getJavaClassSimpleName());
