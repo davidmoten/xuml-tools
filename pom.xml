@@ -117,7 +117,7 @@
 							<artifactId>cobertura-maven-plugin</artifactId>
 							<version>${cobertura.version}</version>
 							<configuration>
-								<aggregate>true</aggregate> 
+								<aggregate>false</aggregate> 
 							</configuration>
 						</plugin>
 						<plugin>
