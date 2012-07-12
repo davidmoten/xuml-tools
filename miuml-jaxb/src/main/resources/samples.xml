@@ -177,8 +177,8 @@
 			</BinaryAssociation>
 
 			<UnaryAssociation Rnum="14">
-				<SymmetricPerspective Phrase="is divided into"
-					ViewedClass="Product Category" OnePerspective="false" Conditional="true" />
+				<SymmetricPerspective Phrase="is part of"
+					ViewedClass="Product Category" OnePerspective="true" Conditional="true" />
 			</UnaryAssociation>
 
 			<BinaryAssociation Rnum="1">
