@@ -109,12 +109,12 @@ The items that may be left out:
 
 Web Class Diagram Viewer
 ------------------------
-Run it locally using Jetty:
+Run it locally using Jetty and in-memory datastore (for saving diagram positions):
 
     cd xuml-tools/xuml-diagrams
     mvn clean jetty:run
 
-Or run locally using Google App Engine (takes much longer to startup):
+Or run locally using Google App Engine (takes much longer to startup). Note: uses in-memory datastore at the moment.
 
     cd xuml-tools/xuml-diagrams
     mvn gae:unpack 
