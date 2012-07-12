@@ -1,4 +1,4 @@
-package xuml.tools.jaxb;
+package xuml.tools.diagram;
 
 import java.io.IOException;
 import java.math.BigInteger;

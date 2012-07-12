@@ -1,4 +1,4 @@
-package xuml.tools.jaxb;
+package xuml.tools.diagram;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -15,6 +15,8 @@ import miuml.jaxb.Subsystem;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
+
+import xuml.tools.diagram.ClassDiagramGenerator;
 
 public class ClassDiagramGeneratorTest {
 

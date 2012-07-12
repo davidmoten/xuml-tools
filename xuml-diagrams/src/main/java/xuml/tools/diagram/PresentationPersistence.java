@@ -1,4 +1,4 @@
-package xuml.tools.jaxb;
+package xuml.tools.diagram;
 
 import xuml.tools.gae.DatastoreText;
 

@@ -5,7 +5,7 @@
 	<display-name>${project.artifactId} ${project.version}</display-name>
 
 	<listener>
-		<listener-class>xuml.tools.jaxb.ApplicationServletContextListener</listener-class>
+		<listener-class>xuml.tools.diagram.ApplicationServletContextListener</listener-class>
 	</listener>
 
 	<servlet>
@@ -20,7 +20,7 @@
 
 	<servlet>
 		<servlet-name>Schema</servlet-name>
-		<servlet-class>xuml.tools.jaxb.SchemaServlet</servlet-class>
+		<servlet-class>xuml.tools.diagram.SchemaServlet</servlet-class>
 	</servlet>
 
 	<servlet-mapping>
@@ -30,7 +30,7 @@
 	
 	<servlet>
 		<servlet-name>Model</servlet-name>
-		<servlet-class>xuml.tools.jaxb.ModelServlet</servlet-class>
+		<servlet-class>xuml.tools.diagram.ModelServlet</servlet-class>
 	</servlet>
 	
 	<servlet-mapping>
@@ -40,7 +40,7 @@
 
 	<servlet>
 		<servlet-name>Presentation</servlet-name>
-		<servlet-class>xuml.tools.jaxb.PresentationServlet</servlet-class>
+		<servlet-class>xuml.tools.diagram.PresentationServlet</servlet-class>
 	</servlet>
 
 	<servlet-mapping>
@@ -48,7 +48,7 @@
 		<url-pattern>/find</url-pattern>
 	</servlet-mapping>	<servlet>
 		<servlet-name>Find</servlet-name>
-		<servlet-class>xuml.tools.jaxb.FindServlet</servlet-class>
+		<servlet-class>xuml.tools.diagram.FindServlet</servlet-class>
 	</servlet>
 
 	<servlet-mapping>
@@ -58,7 +58,7 @@
 
 	<servlet>
 		<servlet-name>ClassDiagram</servlet-name>
-		<servlet-class>xuml.tools.jaxb.ClassDiagramServlet</servlet-class>
+		<servlet-class>xuml.tools.diagram.ClassDiagramServlet</servlet-class>
 	</servlet>
 
 	<servlet-mapping>
