@@ -110,10 +110,12 @@ The items that may be left out:
 Web Class Diagram Viewer
 ------------------------
 Run it locally using Jetty:
+
     cd xuml-tools/xuml-diagrams
     mvn clean jetty:run
 
 Run using Google App Engine locally:
+
     cd xuml-tools/xuml-diagrams
     mvn gae:unpack 
     mvn clean gae:run
