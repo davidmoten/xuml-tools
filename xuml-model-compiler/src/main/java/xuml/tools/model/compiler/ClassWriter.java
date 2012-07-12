@@ -1055,7 +1055,7 @@ public class ClassWriter {
 			MyReferenceMember ref) {
 		out.format("    //secondary side of relationship\n");
 		out.format(
-				"    @ManyToMany(mappedBy=\"%s\",targetEntity=%s.class,cascade=%s.ALL,fetch=%s.LAZY)\n",
+				"    @%s(mappedBy=\"%s\",targetEntity=%s.class,cascade=%s.ALL,fetch=%s.LAZY)\n",
 				info.addType(ManyToMany.class), ref.getThisFieldName(),
 				info.addType(ref.getFullClassName()),
 				info.addType(CascadeType.class), info.addType(FetchType.class));
@@ -1289,8 +1289,7 @@ public class ClassWriter {
 				nonStateEvents.add(event);
 		}
 
-		for (String state : stateEvent.keySet()) {
-			MyEvent event = stateEvent.get(state);
+		for (MyEvent event : stateEvent.values()) {
 			out.format("        void onEntry%s(Events.%s event);\n\n", Util
 					.upperFirst(Util.toJavaIdentifier(event.getStateName())),
 					event.getStateSignatureInterfaceSimpleName());
