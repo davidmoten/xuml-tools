@@ -30,8 +30,8 @@ import org.apache.commons.io.IOUtils;
 
 public class ClassDiagramGenerator {
 
-	public String generate(Domains domains) {
-		return placeInTemplate(generateDivs(domains));
+	public String generate(Domains domains, String domainName) {
+		return placeInTemplate(generateDivs(domains, domainName));
 	}
 
 	private String placeInTemplate(String divs) {
@@ -44,9 +44,10 @@ public class ClassDiagramGenerator {
 		}
 	}
 
-	private String generateDivs(Domains domains) {
+	private String generateDivs(Domains domains, String domainName) {
 		for (JAXBElement<? extends Domain> domain : domains.getDomain()) {
-			if (domain.getValue() instanceof ModeledDomain) {
+			if (domain.getValue() instanceof ModeledDomain
+					&& domain.getValue().getName().equals(domainName)) {
 				ModeledDomain md = (ModeledDomain) domain.getValue();
 				return generateDivs(md.getSubsystem().get(0));
 			}
