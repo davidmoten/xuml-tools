@@ -135,6 +135,7 @@
 							<version>${pmd.version}</version>
 							<configuration>
 								<targetJdk>${compiler.source.version}</targetJdk>
+								<aggregate>true</aggregate> 
 							</configuration>
 						</plugin>
 						<plugin>
