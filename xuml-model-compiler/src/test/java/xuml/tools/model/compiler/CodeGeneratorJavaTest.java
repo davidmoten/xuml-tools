@@ -11,41 +11,74 @@ public class CodeGeneratorJavaTest {
 
 	@Test
 	public void testCodeGenerationForABC() throws FileNotFoundException {
-		generateClassesForDomain("Nested composite id example", "miuml",
-				"simple");
+		generateClassesForDomain("Nested composite id example", "abc", "abc");
+	}
+
+	@Test
+	public void testCodeGenerationAllTypes() throws FileNotFoundException {
+		generateClassesForDomain("all-types");
 	}
 
 	@Test
 	public void testCodeGenerationForBookstore() throws FileNotFoundException {
-		generateClassesForDomain("Bookstore", "bookstore", "bookstore");
+		generateClassesForDomain("Bookstore");
+	}
+
+	@Test
+	public void testCodeGenerationForOneToOne() throws FileNotFoundException {
+		generateClassesForDomain("one-to-one");
+	}
+
+	@Test
+	public void testCodeGenerationForOneToOneMany()
+			throws FileNotFoundException {
+		generateClassesForDomain("one-to-one-many");
 	}
 
 	@Test
 	public void testCodeGenerationForOneToZeroOne()
 			throws FileNotFoundException {
-		generateClassesForDomain("one-to-zero-one", "one_to_zero_one",
-				"one_to_zero_one");
+		generateClassesForDomain("one-to-zero-one");
 	}
 
 	@Test
-	public void testCodeGenerationForOneToOne() throws FileNotFoundException {
-		generateClassesForDomain("one-to-one", "one_to_one", "one_to_one");
+	public void testCodeGenerationForSecondaryIdentifiers()
+			throws FileNotFoundException {
+		generateClassesForDomain("secondary-identifiers");
+	}
+
+	@Test
+	public void testCodeGenerationForSpecialization()
+			throws FileNotFoundException {
+		generateClassesForDomain("specialization");
 	}
 
 	@Test
 	public void testCodeGenerationForUnaryToOne() throws FileNotFoundException {
-		generateClassesForDomain("unary-one", "unary_one", "unary_one");
+		generateClassesForDomain("unary-one");
 	}
 
 	@Test
-	public void testCodeGenerationAllTypes() throws FileNotFoundException {
-		generateClassesForDomain("all-types", "all_types", "all_types");
+	public void testCodeGenerationForUnaryToZeroOne()
+			throws FileNotFoundException {
+		generateClassesForDomain("unary-zero-one");
 	}
 
 	@Test
-	public void testCodeGenerationSpecialization() throws FileNotFoundException {
-		generateClassesForDomain("specialization", "specialization",
-				"specialization");
+	public void testCodeGenerationForZeroOneToMany()
+			throws FileNotFoundException {
+		generateClassesForDomain("zero-one-to-many");
+	}
+
+	@Test
+	public void testCodeGenerationForZeroOneToOneMany()
+			throws FileNotFoundException {
+		generateClassesForDomain("zero-one-to-one-many");
+	}
+
+	private void generateClassesForDomain(String domainName) {
+		String underscored = domainName.replaceAll("-", "_").toLowerCase();
+		generateClassesForDomain(domainName, underscored, underscored);
 	}
 
 	private void generateClassesForDomain(String domainName,
