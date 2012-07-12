@@ -27,12 +27,12 @@
 		<servlet-name>Schema</servlet-name>
 		<url-pattern>/schema</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet>
 		<servlet-name>Model</servlet-name>
 		<servlet-class>xuml.tools.diagram.ModelServlet</servlet-class>
 	</servlet>
-	
+
 	<servlet-mapping>
 		<servlet-name>Model</servlet-name>
 		<url-pattern>/model</url-pattern>
@@ -43,13 +43,15 @@
 		<servlet-class>xuml.tools.diagram.PresentationServlet</servlet-class>
 	</servlet>
 
-	<servlet-mapping>
-		<servlet-name>Find</servlet-name>
-		<url-pattern>/find</url-pattern>
-	</servlet-mapping>	<servlet>
+	<servlet>
 		<servlet-name>Find</servlet-name>
 		<servlet-class>xuml.tools.diagram.FindServlet</servlet-class>
 	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>Find</servlet-name>
+		<url-pattern>/find</url-pattern>
+	</servlet-mapping>
 
 	<servlet-mapping>
 		<servlet-name>Presentation</servlet-name>
