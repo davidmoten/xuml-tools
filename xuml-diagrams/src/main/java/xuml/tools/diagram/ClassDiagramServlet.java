@@ -12,8 +12,6 @@ import miuml.jaxb.Marshaller;
 
 import org.apache.commons.io.IOUtils;
 
-import xuml.tools.gae.DatastoreText;
-
 public class ClassDiagramServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 2511746331522695068L;
@@ -22,8 +20,8 @@ public class ClassDiagramServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		String id = req.getParameter("id");
-		String xml = DatastoreText.instance().get("diagram", id + "-model",
-				"model");
+		String xml = Context.instance().getDatastore()
+				.get("diagram", id + "-model", "model");
 		Domains domains = new Marshaller()
 				.unmarshal(IOUtils.toInputStream(xml));
 		String domainString = req.getParameter("domain");

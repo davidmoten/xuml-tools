@@ -72,6 +72,17 @@
 					</jvmFlags>
 				</configuration>
 			</plugin>
+
+			<plugin>
+				<groupId>org.mortbay.jetty</groupId>
+				<artifactId>maven-jetty-plugin</artifactId>
+				<version>7.0.0.pre5</version>
+				<configuration>
+					<scanIntervalSeconds>10</scanIntervalSeconds>
+					<stopKey>foo</stopKey>
+					<stopPort>9999</stopPort>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 </project>

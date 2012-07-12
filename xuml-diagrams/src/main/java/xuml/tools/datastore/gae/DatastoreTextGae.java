@@ -1,4 +1,6 @@
-package xuml.tools.gae;
+package xuml.tools.datastore.gae;
+
+import xuml.tools.datastore.DatastoreText;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
@@ -8,14 +10,15 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.Text;
 
-public class DatastoreText {
-	
-	private static DatastoreText datastore = new DatastoreText();
-	
-	public static DatastoreText instance(){
+public class DatastoreTextGae implements DatastoreText {
+
+	private static DatastoreText datastore = new DatastoreTextGae();
+
+	public static DatastoreText instance() {
 		return datastore;
 	}
 
+	@Override
 	public void put(String kind, String name, String property, String value) {
 		DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
 		Key k = KeyFactory.createKey(kind, name);
@@ -25,6 +28,7 @@ public class DatastoreText {
 		ds.put(ent);
 	}
 
+	@Override
 	public String get(String kind, String name, String property) {
 		System.out.println("getting");
 		DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
@@ -34,7 +38,7 @@ public class DatastoreText {
 			Entity ent = ds.get(k);
 			System.out.println(ent.getProperties());
 			Text prop = (Text) ent.getProperty(property);
-			System.out.println("Datastore.get "+ k + "= " + prop);
+			System.out.println("Datastore.get " + k + "= " + prop);
 			if (prop != null)
 				result = prop.getValue();
 			else

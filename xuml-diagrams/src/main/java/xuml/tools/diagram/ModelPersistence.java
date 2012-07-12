@@ -1,6 +1,6 @@
 package xuml.tools.diagram;
 
-import xuml.tools.gae.DatastoreText;
+import xuml.tools.datastore.DatastoreText;
 
 public class ModelPersistence {
 
@@ -15,7 +15,7 @@ public class ModelPersistence {
 		String entity = id + "-model";
 		String property = "model";
 		// TODO change to DatastoreText.instance()
-		DatastoreText ds = new DatastoreText();
+		DatastoreText ds = Context.instance().getDatastore();
 		String result = ds.get(KEY_KIND, entity, property);
 		return result;
 	}
@@ -24,7 +24,7 @@ public class ModelPersistence {
 		String entity = id + "-model";
 		String property = "model";
 		// TODO change to DatastoreText.instance()
-		DatastoreText ds = new DatastoreText();
+		DatastoreText ds = Context.instance().getDatastore();
 		ds.put(KEY_KIND, entity, property, xml);
 	}
 }

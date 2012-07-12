@@ -1,4 +1,4 @@
-package xuml.tools.gae;
+package xuml.tools.datastore;
 
 import java.io.IOException;
 
@@ -6,6 +6,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import xuml.tools.diagram.Context;
 
 public class DatastoreServlet extends HttpServlet {
 
@@ -21,7 +23,7 @@ public class DatastoreServlet extends HttpServlet {
 			String property = req.getParameter("property");
 			String mime = req.getParameter("mime");
 			resp.setContentType(mime);
-			DatastoreText ds = new DatastoreText();
+			DatastoreText ds = Context.instance().getDatastore();
 			String result = ds.get(keyKind, entity, property);
 			if (result != null)
 				resp.getOutputStream().write(result.getBytes());
@@ -37,7 +39,7 @@ public class DatastoreServlet extends HttpServlet {
 		String entity = req.getParameter("entity");
 		String property = req.getParameter("property");
 		String value = req.getParameter("value");
-		DatastoreText ds = new DatastoreText();
+		DatastoreText ds = Context.instance().getDatastore();
 		ds.put(keyKind, entity, property, value);
 	}
 

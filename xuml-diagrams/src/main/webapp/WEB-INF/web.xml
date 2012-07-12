@@ -10,7 +10,7 @@
 
 	<servlet>
 		<servlet-name>Datastore</servlet-name>
-		<servlet-class>xuml.tools.gae.DatastoreServlet</servlet-class>
+		<servlet-class>xuml.tools.datastore.DatastoreServlet</servlet-class>
 	</servlet>
 
 	<servlet-mapping>
