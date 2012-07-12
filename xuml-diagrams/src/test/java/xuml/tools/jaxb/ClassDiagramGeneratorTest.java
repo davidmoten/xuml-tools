@@ -10,6 +10,7 @@ import miuml.jaxb.Domain;
 import miuml.jaxb.Domains;
 import miuml.jaxb.Marshaller;
 import miuml.jaxb.ModeledDomain;
+import miuml.jaxb.Subsystem;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -27,22 +28,27 @@ public class ClassDiagramGeneratorTest {
 				new File("target"));
 		for (JAXBElement<? extends Domain> element : domains.getDomain()) {
 			if (element.getValue() instanceof ModeledDomain) {
+				ModeledDomain d = (ModeledDomain) element.getValue();
 				String domainName = element.getValue().getName();
-				generateFromSample(
-						domains,
-						domainName,
-						"target/webapp/diagram-"
-								+ domainName.replaceAll(" ", "-") + ".html");
+				for (Subsystem ss : d.getSubsystem())
+					generateFromSample(
+							domains,
+							domainName,
+							ss.getName(),
+							"target/webapp/diagram_"
+									+ domainName.replaceAll(" ", "-") + "_"
+									+ ss.getName().replaceAll(" ", "-")
+									+ ".html");
 			}
 		}
 	}
 
 	public void generateFromSample(Domains domains, String domainName,
-			String filename) {
+			String subsystemName, String filename) {
 		System.out.println("generating domain " + domainName + " to "
 				+ filename);
 		ClassDiagramGenerator g = new ClassDiagramGenerator();
-		String s = g.generate(domains, domainName);
+		String s = g.generate(domains, domainName, subsystemName);
 		System.out.println(s);
 		try {
 			FileOutputStream fos = new FileOutputStream(filename);

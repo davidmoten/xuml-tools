@@ -55,11 +55,31 @@ public class ClassDiagramGenerator {
 		return "";
 	}
 
-	public String generate(Domains domains, int domain, int ss) {
-		ModeledDomain md = (ModeledDomain) domains.getDomain().get(domain)
-				.getValue();
-		Subsystem sub = md.getSubsystem().get(ss);
-		return placeInTemplate(generateDivs(sub));
+	private Subsystem getSubsystem(Domains domains, String domainName,
+			String subsystemName) {
+		for (JAXBElement<? extends Domain> domain : domains.getDomain()) {
+			if (domain.getValue() instanceof ModeledDomain
+					&& domain.getValue().getName().equals(domainName)) {
+				ModeledDomain md = (ModeledDomain) domain.getValue();
+				for (Subsystem ss : md.getSubsystem())
+					if (ss.getName().equals(subsystemName))
+						return ss;
+			}
+		}
+		return null;
+	}
+
+	public String generate(Domains domains, String domainName,
+			String subsystemName) {
+		return placeInTemplate(generateDivs(getSubsystem(domains, domainName,
+				subsystemName)));
+	}
+
+	public String generate(Domains domains, int domainIndex, int ssIndex) {
+		ModeledDomain md = ((ModeledDomain) domains.getDomain()
+				.get(domainIndex).getValue());
+		Subsystem ss = md.getSubsystem().get(ssIndex);
+		return generate(domains, md.getName(), ss.getName());
 	}
 
 	private String generateDivs(Subsystem subsystem) {
@@ -222,5 +242,4 @@ public class ClassDiagramGenerator {
 		}
 		s.append("</div>\n");
 	}
-
 }
