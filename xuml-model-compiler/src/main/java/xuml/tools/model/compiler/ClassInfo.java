@@ -325,8 +325,9 @@ public class ClassInfo extends ClassInfoBase {
 			}
 
 			if (signature == null)
-				throw new RuntimeException("signature not found for class="
-						+ cls.getName() + ",event=" + event.getName());
+				throw new RuntimeException(
+						"event/state signature not found for " + cls.getName()
+								+ ",event=" + event.getName());
 
 			List<MyParameter> parameters = Lists.newArrayList();
 			for (StateModelParameter p : signature.getStateModelParameter()) {

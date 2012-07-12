@@ -267,6 +267,9 @@ public class ClassWriter {
 		}
 		String idClassName;
 		if (!hasEmbeddedId()) {
+			if (info.getPrimaryIdAttributeMembers().size() == 0)
+				throw new RuntimeException("Class does not have identifier: "
+						+ info.getJavaClassSimpleName());
 			idClassName = info.addType(info.getPrimaryIdAttributeMembers()
 					.get(0).getType().getType());
 		} else
@@ -702,8 +705,8 @@ public class ClassWriter {
 				writeMultipleField(out, ref);
 			} else if (isRelationship(ref, Mult.MANY, Mult.ONE)) {
 				out.format("    @%s(targetEntity=%s.class,fetch=%s.LAZY)\n",
-						info.addType(ManyToOne.class),
-						ref.getSimpleClassName(), info.addType(FetchType.class));
+						info.addType(ManyToOne.class), ref.getFullClassName(),
+						info.addType(FetchType.class));
 				writeJoinColumnsAnnotation(out, ref, false,
 						!ref.isInPrimaryId(), !ref.isInPrimaryId());
 				writeField(out, ref);

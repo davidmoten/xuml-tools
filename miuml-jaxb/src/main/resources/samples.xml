@@ -72,7 +72,7 @@
 
 			<SpecializedClass Name="Product" Cnum="1" Element="1"
 				Alias="Product">
-				<IndependentAttribute Name="ProductID"
+				<IndependentAttribute Name="Product ID"
 					Type="Universal Product Code">
 					<Identifier Number="1" />
 				</IndependentAttribute>
@@ -82,17 +82,46 @@
 				<IndependentAttribute Name="Unit Price" Type="Money" />
 				<IndependentAttribute Name="Description" Type="string" />
 				<IndependentAttribute Name="Website" Type="Website URL" />
+				<ReferentialAttribute Name="Publisher code">
+					<ToOneReference Relationship="1" Attribute="Publisher code" />
+				</ReferentialAttribute>
+				<ReferentialAttribute Name="Publisher Group code">
+					<ToOneReference Relationship="1" Attribute="Group code" />
+				</ReferentialAttribute>
+				<ReferentialAttribute Name="Category ID">
+					<ToOneReference Relationship="15" Attribute="Category ID" />
+				</ReferentialAttribute>
+				<ReferentialAttribute Name="Stocked Product">
+					<SpecializationReference Relationship="12"
+						Attribute="Stocked Product ID" />
+				</ReferentialAttribute>
+				<ReferentialAttribute Name="Special Order Product">
+					<SpecializationReference Relationship="12"
+						Attribute="Special Order Product ID" />
+				</ReferentialAttribute>
 			</SpecializedClass>
 
 			<SpecializedClass Name="Special Order Product"
 				Alias="Special Order Product">
+				<IndependentAttribute Name="Special Order Product ID"
+					Type="arbitraryId">
+					<Identifier Number="1" />
+				</IndependentAttribute>
 				<IndependentAttribute Name="Special Order Instructions"
 					Type="string" />
 				<IndependentAttribute Name="Days to Deliver"
 					Type="Count" />
+				<ReferentialAttribute Name="Product">
+					<GeneralizationReference Relationship="12"
+						Attribute="Product ID" />
+				</ReferentialAttribute>
 			</SpecializedClass>
 
 			<SpecializedClass Name="Stocked Product">
+				<IndependentAttribute Name="Stocked Product ID"
+					Type="arbitraryId">
+					<Identifier Number="1" />
+				</IndependentAttribute>
 				<IndependentAttribute Name="Quantity On hand"
 					Type="Count" />
 				<IndependentAttribute Name="Reorder Threshold"
@@ -101,6 +130,10 @@
 					Type="Count" />
 				<IndependentAttribute Name="Reorder Instructions"
 					Type="string" />
+				<ReferentialAttribute Name="Product">
+					<GeneralizationReference Relationship="12"
+						Attribute="Product ID" />
+				</ReferentialAttribute>
 			</SpecializedClass>
 
 			<NonSpecializedClass Name="Product Category">
@@ -109,6 +142,9 @@
 				</IndependentAttribute>
 				<IndependentAttribute Name="Category Name"
 					Type="string" />
+				<ReferentialAttribute Name="Product ID">
+					<ToOneReference Relationship="15" Attribute="Product ID" />
+				</ReferentialAttribute>
 			</NonSpecializedClass>
 
 			<NonSpecializedClass Name="Publisher">
@@ -121,8 +157,11 @@
 					<Identifier Number="1" />
 				</IndependentAttribute>
 				<IndependentAttribute Name="Name" Type="string" />
-				<IndependentAttribute Name="Address" Type="MailingAddress" />
+				<IndependentAttribute Name="Address" Type="Mailing Address" />
 				<IndependentAttribute Name="Website" Type="Website URL" />
+				<ReferentialAttribute Name="Product">
+					<ToOneReference Relationship="1" Attribute="Product ID" />
+				</ReferentialAttribute>
 			</NonSpecializedClass>
 
 			<Generalization Rnum="12" Superclass="Product">
@@ -137,12 +176,10 @@
 					ViewedClass="Product Category" OnePerspective="true" Conditional="false" />
 			</BinaryAssociation>
 
-			<BinaryAssociation Rnum="14">
-				<ActivePerspective Phrase="is divided into"
+			<UnaryAssociation Rnum="14">
+				<SymmetricPerspective Phrase="is divided into"
 					ViewedClass="Product Category" OnePerspective="false" Conditional="true" />
-				<PassivePerspective Phrase="is part of"
-					ViewedClass="Product Category" OnePerspective="true" Conditional="true" />
-			</BinaryAssociation>
+			</UnaryAssociation>
 
 			<BinaryAssociation Rnum="1">
 				<ActivePerspective Phrase="produces and markets"
@@ -202,8 +239,6 @@
 								Type="Internet Email Address" />
 							<StateModelParameter Name="Customer Name"
 								Type="Personal Name" />
-							<StateModelParameter Name="Billing address"
-								Type="Mailing Address" />
 							<StateModelParameter Name="Customer phone"
 								Type="Telephone Number" />
 							<StateModelParameter Name="Shipping address"
@@ -227,11 +262,17 @@
 					</LocalEffectiveSignalingEvent>
 
 					<LocalEffectiveSignalingEvent Name="Payment declined"
-						ID="3" />
+						ID="3">
+						<EventSignature></EventSignature>
+					</LocalEffectiveSignalingEvent>
 					<LocalEffectiveSignalingEvent Name="Payment approved"
-						ID="4" />
+						ID="4">
+						<EventSignature></EventSignature>
+					</LocalEffectiveSignalingEvent>
 					<LocalEffectiveSignalingEvent Name="Order delivered"
-						ID="5" />
+						ID="5">
+						<EventSignature></EventSignature>
+					</LocalEffectiveSignalingEvent>
 
 					<Transition State="Establishing Customer and Verifying Payment"
 						Destination="Making Charge" EventID="2" />
@@ -278,6 +319,10 @@
 
 			<NonSpecializedClass Name="Product Selection"
 				Association="4">
+				<IndependentAttribute Name="Product Selection ID"
+					Type="arbitraryId">
+					<Identifier Number="1" />
+				</IndependentAttribute>
 				<IndependentAttribute Name="Quantity" Type="Count" />
 				<IndependentAttribute Name="Unit price of selection"
 					Type="Money" />

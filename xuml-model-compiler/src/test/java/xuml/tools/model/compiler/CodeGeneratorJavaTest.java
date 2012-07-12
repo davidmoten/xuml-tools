@@ -15,7 +15,7 @@ public class CodeGeneratorJavaTest {
 				"simple");
 	}
 
-	// @Test
+	@Test
 	public void testCodeGenerationForBookstore() throws FileNotFoundException {
 		generateClassesForDomain("Bookstore", "bookstore", "bookstore");
 	}

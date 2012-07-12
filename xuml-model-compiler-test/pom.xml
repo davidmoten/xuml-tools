@@ -185,6 +185,18 @@
 							<packageName>specialization</packageName>
 						</configuration>
 					</execution>
+					<execution>
+						<id>bookstore</id>
+						<goals>
+							<goal>generate-jpa</goal>
+						</goals>
+						<configuration>
+							<domainsXml>/samples.xml</domainsXml>
+							<domain>Bookstore</domain>
+							<schema>bookstore</schema>
+							<packageName>bookstore</packageName>
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
 			<!-- xuml-tools-maven-plugin does add this directory as source but eclipse 
