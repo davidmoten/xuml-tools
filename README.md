@@ -114,7 +114,7 @@ Run it locally using Jetty:
     cd xuml-tools/xuml-diagrams
     mvn clean jetty:run
 
-Run using Google App Engine locally:
+Or run locally using Google App Engine (takes much longer to startup):
 
     cd xuml-tools/xuml-diagrams
     mvn gae:unpack 
