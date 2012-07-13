@@ -814,17 +814,8 @@
 	<ModeledDomain Name="all-types">
 		<Subsystem Name="all-types" Floor="261" Ceiling="280">
 			<NonSpecializedClass Name="A">
-				<IndependentAttribute Name="A one" Type="integer">
+				<IndependentAttribute Name="A one" Type="string">
 					<Identifier Number="1" />
-					<Extension>
-						<xt:Documentation>
-							<xt:Content>This is the primary identifier for the class A and is a generated value.</xt:Content>
-							<xt:MimeType>text/plain</xt:MimeType>
-						</xt:Documentation>
-					</Extension>
-					<Extension>
-						<xt:Generation generated="true"/>
-					</Extension>
 				</IndependentAttribute>
 				<IndependentAttribute Name="one" Type="boolean" />
 				<IndependentAttribute Name="two" Type="integer" />
@@ -880,6 +871,25 @@
 				<SpecializedClass Name="C" />
 			</Generalization>
 
+		</Subsystem>
+	</ModeledDomain>
+
+	<ModeledDomain Name="extensions">
+		<Subsystem Name="extensions" Floor="301" Ceiling="320">
+			<NonSpecializedClass Name="A">
+				<IndependentAttribute Name="one" Type="arbitraryId">
+					<Identifier Number="1" />
+					<Extension>
+						<xt:Documentation>
+							<xt:Content>This is the primary identifier for the class A</xt:Content>
+							<xt:MimeType>text/plain</xt:MimeType>
+						</xt:Documentation>
+					</Extension>
+					<Extension>
+						<xt:Generation generated="true" />
+					</Extension>
+				</IndependentAttribute>
+			</NonSpecializedClass>
 		</Subsystem>
 	</ModeledDomain>
 

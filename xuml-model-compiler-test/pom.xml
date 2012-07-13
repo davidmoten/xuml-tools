@@ -197,6 +197,18 @@
 							<packageName>bookstore</packageName>
 						</configuration>
 					</execution>
+					<execution>
+						<id>extensions</id>
+						<goals>
+							<goal>generate-jpa</goal>
+						</goals>
+						<configuration>
+							<domainsXml>/samples.xml</domainsXml>
+							<domain>extensions</domain>
+							<schema>extensions</schema>
+							<packageName>extensions</packageName>
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
 			<!-- xuml-tools-maven-plugin does add this directory as source but eclipse 

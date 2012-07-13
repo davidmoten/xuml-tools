@@ -219,7 +219,7 @@ public abstract class ClassInfoBase {
 		}
 
 		public boolean isNullable() {
-			return nullable;
+			return nullable && !extensions.isGenerated();
 		}
 
 	}

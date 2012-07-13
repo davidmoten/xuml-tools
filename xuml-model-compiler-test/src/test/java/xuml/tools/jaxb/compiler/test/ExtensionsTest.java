@@ -1,6 +1,6 @@
 package xuml.tools.jaxb.compiler.test;
 
-import java.util.Date;
+import static org.junit.Assert.assertNotNull;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -11,16 +11,16 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import xuml.tools.util.database.DerbyUtil;
-import all_types.A;
-import all_types.Context;
+import extensions.A;
+import extensions.Context;
 
-public class AllTypesTest {
+public class ExtensionsTest {
 
 	@BeforeClass
 	public static void setup() {
 		DerbyUtil.disableDerbyLog();
 		EntityManagerFactory emf = Persistence
-				.createEntityManagerFactory("all-types");
+				.createEntityManagerFactory("extensions");
 		Context.setEntityManagerFactory(emf);
 	}
 
@@ -34,21 +34,12 @@ public class AllTypesTest {
 		EntityManager em = Context.createEntityManager();
 		try {
 			em.getTransaction().begin();
-			A a = A.create("something");
-			// boolean
-			a.setOne(true);
-			// integer
-			a.setTwo(123);
-			// real
-			a.setThree(1.0001);
-			// date
-			a.setFour(new Date());
-			// timestamp
-			a.setFive(new Date());
-			// arbitraryId
-			a.setSix(10);
+			A a = new A();
 
 			a.persist(em);
+
+			// check that field 'one' has been generated
+			assertNotNull(a.getId());
 
 			em.getTransaction().commit();
 		} finally {

@@ -76,6 +76,11 @@ public class CodeGeneratorJavaTest {
 		generateClassesForDomain("zero-one-to-one-many");
 	}
 
+	@Test
+	public void testCodeGenerationForExtensions() throws FileNotFoundException {
+		generateClassesForDomain("extensions");
+	}
+
 	private void generateClassesForDomain(String domainName) {
 		String underscored = domainName.replaceAll("-", "_").toLowerCase();
 		generateClassesForDomain(domainName, underscored, underscored);

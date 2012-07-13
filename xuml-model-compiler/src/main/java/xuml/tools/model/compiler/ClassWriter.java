@@ -487,7 +487,8 @@ public class ClassWriter {
 					info.addType(member.getType().getType()),
 					member.getFieldName());
 			writeAttributeValidationMethod(out, member.getFieldName(),
-					member.getType(), info, validationMethods, true);
+					member.getType(), info, validationMethods, true, member
+							.getExtensions().isGenerated());
 		}
 	}
 
@@ -540,13 +541,17 @@ public class ClassWriter {
 			MyIndependentAttribute attribute, ClassInfo info,
 			Set<String> validationMethods) {
 		writeAttributeValidationMethod(out, attribute.getFieldName(),
-				attribute.getType(), info, validationMethods, false);
+				attribute.getType(), info, validationMethods, false, attribute
+						.getExtensions().isGenerated());
 	}
 
 	private void writeAttributeValidationMethod(PrintStream out,
 			String fieldName, MyTypeDefinition type, ClassInfo info,
-			Set<String> validationMethods, boolean inEmbeddedId) {
+			Set<String> validationMethods, boolean inEmbeddedId,
+			boolean generated) {
 
+		if (generated)
+			return;
 		String indent;
 		if (inEmbeddedId)
 			indent = "        ";
