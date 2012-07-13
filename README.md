@@ -114,6 +114,11 @@ The items that may be left out:
 
 Web Class Diagram Viewer
 ------------------------
+These pre-alpha demos are available:
+
+* [CloudBees](http://xuml-diagrams.xuml-tools.cloudbees.net/) using in-memory datastore
+* [Google App Engine](http://xuml-tools.appspot.com) using Big Table datastore
+
 Run it locally using Jetty and in-memory datastore (for saving diagram positions):
 
     cd xuml-tools/xuml-diagrams
@@ -127,4 +132,4 @@ Or run locally using Google App Engine (takes much longer to startup). Note: use
     
 Note that gae:unpack need only be run once to download the sdk.
 
-Then open [http://localhost:8080]() in a browser. An early draft is released at [http://xuml-tools.appspot.com]() on Google App Engine.
+Then open [http://localhost:8080]() in a browser.
