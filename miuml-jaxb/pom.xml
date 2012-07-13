@@ -31,7 +31,7 @@
 				</executions>
 				<configuration>
 					<schemaDirectory>${basedir}/src/main/resources</schemaDirectory>
-					<packageName>miuml.jaxb</packageName>
+					<bindingDirectory>${basedir}/src/main/resources</bindingDirectory>
 				</configuration>
 			</plugin>
 		</plugins>

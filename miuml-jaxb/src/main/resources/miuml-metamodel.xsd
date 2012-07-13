@@ -1239,15 +1239,14 @@
 
 	<complexType name="Extension">
 		<annotation>
-			<documentation>Inspired by extension-point element structure used in
-				Eclipse	plugins.xml
+			<documentation>Extension point for xuml-tools. For example
+				documentation against attributes, classes would be placed in an
+				Extension element.
 			</documentation>
 		</annotation>
 		<sequence>
 			<any processContents="lax" minOccurs="0" maxOccurs="unbounded" />
 		</sequence>
-		<attribute name="name" type="string" use="optional" />
-		<attribute name="namespace" type="string" use="optional" />
 		<anyAttribute processContents="lax" />
 	</complexType>
 

@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
 
 import miuml.jaxb.Association;
 import miuml.jaxb.AsymmetricPerspective;
@@ -21,12 +22,10 @@ import miuml.jaxb.BinaryAssociation;
 import miuml.jaxb.BooleanType;
 import miuml.jaxb.Class;
 import miuml.jaxb.CreationEvent;
-import miuml.jaxb.Documentation;
 import miuml.jaxb.EnumeratedType;
 import miuml.jaxb.Event;
 import miuml.jaxb.Extension;
 import miuml.jaxb.Generalization;
-import miuml.jaxb.Generation;
 import miuml.jaxb.IdentifierAttribute;
 import miuml.jaxb.IndependentAttribute;
 import miuml.jaxb.IntegerType;
@@ -46,6 +45,12 @@ import miuml.jaxb.SymmetricPerspective;
 import miuml.jaxb.Transition;
 import miuml.jaxb.UnaryAssociation;
 
+import org.w3c.dom.Node;
+
+import xuml.tools.miuml.metamodel.extensions.jaxb.Documentation;
+import xuml.tools.miuml.metamodel.extensions.jaxb.Generation;
+import xuml.tools.miuml.metamodel.extensions.jaxb.Marshaller;
+
 import com.google.common.base.Function;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
@@ -61,6 +66,7 @@ public class ClassInfo extends ClassInfoBase {
 	private final TypeRegister typeRegister = new TypeRegister();
 	private final Lookups lookups;
 	private static NameManager nameManager = NameManager.getInstance();
+	private final static Marshaller extensionsMarshaller = new Marshaller();
 
 	public ClassInfo(Class cls, String packageName, String classDescription,
 			String schema, Lookups lookups) {
@@ -122,14 +128,25 @@ public class ClassInfo extends ClassInfoBase {
 		String documentationContent = null;
 		boolean generated = false;
 		for (Extension ext : a.getExtension()) {
-			JAXBElement<?> e = (JAXBElement<?>) ext.getAny().get(0);
-			if (e.getValue() instanceof Documentation) {
-				Documentation doco = (Documentation) e.getValue();
-				documentationMimeType = doco.getMimeType();
-				documentationContent = doco.getContent();
-			} else if (e.getValue() instanceof Generation) {
-				Generation g = (Generation) e.getValue();
-				generated = g.getGenerated();
+			for (Object any : ext.getAny()) {
+				Object element;
+				try {
+					element = extensionsMarshaller.unmarshal((Node) any);
+				} catch (JAXBException ex) {
+					// extension will not be used because not recognized
+					element = null;
+				}
+				if (element != null) {
+					Object e = ((JAXBElement<?>) element).getValue();
+					if (e instanceof Documentation) {
+						Documentation doco = (Documentation) e;
+						documentationMimeType = doco.getMimeType();
+						documentationContent = doco.getContent();
+					} else if (e instanceof Generation) {
+						Generation g = (Generation) e;
+						generated = g.getGenerated();
+					}
+				}
 			}
 		}
 		return new MyAttributeExtensions(generated, documentationMimeType,

@@ -1,7 +1,7 @@
 <schema targetNamespace="http://org.github/xuml-tools/miuml-metamodel-extensions"
 	xmlns:xt="http://org.github/xuml-tools/miuml-metamodel-extensions"
-	xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
-
+	xmlns="http://www.w3.org/2001/XMLSchema" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+	jaxb:version="2.0" elementFormDefault="qualified">
 	<element name="Documentation" type="xt:Documentation" />
 
 	<element name="Generation" type="xt:Generation" />

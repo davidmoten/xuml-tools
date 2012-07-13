@@ -816,13 +816,13 @@
 			<NonSpecializedClass Name="A">
 				<IndependentAttribute Name="A one" Type="integer">
 					<Identifier Number="1" />
-					<Extension name="documentation" namespace="http://org.github/xuml-tools/miuml-metamodel-extensions" >
+					<Extension>
 						<xt:Documentation>
 							<xt:Content>This is the primary identifier for the class A and is a generated value.</xt:Content>
 							<xt:MimeType>text/plain</xt:MimeType>
 						</xt:Documentation>
 					</Extension>
-					<Extension name="generation" namespace="http://org.github/xuml-tools/miuml-metamodel-extensions">
+					<Extension>
 						<xt:Generation generated="true"/>
 					</Extension>
 				</IndependentAttribute>
