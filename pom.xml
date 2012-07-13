@@ -178,6 +178,7 @@
 							<version>2.8.1</version>
 							<configuration>
 								<aggregate>true</aggregate>
+								<excludePackageNames>abc:*_*:bookstore:extensions:specialization</excludePackageNames>
 							</configuration>
 						</plugin>
 						<!-- commented this plugin out because cannot run offline (e.g. at 
