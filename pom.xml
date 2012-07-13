@@ -41,7 +41,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<compiler.plugin.version>2.3.2</compiler.plugin.version>
 		<maven.compiler.source>1.6</maven.compiler.source>
-		<maven.compiler.target>1.7</maven.compiler.target>
+		<maven.compiler.target>1.6</maven.compiler.target>
 		<gae.version>1.7.0</gae.version>
 		<gae.plugin.version>0.9.4</gae.plugin.version>
 		<junit.version>4.10</junit.version>
