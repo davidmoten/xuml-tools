@@ -71,7 +71,8 @@
 					</documentation>
 				</annotation>
 			</element>
-			<element ref="t:DomainExtension" minOccurs="0" maxOccurs="unbounded">
+			<element name="Extension" type="t:Extension" minOccurs="0"
+				maxOccurs="unbounded">
 				<annotation>
 					<documentation>Extension point for miuml tools</documentation>
 				</annotation>
@@ -86,9 +87,6 @@
 			</annotation>
 		</attribute>
 	</complexType>
-
-	<element name="DomainExtension" type="t:DomainExtension"
-		abstract="true" />
 
 	<element name="ModeledDomain" substitutionGroup="t:Domain"
 		type="t:ModeledDomain" />
@@ -283,7 +281,8 @@
 							<documentation>R500</documentation>
 						</annotation>
 					</element>
-					<element ref="t:ClassExtension" minOccurs="0" maxOccurs="unbounded">
+					<element name="Extension" type="t:Extension" minOccurs="0"
+						maxOccurs="unbounded">
 						<annotation>
 							<documentation>Extension point for miuml tools</documentation>
 						</annotation>
@@ -318,9 +317,6 @@
 			</extension>
 		</complexContent>
 	</complexType>
-
-	<element name="ClassExtension" type="t:ClassExtension"
-		abstract="true" />
 
 
 	<complexType name="DomainBuildSpecification">
@@ -376,7 +372,8 @@
 					<documentation>R22</documentation>
 				</annotation>
 			</element>
-			<element ref="t:AttributeExtension" minOccurs="0" maxOccurs="unbounded">
+			<element name="Extension" type="t:Extension" minOccurs="0"
+				maxOccurs="unbounded">
 				<annotation>
 					<documentation>Extension point for miuml tools</documentation>
 				</annotation>
@@ -384,9 +381,6 @@
 		</sequence>
 		<attribute name="Name" type="t:Name" use="required" />
 	</complexType>
-
-	<element name="AttributeExtension" type="t:AttributeExtension" abstract="true"/>
-
 
 	<element name="NativeAttribute" substitutionGroup="t:Attribute"
 		type="t:NativeAttribute" abstract="true" />
@@ -1243,33 +1237,20 @@
 
 	<!-- Extension point types -->
 
-	<complexType name="ClassExtension">
-		<complexContent>
-			<extension base="t:Extension">
-			</extension>
-		</complexContent>
-	</complexType>
-
-	<complexType name="AttributeExtension">
-		<complexContent>
-			<extension base="t:Extension">
-			</extension>
-		</complexContent>
-	</complexType>
-
-	<complexType name="DomainExtension">
-		<complexContent>
-			<extension base="t:Extension">
-			</extension>
-		</complexContent>
-	</complexType>
-
 	<complexType name="Extension">
+		<annotation>
+			<documentation>Inspired by extension-point element structure used in
+				Eclipse	plugins.xml
+			</documentation>
+		</annotation>
 		<sequence>
-			<any processContents="strict" />
+			<any processContents="lax" minOccurs="0" maxOccurs="unbounded" />
 		</sequence>
+		<attribute name="name" type="string" use="optional" />
+		<attribute name="namespace" type="string" use="optional" />
+		<anyAttribute processContents="lax" />
 	</complexType>
-	
+
 
 	<!-- Utility complex types -->
 

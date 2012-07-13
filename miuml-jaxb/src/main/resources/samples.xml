@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Domains xmlns="http://www.miuml.org/metamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.miuml.org/metamodel miuml-metamodel.xsd">
+	xsi:schemaLocation="http://www.miuml.org/metamodel miuml-metamodel.xsd  http://org.github/xuml-tools/miuml-metamodel-extensions xuml-tools-miuml-metamodel-extensions.xsd"
+	xmlns:xt="http://org.github/xuml-tools/miuml-metamodel-extensions">
 
 	<DomainBuildSpecification Name="Base"
 		DomainNameIsDefaultSubsystemName="true" DefaultSubsystemName="Subsystem"
@@ -813,8 +814,17 @@
 	<ModeledDomain Name="all-types">
 		<Subsystem Name="all-types" Floor="261" Ceiling="280">
 			<NonSpecializedClass Name="A">
-				<IndependentAttribute Name="A one" Type="string">
+				<IndependentAttribute Name="A one" Type="integer">
 					<Identifier Number="1" />
+					<Extension name="documentation" namespace="http://org.github/xuml-tools/miuml-metamodel-extensions" >
+						<xt:Documentation>
+							<xt:Content>This is the primary identifier for the class A and is a generated value.</xt:Content>
+							<xt:MimeType>text/plain</xt:MimeType>
+						</xt:Documentation>
+					</Extension>
+					<Extension name="generation" namespace="http://org.github/xuml-tools/miuml-metamodel-extensions">
+						<xt:Generation generated="true"/>
+					</Extension>
 				</IndependentAttribute>
 				<IndependentAttribute Name="one" Type="boolean" />
 				<IndependentAttribute Name="two" Type="integer" />
