@@ -1,20 +1,21 @@
 <schema targetNamespace="http://org.github/xuml-tools/miuml-metamodel-extensions"
 	xmlns:xt="http://org.github/xuml-tools/miuml-metamodel-extensions"
-	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.miuml.org/metamodel miuml-metamodel.xsd"
-	xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" >
-	
-	<import namespace="http://www.miuml.org/metamodel" schemaLocation="miuml-metamodel.xsd" />
+	xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+	<element name="Documentation" type="xt:Documentation" />
+
+	<element name="Generation" type="xt:Generation" />
 
 	<complexType name="Documentation">
 		<sequence>
-			<element name="Content" type="string"/>
-			<element name="MimeType" type="string"/>
+			<element name="Content" type="string" />
+			<element name="MimeType" type="string" />
 		</sequence>
 	</complexType>
 
 	<complexType name="Generation">
-		<attribute name="generated" type="boolean" use="optional" default="false"/>
+		<attribute name="generated" type="boolean" use="optional"
+			default="false" />
 	</complexType>
 
 </schema>
