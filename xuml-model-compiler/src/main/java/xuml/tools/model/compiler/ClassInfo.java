@@ -21,9 +21,12 @@ import miuml.jaxb.BinaryAssociation;
 import miuml.jaxb.BooleanType;
 import miuml.jaxb.Class;
 import miuml.jaxb.CreationEvent;
+import miuml.jaxb.Documentation;
 import miuml.jaxb.EnumeratedType;
 import miuml.jaxb.Event;
+import miuml.jaxb.Extension;
 import miuml.jaxb.Generalization;
+import miuml.jaxb.Generation;
 import miuml.jaxb.IdentifierAttribute;
 import miuml.jaxb.IndependentAttribute;
 import miuml.jaxb.IntegerType;
@@ -48,6 +51,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
+//TODO not keen on inheritance but was useful while design was evolving, get rid of ClassInfoBase
 public class ClassInfo extends ClassInfoBase {
 
 	private final Class cls;
@@ -113,10 +117,30 @@ public class ClassInfo extends ClassInfoBase {
 		return newHashSet(transform(attributes, attributeName));
 	}
 
+	private MyAttributeExtensions getAttributeExtensions(Attribute a) {
+		String documentationMimeType = null;
+		String documentationContent = null;
+		boolean generated = false;
+		for (Extension ext : a.getExtension()) {
+			JAXBElement<?> e = (JAXBElement<?>) ext.getAny().get(0);
+			if (e.getValue() instanceof Documentation) {
+				Documentation doco = (Documentation) e.getValue();
+				documentationMimeType = doco.getMimeType();
+				documentationContent = doco.getContent();
+			} else if (e.getValue() instanceof Generation) {
+				Generation g = (Generation) e.getValue();
+				generated = g.getGenerated();
+			}
+		}
+		return new MyAttributeExtensions(generated, documentationMimeType,
+				documentationContent);
+	}
+
 	private HashMultimap<BigInteger, Attribute> getIdentifierAttributes() {
 		HashMultimap<BigInteger, Attribute> map = HashMultimap.create();
 		for (JAXBElement<? extends Attribute> element : cls.getAttribute()) {
 			Attribute attribute = element.getValue();
+
 			for (IdentifierAttribute id : attribute.getIdentifier()) {
 				map.put(id.getNumber(), attribute);
 			}
@@ -202,7 +226,8 @@ public class ClassInfo extends ClassInfoBase {
 					cls.getName(), a.getName()), nameManager.toColumnName(
 					cls.getName(), a.getName()), otherClassName,
 					nameManager.toColumnName(otherClassName,
-							p.getAttributeName()), p.getType());
+							p.getAttributeName()), p.getType(),
+					getAttributeExtensions(a));
 		else
 			throw new RuntimeException("attribute not found!");
 	}
@@ -242,7 +267,8 @@ public class ClassInfo extends ClassInfoBase {
 	private MyIdAttribute createMyIdAttribute(NativeAttribute a) {
 		return new MyIdAttribute(a.getName(),
 				Util.toJavaIdentifier(a.getName()), Util.toColumnName(a
-						.getName()), getTypeDefinition(a.getType()));
+						.getName()), getTypeDefinition(a.getType()),
+				getAttributeExtensions(a));
 	}
 
 	private MyIndependentAttribute createMyIndependentAttribute(
@@ -254,10 +280,10 @@ public class ClassInfo extends ClassInfoBase {
 				inIdentifier = true;
 		}
 		boolean isNullable = !inIdentifier;
-
+		MyAttributeExtensions extensions = getAttributeExtensions(a);
 		return new MyIndependentAttribute(Util.toJavaIdentifier(a.getName()),
 				Util.toColumnName(a.getName()), getTypeDefinition(a.getType()),
-				isNullable, "description");
+				isNullable, "description", extensions);
 	}
 
 	@Override

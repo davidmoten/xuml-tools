@@ -20,6 +20,8 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
@@ -41,6 +43,7 @@ import javax.persistence.UniqueConstraint;
 import org.apache.commons.lang.StringEscapeUtils;
 
 import xuml.tools.model.compiler.ClassInfoBase.Mult;
+import xuml.tools.model.compiler.ClassInfoBase.MyAttributeExtensions;
 import xuml.tools.model.compiler.ClassInfoBase.MyEvent;
 import xuml.tools.model.compiler.ClassInfoBase.MyIdAttribute;
 import xuml.tools.model.compiler.ClassInfoBase.MyIndependentAttribute;
@@ -334,7 +337,7 @@ public class ClassWriter {
 			// override attribute field name to 'id'
 			writeIndependentAttributeMember(out, "id",
 					attribute.getColumnName(), false, "    ",
-					attribute.getType());
+					attribute.getType(), attribute.getExtensions());
 		} else {
 			writeEmbeddedIdField(out, info);
 
@@ -1323,16 +1326,29 @@ public class ClassWriter {
 			MyIndependentAttribute attribute, String indent) {
 		writeIndependentAttributeMember(out, attribute.getFieldName(),
 				attribute.getColumnName(), attribute.isNullable(), indent,
-				attribute.getType());
+				attribute.getType(), attribute.getExtensions());
 	}
 
 	private void writeIndependentAttributeMember(PrintStream out,
 			String fieldName, String columnName, boolean isNullable,
-			String indent, MyTypeDefinition type) {
+			String indent, MyTypeDefinition type,
+			MyAttributeExtensions extensions) {
+		if (extensions.getDocumentationContent() != null)
+			jd(out, extensions.getDocumentationContent(), indent);
+		writeGeneratedAnnotation(out, extensions.isGenerated(), indent);
 		writeFieldAnnotation(out, columnName, isNullable, indent, type, true,
 				true);
 		out.format("%sprivate %s %s;\n\n", indent,
 				info.addType(type.getType()), fieldName);
+	}
+
+	private void writeGeneratedAnnotation(PrintStream out, boolean generated,
+			String indent) {
+		if (generated) {
+			out.format("%s@%s(strategy=%s.AUTO)\n", indent,
+					info.addType(GeneratedValue.class),
+					info.addType(GenerationType.class));
+		}
 	}
 
 	private void writeFieldAnnotation(PrintStream out, String columnName,

@@ -111,8 +111,10 @@ public abstract class ClassInfoBase {
 			MyIndependentAttribute {
 
 		public MyPrimaryIdAttributeMember(String fieldName, String columnName,
-				MyTypeDefinition type, boolean nullable, String description) {
-			super(fieldName, columnName, type, nullable, description);
+				MyTypeDefinition type, boolean nullable, String description,
+				MyAttributeExtensions extensions) {
+			super(fieldName, columnName, type, nullable, description,
+					extensions);
 		}
 
 	}
@@ -124,6 +126,7 @@ public abstract class ClassInfoBase {
 		private final String referenceColumnName;
 		private final MyTypeDefinition type;
 		private final String attributeName;
+		private final MyAttributeExtensions extensions;
 
 		public String getAttributeName() {
 			return attributeName;
@@ -131,18 +134,22 @@ public abstract class ClassInfoBase {
 
 		public MyIdAttribute(String attributeName, String fieldName,
 				String columnName, String referenceClass,
-				String referenceColumnName, MyTypeDefinition type) {
+				String referenceColumnName, MyTypeDefinition type,
+				MyAttributeExtensions extensions) {
 			this.attributeName = attributeName;
 			this.fieldName = fieldName;
 			this.columnName = columnName;
 			this.referenceClass = referenceClass;
 			this.referenceColumnName = referenceColumnName;
 			this.type = type;
+			this.extensions = extensions;
 		}
 
 		public MyIdAttribute(String attributeName, String fieldName,
-				String columnName, MyTypeDefinition type) {
-			this(attributeName, fieldName, columnName, null, null, type);
+				String columnName, MyTypeDefinition type,
+				MyAttributeExtensions extensions) {
+			this(attributeName, fieldName, columnName, null, null, type,
+					extensions);
 		}
 
 		public String getFieldName() {
@@ -165,6 +172,10 @@ public abstract class ClassInfoBase {
 			return type;
 		}
 
+		public MyAttributeExtensions getExtensions() {
+			return extensions;
+		}
+
 	}
 
 	public static class MyIndependentAttribute {
@@ -173,19 +184,18 @@ public abstract class ClassInfoBase {
 		private final MyTypeDefinition type;
 		private final boolean nullable;
 		private final String description;
-
-		public boolean isNullable() {
-			return nullable;
-		}
+		private final MyAttributeExtensions extensions;
 
 		public MyIndependentAttribute(String fieldName, String columnName,
-				MyTypeDefinition type, boolean nullable, String description) {
+				MyTypeDefinition type, boolean nullable, String description,
+				MyAttributeExtensions extensions) {
 			super();
 			this.fieldName = fieldName;
 			this.columnName = columnName;
 			this.type = type;
 			this.nullable = nullable;
 			this.description = description;
+			this.extensions = extensions;
 		}
 
 		public String getDescription() {
@@ -203,6 +213,15 @@ public abstract class ClassInfoBase {
 		public MyTypeDefinition getType() {
 			return type;
 		}
+
+		public MyAttributeExtensions getExtensions() {
+			return extensions;
+		}
+
+		public boolean isNullable() {
+			return nullable;
+		}
+
 	}
 
 	public static class MyParameter {
@@ -694,6 +713,33 @@ public abstract class ClassInfoBase {
 
 		public Set<String> getFieldNames() {
 			return fieldNames;
+		}
+
+	}
+
+	public static class MyAttributeExtensions {
+		private final boolean generated;
+		private final String documentationMimeType;
+		private final String documentationContent;
+
+		public MyAttributeExtensions(boolean generated,
+				String documentationMimeType, String documentationContent) {
+			super();
+			this.generated = generated;
+			this.documentationMimeType = documentationMimeType;
+			this.documentationContent = documentationContent;
+		}
+
+		public boolean isGenerated() {
+			return generated;
+		}
+
+		public String getDocumentationMimeType() {
+			return documentationMimeType;
+		}
+
+		public String getDocumentationContent() {
+			return documentationContent;
 		}
 
 	}

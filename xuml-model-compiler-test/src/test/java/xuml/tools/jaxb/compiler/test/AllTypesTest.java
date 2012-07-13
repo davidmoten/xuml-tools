@@ -34,7 +34,7 @@ public class AllTypesTest {
 		EntityManager em = Context.createEntityManager();
 		try {
 			em.getTransaction().begin();
-			A a = A.create(1);
+			A a = new A();
 			// boolean
 			a.setOne(true);
 			// integer
