@@ -3,7 +3,7 @@ xuml-tools
 
 [Executable UML](http://en.wikipedia.org/wiki/Executable_UML) tools (xml schema, java model compiler, java+javascript model viewer) based on [miUML](http://www.miuml.org) metamodels.
 
-This project is **in active development** and has not reached alpha release status yet.
+This project is **in active development** and has not reached alpha release status yet (will be soon methinks).
 
 <img src="https://github.com/davidmoten/xuml-tools/raw/master/xuml-diagrams/src/docs/class-diagram.png">
 
