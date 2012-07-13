@@ -15,6 +15,11 @@ Maven site is [here](https://xuml-tools.ci.cloudbees.com/job/xuml-tools_site/sit
 
 Getting started
 ---------------
+Requirements:
+
+* java 1.7 or later runtime (due to specific jaxb dependencies at the moment)
+* maven 3 (for building from source)
+
 Until the project has matured enough to release artifacts to Maven Central repository this is how to locally install the artfacts from source (Maven 3 required):
 
     git clone https://github.com/davidmoten/xuml-tools.git
