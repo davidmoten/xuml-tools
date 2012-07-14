@@ -249,7 +249,7 @@
 	<element name="Relationship" substitutionGroup="t:SubsystemElement"
 		type="t:Relationship" abstract="true" />
 	<element name="Class" substitutionGroup="t:SubsystemElement"
-		type="t:Class" abstract="true" />
+		type="t:Class" />
 
 	<complexType name="Relationship">
 		<complexContent>
@@ -265,6 +265,14 @@
 	</complexType>
 
 	<complexType name="Class">
+		<annotation>
+			<documentation>
+				R23 to SpecializedClass and NonSpecializedClass has been collapsed into
+				Class because this distinction is captured by
+				GeneralizationReferences/SpecializationReferences on the attributes
+				of the class.
+			</documentation>
+		</annotation>
 		<complexContent>
 			<extension base="t:SubsystemElement">
 				<annotation>
@@ -333,33 +341,6 @@
 	<!--++++++++++++++++++++++++ -->
 	<!-- CLASS SUBSYSTEM +++++++ -->
 	<!--++++++++++++++++++++++++ -->
-
-	<!-- Class specializations -->
-
-	<element name="NonSpecializedClass" substitutionGroup="t:Class"
-		type="t:NonSpecializedClass" />
-	<element name="SpecializedClass" substitutionGroup="t:Class"
-		type="t:SpecializedClass" />
-
-	<complexType name="NonSpecializedClass">
-		<complexContent>
-			<extension base="t:Class">
-				<annotation>
-					<documentation>R23</documentation>
-				</annotation>
-			</extension>
-		</complexContent>
-	</complexType>
-
-	<complexType name="SpecializedClass">
-		<complexContent>
-			<extension base="t:Class">
-				<annotation>
-					<documentation>R23</documentation>
-				</annotation>
-			</extension>
-		</complexContent>
-	</complexType>
 
 	<!-- Attribute specializations -->
 	<element name="Attribute" type="t:Attribute" abstract="true" />

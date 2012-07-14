@@ -71,7 +71,7 @@
 		<Subsystem Name="Product Specification" Alias="Product Specification"
 			Floor="11" Ceiling="20">
 
-			<SpecializedClass Name="Product" Cnum="1" Element="1"
+			<Class Name="Product" Cnum="1" Element="1"
 				Alias="Product">
 				<IndependentAttribute Name="Product ID"
 					Type="Universal Product Code">
@@ -100,9 +100,9 @@
 					<SpecializationReference Relationship="12"
 						Attribute="Special Order Product ID" />
 				</ReferentialAttribute>
-			</SpecializedClass>
+			</Class>
 
-			<SpecializedClass Name="Special Order Product"
+			<Class Name="Special Order Product"
 				Alias="Special Order Product">
 				<IndependentAttribute Name="Special Order Product ID"
 					Type="arbitraryId">
@@ -116,9 +116,9 @@
 					<GeneralizationReference Relationship="12"
 						Attribute="Product ID" />
 				</ReferentialAttribute>
-			</SpecializedClass>
+			</Class>
 
-			<SpecializedClass Name="Stocked Product">
+			<Class Name="Stocked Product">
 				<IndependentAttribute Name="Stocked Product ID"
 					Type="arbitraryId">
 					<Identifier Number="1" />
@@ -135,9 +135,9 @@
 					<GeneralizationReference Relationship="12"
 						Attribute="Product ID" />
 				</ReferentialAttribute>
-			</SpecializedClass>
+			</Class>
 
-			<NonSpecializedClass Name="Product Category">
+			<Class Name="Product Category">
 				<IndependentAttribute Name="Category ID" Type="arbitraryId">
 					<Identifier Number="1" />
 				</IndependentAttribute>
@@ -146,9 +146,9 @@
 				<ReferentialAttribute Name="Product ID">
 					<ToOneReference Relationship="15" Attribute="Product ID" />
 				</ReferentialAttribute>
-			</NonSpecializedClass>
+			</Class>
 
-			<NonSpecializedClass Name="Publisher">
+			<Class Name="Publisher">
 				<IndependentAttribute Name="Group code"
 					Type="ISBN Group Identifier">
 					<Identifier Number="1" />
@@ -163,7 +163,7 @@
 				<ReferentialAttribute Name="Product">
 					<ToOneReference Relationship="1" Attribute="Product ID" />
 				</ReferentialAttribute>
-			</NonSpecializedClass>
+			</Class>
 
 			<Generalization Rnum="12" Superclass="Product">
 				<SpecializedClass Name="Stocked Product" />
@@ -194,15 +194,15 @@
 		<Subsystem Name="Ordering" Alias="Ordering" Floor="1"
 			Ceiling="10">
 
-			<NonSpecializedClass Name="Shopping Cart">
+			<Class Name="Shopping Cart">
 				<IndependentAttribute Name="Cart ID" Type="arbitraryId">
 					<Identifier Number="1" />
 				</IndependentAttribute>
 				<DerivedAttribute Name="Total value" Formula="formula for total value"
 					Type="Money" />
-			</NonSpecializedClass>
+			</Class>
 
-			<NonSpecializedClass Name="Order">
+			<Class Name="Order">
 				<IndependentAttribute Name="Order ID" Type="arbitraryId">
 					<Identifier Number="1" />
 				</IndependentAttribute>
@@ -283,9 +283,9 @@
 						EventID="5" />
 				</Lifecycle>
 
-			</NonSpecializedClass>
+			</Class>
 
-			<NonSpecializedClass Name="Customer">
+			<Class Name="Customer">
 				<IndependentAttribute Name="Email"
 					Type="Internet Email Address">
 					<Identifier Number="1" />
@@ -296,9 +296,9 @@
 				<IndependentAttribute Name="Phone" Type="Telephone Number" />
 				<IndependentAttribute Name="Purchases made"
 					Type="Count" />
-			</NonSpecializedClass>
+			</Class>
 
-			<NonSpecializedClass Name="Credit Card Charge">
+			<Class Name="Credit Card Charge">
 				<IndependentAttribute Name="Charge Id" Type="arbitraryId">
 					<Identifier Number="1" />
 				</IndependentAttribute>
@@ -316,9 +316,9 @@
 					Type="Money" />
 				<IndependentAttribute Name="Approval code"
 					Type="Bank Card Approval Code" />
-			</NonSpecializedClass>
+			</Class>
 
-			<NonSpecializedClass Name="Product Selection"
+			<Class Name="Product Selection"
 				Association="4">
 				<IndependentAttribute Name="Product Selection ID"
 					Type="arbitraryId">
@@ -329,7 +329,7 @@
 					Type="Money" />
 				<DerivedAttribute Name="Selection value" Type="Money"
 					Formula="selection value formula" />
-			</NonSpecializedClass>
+			</Class>
 
 		</Subsystem>
 
@@ -339,16 +339,16 @@
 
 		<Subsystem Name="Class and Attribute" Floor="20" Ceiling="40">
 
-			<SpecializedClass Name="Class">
+			<Class Name="Class">
 				<IndependentAttribute Name="Domain" Type="string">
 					<Identifier Number="1" />
 				</IndependentAttribute>
 				<IndependentAttribute Name="Name" Type="string">
 					<Identifier Number="1" />
 				</IndependentAttribute>
-			</SpecializedClass>
+			</Class>
 
-			<SpecializedClass Name="Attribute">
+			<Class Name="Attribute">
 				<IndependentAttribute Name="Domain" Type="string">
 					<Identifier Number="1" />
 				</IndependentAttribute>
@@ -359,7 +359,7 @@
 					<Identifier Number="1" />
 				</IndependentAttribute>
 				<IndependentAttribute Name="Type" Type="string" />
-			</SpecializedClass>
+			</Class>
 
 			<BinaryAssociation Rnum="1">
 				<ActivePerspective Phrase="characterizes"
@@ -375,7 +375,7 @@
 
 		<Subsystem Name="Composite Id example" Floor="61" Ceiling="80">
 
-			<NonSpecializedClass Name="A">
+			<Class Name="A">
 
 				<IndependentAttribute Name="A one" Type="string">
 					<Identifier Number="1" />
@@ -406,9 +406,9 @@
 					<Transition State="Has Started" Destination="Done Something"
 						EventID="2" />
 				</Lifecycle>
-			</NonSpecializedClass>
+			</Class>
 
-			<NonSpecializedClass Name="B">
+			<Class Name="B">
 				<IndependentAttribute Name="B one" Type="string">
 					<Identifier Number="1" />
 				</IndependentAttribute>
@@ -421,9 +421,9 @@
 					<ToOneReference Relationship="1" Attribute="A two" />
 				</ReferentialAttribute>
 				<IndependentAttribute Name="B two" Type="string" />
-			</NonSpecializedClass>
+			</Class>
 
-			<NonSpecializedClass Name="C">
+			<Class Name="C">
 				<IndependentAttribute Name="C one" Type="string">
 					<Identifier Number="1" />
 				</IndependentAttribute>
@@ -440,7 +440,7 @@
 					<ToOneReference Relationship="2" Attribute="B A two" />
 				</ReferentialAttribute>
 				<IndependentAttribute Name="C two" Type="string" />
-			</NonSpecializedClass>
+			</Class>
 
 			<BinaryAssociation Rnum="1">
 				<ActivePerspective Phrase="characterizes"
@@ -464,7 +464,7 @@
 
 		<Subsystem Name="one-to-zero-one" Floor="81" Ceiling="100">
 
-			<NonSpecializedClass Name="A">
+			<Class Name="A">
 
 				<IndependentAttribute Name="A one" Type="string">
 					<Identifier Number="1" />
@@ -478,9 +478,9 @@
 				<ReferentialAttribute Name="A B two">
 					<ToOneReference Relationship="1" Attribute="B two" />
 				</ReferentialAttribute>
-			</NonSpecializedClass>
+			</Class>
 
-			<NonSpecializedClass Name="B">
+			<Class Name="B">
 				<IndependentAttribute Name="B one" Type="string">
 					<Identifier Number="1" />
 				</IndependentAttribute>
@@ -493,7 +493,7 @@
 				<ReferentialAttribute Name="B A two">
 					<ToOneReference Relationship="1" Attribute="A two" />
 				</ReferentialAttribute>
-			</NonSpecializedClass>
+			</Class>
 
 			<BinaryAssociation Rnum="1">
 				<ActivePerspective Phrase="characterizes"
@@ -509,7 +509,7 @@
 
 		<Subsystem Name="one-to-many" Floor="101" Ceiling="120">
 
-			<NonSpecializedClass Name="A">
+			<Class Name="A">
 
 				<IndependentAttribute Name="A one" Type="string">
 					<Identifier Number="1" />
@@ -523,9 +523,9 @@
 				<ReferentialAttribute Name="A B two">
 					<ToOneReference Relationship="1" Attribute="B two" />
 				</ReferentialAttribute>
-			</NonSpecializedClass>
+			</Class>
 
-			<NonSpecializedClass Name="B">
+			<Class Name="B">
 				<IndependentAttribute Name="B one" Type="string">
 					<Identifier Number="1" />
 				</IndependentAttribute>
@@ -538,7 +538,7 @@
 				<ReferentialAttribute Name="B A two">
 					<ToOneReference Relationship="1" Attribute="A two" />
 				</ReferentialAttribute>
-			</NonSpecializedClass>
+			</Class>
 
 			<BinaryAssociation Rnum="1">
 				<ActivePerspective Phrase="characterizes"
@@ -554,7 +554,7 @@
 
 		<Subsystem Name="one-to-one" Floor="121" Ceiling="140">
 
-			<NonSpecializedClass Name="A">
+			<Class Name="A">
 
 				<IndependentAttribute Name="A one" Type="string">
 					<Identifier Number="1" />
@@ -568,9 +568,9 @@
 				<ReferentialAttribute Name="A B two">
 					<ToOneReference Relationship="1" Attribute="B two" />
 				</ReferentialAttribute>
-			</NonSpecializedClass>
+			</Class>
 
-			<NonSpecializedClass Name="B">
+			<Class Name="B">
 				<IndependentAttribute Name="B one" Type="string">
 					<Identifier Number="1" />
 				</IndependentAttribute>
@@ -583,7 +583,7 @@
 				<ReferentialAttribute Name="B A two">
 					<ToOneReference Relationship="1" Attribute="A two" />
 				</ReferentialAttribute>
-			</NonSpecializedClass>
+			</Class>
 
 			<BinaryAssociation Rnum="1">
 				<ActivePerspective Phrase="characterizes"
@@ -599,7 +599,7 @@
 
 		<Subsystem Name="zero-one-to-many" Floor="141" Ceiling="160">
 
-			<NonSpecializedClass Name="A">
+			<Class Name="A">
 
 				<IndependentAttribute Name="A one" Type="string">
 					<Identifier Number="1" />
@@ -613,9 +613,9 @@
 				<ReferentialAttribute Name="A B two">
 					<ToOneReference Relationship="1" Attribute="B two" />
 				</ReferentialAttribute>
-			</NonSpecializedClass>
+			</Class>
 
-			<NonSpecializedClass Name="B">
+			<Class Name="B">
 				<IndependentAttribute Name="B one" Type="string">
 					<Identifier Number="1" />
 				</IndependentAttribute>
@@ -628,7 +628,7 @@
 				<ReferentialAttribute Name="B A two">
 					<ToOneReference Relationship="1" Attribute="A two" />
 				</ReferentialAttribute>
-			</NonSpecializedClass>
+			</Class>
 
 			<BinaryAssociation Rnum="1">
 				<ActivePerspective Phrase="characterizes"
@@ -644,7 +644,7 @@
 
 		<Subsystem Name="one-to-one-many" Floor="161" Ceiling="180">
 
-			<NonSpecializedClass Name="A">
+			<Class Name="A">
 
 				<IndependentAttribute Name="A one" Type="string">
 					<Identifier Number="1" />
@@ -658,9 +658,9 @@
 				<ReferentialAttribute Name="A B two">
 					<ToOneReference Relationship="1" Attribute="B two" />
 				</ReferentialAttribute>
-			</NonSpecializedClass>
+			</Class>
 
-			<NonSpecializedClass Name="B">
+			<Class Name="B">
 				<IndependentAttribute Name="B one" Type="string">
 					<Identifier Number="1" />
 				</IndependentAttribute>
@@ -673,7 +673,7 @@
 				<ReferentialAttribute Name="B A two">
 					<ToOneReference Relationship="1" Attribute="A two" />
 				</ReferentialAttribute>
-			</NonSpecializedClass>
+			</Class>
 
 			<BinaryAssociation Rnum="1">
 				<ActivePerspective Phrase="characterizes"
@@ -689,7 +689,7 @@
 
 		<Subsystem Name="zero-one-to-one-many" Floor="181" Ceiling="200">
 
-			<NonSpecializedClass Name="A">
+			<Class Name="A">
 
 				<IndependentAttribute Name="A one" Type="string">
 					<Identifier Number="1" />
@@ -703,9 +703,9 @@
 				<ReferentialAttribute Name="A B two">
 					<ToOneReference Relationship="1" Attribute="B two" />
 				</ReferentialAttribute>
-			</NonSpecializedClass>
+			</Class>
 
-			<NonSpecializedClass Name="B">
+			<Class Name="B">
 				<IndependentAttribute Name="B one" Type="string">
 					<Identifier Number="1" />
 				</IndependentAttribute>
@@ -718,7 +718,7 @@
 				<ReferentialAttribute Name="B A two">
 					<ToOneReference Relationship="1" Attribute="A two" />
 				</ReferentialAttribute>
-			</NonSpecializedClass>
+			</Class>
 
 			<BinaryAssociation Rnum="1">
 				<ActivePerspective Phrase="characterizes"
@@ -734,7 +734,7 @@
 
 		<Subsystem Name="unary-one" Floor="201" Ceiling="220">
 
-			<NonSpecializedClass Name="A">
+			<Class Name="A">
 
 				<IndependentAttribute Name="A one" Type="string">
 					<Identifier Number="1" />
@@ -748,7 +748,7 @@
 				<ReferentialAttribute Name="A B two">
 					<ToOneReference Relationship="1" Attribute="B two" />
 				</ReferentialAttribute>
-			</NonSpecializedClass>
+			</Class>
 
 			<UnaryAssociation Rnum="1">
 				<SymmetricPerspective OnePerspective="true"
@@ -762,7 +762,7 @@
 
 		<Subsystem Name="unary-zero-one" Floor="221" Ceiling="240">
 
-			<NonSpecializedClass Name="A">
+			<Class Name="A">
 
 				<IndependentAttribute Name="A one" Type="string">
 					<Identifier Number="1" />
@@ -776,7 +776,7 @@
 				<ReferentialAttribute Name="A B two">
 					<ToOneReference Relationship="1" Attribute="B two" />
 				</ReferentialAttribute>
-			</NonSpecializedClass>
+			</Class>
 
 			<UnaryAssociation Rnum="1">
 				<SymmetricPerspective OnePerspective="true"
@@ -790,7 +790,7 @@
 
 		<Subsystem Name="secondary-identifiers" Floor="241" Ceiling="260">
 
-			<NonSpecializedClass Name="A">
+			<Class Name="A">
 				<IndependentAttribute Name="A one" Type="string">
 					<Identifier Number="1" />
 				</IndependentAttribute>
@@ -806,14 +806,14 @@
 				<IndependentAttribute Name="A five" Type="string">
 					<Identifier Number="3" />
 				</IndependentAttribute>
-			</NonSpecializedClass>
+			</Class>
 
 		</Subsystem>
 	</ModeledDomain>
 
 	<ModeledDomain Name="all-types">
 		<Subsystem Name="all-types" Floor="261" Ceiling="280">
-			<NonSpecializedClass Name="A">
+			<Class Name="A">
 				<IndependentAttribute Name="A one" Type="string">
 					<Identifier Number="1" />
 				</IndependentAttribute>
@@ -823,13 +823,13 @@
 				<IndependentAttribute Name="four" Type="date" />
 				<IndependentAttribute Name="five" Type="timestamp" />
 				<IndependentAttribute Name="six" Type="arbitraryId" />
-			</NonSpecializedClass>
+			</Class>
 		</Subsystem>
 	</ModeledDomain>
 
 	<ModeledDomain Name="specialization">
 		<Subsystem Name="specialization" Floor="281" Ceiling="300">
-			<SpecializedClass Name="A">
+			<Class Name="A">
 				<IndependentAttribute Name="one" Type="string">
 					<Identifier Number="1" />
 				</IndependentAttribute>
@@ -842,9 +842,9 @@
 					<SpecializationReference Relationship="1"
 						Attribute="category" />
 				</ReferentialAttribute>
-			</SpecializedClass>
+			</Class>
 
-			<NonSpecializedClass Name="B">
+			<Class Name="B">
 				<IndependentAttribute Name="name" Type="string">
 					<Identifier Number="1" />
 				</IndependentAttribute>
@@ -853,9 +853,9 @@
 					<GeneralizationReference Relationship="1"
 						Attribute="one" />
 				</ReferentialAttribute>
-			</NonSpecializedClass>
+			</Class>
 
-			<NonSpecializedClass Name="C">
+			<Class Name="C">
 				<IndependentAttribute Name="category" Type="string">
 					<Identifier Number="1" />
 				</IndependentAttribute>
@@ -864,7 +864,7 @@
 					<GeneralizationReference Relationship="1"
 						Attribute="one" />
 				</ReferentialAttribute>
-			</NonSpecializedClass>
+			</Class>
 
 			<Generalization Superclass="A" Rnum="1">
 				<SpecializedClass Name="B" />
@@ -876,7 +876,7 @@
 
 	<ModeledDomain Name="extensions">
 		<Subsystem Name="extensions" Floor="301" Ceiling="320">
-			<NonSpecializedClass Name="A">
+			<Class Name="A">
 				<IndependentAttribute Name="one" Type="arbitraryId">
 					<Identifier Number="1" />
 					<Extension>
@@ -889,7 +889,7 @@
 						<xt:Generation generated="true" />
 					</Extension>
 				</IndependentAttribute>
-			</NonSpecializedClass>
+			</Class>
 		</Subsystem>
 	</ModeledDomain>
 
