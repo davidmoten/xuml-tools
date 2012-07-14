@@ -1,7 +1,7 @@
 xuml-tools 
 ==========
 
-[Executable UML](http://en.wikipedia.org/wiki/Executable_UML) tools (xml schema, java model compiler, java+javascript model viewer) based on [miUML](http://www.miuml.org) metamodels.
+[Executable UML](http://en.wikipedia.org/wiki/Executable_UML) tools (xml schema, java model compiler, java+javascript model viewer) based on the [miUML](http://www.miuml.org) metamodel. A big thank you to Leon Starr for putting together and making available the metamodel!
 
 This project is **in active development** and has not reached alpha release status yet (will be soon methinks).
 
