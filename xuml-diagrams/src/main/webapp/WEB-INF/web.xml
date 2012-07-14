@@ -68,6 +68,16 @@
 		<url-pattern>/cd</url-pattern>
 	</servlet-mapping>
 
+	<servlet>
+		<servlet-name>Domains</servlet-name>
+		<servlet-class>xuml.tools.diagram.DomainsServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>Domains</servlet-name>
+		<url-pattern>/domains</url-pattern>
+	</servlet-mapping>
+
 	<welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>
 		<welcome-file>index.html</welcome-file>
