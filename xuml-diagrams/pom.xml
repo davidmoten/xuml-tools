@@ -12,7 +12,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>miuml-jaxb</artifactId>
+			<artifactId>xuml-diagrams-core</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
@@ -22,20 +22,10 @@
 			<type>pom</type>
 		</dependency>
 		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>11.0.2</version>
-		</dependency>
-		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.8.2</version>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>2.1</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
