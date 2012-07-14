@@ -19,6 +19,7 @@ package xuml.tools.maven.plugin;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Set;
 
 import javax.xml.bind.JAXBElement;
 
@@ -27,6 +28,7 @@ import miuml.jaxb.Marshaller;
 import miuml.jaxb.ModeledDomain;
 import miuml.jaxb.Subsystem;
 
+import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
@@ -120,6 +122,21 @@ public class GenerateJpaMojo extends AbstractMojo {
 				.generate(outputSourceDirectory);
 		project.addCompileSourceRoot(outputSourceDirectory.getAbsolutePath());
 		// TODO add resourcesDirectory to resources
+
+		String localRepo = project.getProperties().getProperty(
+				"settings.localRepository");
+
+		Set<Artifact> artifacts = project.getDependencyArtifacts();
+		for (Artifact artifact : artifacts) {
+			if (artifact.getArtifactId().equals("xuml-diagrams")
+					&& artifact.getGroupId().equals("org.github.davidmoten")) {
+				String version = artifact.getVersion();
+				String name = "org/github/davidmoten/xuml-diagrams/" + version
+						+ "/xuml-diagrams-" + version + ".war";
+				File war = new File(localRepo, name);
+				getLog().info("found war: " + war.getAbsolutePath());
+			}
+		}
 
 		File resources = new File(resourcesDirectory);
 		int domainIndex = 0;
