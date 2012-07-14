@@ -17,13 +17,21 @@ package xuml.tools.maven.plugin;
  */
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
+import javax.xml.bind.JAXBElement;
+
+import miuml.jaxb.Domain;
 import miuml.jaxb.Marshaller;
+import miuml.jaxb.ModeledDomain;
+import miuml.jaxb.Subsystem;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 
+import xuml.tools.diagram.ClassDiagramGenerator;
 import xuml.tools.model.compiler.CodeGeneratorJava;
 
 /**
@@ -112,5 +120,34 @@ public class GenerateJpaMojo extends AbstractMojo {
 				.generate(outputSourceDirectory);
 		project.addCompileSourceRoot(outputSourceDirectory.getAbsolutePath());
 		// TODO add resourcesDirectory to resources
+
+		File resources = new File(resourcesDirectory);
+		int domainIndex = 0;
+		for (JAXBElement<? extends Domain> domain : domains.getDomain()) {
+			if (domain.getValue() instanceof ModeledDomain) {
+				ModeledDomain md = (ModeledDomain) domain.getValue();
+				int ssIndex = 0;
+				for (Subsystem ss : md.getSubsystem()) {
+					String s = new ClassDiagramGenerator().generate(domains,
+							domainIndex, ssIndex);
+					String name = md.getName().replaceAll(" ", "_") + "_"
+							+ ssIndex + ".html";
+					writeToFile(resources, name, s);
+					ssIndex++;
+				}
+			}
+			domainIndex++;
+		}
+	}
+
+	private void writeToFile(File resources, String name, String html) {
+		try {
+			FileOutputStream fos = new FileOutputStream(new File(resources,
+					name));
+			fos.write(html.getBytes());
+			fos.close();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 }
