@@ -298,7 +298,7 @@ public class ClassWriter {
 	}
 
 	private boolean hasEmbeddedId() {
-		return info.getPrimaryIdAttributeMembers().size() > 1;
+		return info.hasCompositeId();
 	}
 
 	private void writeEntityHelper(PrintStream out, ClassInfo info) {
@@ -327,6 +327,12 @@ public class ClassWriter {
 				info.addType(EntityHelper.class));
 		out.format("        return _helper;\n");
 		out.format("    }\n\n");
+	}
+
+	private boolean isNonEmbeddedPrimaryIdAttribute(String attribute) {
+		return !hasEmbeddedId()
+				&& info.getPrimaryIdAttributeMembers().get(0)
+						.getAttributeName().equals(attribute);
 	}
 
 	private void writeIdMember(PrintStream out, ClassInfo info,
@@ -1423,8 +1429,14 @@ public class ClassWriter {
 			jd(out,
 					"Static finder method generated due to xuml-tools extension <b>Find</b>.",
 					"    ");
-			out.format("    public static %s<%s> find(",
-					info.addType(List.class), info.getJavaClassSimpleName());
+			StringBuffer findBy = new StringBuffer();
+			for (MyIndependentAttribute attribute : find.getAttributes()) {
+				findBy.append(Util.upperFirst(attribute.getFieldName()));
+			}
+
+			out.format("    public static %s<%s> findBy%s(",
+					info.addType(List.class), info.getJavaClassSimpleName(),
+					findBy.toString());
 			{
 				boolean first = true;
 				for (MyIndependentAttribute attribute : find.getAttributes()) {

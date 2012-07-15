@@ -1,6 +1,7 @@
 package xuml.tools.jaxb.compiler.test;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -45,6 +46,11 @@ public class ExtensionsTest {
 		} finally {
 			em.close();
 		}
+	}
+
+	@Test
+	public void testFinder() {
+		assertTrue(A.findById(10).isEmpty());
 	}
 
 }

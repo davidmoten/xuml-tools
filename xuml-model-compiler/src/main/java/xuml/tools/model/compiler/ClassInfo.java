@@ -287,10 +287,27 @@ public class ClassInfo extends ClassInfoBase {
 		return b.getActivePerspective().getViewedClass().equals(cls.getName());
 	}
 
+	public boolean hasCompositeId() {
+		return getIdentifierAttributes().get(BigInteger.ONE).size() > 1;
+	}
+
+	private String getFieldName(String attribute) {
+		HashMultimap<BigInteger, Attribute> map = getIdentifierAttributes();
+		Set<Attribute> idAttributes = map.get(BigInteger.ONE);
+		if (idAttributes.size() > 1 || idAttributes.size() == 0)
+			return Util.toJavaIdentifier(attribute);
+		else {
+			if (idAttributes.iterator().next().getName().equals(attribute))
+				return "id";
+			else
+				return Util.toJavaIdentifier(attribute);
+		}
+	}
+
 	private MyIdAttribute createMyIdAttribute(NativeAttribute a) {
-		return new MyIdAttribute(a.getName(),
-				Util.toJavaIdentifier(a.getName()), Util.toColumnName(a
-						.getName()), getTypeDefinition(a.getType()),
+
+		return new MyIdAttribute(a.getName(), getFieldName(a.getName()),
+				Util.toColumnName(a.getName()), getTypeDefinition(a.getType()),
 				getAttributeExtensions(a));
 	}
 
@@ -304,8 +321,8 @@ public class ClassInfo extends ClassInfoBase {
 		}
 		boolean isNullable = !inIdentifier;
 		MyAttributeExtensions extensions = getAttributeExtensions(a);
-		return new MyIndependentAttribute(a.getName(), Util.toJavaIdentifier(a
-				.getName()), Util.toColumnName(a.getName()),
+		return new MyIndependentAttribute(a.getName(),
+				getFieldName(a.getName()), Util.toColumnName(a.getName()),
 				getTypeDefinition(a.getType()), isNullable, "description",
 				extensions);
 	}
