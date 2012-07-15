@@ -179,7 +179,7 @@
 							<version>2.8.1</version>
 							<configuration>
 								<aggregate>true</aggregate>
-								<excludePackageNames>abc:bookstore:extensions:specialization</excludePackageNames>
+								<excludePackageNames>abc:all_types:one_to_many:one_to_one:one_to_one_many:one_to_zero_one:secondary_identifiers:unary_one:unary_zero_one:zero_one_to_many:zero_one_to_one_many:bookstore:extensions:specialization</excludePackageNames>
 							</configuration>
 						</plugin>
 						<!-- commented this plugin out because cannot run offline (e.g. at 
