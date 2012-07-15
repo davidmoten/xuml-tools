@@ -22,7 +22,6 @@ public class EntityHelper {
 	private final Stack<Call> stack = new Stack<Call>();
 	private final List<Signal> signalsToOther = Lists.newArrayList();
 	private final Signaller signaller;
-	private EntityManager em;
 
 	public EntityHelper(Signaller signaller, Entity entity) {
 		this.signaller = signaller;

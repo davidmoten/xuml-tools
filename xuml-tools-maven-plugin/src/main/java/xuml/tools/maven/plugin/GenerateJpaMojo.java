@@ -145,7 +145,8 @@ public class GenerateJpaMojo extends AbstractMojo {
 			if (domain.getValue() instanceof ModeledDomain) {
 				ModeledDomain md = (ModeledDomain) domain.getValue();
 				int ssIndex = 0;
-				for (Subsystem ss : md.getSubsystem()) {
+				for (@SuppressWarnings("unused")
+				Subsystem ss : md.getSubsystem()) {
 					String s = new ClassDiagramGenerator().generate(domains,
 							domainIndex, ssIndex);
 					String name = md.getName().replaceAll(" ", "_") + "_"
