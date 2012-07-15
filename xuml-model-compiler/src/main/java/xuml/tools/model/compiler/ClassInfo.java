@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.xml.bind.JAXBElement;
@@ -48,12 +49,14 @@ import miuml.jaxb.UnaryAssociation;
 import org.w3c.dom.Node;
 
 import xuml.tools.miuml.metamodel.extensions.jaxb.Documentation;
+import xuml.tools.miuml.metamodel.extensions.jaxb.Find;
 import xuml.tools.miuml.metamodel.extensions.jaxb.Generation;
 import xuml.tools.miuml.metamodel.extensions.jaxb.Marshaller;
 
 import com.google.common.base.Function;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 //TODO not keen on inheritance but was useful while design was evolving, get rid of ClassInfoBase
@@ -129,28 +132,31 @@ public class ClassInfo extends ClassInfoBase {
 		boolean generated = false;
 		for (Extension ext : a.getExtension()) {
 			for (Object any : ext.getAny()) {
-				Object element;
-				try {
-					element = extensionsMarshaller.unmarshal((Node) any);
-				} catch (JAXBException ex) {
-					// extension will not be used because not recognized
-					element = null;
-				}
-				if (element != null) {
-					Object e = ((JAXBElement<?>) element).getValue();
-					if (e instanceof Documentation) {
-						Documentation doco = (Documentation) e;
-						documentationMimeType = doco.getMimeType();
-						documentationContent = doco.getContent();
-					} else if (e instanceof Generation) {
-						Generation g = (Generation) e;
-						generated = g.getGenerated();
-					}
+				Object e = getJaxbElementValue(any);
+				if (e != null && e instanceof Documentation) {
+					Documentation doco = (Documentation) e;
+					documentationMimeType = doco.getMimeType();
+					documentationContent = doco.getContent();
+				} else if (e instanceof Generation) {
+					Generation g = (Generation) e;
+					generated = g.getGenerated();
 				}
 			}
 		}
 		return new MyAttributeExtensions(generated, documentationMimeType,
 				documentationContent);
+	}
+
+	private Object getJaxbElementValue(Object any) {
+		Object e;
+		try {
+			Object element = extensionsMarshaller.unmarshal((Node) any);
+			e = ((JAXBElement<?>) element).getValue();
+		} catch (JAXBException ex) {
+			// extension will not be used because not recognized
+			e = null;
+		}
+		return e;
 	}
 
 	private HashMultimap<BigInteger, Attribute> getIdentifierAttributes() {
@@ -298,9 +304,10 @@ public class ClassInfo extends ClassInfoBase {
 		}
 		boolean isNullable = !inIdentifier;
 		MyAttributeExtensions extensions = getAttributeExtensions(a);
-		return new MyIndependentAttribute(Util.toJavaIdentifier(a.getName()),
-				Util.toColumnName(a.getName()), getTypeDefinition(a.getType()),
-				isNullable, "description", extensions);
+		return new MyIndependentAttribute(a.getName(), Util.toJavaIdentifier(a
+				.getName()), Util.toColumnName(a.getName()),
+				getTypeDefinition(a.getType()), isNullable, "description",
+				extensions);
 	}
 
 	@Override
@@ -313,6 +320,18 @@ public class ClassInfo extends ClassInfoBase {
 				if (!isMemberOfPrimaryIdentifier(a)) {
 					list.add(createMyIndependentAttribute(a));
 				}
+			}
+		}
+		return list;
+	}
+
+	private List<MyIndependentAttribute> getIndependentAttributeMembers() {
+		List<MyIndependentAttribute> list = newArrayList();
+		for (JAXBElement<? extends Attribute> element : cls.getAttribute()) {
+			if (element.getValue() instanceof IndependentAttribute) {
+				IndependentAttribute a = (IndependentAttribute) element
+						.getValue();
+				list.add(createMyIndependentAttribute(a));
 			}
 		}
 		return list;
@@ -709,6 +728,28 @@ public class ClassInfo extends ClassInfoBase {
 			}
 		}
 		return list;
+	}
+
+	public List<MyFind> getFinders() {
+		Map<String, MyIndependentAttribute> map = Maps.newHashMap();
+		for (MyIndependentAttribute a : getIndependentAttributeMembers())
+			map.put(a.getAttributeName(), a);
+
+		List<MyFind> finds = Lists.newArrayList();
+		for (Extension ext : cls.getExtension()) {
+			for (Object any : ext.getAny()) {
+				Object e = getJaxbElementValue(any);
+				if (e != null && e instanceof Find) {
+					Find find = (Find) e;
+					List<MyIndependentAttribute> list = Lists.newArrayList();
+					for (xuml.tools.miuml.metamodel.extensions.jaxb.Attribute attribute : find
+							.getAttribute())
+						list.add(map.get(attribute.getName()));
+					finds.add(new MyFind(list));
+				}
+			}
+		}
+		return finds;
 	}
 
 	public MyTypeDefinition getTypeDefinition(String name) {

@@ -106,11 +106,12 @@ public abstract class ClassInfoBase {
 	public static class MyPrimaryIdAttributeMember extends
 			MyIndependentAttribute {
 
-		public MyPrimaryIdAttributeMember(String fieldName, String columnName,
-				MyTypeDefinition type, boolean nullable, String description,
+		public MyPrimaryIdAttributeMember(String attributeName,
+				String fieldName, String columnName, MyTypeDefinition type,
+				boolean nullable, String description,
 				MyAttributeExtensions extensions) {
-			super(fieldName, columnName, type, nullable, description,
-					extensions);
+			super(attributeName, fieldName, columnName, type, nullable,
+					description, extensions);
 		}
 
 	}
@@ -181,17 +182,23 @@ public abstract class ClassInfoBase {
 		private final boolean nullable;
 		private final String description;
 		private final MyAttributeExtensions extensions;
+		private final String attributeName;
 
-		public MyIndependentAttribute(String fieldName, String columnName,
-				MyTypeDefinition type, boolean nullable, String description,
-				MyAttributeExtensions extensions) {
+		public MyIndependentAttribute(String attributeName, String fieldName,
+				String columnName, MyTypeDefinition type, boolean nullable,
+				String description, MyAttributeExtensions extensions) {
 			super();
+			this.attributeName = attributeName;
 			this.fieldName = fieldName;
 			this.columnName = columnName;
 			this.type = type;
 			this.nullable = nullable;
 			this.description = description;
 			this.extensions = extensions;
+		}
+
+		public String getAttributeName() {
+			return attributeName;
 		}
 
 		public String getDescription() {
@@ -736,6 +743,20 @@ public abstract class ClassInfoBase {
 
 		public String getDocumentationContent() {
 			return documentationContent;
+		}
+
+	}
+
+	public static class MyFind {
+
+		private final List<MyIndependentAttribute> attributes;
+
+		public MyFind(List<MyIndependentAttribute> attributes) {
+			this.attributes = attributes;
+		}
+
+		public List<MyIndependentAttribute> getAttributes() {
+			return attributes;
 		}
 
 	}

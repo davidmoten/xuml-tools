@@ -5,7 +5,7 @@
 
 	<element name="Documentation" type="xt:Documentation" />
 	<element name="Generation" type="xt:Generation" />
-	<element name="Feneration" type="xt:Find" />
+	<element name="Find" type="xt:Find" />
 
 
 	<complexType name="Documentation">
@@ -27,7 +27,7 @@
 	</complexType>
 
 	<complexType name="Attribute">
-		<attribute name="attribute" type="string" use="required"/>
+		<attribute name="name" type="string" use="required"/>
 	</complexType>
 
 </schema>
