@@ -157,6 +157,12 @@ public class AbcTest {
 								.println("setting A.athree="
 										+ entity.getAThree() + " for "
 										+ entity.getId());
+						// demonstrate/unit test getting access to the current
+						// entity manager when needed
+						Object count = entity.em()
+								.createQuery("select count(*) from B b")
+								.getResultList();
+						System.out.println("counted " + count + " B entities");
 					}
 				};
 			}
