@@ -55,7 +55,9 @@ public class EntityActor extends UntypedActor {
 			log.info("calling event "
 					+ signal.getEvent().getClass().getSimpleName()
 					+ " on entity id = " + signal.getEntity().getId());
+			entity.helper().setEntityManager(em);
 			entity.event(signal.getEvent());
+			entity.helper().setEntityManager(em);
 			log.info("removing signal from persistence");
 			em.createQuery(
 					"delete from " + QueuedSignal.class.getSimpleName()

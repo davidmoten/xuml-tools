@@ -3,6 +3,8 @@ package xuml.tools.model.compiler.runtime;
 import java.util.List;
 import java.util.Stack;
 
+import javax.persistence.EntityManager;
+
 import xuml.tools.model.compiler.runtime.message.Signal;
 
 import com.google.common.collect.Lists;
@@ -20,6 +22,7 @@ public class EntityHelper {
 	private final Stack<Call> stack = new Stack<Call>();
 	private final List<Signal> signalsToOther = Lists.newArrayList();
 	private final Signaller signaller;
+	private EntityManager em;
 
 	public EntityHelper(Signaller signaller, Entity entity) {
 		this.signaller = signaller;
@@ -80,6 +83,14 @@ public class EntityHelper {
 		public List<Event> getEventsToSelf() {
 			return eventsToSelf;
 		}
+	}
+
+	public void setEntityManager(EntityManager em) {
+		signaller.getInfo().setCurrentEntityManager(em);
+	}
+
+	public EntityManager getEntityManager() {
+		return signaller.getInfo().getCurrentEntityManager();
 	}
 
 }

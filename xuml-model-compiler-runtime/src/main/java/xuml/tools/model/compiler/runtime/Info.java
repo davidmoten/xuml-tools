@@ -3,6 +3,7 @@ package xuml.tools.model.compiler.runtime;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.persistence.EntityManager;
 
 public class Info {
 
@@ -27,6 +28,7 @@ public class Info {
 	}
 
 	private UUID id;
+	private EntityManager em;
 
 	public UUID getId() {
 		return id;
@@ -34,6 +36,14 @@ public class Info {
 
 	public void setId(UUID id) {
 		this.id = id;
+	}
+
+	public void setCurrentEntityManager(EntityManager em) {
+		this.em = em;
+	}
+
+	public EntityManager getCurrentEntityManager() {
+		return em;
 	}
 
 }
