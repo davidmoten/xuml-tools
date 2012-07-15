@@ -511,14 +511,14 @@ public class ClassInfo extends ClassInfoBase {
 					g.getSuperclass(), g.getRnum());
 			String thisFieldName = nameManager.toFieldName(g.getSuperclass(),
 					cls.getName(), g.getRnum());
-			List<JoinColumn> joins = newArrayList();
+			List<MyJoinColumn> joins = newArrayList();
 			for (MyIdAttribute member : infoOther
 					.getPrimaryIdAttributeMembers()) {
 				// TODO handle when matching attribute not found, use some
 				// default, see schema
 				String attributeName = getMatchingAttributeName(g.getRnum(),
 						member.getAttributeName());
-				JoinColumn jc = new JoinColumn(nameManager.toColumnName(
+				MyJoinColumn jc = new MyJoinColumn(nameManager.toColumnName(
 						g.getSuperclass(), attributeName),
 						member.getColumnName());
 				System.out.println(jc);
@@ -543,12 +543,12 @@ public class ClassInfo extends ClassInfoBase {
 		SymmetricPerspective p = a.getSymmetricPerspective();
 		String fieldName = nameManager.toFieldName(cls.getName(),
 				p.getPhrase(), a.getRnum());
-		List<JoinColumn> joins = newArrayList();
+		List<MyJoinColumn> joins = newArrayList();
 		if (p.isOnePerspective())
 			for (MyIdAttribute member : getPrimaryIdAttributeMembers()) {
 				String attributeName = member.getAttributeName() + " R"
 						+ a.getRnum();
-				JoinColumn jc = new JoinColumn(nameManager.toColumnName(
+				MyJoinColumn jc = new MyJoinColumn(nameManager.toColumnName(
 						cls.getName(), attributeName), member.getColumnName());
 				System.out.println(jc);
 				joins.add(jc);
@@ -574,13 +574,13 @@ public class ClassInfo extends ClassInfoBase {
 		}
 		String otherClassName = pThat.getViewedClass();
 		ClassInfo infoOther = getClassInfo(otherClassName);
-		List<JoinColumn> joins = newArrayList();
+		List<MyJoinColumn> joins = newArrayList();
 		if (pThat.isOnePerspective())
 			for (MyIdAttribute member : infoOther
 					.getPrimaryIdAttributeMembers()) {
 				String attributeName = getMatchingAttributeName(a.getRnum(),
 						member.getAttributeName());
-				JoinColumn jc = new JoinColumn(nameManager.toColumnName(
+				MyJoinColumn jc = new MyJoinColumn(nameManager.toColumnName(
 						cls.getName(), attributeName), member.getColumnName());
 				System.out.println(jc);
 				joins.add(jc);

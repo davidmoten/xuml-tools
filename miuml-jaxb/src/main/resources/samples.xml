@@ -71,8 +71,7 @@
 		<Subsystem Name="Product Specification" Alias="Product Specification"
 			Floor="11" Ceiling="20">
 
-			<Class Name="Product" Cnum="1" Element="1"
-				Alias="Product">
+			<Class Name="Product" Cnum="1" Element="1" Alias="Product">
 				<IndependentAttribute Name="Product ID"
 					Type="Universal Product Code">
 					<Identifier Number="1" />
@@ -102,8 +101,7 @@
 				</ReferentialAttribute>
 			</Class>
 
-			<Class Name="Special Order Product"
-				Alias="Special Order Product">
+			<Class Name="Special Order Product" Alias="Special Order Product">
 				<IndependentAttribute Name="Special Order Product ID"
 					Type="arbitraryId">
 					<Identifier Number="1" />
@@ -318,8 +316,7 @@
 					Type="Bank Card Approval Code" />
 			</Class>
 
-			<Class Name="Product Selection"
-				Association="4">
+			<Class Name="Product Selection" Association="4">
 				<IndependentAttribute Name="Product Selection ID"
 					Type="arbitraryId">
 					<Identifier Number="1" />
@@ -889,6 +886,11 @@
 						<xt:Generation generated="true" />
 					</Extension>
 				</IndependentAttribute>
+				<Extension>
+					<xt:Find>
+						<xt:Attribute name="one" />
+					</xt:Find>
+				</Extension>
 			</Class>
 		</Subsystem>
 	</ModeledDomain>

@@ -2,9 +2,11 @@
 	xmlns:xt="http://org.github/xuml-tools/miuml-metamodel-extensions"
 	xmlns="http://www.w3.org/2001/XMLSchema" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
 	jaxb:version="2.0" elementFormDefault="qualified">
-	<element name="Documentation" type="xt:Documentation" />
 
+	<element name="Documentation" type="xt:Documentation" />
 	<element name="Generation" type="xt:Generation" />
+	<element name="Feneration" type="xt:Find" />
+
 
 	<complexType name="Documentation">
 		<sequence>
@@ -16,6 +18,16 @@
 	<complexType name="Generation">
 		<attribute name="generated" type="boolean" use="optional"
 			default="false" />
+	</complexType>
+
+	<complexType name="Find">
+		<sequence>
+			<element name="Attribute" type="xt:Attribute" maxOccurs="unbounded" />
+		</sequence>
+	</complexType>
+
+	<complexType name="Attribute">
+		<attribute name="attribute" type="string" use="required"/>
 	</complexType>
 
 </schema>

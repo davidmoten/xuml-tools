@@ -109,6 +109,7 @@ public class ClassWriter {
 		writeToStringMethod(out, info);
 		writeBehaviourInterface(out, info);
 		writeBehaviourFactoryInterface(out, info);
+		writeStaticFinderMethods(out, info);
 
 		writeClassClose(out);
 		ByteArrayOutputStream headerBytes = new ByteArrayOutputStream();
@@ -840,7 +841,7 @@ public class ClassWriter {
 			boolean updatable) {
 		out.format("    @%s(value={\n", info.addType(JoinColumns.class));
 		boolean first = true;
-		for (xuml.tools.model.compiler.ClassInfo.JoinColumn col : ref
+		for (xuml.tools.model.compiler.ClassInfo.MyJoinColumn col : ref
 				.getJoinColumns()) {
 			if (!first)
 				out.format(",\n");
@@ -1414,6 +1415,10 @@ public class ClassWriter {
 				attribute.getFieldName());
 		out.format("        this.%1$s=%1$s;\n", attribute.getFieldName());
 		out.format("    }\n\n");
+	}
+
+	private void writeStaticFinderMethods(PrintStream out, ClassInfo info2) {
+		// TODO generate static finder methods
 	}
 
 	private void writeClassClose(PrintStream out) {

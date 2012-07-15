@@ -94,10 +94,6 @@ public abstract class ClassInfoBase {
 		return getContextPackageName() + ".Context";
 	}
 
-	final public String getBehaviourFactoryFullName() {
-		return getBehaviourPackage() + "." + getBehaviourFactorySimpleName();
-	}
-
 	final public String getBehaviourFactoryFieldName() {
 		return Util.toJavaIdentifier(getBehaviourFactorySimpleName());
 	}
@@ -325,11 +321,11 @@ public abstract class ClassInfoBase {
 		ONE, ZERO_ONE, MANY, ONE_MANY;
 	}
 
-	public static class JoinColumn {
+	public static class MyJoinColumn {
 		private final String thisColumnName;
 		private final String otherColumnName;
 
-		public JoinColumn(String thisColumnName, String otherColumnName) {
+		public MyJoinColumn(String thisColumnName, String otherColumnName) {
 			this.thisColumnName = thisColumnName;
 			this.otherColumnName = otherColumnName;
 		}
@@ -496,7 +492,7 @@ public abstract class ClassInfoBase {
 		private final String thisVerbClause;
 		private final String thatVerbClause;
 		private final String fieldName;
-		private final List<JoinColumn> joinColumns;
+		private final List<MyJoinColumn> joinColumns;
 		private final boolean inPrimaryId;
 		/**
 		 * Gets used for mappedBy field in a OneToMany annotation for example.
@@ -507,7 +503,7 @@ public abstract class ClassInfoBase {
 		public MyReferenceMember(String simpleClassName, String fullClassName,
 				Mult thisMult, Mult thatMult, String thisVerbClause,
 				String thatVerbClause, String fieldName,
-				List<JoinColumn> joinColumns, String thisFieldName,
+				List<MyJoinColumn> joinColumns, String thisFieldName,
 				MyManyToMany manyToMany, boolean inPrimaryId) {
 			this.simpleClassName = simpleClassName;
 			this.fullClassName = fullClassName;
@@ -534,7 +530,7 @@ public abstract class ClassInfoBase {
 			return thisFieldName;
 		}
 
-		public List<JoinColumn> getJoinColumns() {
+		public List<MyJoinColumn> getJoinColumns() {
 			return joinColumns;
 		}
 
