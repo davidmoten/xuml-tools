@@ -13,10 +13,19 @@ import javax.xml.validation.SchemaFactory;
 
 import org.xml.sax.SAXException;
 
+/**
+ * Uunmarshals {@link Domains}.
+ * 
+ * @author dave
+ * 
+ */
 public class Marshaller {
 
 	private Unmarshaller unmarshaller;
 
+	/**
+	 * Constructor.
+	 */
 	public Marshaller() {
 
 		try {
@@ -41,6 +50,13 @@ public class Marshaller {
 		}
 	}
 
+	/**
+	 * Unmarshals the xml in the {@link InputStream} to a {@link Domains}.
+	 * Throws a {@link RuntimeException} if anything goes wrong.
+	 * 
+	 * @param is
+	 * @return
+	 */
 	public synchronized Domains unmarshal(InputStream is) {
 		try {
 			return unmarshaller.unmarshal(new StreamSource(is), Domains.class)

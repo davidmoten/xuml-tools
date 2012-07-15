@@ -11,10 +11,21 @@ import javax.xml.validation.SchemaFactory;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
+/**
+ * Marshalls and unmarshalls xuml-tools extensions to the miuml metamodel
+ * schema.
+ * 
+ * @author dave
+ * 
+ */
 public class Marshaller {
 
 	private Unmarshaller unmarshaller;
 
+	/**
+	 * Constructor.
+	 * 
+	 */
 	public Marshaller() {
 
 		try {
@@ -39,6 +50,14 @@ public class Marshaller {
 		}
 	}
 
+	/**
+	 * Unmarshalls a {@link Node} to a JAXB object from the xuml-tools miuml
+	 * extensions schema.
+	 * 
+	 * @param node
+	 * @return
+	 * @throws JAXBException
+	 */
 	public synchronized Object unmarshal(Node node) throws JAXBException {
 		return unmarshaller.unmarshal(node);
 	}
