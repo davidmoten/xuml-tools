@@ -126,6 +126,7 @@ public class GenerateJpaMojo extends AbstractMojo {
 		String localRepo = project.getProperties().getProperty(
 				"settings.localRepository");
 
+		@SuppressWarnings("unchecked")
 		Set<Artifact> artifacts = project.getDependencyArtifacts();
 		for (Artifact artifact : artifacts) {
 			if (artifact.getArtifactId().equals("xuml-diagrams")
