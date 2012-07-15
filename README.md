@@ -56,7 +56,7 @@ The module [**xuml-model-compiler-test**](https://github.com/davidmoten/xuml-too
 
 Model schema
 ------------
-Models are defined in xml that is compliant to the miUML xuml-tools [schema](https://github.com/davidmoten/xuml-tools/blob/master/miuml-jaxb/src/main/resources/miuml-metamodel.xsd). A sample of xml compliant with the schema is [here](https://github.com/davidmoten/xuml-tools/blob/master/miuml-jaxb/src/main/resources/samples.xml).
+Models are defined in xml that is compliant to the miUML xuml-tools [schema](https://github.com/davidmoten/xuml-tools/blob/master/miuml-jaxb/src/main/resources/miuml-metamodel.xsd). A sample of xml compliant with the schema is [samples.xml](https://github.com/davidmoten/xuml-tools/blob/master/miuml-jaxb/src/main/resources/samples.xml).
 
 Java model compiler
 -------------------
