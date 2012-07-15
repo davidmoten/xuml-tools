@@ -886,9 +886,17 @@
 						<xt:Generation generated="true" />
 					</Extension>
 				</IndependentAttribute>
+				<IndependentAttribute Name="email" Type="string"/>
+				<IndependentAttribute Name="postcode" Type="integer"/>
 				<Extension>
 					<xt:Find>
 						<xt:Attribute name="one" />
+					</xt:Find>
+				</Extension>
+				<Extension>
+					<xt:Find>
+						<xt:Attribute name="email" />
+						<xt:Attribute name="postcode" />
 					</xt:Find>
 				</Extension>
 			</Class>
