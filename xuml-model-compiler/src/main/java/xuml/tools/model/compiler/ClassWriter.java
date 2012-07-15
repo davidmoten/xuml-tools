@@ -1457,13 +1457,60 @@ public class ClassWriter {
 					"        %s<%s> list = em.createQuery(\"select e from %s e where ",
 					info.addType(List.class), info.getJavaClassSimpleName(),
 					info.getJavaClassSimpleName());
-			boolean first = true;
+			{
+				boolean first = true;
+				for (MyIndependentAttribute attribute : find.getAttributes()) {
+					if (!first)
+						out.format(" and ");
+					out.format("e.%s=:%s", attribute.getFieldName(),
+							attribute.getFieldName());
+					first = false;
+				}
+			}
+			out.format("\")");
 			for (MyIndependentAttribute attribute : find.getAttributes()) {
-				if (!first)
-					out.format(" and ");
-				out.format("e.%s=:%s", attribute.getFieldName(),
-						attribute.getFieldName());
-				first = false;
+				out.format("\n            .setParameter(\"%s\", %s)",
+						attribute.getFieldName(), attribute.getFieldName());
+			}
+			out.format("\n            .getResultList();\n");
+			out.format("\n      em.close();\n");
+			out.format("        return list;\n");
+			out.format("    }\n\n");
+
+			jd(out,
+					"Static finder method generated due to xuml-tools extension <b>Find</b>.",
+					"    ");
+
+			out.format("    public static %s<%s> findBy%s(%s em, ",
+					info.addType(List.class), info.getJavaClassSimpleName(),
+					findBy.toString(), info.addType(EntityManager.class));
+			{
+				boolean first = true;
+				for (MyIndependentAttribute attribute : find.getAttributes()) {
+					if (!first)
+						out.format(", ");
+					out.format("%s %s",
+							info.addType(attribute.getType().getType()),
+							attribute.getFieldName());
+					first = false;
+				}
+			}
+			out.format(") {\n");
+			out.format("        @%s(\"unchecked\")\n",
+					info.addType(SuppressWarnings.class));
+			out.format(
+					"        %s<%s> list = em.createQuery(\"select e from %s e where ",
+					info.addType(List.class), info.getJavaClassSimpleName(),
+					info.getJavaClassSimpleName());
+			{
+				boolean first = true;
+				for (MyIndependentAttribute attribute : find.getAttributes()) {
+					if (!first)
+						out.format(" and ");
+					out.format("e.%s=:%s", attribute.getFieldName(),
+							attribute.getFieldName());
+					first = false;
+				}
 			}
 			out.format("\")");
 			for (MyIndependentAttribute attribute : find.getAttributes()) {
@@ -1473,6 +1520,7 @@ public class ClassWriter {
 			out.format("\n            .getResultList();\n");
 			out.format("        return list;\n");
 			out.format("    }\n\n");
+
 		}
 	}
 

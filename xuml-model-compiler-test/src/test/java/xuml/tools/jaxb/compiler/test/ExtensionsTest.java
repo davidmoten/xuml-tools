@@ -51,6 +51,10 @@ public class ExtensionsTest {
 		}
 		assertEquals(1, A.findByEmailPostcode("fred@somewhere.com", 2601)
 				.size());
+		em = Context.createEntityManager();
+		assertEquals(1, A.findByEmailPostcode(em, "fred@somewhere.com", 2601)
+				.size());
+		em.close();
 	}
 
 	@Test
