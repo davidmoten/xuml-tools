@@ -109,7 +109,6 @@ public class ClassWriter {
 		writeToStringMethod(out, info);
 		writeBehaviourInterface(out, info);
 		writeBehaviourFactoryInterface(out, info);
-		writeEm(out, info);
 
 		writeClassClose(out);
 		ByteArrayOutputStream headerBytes = new ByteArrayOutputStream();
@@ -119,14 +118,6 @@ public class ClassWriter {
 		out.close();
 		header.close();
 		return headerBytes.toString() + bytes.toString();
-	}
-
-	private void writeEm(PrintStream out, ClassInfo info) {
-		jd(out, "Returns the current entity manager from ThreadLocal storage.",
-				"    ");
-		out.format("    public %s em() {\n", info.addType(EntityManager.class));
-		out.format("        return _helper.getEntityManager();\n");
-		out.format("    }\n\n");
 	}
 
 	private void writeSuperclassValidationCheck(PrintStream out,

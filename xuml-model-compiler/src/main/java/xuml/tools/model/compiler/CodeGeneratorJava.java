@@ -164,6 +164,11 @@ public class CodeGeneratorJava {
 		out.format("        return t;\n");
 		out.format("    }\n\n");
 
+		out.format("    public static %s em() {\n",
+				types.addType(EntityManager.class));
+		out.format("        return signaller.getInfo().getCurrentEntityManager();\n");
+		out.format("    }\n\n");
+
 		out.format("}");
 		out.close();
 

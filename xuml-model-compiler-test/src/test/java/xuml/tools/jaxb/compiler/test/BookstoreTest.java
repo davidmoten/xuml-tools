@@ -10,6 +10,8 @@ import org.junit.Test;
 
 import xuml.tools.util.database.DerbyUtil;
 import bookstore.Context;
+import bookstore.Order;
+import bookstore.Order.Behaviour;
 
 public class BookstoreTest {
 
@@ -40,5 +42,17 @@ public class BookstoreTest {
 	public void testCreateEntityManager() {
 		EntityManager em = Context.createEntityManager();
 		em.close();
+	}
+
+	public Order.BehaviourFactory createOrderBehaviourFactory() {
+		return new Order.BehaviourFactory() {
+
+			@Override
+			public Behaviour create(Order entity) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+		};
 	}
 }
