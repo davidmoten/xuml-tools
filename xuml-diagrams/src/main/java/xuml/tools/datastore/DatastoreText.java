@@ -1,10 +1,32 @@
 package xuml.tools.datastore;
 
+/**
+ * Stores and retrieves String properties.
+ * 
+ * @author dave
+ * 
+ */
 public interface DatastoreText {
 
-	public abstract void put(String kind, String name, String property,
-			String value);
+	/**
+	 * Stores a property.. The kind, name and property can be thought of as
+	 * corresponding roughly to table,column, row key.
+	 * 
+	 * @param kind
+	 * @param name
+	 * @param property
+	 * @param value
+	 */
+	void put(String kind, String name, String property, String value);
 
-	public abstract String get(String kind, String name, String property);
+	/**
+	 * Returns a property value keyed by kind,name and property.
+	 * 
+	 * @param kind
+	 * @param name
+	 * @param property
+	 * @return
+	 */
+	String get(String kind, String name, String property);
 
 }

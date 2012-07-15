@@ -10,6 +10,13 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.Text;
 
+/**
+ * Implements storage of string properties in Google App Engine's Big Table
+ * datastore.
+ * 
+ * @author dave
+ * 
+ */
 public class DatastoreTextGae implements DatastoreText {
 
 	private static DatastoreText datastore = new DatastoreTextGae();

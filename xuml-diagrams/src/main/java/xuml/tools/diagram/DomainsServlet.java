@@ -14,9 +14,10 @@ import miuml.jaxb.Domains;
 import miuml.jaxb.Marshaller;
 import miuml.jaxb.ModeledDomain;
 import miuml.jaxb.Subsystem;
-import moten.david.util.xml.TaggedString;
 
 import org.apache.commons.io.IOUtils;
+
+import xuml.tools.util.xml.TaggedString;
 
 public class DomainsServlet extends HttpServlet {
 

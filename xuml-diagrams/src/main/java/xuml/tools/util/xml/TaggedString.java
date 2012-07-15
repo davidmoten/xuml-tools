@@ -1,4 +1,4 @@
-package moten.david.util.xml;
+package xuml.tools.util.xml;
 
 import java.io.ByteArrayOutputStream;
 
