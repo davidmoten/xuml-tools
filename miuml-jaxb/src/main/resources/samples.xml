@@ -737,31 +737,32 @@
 				<IndependentAttribute Name="A one" Type="string">
 					<Identifier Number="1" />
 				</IndependentAttribute>
-				<ReferentialAttribute Name="A C one">
-					<TReference Relationship="1" AssociationClass="C"  Attribute="C one"/>
-				</ReferentialAttribute>
+				
 			</Class>
 
 			<Class Name="B">
 				<IndependentAttribute Name="B one" Type="string">
 					<Identifier Number="1" />
 				</IndependentAttribute>
-				<IndependentAttribute Name="B two" Type="string">
+			</Class>
+
+			<Class Name="C">
+				<IndependentAttribute Name="C one" Type="string">
 					<Identifier Number="1" />
 				</IndependentAttribute>
-				<ReferentialAttribute Name="B A one">
-					<ToOneReference Relationship="1" Attribute="A one" />
+				<ReferentialAttribute Name="C A one">
+					<TReference Relationship="1" Class="A"  Attribute="A one"/>
 				</ReferentialAttribute>
-				<ReferentialAttribute Name="B A two">
-					<ToOneReference Relationship="1" Attribute="A two" />
+				<ReferentialAttribute Name="C B one">
+					<PReference Relationship="1" Class="B"  Attribute="B one"/>
 				</ReferentialAttribute>
 			</Class>
 
 			<BinaryAssociation Rnum="1">
 				<ActivePerspective Phrase="characterizes"
-					ViewedClass="B" OnePerspective="false" Conditional="false" />
+					ViewedClass="B" OnePerspective="false" Conditional="true" />
 				<PassivePerspective Phrase="is characterized by"
-					ViewedClass="A" OnePerspective="true" Conditional="false" />
+					ViewedClass="A" OnePerspective="false" Conditional="true" />
 			</BinaryAssociation>
 
 		</Subsystem>

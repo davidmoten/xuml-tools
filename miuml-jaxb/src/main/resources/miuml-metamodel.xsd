@@ -696,6 +696,11 @@
 						</documentation>
 					</annotation>
 				</attribute>
+				<attribute name="Class" use="required">
+					<annotation>
+						<documentation>R158,R159</documentation>
+					</annotation>
+				</attribute>
 			</extension>
 		</complexContent>
 	</complexType>
@@ -706,11 +711,6 @@
 				<documentation>R153</documentation>
 			</annotation>
 			<extension base="t:AssociativeReference">
-				<attribute name="AssociationClass" use="required">
-					<annotation>
-						<documentation>R158</documentation>
-					</annotation>
-				</attribute>
 			</extension>
 		</complexContent>
 	</complexType>
@@ -721,11 +721,6 @@
 				<documentation>R153</documentation>
 			</annotation>
 			<extension base="t:AssociativeReference">
-				<attribute name="AssociationClass" use="required">
-					<annotation>
-						<documentation>R159</documentation>
-					</annotation>
-				</attribute>
 			</extension>
 		</complexContent>
 	</complexType>
