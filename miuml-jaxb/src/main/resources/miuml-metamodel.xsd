@@ -267,7 +267,8 @@
 	<complexType name="Class">
 		<annotation>
 			<documentation>
-				R23 to SpecializedClass and NonSpecializedClass has been collapsed into
+				R23 to SpecializedClass and NonSpecializedClass has
+				been collapsed into
 				Class because this distinction is captured by
 				GeneralizationReferences/SpecializationReferences on the attributes
 				of the class.
@@ -652,7 +653,9 @@
 	<!--+++++++++++++++++++++++++++++++ -->
 
 	<element name="Reference" type="t:Reference" abstract="true" />
-	<element name="AssocativeReference" type="t:AssociativeReference"
+	<element name="TReference" type="t:TReference"
+		substitutionGroup="t:Reference" />
+	<element name="PReference" type="t:PReference"
 		substitutionGroup="t:Reference" />
 	<element name="ToOneReference" type="t:ToOneReference"
 		substitutionGroup="t:Reference" />
@@ -669,7 +672,7 @@
 			</documentation>
 		</annotation>
 		<attribute name="Relationship" type="t:Rnum" use="required" />
-		<attribute name="Attribute" type="t:Name" use="optional">
+		<attribute name="Attribute" type="t:Name" use="required">
 			<annotation>
 				<documentation>
 					If this attribute is not used then its value is
@@ -696,6 +699,37 @@
 			</extension>
 		</complexContent>
 	</complexType>
+
+	<complexType name="TReference">
+		<complexContent>
+			<annotation>
+				<documentation>R153</documentation>
+			</annotation>
+			<extension base="t:AssociativeReference">
+				<attribute name="AssociationClass" use="required">
+					<annotation>
+						<documentation>R158</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="PReference">
+		<complexContent>
+			<annotation>
+				<documentation>R153</documentation>
+			</annotation>
+			<extension base="t:AssociativeReference">
+				<attribute name="AssociationClass" use="required">
+					<annotation>
+						<documentation>R159</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
 
 	<complexType name="ToOneReference">
 		<complexContent>
