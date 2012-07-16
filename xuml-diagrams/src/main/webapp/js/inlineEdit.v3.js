@@ -32,12 +32,12 @@ var inlineEdit = new Class({
 		this.element.setStyles({'visibility':'hidden','position':'absolute','width':this.element.offsetWidth});
 		this.input.inject(this.element,'after');
 		this.input.focus();
-		this.fireEvent('onLoad', [this.element,this.input])
+		this.fireEvent('onLoad', [this.element,this.input]);
 	},
 	keyup: function(e){
 		if(e)e=new Event(e);
 		else return;
-		this.fireEvent('onKeyup', [this.element,this.input,e])
+		this.fireEvent('onKeyup', [this.element,this.input,e]);
 		this.element.set('html',(e.key=='enter')?this.getContent()+"&nbsp;":this.getContent());
 		if(e.key=='enter')this.input.addEvent('keydown',this.newLine.bind(this));
 		this.input.setStyle('height',this.element.offsetHeight);
@@ -47,7 +47,7 @@ var inlineEdit = new Class({
 		}
 	},
 	getContent: function(){
-		var content = this.input.value
+		var content = this.input.value;
 		if(this.options.stripHtml)content = content.replace(/(<([^>]+)>)/ig,"");
 		return(content.replace(/\n/gi,"<br>"));
 	},
@@ -57,7 +57,7 @@ var inlineEdit = new Class({
 	},
 	complete: function(){
 		this.element.set('html',this.getContent());
-		this.fireEvent('onComplete', this.element)
+		this.fireEvent('onComplete', this.element);
 		this.end();
 	},
 	end: function(){
