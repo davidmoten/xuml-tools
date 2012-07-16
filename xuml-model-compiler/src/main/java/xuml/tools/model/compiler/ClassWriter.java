@@ -329,12 +329,6 @@ public class ClassWriter {
 		out.format("    }\n\n");
 	}
 
-	private boolean isNonEmbeddedPrimaryIdAttribute(String attribute) {
-		return !hasEmbeddedId()
-				&& info.getPrimaryIdAttributeMembers().get(0)
-						.getAttributeName().equals(attribute);
-	}
-
 	private void writeIdMember(PrintStream out, ClassInfo info,
 			Set<String> validationMethods) {
 		if (!hasEmbeddedId()) {
