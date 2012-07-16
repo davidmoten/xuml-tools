@@ -696,11 +696,6 @@
 						</documentation>
 					</annotation>
 				</attribute>
-				<attribute name="Class" use="required">
-					<annotation>
-						<documentation>R158,R159</documentation>
-					</annotation>
-				</attribute>
 			</extension>
 		</complexContent>
 	</complexType>
