@@ -690,12 +690,6 @@
 				<documentation>R152</documentation>
 			</annotation>
 			<extension base="t:Reference">
-				<attribute name="Side" type="t:Side" use="optional">
-					<annotation>
-						<documentation>TODO
-						</documentation>
-					</annotation>
-				</attribute>
 			</extension>
 		</complexContent>
 	</complexType>
@@ -719,7 +713,6 @@
 			</extension>
 		</complexContent>
 	</complexType>
-
 
 	<complexType name="ToOneReference">
 		<complexContent>
