@@ -8,6 +8,7 @@
 	</parent>
 	<artifactId>xuml-model-compiler</artifactId>
 	<name>${project.artifactId}</name>
+	<description>Java model compiler including JPA generation from xml definitions.</description>
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>

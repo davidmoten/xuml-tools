@@ -7,6 +7,7 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>xuml-diagrams-core</artifactId>
+	<description>Diagram generation core classes</description>
 	<name>${project.artifactId}</name>
 	<dependencies>
 		<dependency>

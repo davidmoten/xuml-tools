@@ -8,6 +8,7 @@
 	</parent>
 	<artifactId>xuml-jaxb</artifactId>
 	<name>${project.artifactId}</name>
+	<description>TODO</description>
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>

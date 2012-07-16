@@ -8,6 +8,7 @@
 	</parent>
 	<artifactId>miuml-jaxb</artifactId>
 	<name>${project.artifactId}</name>
+	<description>Contains miUML metamodel schema and xuml-tools extensions schema and generates JAXB classes from those schemas.</description>
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>

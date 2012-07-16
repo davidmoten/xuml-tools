@@ -8,6 +8,7 @@
 	</parent>
 	<artifactId>xuml-model-compiler-test</artifactId>
 	<name>${project.artifactId}</name>
+	<description>Unit tests for xuml-model-compiler</description>
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>

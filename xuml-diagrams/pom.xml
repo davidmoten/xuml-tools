@@ -9,6 +9,7 @@
 	<artifactId>xuml-diagrams</artifactId>
 	<name>${project.artifactId}</name>
 	<packaging>war</packaging>
+	<description>Generates javascript browser deployed dynamic diagrams from xml</description>
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
