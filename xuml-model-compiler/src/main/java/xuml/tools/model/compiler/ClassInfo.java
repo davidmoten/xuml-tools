@@ -629,10 +629,13 @@ public class ClassInfo extends ClassInfoBase {
 		String thisFieldName = nameManager.toFieldName(otherClassName,
 				cls.getName(), a.getRnum());
 		boolean inPrimaryId = inPrimaryId(a.getRnum());
+
+		// TODO create the MyManyToMany object
+		MyManyToMany manyToMany = null;
 		return new MyReferenceMember(pThat.getViewedClass(),
 				infoOther.getClassFullName(), toMult(pThis), toMult(pThat),
 				pThis.getPhrase(), pThat.getPhrase(), fieldName, joins,
-				thisFieldName, (MyManyToMany) null, inPrimaryId);
+				thisFieldName, manyToMany, inPrimaryId);
 	}
 
 	private boolean inPrimaryId(BigInteger rnum) {
