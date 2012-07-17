@@ -513,8 +513,8 @@ public class ClassInfo extends ClassInfoBase {
 		List<MyReferenceMember> list = Lists.newArrayList();
 		List<Association> associations = lookups.getAssociations(cls);
 		for (Association a : associations) {
-			MyReferenceMember m = createMyReferenceMember(a, cls);
-			list.add(m);
+			List<MyReferenceMember> m = createMyReferenceMembers(a, cls);
+			list.addAll(m);
 		}
 		for (Generalization g : lookups.getGeneralizations()) {
 			for (Named specialization : g.getSpecializedClass()) {
@@ -567,14 +567,15 @@ public class ClassInfo extends ClassInfoBase {
 		}
 	}
 
-	private MyReferenceMember createMyReferenceMember(Association a, Class cls) {
+	private List<MyReferenceMember> createMyReferenceMembers(Association a,
+			Class cls) {
 		if (a instanceof BinaryAssociation)
-			return createMyReferenceMember((BinaryAssociation) a, cls);
+			return createMyReferenceMembers((BinaryAssociation) a, cls);
 		else
 			return createMyReferenceMember((UnaryAssociation) a, cls);
 	}
 
-	private MyReferenceMember createMyReferenceMember(UnaryAssociation a,
+	private List<MyReferenceMember> createMyReferenceMember(UnaryAssociation a,
 			Class cls) {
 		SymmetricPerspective p = a.getSymmetricPerspective();
 		String fieldName = nameManager.toFieldName(cls.getName(),
@@ -590,14 +591,14 @@ public class ClassInfo extends ClassInfoBase {
 				joins.add(jc);
 			}
 
-		return new MyReferenceMember(getJavaClassSimpleName(),
-				getClassFullName(), Mult.ONE, toMult(p), "inverse of"
-						+ p.getPhrase(), p.getPhrase(), fieldName, joins,
-				"this", null, false);
+		return Lists.newArrayList(new MyReferenceMember(
+				getJavaClassSimpleName(), getClassFullName(), Mult.ONE,
+				toMult(p), "inverse of" + p.getPhrase(), p.getPhrase(),
+				fieldName, joins, "this", null, false));
 	}
 
-	private MyReferenceMember createMyReferenceMember(BinaryAssociation a,
-			Class cls) {
+	private List<MyReferenceMember> createMyReferenceMembers(
+			BinaryAssociation a, Class cls) {
 		AsymmetricPerspective pThis;
 		AsymmetricPerspective pThat;
 
@@ -627,10 +628,10 @@ public class ClassInfo extends ClassInfoBase {
 
 		MyManyToMany manyToMany = createManyToMany(a, cls, infoOther, pThis,
 				pThat);
-		return new MyReferenceMember(pThat.getViewedClass(),
+		return Lists.newArrayList(new MyReferenceMember(pThat.getViewedClass(),
 				infoOther.getClassFullName(), toMult(pThis), toMult(pThat),
 				pThis.getPhrase(), pThat.getPhrase(), fieldName, joins,
-				thisFieldName, manyToMany, inPrimaryId);
+				thisFieldName, manyToMany, inPrimaryId));
 	}
 
 	private List<MyJoinColumn> getJoinColumns(BigInteger rnum, Class cls,
@@ -652,21 +653,29 @@ public class ClassInfo extends ClassInfoBase {
 			AsymmetricPerspective pThat) {
 		if (!pThis.isOnePerspective() && !pThat.isOnePerspective()) {
 			String joinClass;
-			// TODO use NameManager to get implicit join class name
-			if (pThis.getViewedClass().compareTo(pThat.getViewedClass()) < 0)
-				joinClass = Util.toClassSimpleName(pThis.getViewedClass() + " "
-						+ pThat.getViewedClass());
-			else
-				joinClass = Util.toClassSimpleName(pThat.getViewedClass() + " "
-						+ pThis.getViewedClass());
+			List<MyJoinColumn> joins;
+			if (a.getAssociationClass() == null) {
+				// TODO use NameManager to get implicit join class name
+				if (pThis.getViewedClass().compareTo(pThat.getViewedClass()) < 0)
+					joinClass = Util.toClassSimpleName(pThis.getViewedClass()
+							+ " " + pThat.getViewedClass());
+				else
+					joinClass = Util.toClassSimpleName(pThat.getViewedClass()
+							+ " " + pThis.getViewedClass());
 
-			List<MyJoinColumn> joins = Lists.newArrayList();
-			for (MyIdAttribute member : infoOther
-					.getPrimaryIdAttributeMembers()) {
-				String col = nameManager.toColumnName(joinClass, cls.getName()
-						+ member.getAttributeName());
-				MyJoinColumn jc = new MyJoinColumn(col, member.getColumnName());
-				joins.add(jc);
+				joins = Lists.newArrayList();
+				for (MyIdAttribute member : infoOther
+						.getPrimaryIdAttributeMembers()) {
+					String col = nameManager.toColumnName(joinClass,
+							cls.getName() + member.getAttributeName());
+					MyJoinColumn jc = new MyJoinColumn(col,
+							member.getColumnName());
+					joins.add(jc);
+				}
+			} else {
+				joinClass = a.getAssociationClass();
+				infoOther = getClassInfo(joinClass);
+				joins = getJoinColumns(a.getRnum(), cls, infoOther);
 			}
 
 			MyManyToMany mm = new MyManyToMany(joinClass, getSchema(), joins);
