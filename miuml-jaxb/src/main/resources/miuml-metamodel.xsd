@@ -689,7 +689,7 @@
 			<annotation>
 				<documentation>R152</documentation>
 			</annotation>
-			<extension base="t:Reference">
+			<extension base="t:ToOneReference">
 			</extension>
 		</complexContent>
 	</complexType>

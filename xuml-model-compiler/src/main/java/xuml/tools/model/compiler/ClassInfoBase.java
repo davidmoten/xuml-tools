@@ -603,20 +603,14 @@ public abstract class ClassInfoBase {
 	public static class MyManyToMany {
 		private final String joinTable;
 		private final String joinTableSchema;
-		private final String thisColumnName;
-		private final String thatColumnName;
-
-		public String getThatColumnName() {
-			return thatColumnName;
-		}
+		private final List<MyJoinColumn> joinColumns;
 
 		public MyManyToMany(String joinTable, String joinTableSchema,
-				String thisColumnName, String thatColumnName) {
+				List<MyJoinColumn> joinColumns) {
 			super();
 			this.joinTable = joinTable;
 			this.joinTableSchema = joinTableSchema;
-			this.thisColumnName = thisColumnName;
-			this.thatColumnName = thatColumnName;
+			this.joinColumns = joinColumns;
 		}
 
 		public String getJoinTable() {
@@ -627,9 +621,10 @@ public abstract class ClassInfoBase {
 			return joinTableSchema;
 		}
 
-		public String getThisColumnName() {
-			return thisColumnName;
+		public List<MyJoinColumn> getJoinColumns() {
+			return joinColumns;
 		}
+
 	}
 
 	public static class MyTransition {

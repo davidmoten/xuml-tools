@@ -48,6 +48,7 @@ import xuml.tools.model.compiler.ClassInfoBase.MyEvent;
 import xuml.tools.model.compiler.ClassInfoBase.MyFind;
 import xuml.tools.model.compiler.ClassInfoBase.MyIdAttribute;
 import xuml.tools.model.compiler.ClassInfoBase.MyIndependentAttribute;
+import xuml.tools.model.compiler.ClassInfoBase.MyJoinColumn;
 import xuml.tools.model.compiler.ClassInfoBase.MyParameter;
 import xuml.tools.model.compiler.ClassInfoBase.MyReferenceMember;
 import xuml.tools.model.compiler.ClassInfoBase.MySpecializations;
@@ -1052,12 +1053,36 @@ public class ClassWriter {
 		out.format("        @%s(name=\"%s\",schema=\"%s\",\n", info
 				.addType(JoinTable.class), ref.getManyToMany().getJoinTable(),
 				ref.getManyToMany().getJoinTableSchema());
-		out.format("            joinColumns=@%s(name=\"%s\"),\n", info
-				.addType(JoinColumn.class), ref.getManyToMany()
-				.getThisColumnName());
-		out.format("            inverseJoinColumns=@%s(name=\"%s\"))\n", info
-				.addType(JoinColumn.class), ref.getManyToMany()
-				.getThatColumnName());
+
+		out.format("            joinColumns={");
+		{
+			boolean first = true;
+			for (MyJoinColumn join : ref.getManyToMany().getJoinColumns()) {
+				if (!first)
+					out.format(",\n");
+				out.format("                @%s(name=\"%s\")",
+						info.addType(JoinColumn.class),
+						join.getThisColumnName());
+				first = false;
+
+			}
+		}
+		out.format("},\n");
+		out.format("            inverseJoinColumns={");
+		{
+			boolean first = true;
+			for (MyJoinColumn join : ref.getManyToMany().getJoinColumns()) {
+				if (!first)
+					out.format(",\n");
+				out.format("                @%s(name=\"%s\")",
+						info.addType(JoinColumn.class),
+						join.getOtherColumnName());
+				first = false;
+
+			}
+		}
+		out.format("})");
+
 		writeMultipleField(out, ref);
 	}
 

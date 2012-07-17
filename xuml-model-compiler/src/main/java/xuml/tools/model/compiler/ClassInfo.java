@@ -610,17 +610,12 @@ public class ClassInfo extends ClassInfoBase {
 		}
 		String otherClassName = pThat.getViewedClass();
 		ClassInfo infoOther = getClassInfo(otherClassName);
-		List<MyJoinColumn> joins = newArrayList();
+
+		List<MyJoinColumn> joins;
 		if (pThat.isOnePerspective())
-			for (MyIdAttribute member : infoOther
-					.getPrimaryIdAttributeMembers()) {
-				String attributeName = getMatchingAttributeName(a.getRnum(),
-						member.getAttributeName());
-				MyJoinColumn jc = new MyJoinColumn(nameManager.toColumnName(
-						cls.getName(), attributeName), member.getColumnName());
-				System.out.println(jc);
-				joins.add(jc);
-			}
+			joins = getJoinColumns(a.getRnum(), cls, infoOther);
+		else
+			joins = Lists.newArrayList();
 
 		String fieldName = nameManager.toFieldName(cls.getName(),
 				pThat.getViewedClass(), a.getRnum());
@@ -631,11 +626,43 @@ public class ClassInfo extends ClassInfoBase {
 		boolean inPrimaryId = inPrimaryId(a.getRnum());
 
 		// TODO create the MyManyToMany object
-		MyManyToMany manyToMany = null;
+		MyManyToMany manyToMany = createManyToMany(a, cls, infoOther, pThis,
+				pThat);
 		return new MyReferenceMember(pThat.getViewedClass(),
 				infoOther.getClassFullName(), toMult(pThis), toMult(pThat),
 				pThis.getPhrase(), pThat.getPhrase(), fieldName, joins,
 				thisFieldName, manyToMany, inPrimaryId);
+	}
+
+	private List<MyJoinColumn> getJoinColumns(BigInteger rnum, Class cls,
+			ClassInfo infoOther) {
+		List<MyJoinColumn> joins = Lists.newArrayList();
+		for (MyIdAttribute member : infoOther.getPrimaryIdAttributeMembers()) {
+			String attributeName = getMatchingAttributeName(rnum,
+					member.getAttributeName());
+			MyJoinColumn jc = new MyJoinColumn(nameManager.toColumnName(
+					cls.getName(), attributeName), member.getColumnName());
+			System.out.println(jc);
+			joins.add(jc);
+		}
+		return joins;
+	}
+
+	private MyManyToMany createManyToMany(BinaryAssociation a, Class cls,
+			ClassInfo infoOther, AsymmetricPerspective pThis,
+			AsymmetricPerspective pThat) {
+		if (!pThis.isOnePerspective() && !pThat.isOnePerspective()) {
+			String joinClass;
+			if (pThis.getViewedClass().compareTo(pThat.getViewedClass()) < 0)
+				// TODO use NameManager
+				joinClass = pThis.getViewedClass() + pThat.getViewedClass();
+			else
+				joinClass = pThat.getViewedClass() + pThis.getViewedClass();
+			MyManyToMany mm = new MyManyToMany(joinClass, getSchema(),
+					getJoinColumns(a.getRnum(), cls, infoOther));
+			return mm;
+		} else
+			return null;
 	}
 
 	private boolean inPrimaryId(BigInteger rnum) {
