@@ -792,7 +792,7 @@
 				</ReferentialAttribute>
 			</Class>
 
-			<BinaryAssociation Rnum="1">
+			<BinaryAssociation Rnum="1" AssociationClass="C">
 				<ActivePerspective Phrase="characterizes"
 					ViewedClass="B" OnePerspective="false" Conditional="true" />
 				<PassivePerspective Phrase="is characterized by"
