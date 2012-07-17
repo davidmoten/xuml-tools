@@ -731,8 +731,6 @@
 
 		<Subsystem Name="many-to-many" Floor="161" Ceiling="180">
 
-			<!-- TODO setup for AssociativeReference -->
-
 			<Class Name="A">
 				<IndependentAttribute Name="A one" Type="string">
 					<Identifier Number="1" />
@@ -744,12 +742,6 @@
 
 			<Class Name="B">
 				<IndependentAttribute Name="B one" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-			</Class>
-
-			<Class Name="C">
-				<IndependentAttribute Name="C one" Type="string">
 					<Identifier Number="1" />
 				</IndependentAttribute>
 			</Class>
