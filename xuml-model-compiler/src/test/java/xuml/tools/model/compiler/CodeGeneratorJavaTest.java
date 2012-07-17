@@ -81,7 +81,7 @@ public class CodeGeneratorJavaTest {
 		generateClassesForDomain("extensions");
 	}
 
-	// @Test
+	@Test
 	public void testCodeGenerationForManyToMany() throws FileNotFoundException {
 		generateClassesForDomain("many-to-many");
 	}

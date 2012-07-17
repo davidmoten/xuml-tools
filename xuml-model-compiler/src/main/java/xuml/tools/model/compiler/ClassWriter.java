@@ -1050,11 +1050,11 @@ public class ClassWriter {
 				info.addType(ManyToMany.class),
 				info.addType(ref.getFullClassName()),
 				info.addType(CascadeType.class), info.addType(FetchType.class));
-		out.format("        @%s(name=\"%s\",schema=\"%s\",\n", info
+		out.format("    @%s(name=\"%s\",schema=\"%s\",\n", info
 				.addType(JoinTable.class), ref.getManyToMany().getJoinTable(),
 				ref.getManyToMany().getJoinTableSchema());
 
-		out.format("            joinColumns={");
+		out.format("            joinColumns={\n");
 		{
 			boolean first = true;
 			for (MyJoinColumn join : ref.getManyToMany().getJoinColumns()) {
@@ -1068,7 +1068,7 @@ public class ClassWriter {
 			}
 		}
 		out.format("},\n");
-		out.format("            inverseJoinColumns={");
+		out.format("            inverseJoinColumns={\n");
 		{
 			boolean first = true;
 			for (MyJoinColumn join : ref.getManyToMany().getJoinColumns()) {
@@ -1081,7 +1081,7 @@ public class ClassWriter {
 
 			}
 		}
-		out.format("})");
+		out.format("})\n");
 
 		writeMultipleField(out, ref);
 	}

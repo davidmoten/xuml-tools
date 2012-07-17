@@ -625,7 +625,6 @@ public class ClassInfo extends ClassInfoBase {
 				cls.getName(), a.getRnum());
 		boolean inPrimaryId = inPrimaryId(a.getRnum());
 
-		// TODO create the MyManyToMany object
 		MyManyToMany manyToMany = createManyToMany(a, cls, infoOther, pThis,
 				pThat);
 		return new MyReferenceMember(pThat.getViewedClass(),
@@ -653,13 +652,24 @@ public class ClassInfo extends ClassInfoBase {
 			AsymmetricPerspective pThat) {
 		if (!pThis.isOnePerspective() && !pThat.isOnePerspective()) {
 			String joinClass;
+			// TODO use NameManager to get implicit join class name
 			if (pThis.getViewedClass().compareTo(pThat.getViewedClass()) < 0)
-				// TODO use NameManager
-				joinClass = pThis.getViewedClass() + pThat.getViewedClass();
+				joinClass = Util.toClassSimpleName(pThis.getViewedClass() + " "
+						+ pThat.getViewedClass());
 			else
-				joinClass = pThat.getViewedClass() + pThis.getViewedClass();
-			MyManyToMany mm = new MyManyToMany(joinClass, getSchema(),
-					getJoinColumns(a.getRnum(), cls, infoOther));
+				joinClass = Util.toClassSimpleName(pThat.getViewedClass() + " "
+						+ pThis.getViewedClass());
+
+			List<MyJoinColumn> joins = Lists.newArrayList();
+			for (MyIdAttribute member : infoOther
+					.getPrimaryIdAttributeMembers()) {
+				String col = nameManager.toColumnName(joinClass, cls.getName()
+						+ member.getAttributeName());
+				MyJoinColumn jc = new MyJoinColumn(col, member.getColumnName());
+				joins.add(jc);
+			}
+
+			MyManyToMany mm = new MyManyToMany(joinClass, getSchema(), joins);
 			return mm;
 		} else
 			return null;

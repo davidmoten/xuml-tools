@@ -210,6 +210,18 @@
 							<packageName>extensions</packageName>
 						</configuration>
 					</execution>
+					<execution>
+						<id>many-to-many</id>
+						<goals>
+							<goal>generate-jpa</goal>
+						</goals>
+						<configuration>
+							<domainsXml>/samples.xml</domainsXml>
+							<domain>many-to-many</domain>
+							<schema>many_to_many</schema>
+							<packageName>many_to_many</packageName>
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
 			<!-- xuml-tools-maven-plugin does add this directory as source but eclipse 
