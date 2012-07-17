@@ -506,7 +506,11 @@
 						</annotation>
 					</element>
 				</sequence>
-				<attribute name="Superclass" type="t:Name" use="required" />
+				<attribute name="Superclass" type="t:Name" use="required">
+					<annotation>
+						<documentation>R103</documentation>
+					</annotation>
+				</attribute>
 			</extension>
 		</complexContent>
 	</complexType>
