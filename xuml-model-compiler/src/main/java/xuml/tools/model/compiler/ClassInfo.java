@@ -32,6 +32,7 @@ import miuml.jaxb.IndependentAttribute;
 import miuml.jaxb.IntegerType;
 import miuml.jaxb.Named;
 import miuml.jaxb.NativeAttribute;
+import miuml.jaxb.PassivePerspective;
 import miuml.jaxb.Perspective;
 import miuml.jaxb.RealType;
 import miuml.jaxb.Reference;
@@ -609,6 +610,30 @@ public class ClassInfo extends ClassInfoBase {
 			pThis = a.getPassivePerspective();
 			pThat = a.getActivePerspective();
 		}
+		List<MyReferenceMember> list = Lists.newArrayList();
+		list.add(createMyReferenceMemberForDirectAssociation(a, cls, pThis,
+				pThat));
+		if (a.getAssociationClass() != null) {
+			{
+				BinaryAssociation a2 = new BinaryAssociation();
+				a2.setActivePerspective(pThis);
+				PassivePerspective pThat2 = new PassivePerspective();
+				pThat2.setConditional(true);
+				pThat2.setOnePerspective(true);
+				pThat2.setPhrase(pThat.getPhrase());
+				pThat2.setViewedClass(a.getAssociationClass());
+				a2.setPassivePerspective(pThat2);
+				list.add(createMyReferenceMemberForDirectAssociation(a, cls,
+						pThis, pThat2));
+			}
+		}
+		return list;
+	}
+
+	private MyReferenceMember createMyReferenceMemberForDirectAssociation(
+			BinaryAssociation a, Class cls, AsymmetricPerspective pThis,
+			AsymmetricPerspective pThat) {
+
 		String otherClassName = pThat.getViewedClass();
 		ClassInfo infoOther = getClassInfo(otherClassName);
 
@@ -628,10 +653,11 @@ public class ClassInfo extends ClassInfoBase {
 
 		MyManyToMany manyToMany = createManyToMany(a, cls, infoOther, pThis,
 				pThat);
-		return Lists.newArrayList(new MyReferenceMember(pThat.getViewedClass(),
+
+		return new MyReferenceMember(pThat.getViewedClass(),
 				infoOther.getClassFullName(), toMult(pThis), toMult(pThat),
 				pThis.getPhrase(), pThat.getPhrase(), fieldName, joins,
-				thisFieldName, manyToMany, inPrimaryId));
+				thisFieldName, manyToMany, inPrimaryId);
 	}
 
 	private List<MyJoinColumn> getJoinColumns(BigInteger rnum, Class cls,

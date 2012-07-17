@@ -562,12 +562,12 @@
 					<documentation>R119</documentation>
 				</annotation>
 				<sequence>
-					<element name="ActivePerspective" type="t:ActivePerspective">
+					<element name="ActivePerspective" type="t:AsymmetricPerspective">
 						<annotation>
 							<documentation>R124</documentation>
 						</annotation>
 					</element>
-					<element name="PassivePerspective" type="t:PassivePerspective">
+					<element name="PassivePerspective" type="t:AsymmetricPerspective">
 						<annotation>
 							<documentation>R125</documentation>
 						</annotation>
