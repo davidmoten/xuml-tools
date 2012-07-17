@@ -86,6 +86,12 @@ public class CodeGeneratorJavaTest {
 		generateClassesForDomain("many-to-many");
 	}
 
+	@Test
+	public void testCodeGenerationForManyToManyWithAssociationClass()
+			throws FileNotFoundException {
+		generateClassesForDomain("many-to-many-association-class");
+	}
+
 	private void generateClassesForDomain(String domainName) {
 		String underscored = domainName.replaceAll("-", "_").toLowerCase();
 		generateClassesForDomain(domainName, underscored, underscored);
