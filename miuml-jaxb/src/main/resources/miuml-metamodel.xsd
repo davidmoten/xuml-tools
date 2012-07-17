@@ -518,7 +518,11 @@
 				<annotation>
 					<documentation>R100</documentation>
 				</annotation>
-				<attribute name="AssociationClass" use="optional"/>
+				<attribute name="AssociationClass" use="optional">
+					<annotation>
+						<documentation>R119, R120</documentation>
+					</annotation>
+				</attribute>
 			</extension>
 		</complexContent>
 	</complexType>
