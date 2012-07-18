@@ -11,7 +11,7 @@ Continuous integration with Jenkins for this project is [here](https://xuml-tool
 
 <a href="https://xuml-tools.ci.cloudbees.com/"><img  src="http://web-static-cloudfront.s3.amazonaws.com/images/badges/BuiltOnDEV.png"/></a>
 
-Maven site is [here](https://xuml-tools.ci.cloudbees.com/job/xuml-tools_site/site/). Includes Javadoc, Cobertura test coverage, FindBugs, PMD, Java NCSS and other reports.
+Maven site is [here](https://xuml-tools.ci.cloudbees.com/job/xuml-tools_site/site/). Includes Javadoc, Cobertura test coverage, FindBugs,CPD, PMD, JavaNCSS, Checkstyle and other reports.
 
 Getting started
 ---------------

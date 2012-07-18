@@ -185,11 +185,6 @@
 						<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-changelog-plugin</artifactId> 
 							<version>${changelog.version}</version> <configuration> <username>${svn.username}</username> 
 							<password>${svn.password}</password> </configuration> </plugin> -->
-						<plugin>
-							<groupId>org.codehaus.mojo</groupId>
-							<artifactId>dashboard-maven-plugin</artifactId>
-							<version>${dashboard.version}</version>
-						</plugin>
 					</reportPlugins>
 				</configuration>
 			</plugin>
