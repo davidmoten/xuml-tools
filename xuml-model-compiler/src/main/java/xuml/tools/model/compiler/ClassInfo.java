@@ -533,24 +533,46 @@ public class ClassInfo extends ClassInfoBase {
 				.getName());
 		if (ass.isPresent()) {
 			if (ass.get() instanceof BinaryAssociation) {
-				BinaryAssociation b = (BinaryAssociation) ass.get();
-				BinaryAssociation b2 = new BinaryAssociation();
-				ActivePerspective p1 = new ActivePerspective();
-				p1.setViewedClass(cls.getName());
-				p1.setOnePerspective(true);
-				p1.setConditional(true);
-				p1.setPhrase(b.getActivePerspective().getPhrase());
-				b2.setActivePerspective(p1);
-				PassivePerspective p2 = new PassivePerspective();
-				p2.setViewedClass(b.getActivePerspective().getViewedClass());
-				p2.setOnePerspective(b.getActivePerspective()
-						.isOnePerspective());
-				p2.setConditional(b.getActivePerspective().isConditional());
-				b2.setPassivePerspective(p2);
-				b2.setRnum(b.getRnum());
-				list.addAll(createMyReferenceMembers(b2, cls));
+				{
+					BinaryAssociation b = (BinaryAssociation) ass.get();
+					BinaryAssociation b2 = new BinaryAssociation();
+					ActivePerspective p1 = new ActivePerspective();
+					p1.setViewedClass(cls.getName());
+					p1.setOnePerspective(b.getActivePerspective()
+							.isOnePerspective());
+					p1.setConditional(true);
+					p1.setPhrase(b.getActivePerspective().getPhrase());
+					b2.setActivePerspective(p1);
+					PassivePerspective p2 = new PassivePerspective();
+					p2.setViewedClass(b.getActivePerspective().getViewedClass());
+					p2.setOnePerspective(true);
+					p2.setConditional(false);
+					p2.setPhrase(b.getPassivePerspective().getPhrase());
+					b2.setPassivePerspective(p2);
+					b2.setRnum(b.getRnum());
+					list.addAll(createMyReferenceMembers(b2, cls));
+				}
 
-				// TODO add other side
+				{
+					BinaryAssociation b = (BinaryAssociation) ass.get();
+					BinaryAssociation b2 = new BinaryAssociation();
+					ActivePerspective p1 = new ActivePerspective();
+					p1.setViewedClass(cls.getName());
+					p1.setOnePerspective(b.getActivePerspective()
+							.isOnePerspective());
+					p1.setConditional(true);
+					p1.setPhrase(b.getActivePerspective().getPhrase());
+					b2.setActivePerspective(p1);
+					PassivePerspective p2 = new PassivePerspective();
+					p2.setViewedClass(b.getPassivePerspective()
+							.getViewedClass());
+					p2.setOnePerspective(true);
+					p2.setConditional(false);
+					p2.setPhrase(b.getActivePerspective().getPhrase());
+					b2.setPassivePerspective(p2);
+					b2.setRnum(b.getRnum());
+					list.addAll(createMyReferenceMembers(b2, cls));
+				}
 			}
 			// TODO handle unary association classesm
 		}
