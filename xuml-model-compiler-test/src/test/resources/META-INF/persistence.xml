@@ -240,4 +240,20 @@
 			<property name="hibernate.format_sql" value="true" />
 		</properties>
 	</persistence-unit>
+	<persistence-unit name="many-to-many-association">
+		<class>many_to_many_association.A</class>
+		<class>many_to_many_association.B</class>
+		<class>many_to_many_association.C</class>
+		<class>xuml.tools.model.compiler.runtime.QueuedSignal</class>
+		<exclude-unlisted-classes>true</exclude-unlisted-classes>
+		<properties>
+			<property name="hibernate.dialect" value="org.hibernate.dialect.DerbyDialect" />
+			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
+			<property name="hibernate.connection.driver_class" value="org.apache.derby.jdbc.EmbeddedDriver" />
+			<property name="hibernate.connection.url" value="jdbc:derby:memory:manytomanyassociation-db;create=true" />
+			<property name="hibernate.connection.pool_size" value="5" />
+			<property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.format_sql" value="true" />
+		</properties>
+	</persistence-unit>
 </persistence>

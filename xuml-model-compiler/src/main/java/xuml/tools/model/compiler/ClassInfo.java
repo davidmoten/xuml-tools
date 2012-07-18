@@ -643,15 +643,21 @@ public class ClassInfo extends ClassInfoBase {
 		if (a.getAssociationClass() != null) {
 			{
 				BinaryAssociation a2 = new BinaryAssociation();
-				a2.setActivePerspective(pThis);
-				PassivePerspective pThat2 = new PassivePerspective();
-				pThat2.setConditional(true);
-				pThat2.setOnePerspective(true);
-				pThat2.setPhrase(pThat.getPhrase());
-				pThat2.setViewedClass(a.getAssociationClass());
-				a2.setPassivePerspective(pThat2);
-				list.add(createMyReferenceMemberForDirectAssociation(a, cls,
-						pThis, pThat2));
+				ActivePerspective active = new ActivePerspective();
+				active.setPhrase(pThis.getPhrase());
+				active.setOnePerspective(true);
+				active.setConditional(true);
+				a2.setActivePerspective(active);
+
+				PassivePerspective passive = new PassivePerspective();
+				passive.setConditional(true);
+				passive.setOnePerspective(false);
+				passive.setPhrase(pThat.getPhrase());
+				passive.setViewedClass(a.getAssociationClass());
+				a2.setPassivePerspective(passive);
+				a2.setRnum(a.getRnum());
+				list.add(createMyReferenceMemberForDirectAssociation(a2, cls,
+						active, passive));
 			}
 		}
 		return list;
