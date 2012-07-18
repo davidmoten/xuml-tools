@@ -27,6 +27,7 @@ import miuml.jaxb.SubsystemElement;
 import miuml.jaxb.SymbolicType;
 import miuml.jaxb.UnaryAssociation;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -118,6 +119,17 @@ class Lookups {
 			}
 		}
 		return list;
+	}
+
+	public Optional<Association> associationForAssociationClass(String className) {
+		for (Relationship r : relationshipsByNumber.values()) {
+			if (r instanceof Association) {
+				Association a = (Association) r;
+				if (className.equals(a.getAssociationClass()))
+					return Optional.of(a);
+			}
+		}
+		return Optional.absent();
 	}
 
 	public String getJavaType(String typeName) {
