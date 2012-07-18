@@ -180,8 +180,7 @@
 			<annotation>
 				<documentation>
 					Number has been made optional because it is not
-					required
-					to uniquely refer to an Element within a Domain in the
+					required to uniquely refer to an Element within a Domain in the
 					schema.
 				</documentation>
 			</annotation>
