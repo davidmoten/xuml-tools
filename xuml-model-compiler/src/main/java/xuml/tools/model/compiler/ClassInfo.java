@@ -55,6 +55,7 @@ import xuml.tools.miuml.metamodel.extensions.jaxb.Generation;
 import xuml.tools.miuml.metamodel.extensions.jaxb.Marshaller;
 
 import com.google.common.base.Function;
+import com.google.common.base.Optional;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -526,6 +527,13 @@ public class ClassInfo extends ClassInfoBase {
 					list.add(createMyReferenceMember(g, specialization, cls,
 							false));
 			}
+		}
+		Optional<Association> ass = lookups.associationForAssociationClass(cls
+				.getName());
+		if (ass.isPresent()) {
+			if (ass.get() instanceof BinaryAssociation)
+				;
+			// TODO
 		}
 		return list;
 	}
