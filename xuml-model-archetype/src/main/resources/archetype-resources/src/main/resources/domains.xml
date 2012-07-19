@@ -3,26 +3,23 @@
 	xsi:schemaLocation="http://www.miuml.org/metamodel miuml-metamodel.xsd  http://org.github/xuml-tools/miuml-metamodel-extensions xuml-tools-miuml-metamodel-extensions.xsd"
 	xmlns:xt="http://org.github/xuml-tools/miuml-metamodel-extensions">
 
+	<DomainBuildSpecification Name="Base"
+		DomainNameIsDefaultSubsystemName="true" DefaultSubsystemName="Subsystem"
+		DefaultSubsystemRange="100" DefaultIdName="Id" DefaultIdType="arbitraryId" />
+
 	<SymbolicType Name="string" MinLength="1" MaxLength="4096"
 		Prefix="" Suffix="" ValidationPattern=".*" DefaultValue="" />
 
-	<ModeledDomain Name="one-to-many">
+	<ModeledDomain Name="test-domain">
 
-		<Subsystem Name="one-to-many" Floor="101" Ceiling="120">
+		<Subsystem Name="test-domain" Floor="1" Ceiling="20">
 
 			<Class Name="A">
-
 				<IndependentAttribute Name="A one" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<IndependentAttribute Name="A two" Type="string">
 					<Identifier Number="1" />
 				</IndependentAttribute>
 				<ReferentialAttribute Name="A B one">
 					<ToOneReference Relationship="1" Attribute="B one" />
-				</ReferentialAttribute>
-				<ReferentialAttribute Name="A B two">
-					<ToOneReference Relationship="1" Attribute="B two" />
 				</ReferentialAttribute>
 			</Class>
 
@@ -30,14 +27,8 @@
 				<IndependentAttribute Name="B one" Type="string">
 					<Identifier Number="1" />
 				</IndependentAttribute>
-				<IndependentAttribute Name="B two" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
 				<ReferentialAttribute Name="B A one">
 					<ToOneReference Relationship="1" Attribute="A one" />
-				</ReferentialAttribute>
-				<ReferentialAttribute Name="B A two">
-					<ToOneReference Relationship="1" Attribute="A two" />
 				</ReferentialAttribute>
 			</Class>
 

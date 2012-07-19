@@ -11,6 +11,8 @@ import javax.xml.validation.SchemaFactory;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
+import com.google.common.base.Preconditions;
+
 /**
  * Marshalls and unmarshalls xuml-tools extensions to the miuml metamodel
  * schema.
@@ -59,6 +61,7 @@ public class Marshaller {
 	 * @throws JAXBException
 	 */
 	public synchronized Object unmarshal(Node node) throws JAXBException {
+		Preconditions.checkNotNull(node, "Node is null!");
 		return unmarshaller.unmarshal(node);
 	}
 

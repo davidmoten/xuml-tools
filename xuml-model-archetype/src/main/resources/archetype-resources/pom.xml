@@ -7,10 +7,18 @@
 	<version>${version}</version>
 	<packaging>jar</packaging>
 
-	<name>Generated xuml-tools model</name>
-	<url>http://www.myorganization.org</url>
+	<name>${artifactId}</name>
+
+	<properties>
+		<xuml.tools.version>0.0.1-SNAPSHOT</xuml.tools.version>
+	</properties>
 
 	<dependencies>
+		<dependency>
+			<groupId>org.github.davidmoten</groupId>
+			<artifactId>xuml-model-compiler-runtime</artifactId>
+			<version>${xuml.tools.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -23,7 +31,7 @@
 			<plugin>
 				<groupId>org.github.davidmoten</groupId>
 				<artifactId>xuml-tools-maven-plugin</artifactId>
-				<version>0.0.1-SNAPSHOT</version>
+				<version>${xuml.tools.version}</version>
 				<executions>
 					<execution>
 						<id>generate-jpa</id>
@@ -31,10 +39,10 @@
 							<goal>generate-jpa</goal>
 						</goals>
 						<configuration>
-							<domainsXml>/domains.xml</domainsXml>
-							<domain>one-to-many</domain>
-							<schema>one_to_many</schema>
-							<packageName>one.to.many</packageName>
+							<domainsXml>src/main/resources/domains.xml</domainsXml>
+							<domain>test-domain</domain>
+							<schema>test_domain</schema>
+							<packageName>test</packageName>
 						</configuration>
 					</execution>
 				</executions>

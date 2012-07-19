@@ -17,12 +17,14 @@ package xuml.tools.maven.plugin;
  */
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Set;
 
 import javax.xml.bind.JAXBElement;
-
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.AbstractMojo;
@@ -115,8 +117,15 @@ public class GenerateJpaMojo extends AbstractMojo {
 		if (!f.exists()) {
 			f.mkdirs();
 		}
-		xuml.tools.miuml.metamodel.jaxb.Domains domains = new Marshaller().unmarshal(getClass()
-				.getResourceAsStream(domainsXml));
+		InputStream is = getClass().getResourceAsStream(domainsXml);
+		if (is == null)
+			try {
+				is = new FileInputStream(domainsXml);
+			} catch (FileNotFoundException e) {
+				throw new MojoExecutionException(e.getMessage(), e);
+			}
+		xuml.tools.miuml.metamodel.jaxb.Domains domains = new Marshaller()
+				.unmarshal(is);
 		new CodeGeneratorJava(domains, domain, packageName, schema,
 				resourcesDirectory, generatePersistenceXml)
 				.generate(outputSourceDirectory);

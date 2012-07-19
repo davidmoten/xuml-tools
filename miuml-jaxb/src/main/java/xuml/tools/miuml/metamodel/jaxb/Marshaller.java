@@ -13,8 +13,7 @@ import javax.xml.validation.SchemaFactory;
 
 import org.xml.sax.SAXException;
 
-import xuml.tools.miuml.metamodel.jaxb.Domains;
-import xuml.tools.miuml.metamodel.jaxb.ObjectFactory;
+import com.google.common.base.Preconditions;
 
 /**
  * Uunmarshals {@link Domains}.
@@ -61,6 +60,7 @@ public class Marshaller {
 	 * @return
 	 */
 	public synchronized Domains unmarshal(InputStream is) {
+		Preconditions.checkNotNull(is, "InputStream is null!");
 		try {
 			return unmarshaller.unmarshal(new StreamSource(is), Domains.class)
 					.getValue();
