@@ -50,7 +50,13 @@
 
 	<complexType name="Domains">
 		<sequence>
-			<element name="DomainBuildSpecification" type="t:DomainBuildSpecification" />
+			<element name="DomainBuildSpecification" type="t:DomainBuildSpecification"
+				minOccurs="0">
+				<annotation>
+					<documentation>Used to configure defaults for creating new domains.
+					</documentation>
+				</annotation>
+			</element>
 			<element ref="t:ConstrainedType" minOccurs="0" maxOccurs="unbounded">
 				<annotation>
 					<documentation>R708 CommonType</documentation>

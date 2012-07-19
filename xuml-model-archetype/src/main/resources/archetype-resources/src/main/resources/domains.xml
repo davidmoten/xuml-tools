@@ -3,10 +3,6 @@
 	xsi:schemaLocation="http://www.miuml.org/metamodel miuml-metamodel.xsd  http://org.github/xuml-tools/miuml-metamodel-extensions xuml-tools-miuml-metamodel-extensions.xsd"
 	xmlns:xt="http://org.github/xuml-tools/miuml-metamodel-extensions">
 
-	<DomainBuildSpecification Name="Base"
-		DomainNameIsDefaultSubsystemName="true" DefaultSubsystemName="Subsystem"
-		DefaultSubsystemRange="100" DefaultIdName="Id" DefaultIdType="arbitraryId" />
-
 	<SymbolicType Name="string" MinLength="1" MaxLength="4096"
 		Prefix="" Suffix="" ValidationPattern=".*" DefaultValue="" />
 
