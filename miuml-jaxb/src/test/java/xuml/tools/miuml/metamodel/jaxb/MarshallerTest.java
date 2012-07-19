@@ -1,4 +1,4 @@
-package miuml.jaxb;
+package xuml.tools.miuml.metamodel.jaxb;
 
 import org.junit.Test;
 
