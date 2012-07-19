@@ -54,7 +54,10 @@ To generate your own JPA classes from xml compliant with the miUML schema add th
 ```
 or use the maven archetype to create a project in interactive mode:
 
-    mvn archetype:generate -DarchetypeGroupId=org.github.davidmoten -DarchetypeArtifactId=xuml-model-archetype -DarchetypeVersion=0.0.1-SNAPSHOT		                
+    mvn archetype:generate \
+    -DarchetypeGroupId=org.github.davidmoten \
+    -DarchetypeArtifactId=xuml-model-archetype \
+    -DarchetypeVersion=0.0.1-SNAPSHOT
 
 Then customise src/main/resources/domain.xml, pom.xml and src/main/java and src/test/java.
 
