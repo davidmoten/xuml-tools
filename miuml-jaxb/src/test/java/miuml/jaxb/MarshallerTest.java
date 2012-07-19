@@ -2,6 +2,8 @@ package miuml.jaxb;
 
 import org.junit.Test;
 
+import xuml.tools.miuml.metamodel.jaxb.Marshaller;
+
 /**
  * Tests the {@link Marshaller}.
  * 

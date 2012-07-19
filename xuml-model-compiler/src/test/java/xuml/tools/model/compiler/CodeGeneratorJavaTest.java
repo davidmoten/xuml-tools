@@ -3,9 +3,10 @@ package xuml.tools.model.compiler;
 import java.io.File;
 import java.io.FileNotFoundException;
 
-import miuml.jaxb.Marshaller;
 
 import org.junit.Test;
+
+import xuml.tools.miuml.metamodel.jaxb.Marshaller;
 
 public class CodeGeneratorJavaTest {
 

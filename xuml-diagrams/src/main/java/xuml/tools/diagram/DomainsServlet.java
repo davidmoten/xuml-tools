@@ -9,12 +9,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.JAXBElement;
 
-import miuml.jaxb.Marshaller;
 
 import org.apache.commons.io.IOUtils;
 
 import xuml.tools.miuml.metamodel.jaxb.Domain;
 import xuml.tools.miuml.metamodel.jaxb.Domains;
+import xuml.tools.miuml.metamodel.jaxb.Marshaller;
 import xuml.tools.miuml.metamodel.jaxb.ModeledDomain;
 import xuml.tools.miuml.metamodel.jaxb.Subsystem;
 import xuml.tools.util.xml.TaggedString;

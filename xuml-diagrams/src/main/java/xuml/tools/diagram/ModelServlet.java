@@ -7,9 +7,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import miuml.jaxb.Marshaller;
 
 import org.apache.commons.io.IOUtils;
+
+import xuml.tools.miuml.metamodel.jaxb.Marshaller;
 
 public class ModelServlet extends HttpServlet {
 

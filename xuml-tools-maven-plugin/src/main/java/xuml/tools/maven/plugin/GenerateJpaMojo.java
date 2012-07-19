@@ -23,7 +23,6 @@ import java.util.Set;
 
 import javax.xml.bind.JAXBElement;
 
-import miuml.jaxb.Marshaller;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.AbstractMojo;
@@ -32,6 +31,7 @@ import org.apache.maven.project.MavenProject;
 
 import xuml.tools.diagram.ClassDiagramGenerator;
 import xuml.tools.miuml.metamodel.jaxb.Domain;
+import xuml.tools.miuml.metamodel.jaxb.Marshaller;
 import xuml.tools.miuml.metamodel.jaxb.ModeledDomain;
 import xuml.tools.miuml.metamodel.jaxb.Subsystem;
 import xuml.tools.model.compiler.CodeGeneratorJava;

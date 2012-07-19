@@ -6,7 +6,6 @@ import java.io.IOException;
 
 import javax.xml.bind.JAXBElement;
 
-import miuml.jaxb.Marshaller;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -15,6 +14,7 @@ import org.junit.Test;
 import xuml.tools.diagram.ClassDiagramGenerator;
 import xuml.tools.miuml.metamodel.jaxb.Domain;
 import xuml.tools.miuml.metamodel.jaxb.Domains;
+import xuml.tools.miuml.metamodel.jaxb.Marshaller;
 import xuml.tools.miuml.metamodel.jaxb.ModeledDomain;
 import xuml.tools.miuml.metamodel.jaxb.Subsystem;
 
