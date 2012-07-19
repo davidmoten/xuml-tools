@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Domains xmlns="http://www.miuml.org/metamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.miuml.org/metamodel miuml-metamodel.xsd  http://org.github/xuml-tools/miuml-metamodel-extensions xuml-tools-miuml-metamodel-extensions.xsd"
+	xmlns:xt="http://org.github/xuml-tools/miuml-metamodel-extensions">
+
+	<SymbolicType Name="string" MinLength="1" MaxLength="4096"
+		Prefix="" Suffix="" ValidationPattern=".*" DefaultValue="" />
+
+	<ModeledDomain Name="one-to-many">
+
+		<Subsystem Name="one-to-many" Floor="101" Ceiling="120">
+
+			<Class Name="A">
+
+				<IndependentAttribute Name="A one" Type="string">
+					<Identifier Number="1" />
+				</IndependentAttribute>
+				<IndependentAttribute Name="A two" Type="string">
+					<Identifier Number="1" />
+				</IndependentAttribute>
+				<ReferentialAttribute Name="A B one">
+					<ToOneReference Relationship="1" Attribute="B one" />
+				</ReferentialAttribute>
+				<ReferentialAttribute Name="A B two">
+					<ToOneReference Relationship="1" Attribute="B two" />
+				</ReferentialAttribute>
+			</Class>
+
+			<Class Name="B">
+				<IndependentAttribute Name="B one" Type="string">
+					<Identifier Number="1" />
+				</IndependentAttribute>
+				<IndependentAttribute Name="B two" Type="string">
+					<Identifier Number="1" />
+				</IndependentAttribute>
+				<ReferentialAttribute Name="B A one">
+					<ToOneReference Relationship="1" Attribute="A one" />
+				</ReferentialAttribute>
+				<ReferentialAttribute Name="B A two">
+					<ToOneReference Relationship="1" Attribute="A two" />
+				</ReferentialAttribute>
+			</Class>
+
+			<BinaryAssociation Rnum="1">
+				<ActivePerspective Phrase="characterizes"
+					ViewedClass="B" OnePerspective="false" Conditional="true" />
+				<PassivePerspective Phrase="is characterized by"
+					ViewedClass="A" OnePerspective="true" Conditional="false" />
+			</BinaryAssociation>
+
+		</Subsystem>
+	</ModeledDomain>
+
+</Domains>

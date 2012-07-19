@@ -1,0 +1,18 @@
+<archetype
+	xmlns="http://maven.apache.org/plugins/maven-archetype-plugin/archetype/1.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/plugins/maven-archetype-plugin/archetype/1.0.0 http://maven.apache.org/xsd/archetype-1.0.0.xsd">
+	<id>model</id>
+	<sources>
+		<source>src/main/java/App.java</source>
+	</sources>
+	<testSources>
+		<source>src/test/java/AppTest.java</source>
+	</testSources>
+	<testResources>
+		<resource>src/test/resources/META-INF/persistence.xml</resource>
+	</testResources>
+	<resources>
+		<resource>src/main/resources/domains.xml</resource>
+	</resources>
+</archetype>
