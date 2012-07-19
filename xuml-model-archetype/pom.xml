@@ -32,7 +32,7 @@
 					<goals>
 						<goal>org.apache.maven.plugins:maven-archetype-plugin:generate</goal>
 					</goals>
-					<localRepositoryPath>${project.build.directory}/it/repo</localRepositoryPath>
+					<!--<localRepositoryPath>${project.build.directory}/it/repo</localRepositoryPath>-->
 					<pomIncludes>
 						<pomInclude>*</pomInclude>
 					</pomIncludes>
