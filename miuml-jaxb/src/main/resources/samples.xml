@@ -790,6 +790,7 @@
 				<ReferentialAttribute Name="C B one">
 					<PReference Relationship="1" Attribute="B one"/>
 				</ReferentialAttribute>
+				<IndependentAttribute Name="Description" Type="string"/>
 			</Class>
 
 			<BinaryAssociation Rnum="1" AssociationClass="C">
@@ -901,6 +902,7 @@
 
 	<ModeledDomain Name="specialization">
 		<Subsystem Name="specialization" Floor="281" Ceiling="300">
+		
 			<Class Name="A">
 				<IndependentAttribute Name="one" Type="string">
 					<Identifier Number="1" />

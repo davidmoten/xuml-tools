@@ -53,6 +53,7 @@ public class BinaryAssociationManyToManyAssociationClassTest {
 		a2.getB().add(b2);
 		b1.getA().add(a2);
 		b2.getA().add(a2);
+
 		em.flush();
 		assertEquals(2, a1.getC().size());
 
