@@ -71,11 +71,12 @@ public class ClassInfo extends ClassInfoBase {
 	private final String schema;
 	private final TypeRegister typeRegister = new TypeRegister();
 	private final Lookups lookups;
-	private static NameManager nameManager = NameManager.getInstance();
 	private final static Marshaller extensionsMarshaller = new Marshaller();
+	private final NameManager nameManager;
 
-	public ClassInfo(Class cls, String packageName, String classDescription,
-			String schema, Lookups lookups) {
+	public ClassInfo(NameManager nameManager, Class cls, String packageName,
+			String classDescription, String schema, Lookups lookups) {
+		this.nameManager = nameManager;
 		this.cls = cls;
 		this.packageName = packageName;
 		// TODO is this property needed?
@@ -280,7 +281,7 @@ public class ClassInfo extends ClassInfoBase {
 	}
 
 	private ClassInfo getClassInfo(String otherClassName) {
-		ClassInfo otherInfo = new ClassInfo(
+		ClassInfo otherInfo = new ClassInfo(nameManager,
 				lookups.getClassByName(otherClassName), packageName, "unknown",
 				schema, lookups);
 		return otherInfo;

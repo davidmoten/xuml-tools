@@ -28,7 +28,7 @@ public class NameManager {
 
 	private final Map<String, BiMap<String, String>> referencedTables = newHashMap();
 
-	private NameManager() {
+	public NameManager() {
 		try {
 			reservedWords = Sets.newHashSet();
 			// the list below was obtained from http://drupal.org/node/141051

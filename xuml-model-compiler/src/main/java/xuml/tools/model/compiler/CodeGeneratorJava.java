@@ -38,6 +38,7 @@ public class CodeGeneratorJava {
 	private final Domains domains;
 	private final String resourcesDirectory;
 	private final boolean generatePersistenceXml;
+	private final NameManager nameManager;
 
 	public CodeGeneratorJava(Domains domains, String domainName,
 			String domainPackageName, String domainSchema,
@@ -48,6 +49,7 @@ public class CodeGeneratorJava {
 		this.domain = Util.getModeledDomain(domains, domainName);
 		this.domainPackageName = domainPackageName;
 		this.domainSchema = domainSchema;
+		this.nameManager = new NameManager();
 	}
 
 	public void generate(File destination) {
@@ -201,8 +203,8 @@ public class CodeGeneratorJava {
 
 	private ClassInfo createClassInfo(Class cls) {
 		Lookups lookups = new Lookups(domains, domain);
-		return new ClassInfo(cls, domainPackageName, "description",
-				domainSchema, lookups);
+		return new ClassInfo(nameManager, cls, domainPackageName,
+				"description", domainSchema, lookups);
 	}
 
 	private String getClassJavaSimpleName(Class cls) {
