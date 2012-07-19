@@ -8,24 +8,25 @@ import java.util.Map;
 
 import javax.xml.bind.JAXBElement;
 
-import miuml.jaxb.Association;
-import miuml.jaxb.AtomicType;
-import miuml.jaxb.BinaryAssociation;
-import miuml.jaxb.BooleanType;
-import miuml.jaxb.Class;
-import miuml.jaxb.ConstrainedType;
-import miuml.jaxb.Domains;
-import miuml.jaxb.EnumeratedType;
-import miuml.jaxb.Generalization;
-import miuml.jaxb.IntegerType;
-import miuml.jaxb.ModeledDomain;
-import miuml.jaxb.Named;
-import miuml.jaxb.RealType;
-import miuml.jaxb.Relationship;
-import miuml.jaxb.Subsystem;
-import miuml.jaxb.SubsystemElement;
-import miuml.jaxb.SymbolicType;
-import miuml.jaxb.UnaryAssociation;
+import xuml.tools.miuml.metamodel.jaxb.Association;
+import xuml.tools.miuml.metamodel.jaxb.AtomicType;
+import xuml.tools.miuml.metamodel.jaxb.BinaryAssociation;
+import xuml.tools.miuml.metamodel.jaxb.BooleanType;
+import xuml.tools.miuml.metamodel.jaxb.Class;
+import xuml.tools.miuml.metamodel.jaxb.ConstrainedType;
+import xuml.tools.miuml.metamodel.jaxb.Domains;
+import xuml.tools.miuml.metamodel.jaxb.EnumeratedType;
+import xuml.tools.miuml.metamodel.jaxb.Generalization;
+import xuml.tools.miuml.metamodel.jaxb.IntegerType;
+import xuml.tools.miuml.metamodel.jaxb.ModeledDomain;
+import xuml.tools.miuml.metamodel.jaxb.Named;
+import xuml.tools.miuml.metamodel.jaxb.RealType;
+import xuml.tools.miuml.metamodel.jaxb.Relationship;
+import xuml.tools.miuml.metamodel.jaxb.Subsystem;
+import xuml.tools.miuml.metamodel.jaxb.SubsystemElement;
+import xuml.tools.miuml.metamodel.jaxb.SymbolicType;
+import xuml.tools.miuml.metamodel.jaxb.UnaryAssociation;
+
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;

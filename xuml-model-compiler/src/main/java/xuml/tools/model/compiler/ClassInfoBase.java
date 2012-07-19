@@ -7,8 +7,9 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Set;
 
-import miuml.jaxb.EventSignature;
-import miuml.jaxb.StateSignature;
+import xuml.tools.miuml.metamodel.jaxb.EventSignature;
+import xuml.tools.miuml.metamodel.jaxb.StateSignature;
+
 
 public abstract class ClassInfoBase {
 

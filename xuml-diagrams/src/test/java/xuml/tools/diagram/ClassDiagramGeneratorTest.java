@@ -6,17 +6,17 @@ import java.io.IOException;
 
 import javax.xml.bind.JAXBElement;
 
-import miuml.jaxb.Domain;
-import miuml.jaxb.Domains;
 import miuml.jaxb.Marshaller;
-import miuml.jaxb.ModeledDomain;
-import miuml.jaxb.Subsystem;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
 import xuml.tools.diagram.ClassDiagramGenerator;
+import xuml.tools.miuml.metamodel.jaxb.Domain;
+import xuml.tools.miuml.metamodel.jaxb.Domains;
+import xuml.tools.miuml.metamodel.jaxb.ModeledDomain;
+import xuml.tools.miuml.metamodel.jaxb.Subsystem;
 
 public class ClassDiagramGeneratorTest {
 

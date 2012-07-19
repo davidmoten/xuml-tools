@@ -2,10 +2,11 @@ package xuml.tools.model.compiler;
 
 import javax.xml.bind.JAXBElement;
 
-import miuml.jaxb.Domain;
-import miuml.jaxb.Domains;
-import miuml.jaxb.ModeledDomain;
-import miuml.jaxb.Perspective;
+import xuml.tools.miuml.metamodel.jaxb.Domain;
+import xuml.tools.miuml.metamodel.jaxb.Domains;
+import xuml.tools.miuml.metamodel.jaxb.ModeledDomain;
+import xuml.tools.miuml.metamodel.jaxb.Perspective;
+
 
 public class Util {
 

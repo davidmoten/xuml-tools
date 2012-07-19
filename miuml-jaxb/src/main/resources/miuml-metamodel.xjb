@@ -1,7 +1,7 @@
 <bindings xmlns="http://java.sun.com/xml/ns/jaxb" version="2.1">
   <bindings schemaLocation="miuml-metamodel.xsd" >
     <schemaBindings>
-      <package name="miuml.jaxb"/>
+      <package name="xuml.tools.miuml.metamodel.jaxb"/>
     </schemaBindings>
   </bindings>
 </bindings>

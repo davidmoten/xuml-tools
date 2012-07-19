@@ -12,11 +12,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.xml.bind.JAXBElement;
 
-import miuml.jaxb.Class;
-import miuml.jaxb.Domains;
-import miuml.jaxb.ModeledDomain;
-import miuml.jaxb.Subsystem;
-import miuml.jaxb.SubsystemElement;
+import xuml.tools.miuml.metamodel.jaxb.Class;
+import xuml.tools.miuml.metamodel.jaxb.Domains;
+import xuml.tools.miuml.metamodel.jaxb.ModeledDomain;
+import xuml.tools.miuml.metamodel.jaxb.Subsystem;
+import xuml.tools.miuml.metamodel.jaxb.SubsystemElement;
 import xuml.tools.model.compiler.runtime.CreationEvent;
 import xuml.tools.model.compiler.runtime.Entity;
 import xuml.tools.model.compiler.runtime.Event;

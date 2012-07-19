@@ -23,10 +23,7 @@ import java.util.Set;
 
 import javax.xml.bind.JAXBElement;
 
-import miuml.jaxb.Domain;
 import miuml.jaxb.Marshaller;
-import miuml.jaxb.ModeledDomain;
-import miuml.jaxb.Subsystem;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.AbstractMojo;
@@ -34,6 +31,9 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 
 import xuml.tools.diagram.ClassDiagramGenerator;
+import xuml.tools.miuml.metamodel.jaxb.Domain;
+import xuml.tools.miuml.metamodel.jaxb.ModeledDomain;
+import xuml.tools.miuml.metamodel.jaxb.Subsystem;
 import xuml.tools.model.compiler.CodeGeneratorJava;
 
 /**
@@ -115,7 +115,7 @@ public class GenerateJpaMojo extends AbstractMojo {
 		if (!f.exists()) {
 			f.mkdirs();
 		}
-		miuml.jaxb.Domains domains = new Marshaller().unmarshal(getClass()
+		xuml.tools.miuml.metamodel.jaxb.Domains domains = new Marshaller().unmarshal(getClass()
 				.getResourceAsStream(domainsXml));
 		new CodeGeneratorJava(domains, domain, packageName, schema,
 				resourcesDirectory, generatePersistenceXml)

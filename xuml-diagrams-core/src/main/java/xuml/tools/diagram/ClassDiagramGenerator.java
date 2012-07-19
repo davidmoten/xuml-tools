@@ -7,26 +7,27 @@ import java.util.List;
 
 import javax.xml.bind.JAXBElement;
 
-import miuml.jaxb.Attribute;
-import miuml.jaxb.BinaryAssociation;
-import miuml.jaxb.DerivedAttribute;
-import miuml.jaxb.Domain;
-import miuml.jaxb.Domains;
-import miuml.jaxb.Event;
-import miuml.jaxb.Generalization;
-import miuml.jaxb.IdentifierAttribute;
-import miuml.jaxb.IndependentAttribute;
-import miuml.jaxb.ModeledDomain;
-import miuml.jaxb.Named;
-import miuml.jaxb.Perspective;
-import miuml.jaxb.Reference;
-import miuml.jaxb.ReferentialAttribute;
-import miuml.jaxb.Relationship;
-import miuml.jaxb.Subsystem;
-import miuml.jaxb.SubsystemElement;
-import miuml.jaxb.UnaryAssociation;
 
 import org.apache.commons.io.IOUtils;
+
+import xuml.tools.miuml.metamodel.jaxb.Attribute;
+import xuml.tools.miuml.metamodel.jaxb.BinaryAssociation;
+import xuml.tools.miuml.metamodel.jaxb.DerivedAttribute;
+import xuml.tools.miuml.metamodel.jaxb.Domain;
+import xuml.tools.miuml.metamodel.jaxb.Domains;
+import xuml.tools.miuml.metamodel.jaxb.Event;
+import xuml.tools.miuml.metamodel.jaxb.Generalization;
+import xuml.tools.miuml.metamodel.jaxb.IdentifierAttribute;
+import xuml.tools.miuml.metamodel.jaxb.IndependentAttribute;
+import xuml.tools.miuml.metamodel.jaxb.ModeledDomain;
+import xuml.tools.miuml.metamodel.jaxb.Named;
+import xuml.tools.miuml.metamodel.jaxb.Perspective;
+import xuml.tools.miuml.metamodel.jaxb.Reference;
+import xuml.tools.miuml.metamodel.jaxb.ReferentialAttribute;
+import xuml.tools.miuml.metamodel.jaxb.Relationship;
+import xuml.tools.miuml.metamodel.jaxb.Subsystem;
+import xuml.tools.miuml.metamodel.jaxb.SubsystemElement;
+import xuml.tools.miuml.metamodel.jaxb.UnaryAssociation;
 
 public class ClassDiagramGenerator {
 
@@ -86,8 +87,8 @@ public class ClassDiagramGenerator {
 		StringBuilder s = new StringBuilder();
 		for (JAXBElement<? extends SubsystemElement> element : subsystem
 				.getSubsystemElement())
-			if (element.getValue() instanceof miuml.jaxb.Class)
-				generateClass(s, (miuml.jaxb.Class) element.getValue());
+			if (element.getValue() instanceof xuml.tools.miuml.metamodel.jaxb.Class)
+				generateClass(s, (xuml.tools.miuml.metamodel.jaxb.Class) element.getValue());
 			else if (element.getValue() instanceof Relationship) {
 				Relationship r = (Relationship) element.getValue();
 				if (r instanceof BinaryAssociation)
@@ -165,7 +166,7 @@ public class ClassDiagramGenerator {
 		return "R" + n;
 	}
 
-	private void generateClass(StringBuilder s, miuml.jaxb.Class cls) {
+	private void generateClass(StringBuilder s, xuml.tools.miuml.metamodel.jaxb.Class cls) {
 		System.out.println("class=" + cls.getName());
 		s.append("<div id=\"" + cls.getName().replaceAll(" ", "_")
 				+ "\" class=\"cls draggable");

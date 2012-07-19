@@ -7,10 +7,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import miuml.jaxb.Domains;
 import miuml.jaxb.Marshaller;
 
 import org.apache.commons.io.IOUtils;
+
+import xuml.tools.miuml.metamodel.jaxb.Domains;
 
 public class ClassDiagramServlet extends HttpServlet {
 

@@ -13,6 +13,9 @@ import javax.xml.validation.SchemaFactory;
 
 import org.xml.sax.SAXException;
 
+import xuml.tools.miuml.metamodel.jaxb.Domains;
+import xuml.tools.miuml.metamodel.jaxb.ObjectFactory;
+
 /**
  * Uunmarshals {@link Domains}.
  * 
