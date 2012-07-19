@@ -4,4 +4,4 @@ mvn archetype:generate                                  \
   -DarchetypeVersion=0.0.1-SNAPSHOT		                \
   -DgroupId=temp                                \
   -DartifactId=model-temp                                  \
-
+  -Dversion=1.0-SNAPSHOT

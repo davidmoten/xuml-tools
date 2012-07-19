@@ -11,6 +11,7 @@
 	</testSources>
 	<testResources>
 		<resource>src/test/resources/META-INF/persistence.xml</resource>
+		<resource>src/test/resources/log4j.properties</resource>
 	</testResources>
 	<resources>
 		<resource>src/main/resources/domains.xml</resource>
