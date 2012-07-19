@@ -11,7 +11,7 @@ Continuous integration with Jenkins for this project is [here](https://xuml-tool
 
 <a href="https://xuml-tools.ci.cloudbees.com/"><img  src="http://web-static-cloudfront.s3.amazonaws.com/images/badges/BuiltOnDEV.png"/></a>
 
-Maven site is [here](https://xuml-tools.ci.cloudbees.com/job/xuml-tools_site/site/). Includes Javadoc, Cobertura test coverage, FindBugs,CPD, PMD, JavaNCSS, Checkstyle and other reports.
+Maven site is [here](https://xuml-tools.ci.cloudbees.com/job/xuml-tools_site/site/). Includes [Javadocs](https://xuml-tools.ci.cloudbees.com/job/xuml-tools_site/site/apidocs/index.html), Cobertura test coverage, FindBugs,CPD, PMD, JavaNCSS, Checkstyle and other reports.
 
 Getting started
 ---------------
@@ -115,7 +115,6 @@ The java model compiler includes the following features (<img src="https://githu
  * Suffix <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
  * ValidationPattern <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
  * DefaultValue
-
 
 The todo list includes:
 * Event polymorphism
