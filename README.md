@@ -26,7 +26,19 @@ Until the project has matured enough to release artifacts to Maven Central repos
     cd xuml-tools
     mvn clean install
 
-To generate your own JPA classes from xml compliant with the miUML schema add the following plugin to your pom.xml:
+Once a model is specified in xml then xuml-tools generates a system (rich JPA classes), including a test harness with an in-memory generated database.
+
+Use the maven archetype to create a project in interactive mode:
+	
+	cd <YOUR_WORKSPACE>
+    mvn archetype:generate \
+    -DarchetypeGroupId=org.github.davidmoten \
+    -DarchetypeArtifactId=xuml-model-archetype \
+    -DarchetypeVersion=0.0.1-SNAPSHOT
+
+Then customise src/main/resources/domain.xml, pom.xml and src/main/java and src/test/java.
+
+Alternatively, look at the maven plugin below that you would insert into your pom.xml and follow your nose:
 ```xml
 <build>
 	<plugins>
@@ -52,14 +64,6 @@ To generate your own JPA classes from xml compliant with the miUML schema add th
 	</plugins>
 </build>
 ```
-or use the maven archetype to create a project in interactive mode:
-
-    mvn archetype:generate \
-    -DarchetypeGroupId=org.github.davidmoten \
-    -DarchetypeArtifactId=xuml-model-archetype \
-    -DarchetypeVersion=0.0.1-SNAPSHOT
-
-Then customise src/main/resources/domain.xml, pom.xml and src/main/java and src/test/java.
 
 The module [**xuml-model-compiler-test**](https://github.com/davidmoten/xuml-tools/tree/master/xuml-model-compiler-test) demonstrates usage. In particular the test class [AbcTest.java](https://github.com/davidmoten/xuml-tools/blob/master/xuml-model-compiler-test/src/test/java/xuml/tools/jaxb/compiler/test/AbcTest.java) demonstrates normal system lifecycle.
 
