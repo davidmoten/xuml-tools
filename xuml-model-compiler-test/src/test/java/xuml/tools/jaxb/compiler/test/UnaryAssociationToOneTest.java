@@ -17,24 +17,24 @@ import unary_one.Context;
 import xuml.tools.util.database.DerbyUtil;
 
 public class UnaryAssociationToOneTest {
-	private static EntityManagerFactory emf;
 
 	@BeforeClass
 	public static void setup() {
 		DerbyUtil.disableDerbyLog();
-		emf = Persistence.createEntityManagerFactory("unary-one");
+		EntityManagerFactory emf = Persistence
+				.createEntityManagerFactory("unary-one");
 		Context.setEntityManagerFactory(emf);
 	}
 
 	@AfterClass
 	public static void shutdown() {
-		emf.close();
+		Context.close();
 	}
 
 	@Test(expected = PersistenceException.class)
 	public void testCreateAWithoutParent() {
 
-		EntityManager em = emf.createEntityManager();
+		EntityManager em = Context.createEntityManager();
 		try {
 			em.getTransaction().begin();
 			A.create(new A.AId("hello", "there")).persist(em);
@@ -47,7 +47,7 @@ public class UnaryAssociationToOneTest {
 	@Test
 	public void testCreateAWithParentAndIsPersistedProperly() {
 		{
-			EntityManager em = emf.createEntityManager();
+			EntityManager em = Context.createEntityManager();
 			em.getTransaction().begin();
 			A a = A.create(new AId("boo", "baa"));
 			A parent = A.create(new AId("boo2", "baa2"));
@@ -60,7 +60,7 @@ public class UnaryAssociationToOneTest {
 			em.close();
 		}
 		{
-			EntityManager em = emf.createEntityManager();
+			EntityManager em = Context.createEntityManager();
 			em.getTransaction().begin();
 			A a = em.find(A.class, new A.AId("boo", "baa"));
 			assertNotNull(a.getHasParent());
