@@ -3,7 +3,6 @@ package xuml.tools.model.compiler;
 import java.io.File;
 import java.io.FileNotFoundException;
 
-
 import org.junit.Test;
 
 import xuml.tools.miuml.metamodel.jaxb.Marshaller;
@@ -66,6 +65,11 @@ public class CodeGeneratorJavaTest {
 	}
 
 	@Test
+	public void testCodeGenerationForUnaryToMany() throws FileNotFoundException {
+		generateClassesForDomain("unary-many");
+	}
+
+	@Test
 	public void testCodeGenerationForZeroOneToMany()
 			throws FileNotFoundException {
 		generateClassesForDomain("zero-one-to-many");
@@ -100,8 +104,8 @@ public class CodeGeneratorJavaTest {
 
 	private void generateClassesForDomain(String domainName,
 			String domainPackageName, String schema) {
-		xuml.tools.miuml.metamodel.jaxb.Domains domains = new Marshaller().unmarshal(getClass()
-				.getResourceAsStream("/samples.xml"));
+		xuml.tools.miuml.metamodel.jaxb.Domains domains = new Marshaller()
+				.unmarshal(getClass().getResourceAsStream("/samples.xml"));
 		File resources = new File("target/generated-resources");
 		if (!resources.exists())
 			resources.mkdirs();

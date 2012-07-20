@@ -52,7 +52,9 @@ public class UnaryAssociationToOneTest {
 			A a = A.create(new AId("boo", "baa"));
 			A parent = A.create(new AId("boo2", "baa2"));
 			a.setHasParent(parent);
+			a.setHasParentInverse(parent);
 			parent.setHasParent(parent);
+			parent.setHasParentInverse(parent);
 			em.persist(a);
 			em.getTransaction().commit();
 			em.close();

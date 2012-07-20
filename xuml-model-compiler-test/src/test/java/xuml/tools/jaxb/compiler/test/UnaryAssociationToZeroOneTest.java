@@ -50,6 +50,7 @@ public class UnaryAssociationToZeroOneTest {
 			A parent = A.create(new AId("boo2", "baa2"));
 			a.setHasParent(parent);
 			em.persist(a);
+			em.persist(parent);
 			em.getTransaction().commit();
 			em.close();
 		}

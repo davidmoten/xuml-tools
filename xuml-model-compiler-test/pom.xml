@@ -151,6 +151,18 @@
 						</configuration>
 					</execution>
 					<execution>
+						<id>unary-many</id>
+						<goals>
+							<goal>generate-jpa</goal>
+						</goals>
+						<configuration>
+							<domainsXml>/samples.xml</domainsXml>
+							<domain>unary-many</domain>
+							<schema>unary_many</schema>
+							<packageName>unary_many</packageName>
+						</configuration>
+					</execution>
+					<execution>
 						<id>secondary-identifiers</id>
 						<goals>
 							<goal>generate-jpa</goal>

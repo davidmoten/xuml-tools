@@ -859,6 +859,35 @@
 		</Subsystem>
 	</ModeledDomain>
 
+	<ModeledDomain Name="unary-many">
+
+		<Subsystem Name="unary-many" Floor="221" Ceiling="240">
+
+			<Class Name="A">
+
+				<IndependentAttribute Name="A one" Type="string">
+					<Identifier Number="1" />
+				</IndependentAttribute>
+				<IndependentAttribute Name="A two" Type="string">
+					<Identifier Number="1" />
+				</IndependentAttribute>
+				<ReferentialAttribute Name="A B one">
+					<ToOneReference Relationship="1" Attribute="B one" />
+				</ReferentialAttribute>
+				<ReferentialAttribute Name="A B two">
+					<ToOneReference Relationship="1" Attribute="B two" />
+				</ReferentialAttribute>
+			</Class>
+
+			<UnaryAssociation Rnum="1">
+				<SymmetricPerspective OnePerspective="false"
+					Conditional="true" ViewedClass="A" Phrase="has children" />
+			</UnaryAssociation>
+
+		</Subsystem>
+	</ModeledDomain>
+
+
 	<ModeledDomain Name="secondary-identifiers">
 
 		<Subsystem Name="secondary-identifiers" Floor="241" Ceiling="260">

@@ -15,7 +15,6 @@ import java.util.Set;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 
-
 import org.w3c.dom.Node;
 
 import xuml.tools.miuml.metamodel.extensions.jaxb.Documentation;
@@ -629,23 +628,43 @@ public class ClassInfo extends ClassInfoBase {
 	private List<MyReferenceMember> createMyReferenceMember(UnaryAssociation a,
 			Class cls) {
 		SymmetricPerspective p = a.getSymmetricPerspective();
-		String fieldName = nameManager.toFieldName(cls.getName(),
-				p.getPhrase(), a.getRnum());
 		List<MyJoinColumn> joins = newArrayList();
-		if (p.isOnePerspective())
-			for (MyIdAttribute member : getPrimaryIdAttributeMembers()) {
-				String attributeName = member.getAttributeName() + " R"
-						+ a.getRnum();
-				MyJoinColumn jc = new MyJoinColumn(nameManager.toColumnName(
-						cls.getName(), attributeName), member.getColumnName());
-				System.out.println(jc);
-				joins.add(jc);
-			}
+		List<MyJoinColumn> joins2 = newArrayList();
+		for (MyIdAttribute member : getPrimaryIdAttributeMembers()) {
+			String attributeName = member.getAttributeName() + " R"
+					+ a.getRnum();
 
-		return Lists.newArrayList(new MyReferenceMember(
-				getJavaClassSimpleName(), getClassFullName(), Mult.ONE,
-				toMult(p), "inverse of" + p.getPhrase(), p.getPhrase(),
-				fieldName, joins, "this", null, false));
+			joins.add(new MyJoinColumn(nameManager.toColumnName(cls.getName(),
+					attributeName), member.getColumnName()));
+			joins2.add(new MyJoinColumn(member.getColumnName(), nameManager
+					.toColumnName(cls.getName(), attributeName)));
+		}
+		List<MyReferenceMember> list = Lists.newArrayList();
+
+		String fieldName1 = nameManager.toFieldName(cls.getName(),
+				p.getPhrase() + " Inverse", a.getRnum());
+		String fieldName2 = nameManager.toFieldName(cls.getName(),
+				p.getPhrase(), a.getRnum());
+
+		Mult fromMult;
+		if (toMult(p).equals(Mult.MANY) || toMult(p).equals(Mult.ZERO_ONE))
+			fromMult = Mult.ZERO_ONE;
+		else
+			fromMult = Mult.ONE;
+
+		{
+			list.add(new MyReferenceMember(getJavaClassSimpleName(),
+					getClassFullName(), fromMult, toMult(p), p.getPhrase()
+							+ " Inverse", p.getPhrase(), fieldName2, joins2,
+					fieldName1, null, false));
+		}
+		{
+			list.add(new MyReferenceMember(getJavaClassSimpleName(),
+					getClassFullName(), toMult(p), fromMult, p.getPhrase(), p
+							.getPhrase() + " Inverse", fieldName1, joins,
+					fieldName2, null, false));
+		}
+		return list;
 	}
 
 	private List<MyReferenceMember> createMyReferenceMembers(
