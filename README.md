@@ -92,7 +92,7 @@ The java model compiler includes the following features (<img src="https://githu
  * 1..* to * with Association Class <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
  * Unary 1 <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
  * Unary 0..1 <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
- * Unary *
+ * Unary * <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
  * Unary * with Association Class
  * Unary 1..*
  * Unary 1..* with Association Class
