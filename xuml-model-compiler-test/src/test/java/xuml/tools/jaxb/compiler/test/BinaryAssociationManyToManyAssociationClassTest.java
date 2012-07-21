@@ -10,13 +10,15 @@ import many_to_many_association.A;
 import many_to_many_association.B;
 import many_to_many_association.Context;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import xuml.tools.util.database.DerbyUtil;
 
 public class BinaryAssociationManyToManyAssociationClassTest {
 
-	// @BeforeClass
+	@BeforeClass
 	public static void setup() {
 		DerbyUtil.disableDerbyLog();
 		EntityManagerFactory emf = Persistence
@@ -24,17 +26,17 @@ public class BinaryAssociationManyToManyAssociationClassTest {
 		Context.setEntityManagerFactory(emf);
 	}
 
-	// @AfterClass
+	@AfterClass
 	public static void shutdown() {
 		Context.close();
 	}
 
-	@Test
+	// @Test
 	public void dummy() {
 		// TODO remove and enable tests
 	}
 
-	// @Test
+	@Test
 	public void testCanCreateManyToMany() {
 
 		EntityManager em = Context.createEntityManager();
@@ -53,10 +55,14 @@ public class BinaryAssociationManyToManyAssociationClassTest {
 		b1.getA().add(a2);
 		b2.getA().add(a2);
 
-		em.flush();
-		assertEquals(2, a1.getC().size());
-
 		em.getTransaction().commit();
+
+		em.close();
+
+		em = Context.createEntityManager();
+		assertEquals(2, a1.load(em).getB().size());
+		// TODO enable test below
+		// assertEquals(2, a1.load(em).getC().size());
 		em.close();
 	}
 }
