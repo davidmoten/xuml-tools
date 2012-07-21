@@ -19,24 +19,23 @@ import xuml.tools.util.database.DerbyUtil;
 
 public class SignalPersistenceTest {
 
-	private static EntityManagerFactory emf;
-
 	@BeforeClass
 	public static void setup() {
 		DerbyUtil.disableDerbyLog();
-		emf = Persistence.createEntityManagerFactory("one-to-zero-one");
+		EntityManagerFactory emf = Persistence
+				.createEntityManagerFactory("one-to-zero-one");
 		Context.setEntityManagerFactory(emf);
 	}
 
 	@AfterClass
 	public static void shutdown() {
-		emf.close();
+		Context.close();
 	}
 
 	@Test
 	public void testSignalPersistence() throws ClassNotFoundException {
 
-		EntityManager em = emf.createEntityManager();
+		EntityManager em = Context.createEntityManager();
 		em.getTransaction().begin();
 		A.create(new A.AId("hello2", "there2")).persist(em);
 		em.getTransaction().commit();
@@ -55,7 +54,7 @@ public class SignalPersistenceTest {
 		em.close();
 
 		// now test can find using new em, Class.forName and reconstituted id
-		em = emf.createEntityManager();
+		em = Context.createEntityManager();
 		em.getTransaction().begin();
 		AId id = new A.AId("hello2", "there2");
 		Object id2 = Util.toObject(Util.toBytes(id));

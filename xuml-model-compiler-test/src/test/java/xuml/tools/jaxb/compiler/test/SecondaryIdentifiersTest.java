@@ -16,24 +16,24 @@ import secondary_identifiers.Context;
 import xuml.tools.util.database.DerbyUtil;
 
 public class SecondaryIdentifiersTest {
-	private static EntityManagerFactory emf;
 
 	@BeforeClass
 	public static void setup() {
 		DerbyUtil.disableDerbyLog();
-		emf = Persistence.createEntityManagerFactory("secondary-identifiers");
+		EntityManagerFactory emf = Persistence
+				.createEntityManagerFactory("secondary-identifiers");
 		Context.setEntityManagerFactory(emf);
 	}
 
 	@AfterClass
 	public static void shutdown() {
-		emf.close();
+		Context.close();
 	}
 
 	@Test(expected = RuntimeException.class)
 	public void testCreateAWithNullSecondaryIdentifiersShouldFail() {
 
-		EntityManager em = emf.createEntityManager();
+		EntityManager em = Context.createEntityManager();
 		try {
 			em.getTransaction().begin();
 			A.create("boo").persist(em);
@@ -47,7 +47,7 @@ public class SecondaryIdentifiersTest {
 
 	@Test
 	public void testCreateWithAllIdentifiersSpecified() {
-		EntityManager em = emf.createEntityManager();
+		EntityManager em = Context.createEntityManager();
 		try {
 			em.getTransaction().begin();
 			A a = A.create("one");
@@ -65,7 +65,7 @@ public class SecondaryIdentifiersTest {
 
 	@Test(expected = ConstraintViolationException.class)
 	public void testPersistWithNonUniqueSecondaryIdentifiersFails() {
-		EntityManager em = emf.createEntityManager();
+		EntityManager em = Context.createEntityManager();
 		try {
 			em.getTransaction().begin();
 			{

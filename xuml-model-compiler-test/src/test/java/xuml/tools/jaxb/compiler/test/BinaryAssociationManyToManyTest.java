@@ -15,24 +15,24 @@ import org.junit.Test;
 import xuml.tools.util.database.DerbyUtil;
 
 public class BinaryAssociationManyToManyTest {
-	private static EntityManagerFactory emf;
 
 	@BeforeClass
 	public static void setup() {
 		DerbyUtil.disableDerbyLog();
-		emf = Persistence.createEntityManagerFactory("many-to-many");
+		EntityManagerFactory emf = Persistence
+				.createEntityManagerFactory("many-to-many");
 		Context.setEntityManagerFactory(emf);
 	}
 
 	@AfterClass
 	public static void shutdown() {
-		emf.close();
+		Context.close();
 	}
 
 	@Test
 	public void testCanCreateManyToMany() {
 
-		EntityManager em = emf.createEntityManager();
+		EntityManager em = Context.createEntityManager();
 		em.getTransaction().begin();
 		A a1 = A.create("thing").persist(em);
 		A a2 = A.create("thing2").persist(em);

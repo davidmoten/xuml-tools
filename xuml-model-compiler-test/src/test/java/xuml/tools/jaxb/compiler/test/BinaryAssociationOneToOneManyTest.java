@@ -21,12 +21,11 @@ import xuml.tools.util.database.DerbyUtil;
 
 public class BinaryAssociationOneToOneManyTest {
 
-	private static EntityManagerFactory emf;
-
 	@BeforeClass
 	public static void setup() {
 		DerbyUtil.disableDerbyLog();
-		emf = Persistence.createEntityManagerFactory("one-to-one-many");
+		EntityManagerFactory emf = Persistence
+				.createEntityManagerFactory("one-to-one-many");
 		Context.setEntityManagerFactory(emf);
 	}
 
@@ -38,7 +37,7 @@ public class BinaryAssociationOneToOneManyTest {
 	@Test(expected = RelationshipNotEstablishedException.class)
 	public void testCreateAWithoutB() {
 
-		EntityManager em = emf.createEntityManager();
+		EntityManager em = Context.createEntityManager();
 		em.getTransaction().begin();
 		A.create(new A.AId("hello", "there")).persist(em);
 		em.getTransaction().commit();
@@ -48,7 +47,7 @@ public class BinaryAssociationOneToOneManyTest {
 	@Test(expected = RelationshipNotEstablishedException.class)
 	public void testCannotCreateBWithoutA() {
 
-		EntityManager em = emf.createEntityManager();
+		EntityManager em = Context.createEntityManager();
 		em.getTransaction().begin();
 		try {
 			B.create(new BId("some", "thing")).persist(em);
@@ -61,7 +60,7 @@ public class BinaryAssociationOneToOneManyTest {
 	@Test
 	public void testCreateAWithMultipleBAndIsPersistedProperly() {
 		{
-			EntityManager em = emf.createEntityManager();
+			EntityManager em = Context.createEntityManager();
 			em.getTransaction().begin();
 			A a = A.create(new AId("boo", "baa"));
 			B b = B.create(new BId("some2", "thing2"));
@@ -77,7 +76,7 @@ public class BinaryAssociationOneToOneManyTest {
 			em.close();
 		}
 		{
-			EntityManager em = emf.createEntityManager();
+			EntityManager em = Context.createEntityManager();
 			em.getTransaction().begin();
 			A a2 = em.find(A.class, new A.AId("boo", "baa"));
 			assertEquals(2, a2.getB().size());

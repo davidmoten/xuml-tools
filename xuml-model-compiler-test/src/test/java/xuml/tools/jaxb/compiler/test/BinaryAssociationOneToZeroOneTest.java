@@ -21,24 +21,23 @@ import xuml.tools.util.database.DerbyUtil;
 
 public class BinaryAssociationOneToZeroOneTest {
 
-	private static EntityManagerFactory emf;
-
 	@BeforeClass
 	public static void setup() {
 		DerbyUtil.disableDerbyLog();
-		emf = Persistence.createEntityManagerFactory("one-to-zero-one");
+		EntityManagerFactory emf = Persistence
+				.createEntityManagerFactory("one-to-zero-one");
 		Context.setEntityManagerFactory(emf);
 	}
 
 	@AfterClass
 	public static void shutdown() {
-		emf.close();
+		Context.close();
 	}
 
 	@Test
 	public void testCreateAWithoutB() {
 
-		EntityManager em = emf.createEntityManager();
+		EntityManager em = Context.createEntityManager();
 		em.getTransaction().begin();
 		A.create(new A.AId("hello", "there")).persist(em);
 		em.getTransaction().commit();
@@ -48,7 +47,7 @@ public class BinaryAssociationOneToZeroOneTest {
 	@Test(expected = PersistenceException.class)
 	public void testCannotCreateBWithoutA() {
 
-		EntityManager em = emf.createEntityManager();
+		EntityManager em = Context.createEntityManager();
 		em.getTransaction().begin();
 		try {
 			B.create(new BId("some", "thing")).persist(em);
@@ -61,7 +60,7 @@ public class BinaryAssociationOneToZeroOneTest {
 	@Test
 	public void testCreateAWithBAndIsPersistedProperly() {
 		{
-			EntityManager em = emf.createEntityManager();
+			EntityManager em = Context.createEntityManager();
 			em.getTransaction().begin();
 			A a2 = A.create(new AId("boo", "baa"));
 			B b = B.create(new BId("some2", "thing2"));
@@ -71,7 +70,7 @@ public class BinaryAssociationOneToZeroOneTest {
 			em.close();
 		}
 		{
-			EntityManager em = emf.createEntityManager();
+			EntityManager em = Context.createEntityManager();
 			em.getTransaction().begin();
 			A a2 = em.find(A.class, new A.AId("boo", "baa"));
 			assertNotNull(a2.getB());

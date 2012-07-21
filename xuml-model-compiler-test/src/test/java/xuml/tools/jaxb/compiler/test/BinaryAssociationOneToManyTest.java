@@ -21,18 +21,17 @@ import xuml.tools.util.database.DerbyUtil;
 
 public class BinaryAssociationOneToManyTest {
 
-	private static EntityManagerFactory emf;
-
 	@BeforeClass
 	public static void setup() {
 		DerbyUtil.disableDerbyLog();
-		emf = Persistence.createEntityManagerFactory("one-to-many");
+		EntityManagerFactory emf = Persistence
+				.createEntityManagerFactory("one-to-many");
 		Context.setEntityManagerFactory(emf);
 	}
 
 	@AfterClass
 	public static void shutdown() {
-		emf.close();
+		Context.close();
 	}
 
 	@Test
