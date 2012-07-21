@@ -70,6 +70,12 @@ public class CodeGeneratorJavaTest {
 	}
 
 	@Test
+	public void testCodeGenerationForUnaryToOneMany()
+			throws FileNotFoundException {
+		generateClassesForDomain("unary-one-many");
+	}
+
+	@Test
 	public void testCodeGenerationForZeroOneToMany()
 			throws FileNotFoundException {
 		generateClassesForDomain("zero-one-to-many");
