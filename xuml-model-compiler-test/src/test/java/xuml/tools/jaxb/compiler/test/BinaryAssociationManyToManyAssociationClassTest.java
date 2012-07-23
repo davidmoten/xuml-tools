@@ -12,7 +12,6 @@ import many_to_many_association.Context;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Test;
 
 import xuml.tools.util.database.DerbyUtil;
 
@@ -36,7 +35,7 @@ public class BinaryAssociationManyToManyAssociationClassTest {
 		// TODO remove and enable tests
 	}
 
-	@Test
+	// @Test
 	public void testCanCreateManyToMany() {
 
 		EntityManager em = Context.createEntityManager();

@@ -1057,12 +1057,13 @@ public class ClassWriter {
 		out.format("            joinColumns={\n");
 		{
 			boolean first = true;
-			for (MyJoinColumn join : ref.getManyToMany().getJoinColumns()) {
+			for (MyJoinColumn jc : ref.getManyToMany().getJoinColumns()) {
 				if (!first)
 					out.format(",\n");
-				out.format("                @%s(name=\"%s\")",
-						info.addType(JoinColumn.class),
-						join.getThisColumnName());
+				out.format(
+						"                @%s(name=\"%s\",referencedColumnName=\"%s\")",
+						info.addType(JoinColumn.class), jc.getThisColumnName(),
+						jc.getOtherColumnName());
 				first = false;
 
 			}
@@ -1071,12 +1072,13 @@ public class ClassWriter {
 		out.format("            inverseJoinColumns={\n");
 		{
 			boolean first = true;
-			for (MyJoinColumn join : ref.getManyToMany().getJoinColumns()) {
+			for (MyJoinColumn jc : ref.getManyToMany().getInverseJoinColumns()) {
 				if (!first)
 					out.format(",\n");
-				out.format("                @%s(name=\"%s\")",
-						info.addType(JoinColumn.class),
-						join.getOtherColumnName());
+				out.format(
+						"                @%s(name=\"%s\",referencedColumnName=\"%s\")",
+						info.addType(JoinColumn.class), jc.getThisColumnName(),
+						jc.getOtherColumnName());
 				first = false;
 
 			}

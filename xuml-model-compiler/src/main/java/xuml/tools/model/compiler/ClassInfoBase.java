@@ -10,7 +10,6 @@ import java.util.Set;
 import xuml.tools.miuml.metamodel.jaxb.EventSignature;
 import xuml.tools.miuml.metamodel.jaxb.StateSignature;
 
-
 public abstract class ClassInfoBase {
 
 	abstract String getPackage();
@@ -605,13 +604,16 @@ public abstract class ClassInfoBase {
 		private final String joinTable;
 		private final String joinTableSchema;
 		private final List<MyJoinColumn> joinColumns;
+		private final List<MyJoinColumn> inverseJoinColumns;
 
 		public MyManyToMany(String joinTable, String joinTableSchema,
-				List<MyJoinColumn> joinColumns) {
+				List<MyJoinColumn> joinColumns,
+				List<MyJoinColumn> inverseJoinColumns) {
 			super();
 			this.joinTable = joinTable;
 			this.joinTableSchema = joinTableSchema;
 			this.joinColumns = joinColumns;
+			this.inverseJoinColumns = inverseJoinColumns;
 		}
 
 		public String getJoinTable() {
@@ -624,6 +626,10 @@ public abstract class ClassInfoBase {
 
 		public List<MyJoinColumn> getJoinColumns() {
 			return joinColumns;
+		}
+
+		public List<MyJoinColumn> getInverseJoinColumns() {
+			return inverseJoinColumns;
 		}
 
 	}

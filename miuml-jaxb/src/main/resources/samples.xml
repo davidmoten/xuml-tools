@@ -735,9 +735,6 @@
 				<IndependentAttribute Name="A one" Type="string">
 					<Identifier Number="1" />
 				</IndependentAttribute>
-				<ReferentialAttribute Name="A C one">
-					<TReference Relationship="1" Attribute="C one" />
-				</ReferentialAttribute>
 			</Class>
 
 			<Class Name="B">

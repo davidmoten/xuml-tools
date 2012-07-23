@@ -7,6 +7,7 @@ import static com.google.common.collect.Sets.newHashSet;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -754,7 +755,8 @@ public class ClassInfo extends ClassInfoBase {
 			AsymmetricPerspective pThat) {
 		if (!pThis.isOnePerspective() && !pThat.isOnePerspective()) {
 			String joinClass;
-			List<MyJoinColumn> joins;
+			final List<MyJoinColumn> joinColumns;
+			final List<MyJoinColumn> inverseJoinColumns;
 			if (a.getAssociationClass() == null) {
 				// TODO use NameManager to get implicit join class name
 				if (pThis.getViewedClass().compareTo(pThat.getViewedClass()) < 0)
@@ -764,22 +766,32 @@ public class ClassInfo extends ClassInfoBase {
 					joinClass = Util.toClassSimpleName(pThat.getViewedClass()
 							+ " " + pThis.getViewedClass());
 
-				joins = Lists.newArrayList();
+				joinColumns = Lists.newArrayList();
+				for (MyIdAttribute member : getPrimaryIdAttributeMembers()) {
+					joinColumns.add(new MyJoinColumn(nameManager.toColumnName(
+							joinClass,
+							cls.getName() + " " + member.getAttributeName()),
+							member.getColumnName()));
+				}
+
+				inverseJoinColumns = Lists.newArrayList();
 				for (MyIdAttribute member : infoOther
 						.getPrimaryIdAttributeMembers()) {
-					String col = nameManager.toColumnName(joinClass,
-							cls.getName() + member.getAttributeName());
-					MyJoinColumn jc = new MyJoinColumn(col,
-							member.getColumnName());
-					joins.add(jc);
+					inverseJoinColumns.add(new MyJoinColumn(nameManager
+							.toColumnName(joinClass, cls.getName() + " "
+									+ member.getAttributeName()), member
+							.getColumnName()));
 				}
 			} else {
 				joinClass = a.getAssociationClass();
 				infoOther = getClassInfo(joinClass);
-				joins = getJoinColumns(a.getRnum(), cls, infoOther);
+				joinColumns = Collections.emptyList();
+				inverseJoinColumns = Collections.emptyList();
 			}
 
-			MyManyToMany mm = new MyManyToMany(joinClass, getSchema(), joins);
+			MyManyToMany mm = new MyManyToMany(nameManager.toTableName(
+					getSchema(), joinClass), getSchema(), joinColumns,
+					inverseJoinColumns);
 			return mm;
 		} else
 			return null;
