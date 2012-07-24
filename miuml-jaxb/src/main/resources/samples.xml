@@ -779,7 +779,6 @@
 		<Subsystem Name="unary-one" Floor="201" Ceiling="220">
 
 			<Class Name="A">
-
 				<IndependentAttribute Name="A one" Type="string">
 					<Identifier Number="1" />
 				</IndependentAttribute>
@@ -807,7 +806,6 @@
 		<Subsystem Name="unary-zero-one" Floor="221" Ceiling="240">
 
 			<Class Name="A">
-
 				<IndependentAttribute Name="A one" Type="string">
 					<Identifier Number="1" />
 				</IndependentAttribute>
