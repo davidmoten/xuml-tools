@@ -32,6 +32,8 @@ public class BinaryAssociationManyToManyAssociationClassTest {
 		Context.close();
 	}
 
+	// TODO many more tests can be added here
+
 	@Test
 	public void testCanCreateManyToMany() {
 
