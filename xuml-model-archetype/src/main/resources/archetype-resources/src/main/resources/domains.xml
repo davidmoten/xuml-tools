@@ -14,9 +14,6 @@
 				<IndependentAttribute Name="A one" Type="string">
 					<Identifier Number="1" />
 				</IndependentAttribute>
-				<ReferentialAttribute Name="A B one">
-					<ToOneReference Relationship="1" Attribute="B one" />
-				</ReferentialAttribute>
 			</Class>
 
 			<Class Name="B">

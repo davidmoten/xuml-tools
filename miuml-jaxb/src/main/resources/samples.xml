@@ -514,12 +514,6 @@
 				<IndependentAttribute Name="A two" Type="string">
 					<Identifier Number="1" />
 				</IndependentAttribute>
-				<ReferentialAttribute Name="A B one">
-					<ToOneReference Relationship="1" Attribute="B one" />
-				</ReferentialAttribute>
-				<ReferentialAttribute Name="A B two">
-					<ToOneReference Relationship="1" Attribute="B two" />
-				</ReferentialAttribute>
 			</Class>
 
 			<Class Name="B">
@@ -597,19 +591,12 @@
 		<Subsystem Name="zero-one-to-many" Floor="141" Ceiling="160">
 
 			<Class Name="A">
-
 				<IndependentAttribute Name="A one" Type="string">
 					<Identifier Number="1" />
 				</IndependentAttribute>
 				<IndependentAttribute Name="A two" Type="string">
 					<Identifier Number="1" />
 				</IndependentAttribute>
-				<ReferentialAttribute Name="A B one">
-					<ToOneReference Relationship="1" Attribute="B one" />
-				</ReferentialAttribute>
-				<ReferentialAttribute Name="A B two">
-					<ToOneReference Relationship="1" Attribute="B two" />
-				</ReferentialAttribute>
 			</Class>
 
 			<Class Name="B">
@@ -642,19 +629,12 @@
 		<Subsystem Name="one-to-one-many" Floor="161" Ceiling="180">
 
 			<Class Name="A">
-
 				<IndependentAttribute Name="A one" Type="string">
 					<Identifier Number="1" />
 				</IndependentAttribute>
 				<IndependentAttribute Name="A two" Type="string">
 					<Identifier Number="1" />
 				</IndependentAttribute>
-				<ReferentialAttribute Name="A B one">
-					<ToOneReference Relationship="1" Attribute="B one" />
-				</ReferentialAttribute>
-				<ReferentialAttribute Name="A B two">
-					<ToOneReference Relationship="1" Attribute="B two" />
-				</ReferentialAttribute>
 			</Class>
 
 			<Class Name="B">
@@ -694,12 +674,6 @@
 				<IndependentAttribute Name="A two" Type="string">
 					<Identifier Number="1" />
 				</IndependentAttribute>
-				<ReferentialAttribute Name="A B one">
-					<ToOneReference Relationship="1" Attribute="B one" />
-				</ReferentialAttribute>
-				<ReferentialAttribute Name="A B two">
-					<ToOneReference Relationship="1" Attribute="B two" />
-				</ReferentialAttribute>
 			</Class>
 
 			<Class Name="B">
