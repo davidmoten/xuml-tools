@@ -80,6 +80,10 @@ public class AbcTest {
 
 	}
 
+	/**
+	 * Creates the database, initializes the Context and sets the static
+	 * behaviour factory for A.
+	 */
 	@BeforeClass
 	public static void setup() {
 		DerbyUtil.disableDerbyLog();
@@ -95,6 +99,9 @@ public class AbcTest {
 		A.setBehaviourFactory(createBehaviourFactory());
 	}
 
+	/**
+	 * Stop the actor system and shutdown the database.
+	 */
 	@AfterClass
 	public static void cleanup() {
 
@@ -105,6 +112,11 @@ public class AbcTest {
 		Context.close();
 	}
 
+	/**
+	 * Tests signal persistence.
+	 * 
+	 * @throws InterruptedException
+	 */
 	@Test
 	public void testEntitiesAndSignalsArePersisted()
 			throws InterruptedException {
@@ -136,6 +148,11 @@ public class AbcTest {
 
 	}
 
+	/**
+	 * Returns a {@link BehaviourFactory} for A.
+	 * 
+	 * @return
+	 */
 	private static BehaviourFactory createBehaviourFactory() {
 		return new A.BehaviourFactory() {
 			@Override
@@ -169,6 +186,11 @@ public class AbcTest {
 		};
 	}
 
+	/**
+	 * Tests that an exception is thrown if the {@link BehaviourFactory} has not
+	 * been set for a class with behaviour before attempting to instantiate an
+	 * instance of it.
+	 */
 	@Test(expected = NullPointerException.class)
 	public void testBehaviourNotSetForAThrowsException() {
 		A.BehaviourFactory f = A.getBehaviourFactory();
