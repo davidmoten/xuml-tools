@@ -5,7 +5,7 @@ xuml-tools
 
 This project is **in active development** and has not reached alpha release status yet (will be soon methinks).
 
-<img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/xuml-model-copmiler.png">
+<img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/xuml-model-compiler.png">
 
 <img src="https://github.com/davidmoten/xuml-tools/raw/master/xuml-diagrams/src/docs/class-diagram.png">
 
