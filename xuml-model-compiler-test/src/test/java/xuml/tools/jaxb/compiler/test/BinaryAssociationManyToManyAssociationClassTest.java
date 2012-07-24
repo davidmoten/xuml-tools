@@ -62,8 +62,7 @@ public class BinaryAssociationManyToManyAssociationClassTest {
 
 		em = Context.createEntityManager();
 		assertEquals(2, a1.load(em).getB().size());
-		// TODO enable test below
-		// assertEquals(2, a1.load(em).getC().size());
+
 		em.close();
 	}
 }
