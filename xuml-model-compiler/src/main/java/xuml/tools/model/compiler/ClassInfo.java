@@ -7,7 +7,6 @@ import static com.google.common.collect.Sets.newHashSet;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +23,7 @@ import xuml.tools.miuml.metamodel.extensions.jaxb.Generation;
 import xuml.tools.miuml.metamodel.extensions.jaxb.Marshaller;
 import xuml.tools.miuml.metamodel.jaxb.ActivePerspective;
 import xuml.tools.miuml.metamodel.jaxb.Association;
+import xuml.tools.miuml.metamodel.jaxb.AssociativeReference;
 import xuml.tools.miuml.metamodel.jaxb.AsymmetricPerspective;
 import xuml.tools.miuml.metamodel.jaxb.AtomicType;
 import xuml.tools.miuml.metamodel.jaxb.Attribute;
@@ -759,26 +759,24 @@ public class ClassInfo extends ClassInfoBase {
 			AsymmetricPerspective pThat) {
 		if (!pThis.isOnePerspective() && !pThat.isOnePerspective()) {
 			String joinClass;
-			final List<MyJoinColumn> joinColumns;
-			final List<MyJoinColumn> inverseJoinColumns;
+			final List<MyJoinColumn> joinColumns = Lists.newArrayList();
+			final List<MyJoinColumn> inverseJoinColumns = Lists.newArrayList();
 			if (a.getAssociationClass() == null) {
-				// TODO use NameManager to get implicit join class name
+				// TODO use NameManager to get implicit join class name, must do
+				// this because there could be multiple many to many
+				// associations between the two classes.
 				if (pThis.getViewedClass().compareTo(pThat.getViewedClass()) < 0)
-					joinClass = Util.toClassSimpleName(pThis.getViewedClass()
-							+ " " + pThat.getViewedClass());
+					joinClass = pThis.getViewedClass() + " "
+							+ pThat.getViewedClass();
 				else
-					joinClass = Util.toClassSimpleName(pThat.getViewedClass()
-							+ " " + pThis.getViewedClass());
-
-				joinColumns = Lists.newArrayList();
+					joinClass = pThat.getViewedClass() + " "
+							+ pThis.getViewedClass();
 				for (MyIdAttribute member : getPrimaryIdAttributeMembers()) {
 					joinColumns.add(new MyJoinColumn(nameManager.toColumnName(
 							joinClass,
 							cls.getName() + " " + member.getAttributeName()),
 							member.getColumnName()));
 				}
-
-				inverseJoinColumns = Lists.newArrayList();
 				for (MyIdAttribute member : infoOther
 						.getPrimaryIdAttributeMembers()) {
 					inverseJoinColumns.add(new MyJoinColumn(nameManager
@@ -788,9 +786,26 @@ public class ClassInfo extends ClassInfoBase {
 				}
 			} else {
 				joinClass = a.getAssociationClass();
-				infoOther = getClassInfo(joinClass);
-				joinColumns = Collections.emptyList();
-				inverseJoinColumns = Collections.emptyList();
+				ClassInfo joinInfo = getClassInfo(joinClass);
+				for (MyIdAttribute member : getPrimaryIdAttributeMembers()) {
+					String otherAttributeName = joinInfo
+							.getMatchingAttributeNameForAssociativeReference(
+									a.getRnum(), cls.getName(),
+									member.getAttributeName());
+					joinColumns.add(new MyJoinColumn(nameManager.toColumnName(
+							joinClass, otherAttributeName), member
+							.getColumnName()));
+				}
+				for (MyIdAttribute member : infoOther
+						.getPrimaryIdAttributeMembers()) {
+					String otherAttributeName = joinInfo
+							.getMatchingAttributeNameForAssociativeReference(
+									a.getRnum(), infoOther.getName(),
+									member.getAttributeName());
+					inverseJoinColumns.add(new MyJoinColumn(nameManager
+							.toColumnName(joinClass, otherAttributeName),
+							member.getColumnName()));
+				}
 			}
 
 			MyManyToMany mm = new MyManyToMany(nameManager.toTableName(
@@ -799,6 +814,27 @@ public class ClassInfo extends ClassInfoBase {
 			return mm;
 		} else
 			return null;
+	}
+
+	private String getMatchingAttributeNameForAssociativeReference(
+			BigInteger rNum, String otherClassName, String otherAttributeName) {
+		for (JAXBElement<? extends Attribute> element : cls.getAttribute()) {
+			Attribute a = element.getValue();
+			if (a instanceof ReferentialAttribute) {
+				ReferentialAttribute r = (ReferentialAttribute) a;
+				if (r.getReference().getValue() instanceof AssociativeReference) {
+					AssociativeReference ar = (AssociativeReference) r
+							.getReference().getValue();
+					if (ar.getRelationship().equals(rNum)
+							&& ar.getAttribute().equals(otherAttributeName)
+							&& ar.getClazz().equals(otherClassName))
+						return r.getName();
+				}
+			}
+		}
+		throw new RuntimeException("could not find matching attribute "
+				+ cls.getName() + " R" + rNum + " " + otherClassName + "."
+				+ otherAttributeName);
 	}
 
 	private boolean inPrimaryId(BigInteger rnum) {
