@@ -8,10 +8,12 @@ import javax.persistence.Persistence;
 
 import many_to_many_association.A;
 import many_to_many_association.B;
+import many_to_many_association.C;
 import many_to_many_association.Context;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Test;
 
 import xuml.tools.util.database.DerbyUtil;
 
@@ -30,29 +32,27 @@ public class BinaryAssociationManyToManyAssociationClassTest {
 		Context.close();
 	}
 
-	// @Test
-	public void dummy() {
-		// TODO remove and enable tests
-	}
-
-	// @Test
+	@Test
 	public void testCanCreateManyToMany() {
 
 		EntityManager em = Context.createEntityManager();
 		em.getTransaction().begin();
 		A a1 = A.create("thing").persist(em);
-		A a2 = A.create("thing2").persist(em);
 		B b1 = B.create("boo").persist(em);
 		B b2 = B.create("boo2").persist(em);
-		a1.getB().add(b1);
-		a1.getB().add(b2);
-		b1.getA().add(a1);
-		b2.getA().add(a1);
+		C c1 = new C("c1");
+		c1.setDescription("example");
+		c1.setA(a1);
+		c1.setB(b1);
+		a1.getC().add(c1);
+		b1.getC().add(c1);
 
-		a2.getB().add(b1);
-		a2.getB().add(b2);
-		b1.getA().add(a2);
-		b2.getA().add(a2);
+		C c2 = new C("c2");
+		c2.setDescription("example2");
+		c2.setA(a1);
+		c2.setB(b2);
+		a1.getC().add(c2);
+		b2.getC().add(c2);
 
 		em.getTransaction().commit();
 

@@ -270,6 +270,12 @@ public class ClassWriter {
 					factoryTypeName);
 			out.format("        _behaviourFactory = factory;\n");
 			out.format("    }\n\n");
+
+			jd(out, "Returns the singleton BehaviourFactory for this.", "    ");
+			out.format("    public static %s getBehaviourFactory(){\n",
+					factoryTypeName);
+			out.format("        return _behaviourFactory;\n");
+			out.format("    }\n\n");
 		}
 		String idClassName;
 		if (!hasEmbeddedId()) {

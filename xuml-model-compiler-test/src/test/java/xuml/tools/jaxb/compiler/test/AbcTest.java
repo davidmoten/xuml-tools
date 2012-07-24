@@ -171,8 +171,13 @@ public class AbcTest {
 
 	@Test(expected = NullPointerException.class)
 	public void testBehaviourNotSetForAThrowsException() {
-		A.setBehaviourFactory(null);
-		new A();
+		A.BehaviourFactory f = A.getBehaviourFactory();
+		try {
+			A.setBehaviourFactory(null);
+			new A();
+		} finally {
+			A.setBehaviourFactory(f);
+		}
 	}
 
 }
