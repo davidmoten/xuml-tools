@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Domains xmlns="http://www.miuml.org/metamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.miuml.org/metamodel miuml-metamodel.xsd  http://org.github/xuml-tools/miuml-metamodel-extensions xuml-tools-miuml-metamodel-extensions.xsd"
+	xsi:schemaLocation="http://www.miuml.org/metamodel https://raw.github.com/davidmoten/xuml-tools/master/miuml-jaxb/src/main/resources/miuml-metamodel.xsd  http://org.github/xuml-tools/miuml-metamodel-extensions https://raw.github.com/davidmoten/xuml-tools/master/miuml-jaxb/src/main/resources/xuml-tools-miuml-metamodel-extensions.xsd"
 	xmlns:xt="http://org.github/xuml-tools/miuml-metamodel-extensions">
 
 	<SymbolicType Name="string" MinLength="1" MaxLength="4096"
