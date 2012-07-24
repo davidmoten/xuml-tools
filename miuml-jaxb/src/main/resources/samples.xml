@@ -141,9 +141,6 @@
 				</IndependentAttribute>
 				<IndependentAttribute Name="Category Name"
 					Type="string" />
-				<ReferentialAttribute Name="Product ID">
-					<ToOneReference Relationship="15" Attribute="Product ID" />
-				</ReferentialAttribute>
 			</Class>
 
 			<Class Name="Publisher">
@@ -158,9 +155,6 @@
 				<IndependentAttribute Name="Name" Type="string" />
 				<IndependentAttribute Name="Address" Type="Mailing Address" />
 				<IndependentAttribute Name="Website" Type="Website URL" />
-				<ReferentialAttribute Name="Product">
-					<ToOneReference Relationship="1" Attribute="Product ID" />
-				</ReferentialAttribute>
 			</Class>
 
 			<Generalization Rnum="12" Superclass="Product">
