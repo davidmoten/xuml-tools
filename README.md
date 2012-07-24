@@ -5,6 +5,8 @@ xuml-tools
 
 This project is **in active development** and has not reached alpha release status yet (will be soon methinks).
 
+<img src="https://github.com/davidmoten/xuml-tools/src/docs/xuml-model-copmiler.png">
+
 <img src="https://github.com/davidmoten/xuml-tools/raw/master/xuml-diagrams/src/docs/class-diagram.png">
 
 Continuous integration with Jenkins for this project is [here](https://xuml-tools.ci.cloudbees.com/).
