@@ -110,6 +110,10 @@ public class ClassInfo extends ClassInfoBase {
 		return list;
 	}
 
+	public String getName() {
+		return cls.getName();
+	}
+
 	private HashMultimap<BigInteger, String> getIdentifierAttributeNames() {
 		HashMultimap<BigInteger, Attribute> map = getIdentifierAttributes();
 		HashMultimap<BigInteger, String> m = create();
@@ -778,7 +782,7 @@ public class ClassInfo extends ClassInfoBase {
 				for (MyIdAttribute member : infoOther
 						.getPrimaryIdAttributeMembers()) {
 					inverseJoinColumns.add(new MyJoinColumn(nameManager
-							.toColumnName(joinClass, cls.getName() + " "
+							.toColumnName(joinClass, infoOther.getName() + " "
 									+ member.getAttributeName()), member
 							.getColumnName()));
 				}
