@@ -26,8 +26,6 @@ Until the project has matured enough to release artifacts to Maven Central repos
     cd xuml-tools
     mvn clean install
 
-Once a model is specified in xml then xuml-tools generates a system (rich JPA classes), including a test harness with an in-memory generated database.
-
 Use the maven archetype to create a project in interactive mode:
 	
     cd <YOUR_WORKSPACE>
