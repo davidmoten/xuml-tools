@@ -667,9 +667,7 @@
 	<!--+++++++++++++++++++++++++++++++ -->
 
 	<element name="Reference" type="t:Reference" abstract="true" />
-	<element name="TReference" type="t:TReference"
-		substitutionGroup="t:Reference" />
-	<element name="PReference" type="t:PReference"
+	<element name="AssociativeReference" type="t:AssociativeReference"
 		substitutionGroup="t:Reference" />
 	<element name="ToOneReference" type="t:ToOneReference"
 		substitutionGroup="t:Reference" />
@@ -677,7 +675,6 @@
 		substitutionGroup="t:Reference" />
 	<element name="SpecializationReference" type="t:SpecializationReference"
 		substitutionGroup="t:Reference" />
-
 
 	<complexType name="Reference">
 		<annotation>
@@ -701,32 +698,14 @@
 	<complexType name="AssociativeReference">
 		<complexContent>
 			<annotation>
-				<documentation>R152</documentation>
+				<documentation>R152. TReference and PReference via R153 have been collapsed into AssociativeReference. Differentiation is via the Class attribute.</documentation>
 			</annotation>
 			<extension base="t:ToOneReference">
+				<attribute name="Class" type="t:Name" use="required" />
 			</extension>
 		</complexContent>
 	</complexType>
 
-	<complexType name="TReference">
-		<complexContent>
-			<annotation>
-				<documentation>R153</documentation>
-			</annotation>
-			<extension base="t:AssociativeReference">
-			</extension>
-		</complexContent>
-	</complexType>
-
-	<complexType name="PReference">
-		<complexContent>
-			<annotation>
-				<documentation>R153</documentation>
-			</annotation>
-			<extension base="t:AssociativeReference">
-			</extension>
-		</complexContent>
-	</complexType>
 
 	<complexType name="ToOneReference">
 		<complexContent>

@@ -731,18 +731,12 @@
 				<IndependentAttribute Name="A one" Type="string">
 					<Identifier Number="1" />
 				</IndependentAttribute>
-				<ReferentialAttribute Name="A C one">
-					<TReference Relationship="1" Attribute="C one" />
-				</ReferentialAttribute>
 			</Class>
 
 			<Class Name="B">
 				<IndependentAttribute Name="B one" Type="string">
 					<Identifier Number="1" />
 				</IndependentAttribute>
-				<ReferentialAttribute Name="B C one">
-					<PReference Relationship="1" Attribute="C one" />
-				</ReferentialAttribute>
 			</Class>
 
 			<Class Name="C">
@@ -750,10 +744,10 @@
 					<Identifier Number="1" />
 				</IndependentAttribute>
 				<ReferentialAttribute Name="C A one">
-					<TReference Relationship="1" Attribute="A one"/>
+					<AssociativeReference Relationship="1" Class="A" Attribute="A one"/>
 				</ReferentialAttribute>
 				<ReferentialAttribute Name="C B one">
-					<PReference Relationship="1" Attribute="B one"/>
+					<AssociativeReference Relationship="1" Class="B" Attribute="B one"/>
 				</ReferentialAttribute>
 				<IndependentAttribute Name="Description" Type="string"/>
 			</Class>
