@@ -5,8 +5,6 @@ xuml-tools
 
 This project is **in active development** and has not reached alpha release status yet (will be soon methinks).
 
-<img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/xuml-model-compiler.png">
-
 <img src="https://github.com/davidmoten/xuml-tools/raw/master/xuml-diagrams/src/docs/class-diagram.png">
 
 Continuous integration with Jenkins for this project is [here](https://xuml-tools.ci.cloudbees.com/).
@@ -77,7 +75,9 @@ Models are defined in xml that is compliant to the miUML xuml-tools [schema](htt
 
 Java model compiler
 -------------------
-With the model compiler we seek to implement the approach taken by Mellor & Balcer in their super book [*Executable UML - A Foundation for Model Driven Architecture*](http://www.executableumlbook.com/).
+With the model compiler we seek to implement the approach taken by Mellor & Balcer in their super book [*Executable UML - A Foundation for Model Driven Architecture*](http://www.executableumlbook.com/). The most notable exception is the Action Language is java.
+
+<img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/xuml-model-compiler.png" width="600">
 
 The java model compiler includes the following features (<img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">denotes done):
 * Generates JPA entities  <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png"> 
