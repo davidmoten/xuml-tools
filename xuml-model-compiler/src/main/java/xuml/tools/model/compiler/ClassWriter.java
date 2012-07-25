@@ -364,6 +364,8 @@ public class ClassWriter {
 
 			writeEmbeddedIdHashCode(out, info);
 
+			writeEmbeddedIdBuilder(out, info);
+
 			out.format("    }\n\n");
 		}
 	}
@@ -409,6 +411,44 @@ public class ClassWriter {
 		}
 		out.format(");\n");
 		out.format("        }\n\n");
+	}
+
+	private void writeEmbeddedIdBuilder(PrintStream out, ClassInfo info) {
+		out.format("        public static Builder builder() {\n");
+		out.format("            return new Builder();\n");
+		out.format("        }\n\n");
+		out.format("        public %s(Builder builder) {\n",
+				info.getEmbeddedIdSimpleClassName());
+		for (MyIdAttribute member : info.getPrimaryIdAttributeMembers()) {
+			out.format("            this.%s = builder.%s;\n",
+					member.getFieldName(), member.getFieldName());
+		}
+		out.format("        }\n\n");
+		out.format("        public static class Builder {\n\n");
+
+		for (MyIdAttribute member : info.getPrimaryIdAttributeMembers()) {
+			out.format("            private %s %s;\n",
+					info.addType(member.getType().getType()),
+					member.getFieldName());
+		}
+		out.println();
+		for (MyIdAttribute member : info.getPrimaryIdAttributeMembers()) {
+			out.format("            public Builder %s(%s %s) {\n",
+					member.getFieldName(),
+					info.addType(member.getType().getType()),
+					member.getFieldName());
+			out.format("                this.%s = %s;\n",
+					member.getFieldName(), member.getFieldName());
+			out.format("                return this;\n");
+			out.format("            }\n\n");
+		}
+		out.format("            public %s build() {\n",
+				info.getEmbeddedIdSimpleClassName());
+		out.format("                return new %s(this);\n",
+				info.getEmbeddedIdSimpleClassName());
+		out.format("            }\n\n");
+		out.format("        }\n\n");
+
 	}
 
 	private void writeEmbeddedIdDeclaration(PrintStream out, ClassInfo info) {

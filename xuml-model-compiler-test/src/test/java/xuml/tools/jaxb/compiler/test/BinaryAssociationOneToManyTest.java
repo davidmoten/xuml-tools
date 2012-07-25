@@ -39,7 +39,10 @@ public class BinaryAssociationOneToManyTest {
 
 		EntityManager em = Context.createEntityManager();
 		em.getTransaction().begin();
-		A.create(new A.AId("hello", "there")).persist(em);
+		// use Id Builder
+		A.create(A.AId.builder().aOne("hello").aTwo("there").build()).persist(
+				em);
+		// A.create(new A.AId("hello", "there")).persist(em);
 		em.getTransaction().commit();
 		em.close();
 	}
