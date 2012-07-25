@@ -270,6 +270,18 @@
 							<packageName>one_many_to_many_association</packageName>
 						</configuration>
 					</execution>
+					<execution>
+						<id>one-many-to-one-many-association-class</id>
+						<goals>
+							<goal>generate-jpa</goal>
+						</goals>
+						<configuration>
+							<domainsXml>/samples.xml</domainsXml>
+							<domain>one-many-to-one-many-association-class</domain>
+							<schema>one_many_to_one_many_association</schema>
+							<packageName>one_many_to_one_many_association</packageName>
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
 			<!-- xuml-tools-maven-plugin does add this directory as source but eclipse 

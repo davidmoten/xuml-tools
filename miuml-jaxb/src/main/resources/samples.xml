@@ -809,6 +809,51 @@
 		</Subsystem>
 	</ModeledDomain>
 
+	<ModeledDomain Name="one-many-to-one-many-association-class">
+
+		<Subsystem Name="one-many-to-one-many-association-class" Floor="161"
+			Ceiling="180">
+
+			<!-- TODO setup for AssociativeReference -->
+
+			<Class Name="A">
+				<IndependentAttribute Name="A one" Type="string">
+					<Identifier Number="1" />
+				</IndependentAttribute>
+			</Class>
+
+			<Class Name="B">
+				<IndependentAttribute Name="B one" Type="string">
+					<Identifier Number="1" />
+				</IndependentAttribute>
+			</Class>
+
+			<Class Name="C">
+				<ReferentialAttribute Name="C A one">
+					<AssociativeReference Relationship="1" Class="A"
+						Attribute="A one" />
+				</ReferentialAttribute>
+				<ReferentialAttribute Name="C B one">
+					<AssociativeReference Relationship="1" Class="B"
+						Attribute="B one" />
+				</ReferentialAttribute>
+				<IndependentAttribute Name="C one" Type="string">
+					<Identifier Number="1" />
+				</IndependentAttribute>
+				<IndependentAttribute Name="Description" Type="string" />
+			</Class>
+
+			<BinaryAssociation Rnum="1" AssociationClass="C">
+				<ActivePerspective Phrase="characterizes"
+					ViewedClass="B" OnePerspective="false" Conditional="false" />
+				<PassivePerspective Phrase="is characterized by"
+					ViewedClass="A" OnePerspective="false" Conditional="false" />
+			</BinaryAssociation>
+
+		</Subsystem>
+	</ModeledDomain>
+
+
 	<ModeledDomain Name="unary-one">
 
 		<Subsystem Name="unary-one" Floor="201" Ceiling="220">
