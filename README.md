@@ -134,7 +134,7 @@ The items that may be left out:
 
 Web Class Diagram Viewer
 ------------------------
-The following examples are based on storing the domain xml and the associated presentation settings on the server. To be investigated is the http://www.diagram.ly approach where all user data is stored on the client machine and the application does no account management. Might be worth pursuing.
+The following examples are based on storing the domain xml and the associated presentation settings on the server. To be investigated is the http://www.diagram.ly approach (see this [interview](http://doeswhat.com/2011/04/11/interview-with-david-benson-diagramly/)) where all user data is stored on the client machine and the application does no account management. Might be worth pursuing.
 
 These pre-alpha demos are available:
 
