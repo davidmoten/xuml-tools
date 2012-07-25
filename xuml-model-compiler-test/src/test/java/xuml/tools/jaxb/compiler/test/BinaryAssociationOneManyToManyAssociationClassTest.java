@@ -3,6 +3,7 @@ package xuml.tools.jaxb.compiler.test;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.RollbackException;
 
 import one_many_to_many_association.A;
 import one_many_to_many_association.B;
@@ -74,6 +75,35 @@ public class BinaryAssociationOneManyToManyAssociationClassTest {
 			b.getC().add(c);
 			em.persist(b);
 			em.persist(c);
+			em.getTransaction().commit();
+		} finally {
+			em.close();
+		}
+	}
+
+	@Test(expected = RollbackException.class)
+	public void testCannotCreateTwoLinksBetweenAAndB() {
+
+		EntityManager em = Context.createEntityManager();
+		try {
+			em.getTransaction().begin();
+			A a = A.create("a2").persist(em);
+			B b = B.create("b2");
+			C c = C.create("c2");
+			c.setA(a);
+			c.setB(b);
+			c.setDescription("hello");
+			a.getC().add(c);
+			b.getC().add(c);
+			em.persist(b);
+			em.persist(c);
+			C c3 = C.create("c3");
+			c3.setA(a);
+			c3.setB(b);
+			c3.setDescription("hello");
+			a.getC().add(c3);
+			b.getC().add(c3);
+			c3.persist(em);
 			em.getTransaction().commit();
 		} finally {
 			em.close();
