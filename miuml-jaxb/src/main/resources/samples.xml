@@ -344,7 +344,7 @@
 					<Identifier Number="1" />
 				</IndependentAttribute>
 				<ReferentialAttribute Name="Class">
-					<ToOneReference Relationship="1" Attribute="Name"/>
+					<ToOneReference Relationship="1" Attribute="Name" />
 				</ReferentialAttribute>
 				<IndependentAttribute Name="Name" Type="string">
 					<Identifier Number="1" />
@@ -723,7 +723,8 @@
 
 	<ModeledDomain Name="many-to-many-association-class">
 
-		<Subsystem Name="many-to-many-association-class" Floor="161" Ceiling="180">
+		<Subsystem Name="many-to-many-association-class" Floor="161"
+			Ceiling="180">
 
 			<!-- TODO setup for AssociativeReference -->
 
@@ -744,12 +745,14 @@
 					<Identifier Number="1" />
 				</IndependentAttribute>
 				<ReferentialAttribute Name="C A one">
-					<AssociativeReference Relationship="1" Class="A" Attribute="A one"/>
+					<AssociativeReference Relationship="1" Class="A"
+						Attribute="A one" />
 				</ReferentialAttribute>
 				<ReferentialAttribute Name="C B one">
-					<AssociativeReference Relationship="1" Class="B" Attribute="B one"/>
+					<AssociativeReference Relationship="1" Class="B"
+						Attribute="B one" />
 				</ReferentialAttribute>
-				<IndependentAttribute Name="Description" Type="string"/>
+				<IndependentAttribute Name="Description" Type="string" />
 			</Class>
 
 			<BinaryAssociation Rnum="1" AssociationClass="C">
@@ -764,7 +767,8 @@
 
 	<ModeledDomain Name="one-many-to-many-association-class">
 
-		<Subsystem Name="one-many-to-many-association-class" Floor="161" Ceiling="180">
+		<Subsystem Name="one-many-to-many-association-class" Floor="161"
+			Ceiling="180">
 
 			<!-- TODO setup for AssociativeReference -->
 
@@ -785,12 +789,16 @@
 					<Identifier Number="1" />
 				</IndependentAttribute>
 				<ReferentialAttribute Name="C A one">
-					<AssociativeReference Relationship="1" Class="A" Attribute="A one"/>
+					<Identifier Number="2" />
+					<AssociativeReference Relationship="1" Class="A"
+						Attribute="A one" />
 				</ReferentialAttribute>
 				<ReferentialAttribute Name="C B one">
-					<AssociativeReference Relationship="1" Class="B" Attribute="B one"/>
+					<Identifier Number="2" />
+					<AssociativeReference Relationship="1" Class="B"
+						Attribute="B one" />
 				</ReferentialAttribute>
-				<IndependentAttribute Name="Description" Type="string"/>
+				<IndependentAttribute Name="Description" Type="string" />
 			</Class>
 
 			<BinaryAssociation Rnum="1" AssociationClass="C">
@@ -956,7 +964,7 @@
 
 	<ModeledDomain Name="specialization">
 		<Subsystem Name="specialization" Floor="281" Ceiling="300">
-		
+
 			<Class Name="A">
 				<IndependentAttribute Name="one" Type="string">
 					<Identifier Number="1" />
