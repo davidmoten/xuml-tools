@@ -6,6 +6,7 @@ import javax.persistence.Persistence;
 
 import one_many_to_many_association.A;
 import one_many_to_many_association.B;
+import one_many_to_many_association.C;
 import one_many_to_many_association.Context;
 
 import org.junit.AfterClass;
@@ -57,14 +58,22 @@ public class BinaryAssociationOneManyToManyAssociationClassTest {
 		}
 	}
 
-	// TODO sort this out, attributes in C.id and other refs conflict.
 	@Test
 	public void testCanCreateInstanceOfBWithA() {
 
 		EntityManager em = Context.createEntityManager();
 		try {
 			em.getTransaction().begin();
-			A.create("a1").persist(em);
+			A a = A.create("a1").persist(em);
+			B b = B.create("b1");
+			C c = C.create("c1");
+			c.setA(a);
+			c.setB(b);
+			c.setDescription("hello");
+			a.getC().add(c);
+			b.getC().add(c);
+			em.persist(b);
+			em.persist(c);
 			em.getTransaction().commit();
 		} finally {
 			em.close();

@@ -785,19 +785,17 @@
 			</Class>
 
 			<Class Name="C">
-				<IndependentAttribute Name="C one" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
 				<ReferentialAttribute Name="C A one">
-					<Identifier Number="2" />
 					<AssociativeReference Relationship="1" Class="A"
 						Attribute="A one" />
 				</ReferentialAttribute>
 				<ReferentialAttribute Name="C B one">
-					<Identifier Number="2" />
 					<AssociativeReference Relationship="1" Class="B"
 						Attribute="B one" />
 				</ReferentialAttribute>
+				<IndependentAttribute Name="C one" Type="string">
+					<Identifier Number="1" />
+				</IndependentAttribute>
 				<IndependentAttribute Name="Description" Type="string" />
 			</Class>
 
