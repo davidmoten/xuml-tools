@@ -537,6 +537,8 @@ public class ClassInfo extends ClassInfoBase {
 		Optional<Association> ass = lookups.associationForAssociationClass(cls
 				.getName());
 		if (ass.isPresent()) {
+			// current class is an Association Class so prepare the implicit
+			// associations from the ends to the Association Class
 			if (ass.get() instanceof BinaryAssociation) {
 				{
 					BinaryAssociation b = (BinaryAssociation) ass.get();
