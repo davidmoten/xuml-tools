@@ -45,8 +45,11 @@ public class AbcTest {
 				"value2.1", "1234"));
 		A a2 = Context.create(A.class, new A.Events.Create("value1.2",
 				"value2.2", "1234"));
-		A a3 = Context.create(A.class, new A.Events.Create("value1.3",
-				"value2.3", "1234"));
+		// use Builder pattern for this one (all Events and Id classes have
+		// builders)
+		A a3 = Context.create(A.class,
+				A.Events.Create.builder().aOne("value1.3").aTwo("value2.3")
+						.accountNumber("1234").build());
 
 		// send asynchronous signals to the a2 and a3
 		a1.signal(new A.Events.SomethingDone(11));

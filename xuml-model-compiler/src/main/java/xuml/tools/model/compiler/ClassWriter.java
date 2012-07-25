@@ -1053,6 +1053,10 @@ public class ClassWriter {
 			}
 			out.format("            }\n\n");
 
+			out.format("            public static Builder builder() {\n");
+			out.format("                return new Builder();\n");
+			out.format("            }\n\n");
+
 			// define event Builder class
 			out.format("            public static class Builder {\n");
 			out.println();
