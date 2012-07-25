@@ -1031,8 +1031,7 @@ public class ClassWriter {
 			}
 			constructor.append("){\n");
 			constructor.append(constructorBody);
-			constructor.append("            }\n");
-			out.println();
+			constructor.append("            }\n\n");
 			jd(out, "Constructor.", "            ");
 			out.println(constructor);
 
@@ -1044,8 +1043,45 @@ public class ClassWriter {
 				out.format("                return %s;\n", p.getFieldName());
 				out.format("            }\n\n");
 			}
-			out.format("        }\n\n");
 
+			// create constructor using Builder
+			out.format("            private %s(Builder builder) {\n",
+					event.getSimpleClassName());
+			for (MyParameter p : event.getParameters()) {
+				out.format("                this.%s = builder.%s;\n",
+						p.getFieldName(), p.getFieldName());
+			}
+			out.format("            }\n\n");
+
+			// define event Builder class
+			out.format("            public static class Builder {\n");
+			out.println();
+			for (MyParameter p : event.getParameters()) {
+				out.format("                private %s %s;\n",
+						info.addType(p.getType()), p.getFieldName());
+			}
+			for (MyParameter p : event.getParameters()) {
+				out.println();
+				out.format("                public Builder %s(%s %s) {\n",
+						p.getFieldName(), info.addType(p.getType()),
+						p.getFieldName());
+				out.format("                    this.%s = %s;\n",
+						p.getFieldName(), p.getFieldName());
+				out.format("                    return this;\n");
+				out.format("                }\n");
+			}
+
+			out.println();
+			out.format("                public %s build() {\n",
+					event.getSimpleClassName());
+			out.format("                    return new %s(this);\n",
+					event.getSimpleClassName());
+			out.format("                }\n");
+
+			out.format("            }\n");
+
+			// close event class definition
+			out.format("        }\n\n");
 		}
 		out.format("    }\n\n");
 	}
