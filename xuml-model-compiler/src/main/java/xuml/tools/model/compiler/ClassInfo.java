@@ -545,7 +545,7 @@ public class ClassInfo extends ClassInfoBase {
 					p1.setViewedClass(cls.getName());
 					p1.setOnePerspective(b.getActivePerspective()
 							.isOnePerspective());
-					p1.setConditional(true);
+					p1.setConditional(b.getActivePerspective().isConditional());
 					p1.setPhrase(b.getActivePerspective().getPhrase());
 					b2.setActivePerspective(p1);
 					PassivePerspective p2 = new PassivePerspective();
@@ -565,8 +565,8 @@ public class ClassInfo extends ClassInfoBase {
 					p1.setViewedClass(cls.getName());
 					p1.setOnePerspective(b.getActivePerspective()
 							.isOnePerspective());
-					p1.setConditional(true);
-					p1.setPhrase(b.getActivePerspective().getPhrase());
+					p1.setConditional(b.getPassivePerspective().isConditional());
+					p1.setPhrase(b.getPassivePerspective().getPhrase());
 					b2.setActivePerspective(p1);
 					PassivePerspective p2 = new PassivePerspective();
 					p2.setViewedClass(b.getPassivePerspective()
@@ -693,11 +693,11 @@ public class ClassInfo extends ClassInfoBase {
 				ActivePerspective active = new ActivePerspective();
 				active.setPhrase(pThis.getPhrase());
 				active.setOnePerspective(true);
-				active.setConditional(true);
+				active.setConditional(false);
 				a2.setActivePerspective(active);
 
 				PassivePerspective passive = new PassivePerspective();
-				passive.setConditional(true);
+				passive.setConditional(pThis.isConditional());
 				passive.setOnePerspective(false);
 				passive.setPhrase(pThat.getPhrase());
 				passive.setViewedClass(a.getAssociationClass());

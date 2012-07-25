@@ -134,6 +134,8 @@ The items that may be left out:
 
 Web Class Diagram Viewer
 ------------------------
+The following examples are based on storing the domain xml and the associated presentation settings on the server. To be investigated is the diagram.ly approach where all user data is stored on the client machine and the application does no account management. Might be worth pursuing.
+
 These pre-alpha demos are available:
 
 * [CloudBees](http://xuml-diagrams.xuml-tools.cloudbees.net/) using in-memory datastore
