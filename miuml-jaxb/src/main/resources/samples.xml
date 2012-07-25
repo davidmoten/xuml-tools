@@ -795,9 +795,9 @@
 
 			<BinaryAssociation Rnum="1" AssociationClass="C">
 				<ActivePerspective Phrase="characterizes"
-					ViewedClass="B" OnePerspective="false" Conditional="false" />
+					ViewedClass="B" OnePerspective="false" Conditional="true" />
 				<PassivePerspective Phrase="is characterized by"
-					ViewedClass="A" OnePerspective="false" Conditional="true" />
+					ViewedClass="A" OnePerspective="false" Conditional="false" />
 			</BinaryAssociation>
 
 		</Subsystem>

@@ -545,7 +545,7 @@ public class ClassInfo extends ClassInfoBase {
 					p1.setViewedClass(cls.getName());
 					p1.setOnePerspective(b.getActivePerspective()
 							.isOnePerspective());
-					p1.setConditional(b.getActivePerspective().isConditional());
+					p1.setConditional(b.getPassivePerspective().isConditional());
 					p1.setPhrase(b.getActivePerspective().getPhrase());
 					b2.setActivePerspective(p1);
 					PassivePerspective p2 = new PassivePerspective();
@@ -565,7 +565,7 @@ public class ClassInfo extends ClassInfoBase {
 					p1.setViewedClass(cls.getName());
 					p1.setOnePerspective(b.getActivePerspective()
 							.isOnePerspective());
-					p1.setConditional(b.getPassivePerspective().isConditional());
+					p1.setConditional(b.getActivePerspective().isConditional());
 					p1.setPhrase(b.getPassivePerspective().getPhrase());
 					b2.setActivePerspective(p1);
 					PassivePerspective p2 = new PassivePerspective();
@@ -694,10 +694,11 @@ public class ClassInfo extends ClassInfoBase {
 				active.setPhrase(pThis.getPhrase());
 				active.setOnePerspective(true);
 				active.setConditional(false);
+				active.setViewedClass(cls.getName());
 				a2.setActivePerspective(active);
 
 				PassivePerspective passive = new PassivePerspective();
-				passive.setConditional(pThis.isConditional());
+				passive.setConditional(pThat.isConditional());
 				passive.setOnePerspective(false);
 				passive.setPhrase(pThat.getPhrase());
 				passive.setViewedClass(a.getAssociationClass());
@@ -765,12 +766,7 @@ public class ClassInfo extends ClassInfoBase {
 				// TODO use NameManager to get implicit join class name, must do
 				// this because there could be multiple many to many
 				// associations between the two classes.
-				if (pThis.getViewedClass().compareTo(pThat.getViewedClass()) < 0)
-					joinClass = pThis.getViewedClass() + " "
-							+ pThat.getViewedClass();
-				else
-					joinClass = pThat.getViewedClass() + " "
-							+ pThis.getViewedClass();
+				joinClass = getImplicitJoinClass(pThis, pThat);
 				for (MyIdAttribute member : getPrimaryIdAttributeMembers()) {
 					joinColumns.add(new MyJoinColumn(nameManager.toColumnName(
 							joinClass,
@@ -814,6 +810,16 @@ public class ClassInfo extends ClassInfoBase {
 			return mm;
 		} else
 			return null;
+	}
+
+	private String getImplicitJoinClass(AsymmetricPerspective pThis,
+			AsymmetricPerspective pThat) {
+		String joinClass;
+		if (pThis.getViewedClass().compareTo(pThat.getViewedClass()) < 0)
+			joinClass = pThis.getViewedClass() + " " + pThat.getViewedClass();
+		else
+			joinClass = pThat.getViewedClass() + " " + pThis.getViewedClass();
+		return joinClass;
 	}
 
 	private String getMatchingAttributeNameForAssociativeReference(
