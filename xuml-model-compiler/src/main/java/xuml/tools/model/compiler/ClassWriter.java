@@ -1087,6 +1087,7 @@ public class ClassWriter {
 			out.format("            }\n");
 
 			if (event.getParameters().size() > 0) {
+				out.println();
 				out.format("            @%s\n", info.addType(Override.class));
 				out.format("            public String toString() {\n");
 				out.format(
