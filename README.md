@@ -175,10 +175,10 @@ The system should be developed and tested with the aim of no uncaught exceptions
 
 If an exception occurs during the processing of a transaction then
 
-1. The transaction is rolled back and processing of the signal is aborted
-1. An error is optionally written to the application log (not implemented yet)
+1. The transaction is rolled back and processing of the signal is aborted.
+1. An error is optionally written to the application log (not implemented yet).
 1. The signal that prompted the exception remains in the persisted signals table and the number of failures of that signal is incremented in the table.
-1. Other signals continue processing as normal
+1. Other signals continue processing as normal (if the system is configured to allow this).
 
 The treatment of failing signals is up to the developer. The developer may wish to periodically reprocess the messages in the queue (call Context.sendSignalsInQueue()) and perhaps when the number of failures or time since first failure reaches a certain level some investigative action may be prompted. Given that the system was developed to not throw uncaught exceptions it's probable that any failed signal requires investigation on the part of the developer.
 
