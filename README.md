@@ -146,15 +146,15 @@ There are two types of signals:
 In terms of the role transactions play in relation to signals:
 
 1. When a *Signal to other* is made to an entity it is added to the signal queue for that entity to be processed in FIFO order (first in first out).
-2. When the *Signal to other* for an entity is ready to be processed **a database transaction is started**. 
-3. The signal is persisted to the signal table.
-4. The appropriate on-entry procedure is called in the entity's state machine.
-5. If the on-entry procedure initiates a *Signal to self* that signal is added to a temporary *Signal to self* queue specific to the current transaction. 
-6. If the on-entry procedure initiates a *Signal to other* that signal is added to a second temporary *Signal to other* queue specific to the current transaction. 
-7. Once the on-entry-procedure completes, the queue of *Signal to self* is processed in FIFO order.
-8. The signal is then removed from the signal table. 
-9. **Only then is the transaction committed**. 
-10. If and only if the transaction succeeds the queue of *Signal to other* is processed (the signals are sent).
+1. When the *Signal to other* for an entity is ready to be processed **a database transaction is started**. 
+1. The signal is persisted to the signal table.
+1. The appropriate on-entry procedure is called in the entity's state machine.
+1. If the on-entry procedure initiates a *Signal to self* that signal is added to a temporary *Signal to self* queue specific to the current transaction. 
+1. If the on-entry procedure initiates a *Signal to other* that signal is added to a second temporary *Signal to other* queue specific to the current transaction. 
+1. Once the on-entry-procedure completes, the queue of *Signal to self* is processed in FIFO order.
+1. The signal is then removed from the signal table. 
+1. **Only then is the transaction committed**. 
+1. If and only if the transaction succeeds the queue of *Signal to other* is processed (the signals are sent).
 
 Web Class Diagram Viewer
 ------------------------
