@@ -139,11 +139,12 @@ The items that may be left out:
 ### Transactions ###
 The xuml-model-compiler runtime takes the following approach in terms of database transactions:
 
-There are two types of signals
+There are two types of signals:
 * Signal to self (initiated by an entity's on entry procedure to itself)
 * Signal to other 
 
 In terms of the role transactions play in relation to signals:
+
 1. When a *Signal to other* is made to an entity it is added to the signal queue for that entity to be processed in FIFO order (first in first out).
 2. When the *Signal to other* for an entity is ready to be processed **a database transaction is started**. 
 3. The signal is persisted to the signal table.
