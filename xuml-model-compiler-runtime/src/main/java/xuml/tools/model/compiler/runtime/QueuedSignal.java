@@ -23,6 +23,8 @@ public class QueuedSignal {
 		this.eventContent = eventContent;
 	}
 
+	// TODO add new fields, numFailures, timeFirstFailure, timeLastFailure
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "signal_id")
