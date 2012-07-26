@@ -179,7 +179,7 @@ In terms of the role transactions play in relation to signals:
 ### Exception handling ###
 The system should be developed and tested with the aim of no uncaught exceptions being thrown.
 
-If an exception occurs during the processing of a transaction then
+If an exception occurs during the processing of a transaction then the xuml-model-compiler-runtime ensures that:
 
 1. The transaction is rolled back and processing of the signal is aborted.
 1. An error is optionally written to the application log (not implemented yet).
