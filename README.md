@@ -154,8 +154,8 @@ The items that may be left out:
 The xuml-model-compiler runtime takes the following approach in terms of database transactions:
 
 There are two types of signals:
-* Signal to self (initiated by an entity's on entry procedure to itself)
-* Signal to other 
+* *Signal to self* (initiated by an entity's on entry procedure to itself)
+* *Signal to other* 
 
 In terms of the role transactions play in relation to signals:
 
@@ -182,7 +182,7 @@ If an exception occurs during the processing of a transaction then
 
 The treatment of failing signals is up to the developer. The developer may wish to periodically reprocess the messages in the queue (call Context.sendSignalsInQueue()) and perhaps when the number of failures or time since first failure reaches a certain level some investigative action may be prompted. Given that the system was developed to not throw uncaught exceptions it's probable that any failed signal requires investigation on the part of the developer.
 
-It is possible that the developer may wish to halt all processing of signals on the first failed transaction. Some configuration or notification mechanism may be included in xuml-model-compiler-runtime to enable this.
+It is possible that the developer may wish to halt all processing of signals on the first failed transaction. Some configuration or notification mechanism will be included in xuml-model-compiler-runtime to enable this.
 
 Web Class Diagram Viewer
 ------------------------
