@@ -136,6 +136,17 @@ The items that may be left out:
 * Derived attributes 
 * any specific Action Language implementation 
 
+### Transactions ###
+The xuml-model-compiler runtime takes the following approach in terms of database transactions:
+
+There are two types of signals
+* Signal to self (initiated by an entity's on entry procedure to itself)
+* Signal to other 
+
+In terms of the role transactions play in relation to signals:
+* When a *Signal to other* is made to an entity it is added to the signal queue for that entity to be processed in FIFO order (first in first out).
+* When the *Signal to other* for an entity is ready to be processed a database transaction is started. The signal is persisted to the signal table and the appropriate on-entry procedure is called in the entities state machine. If the on-entry procedure initiates a *Signal to self* that signal is added to a temporary queue specific to the current transaction. If the on-entry procedure initiates a *Signal to other* that signal is added to a second temporary queue specific to the current transaction. Once the on-entry-procedure completes, the queue of *Signal to self* is processed in FIFO order. The signal is then removed from the signal table. Only then is the transaction committed. If and only if the transaction succeeds the queue of *Signal to other* is processed (the signals are sent).
+
 Web Class Diagram Viewer
 ------------------------
 The following examples are based on storing the domain xml and the associated presentation settings on the server. To be investigated is the http://www.diagram.ly approach (see this [interview](http://doeswhat.com/2011/04/11/interview-with-david-benson-diagramly/)) where all user data is stored on the client machine and the application does no account management. Might be worth pursuing.
