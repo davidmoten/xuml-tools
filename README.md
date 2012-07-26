@@ -174,18 +174,7 @@ In terms of the role transactions play in relation to signals:
 1. If and only if the transaction succeeds the queue of *Signal to other* is processed (the signals are sent).
 
 ### Exception handling ###
-The system should be developed and tested with the aim of no uncaught exceptions being thrown.
-
-If an exception occurs during the processing of a transaction then the *xuml-model-compiler-runtime* ensures that:
-
-1. The transaction is rolled back and processing of the signal is aborted.
-1. An error is optionally written to the application log (not implemented yet).
-1. The signal that prompted the exception remains in the persisted signals table and the number of failures of that signal is incremented in the table.
-1. Other signals continue processing as normal (if the system is configured to allow this).
-
-The treatment of failing signals is up to the developer. The developer may wish to periodically reprocess the messages in the queue (call Context.sendSignalsInQueue()) and perhaps when the number of failures or time since first failure reaches a certain level some investigative action may be prompted. Given that the system was developed to not throw uncaught exceptions it's probable that any failed signal requires investigation on the part of the developer.
-
-It is possible that the developer may wish to halt all processing of signals on the first failed transaction. Some configuration or notification mechanism will be included in *xuml-model-compiler-runtime* to enable this.
+The system should be developed and tested with the aim of no uncaught exceptions being thrown. However, unexpected exceptions need to be dealt with properly when they occur. For this purpose the developer may implement a FailureStrategy to perform retries, log/notify errors, or even halt processing on one or all entities.
 
 Web Class Diagram Viewer
 ------------------------
