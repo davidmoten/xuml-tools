@@ -182,6 +182,8 @@ If an exception occurs during the processing of a transaction then
 
 The treatment of failing signals is up to the developer. The developer may wish to periodically reprocess the messages in the queue (call Context.sendSignalsInQueue()) and perhaps when the number of failures or time since first failure reaches a certain level some investigative action may be prompted. Given that the system was developed to not throw uncaught exceptions it's probable that any failed signal requires investigation on the part of the developer.
 
+It is possible that the developer may wish to halt all processing of signals on the first failed transaction. Some configuration or notification mechanism may be included in xuml-model-compiler-runtime to enable this.
+
 Web Class Diagram Viewer
 ------------------------
 The following examples are based on storing the domain xml and the associated presentation settings on the server. To be investigated is the http://www.diagram.ly approach (see this [interview](http://doeswhat.com/2011/04/11/interview-with-david-benson-diagramly/)) where all user data is stored on the client machine and the application does no account management. Might be worth pursuing.
