@@ -79,7 +79,6 @@ public class ClassInfo extends ClassInfoBase {
 		this.nameManager = nameManager;
 		this.cls = cls;
 		this.packageName = packageName;
-		// TODO is this property needed?
 		this.classDescription = classDescription;
 		this.schema = schema;
 		this.lookups = lookups;
@@ -110,6 +109,11 @@ public class ClassInfo extends ClassInfoBase {
 		return list;
 	}
 
+	/**
+	 * Returns the name of the class.
+	 * 
+	 * @return
+	 */
 	public String getName() {
 		return cls.getName();
 	}
@@ -691,26 +695,35 @@ public class ClassInfo extends ClassInfoBase {
 				pThat));
 		if (a.getAssociationClass() != null) {
 			{
-				BinaryAssociation a2 = new BinaryAssociation();
-				ActivePerspective active = new ActivePerspective();
-				active.setPhrase(pThis.getPhrase());
-				active.setOnePerspective(true);
-				active.setConditional(false);
-				active.setViewedClass(cls.getName());
-				a2.setActivePerspective(active);
-
-				PassivePerspective passive = new PassivePerspective();
-				passive.setConditional(pThat.isConditional());
-				passive.setOnePerspective(false);
-				passive.setPhrase(pThat.getPhrase());
-				passive.setViewedClass(a.getAssociationClass());
-				a2.setPassivePerspective(passive);
-				a2.setRnum(a.getRnum());
-				list.add(createMyReferenceMemberForDirectAssociation(a2, cls,
-						active, passive));
+				MyReferenceMember ref = createImplicitReferenceMemberToAssociationClass(
+						a, cls, pThis, pThat);
+				list.add(ref);
 			}
 		}
 		return list;
+	}
+
+	private MyReferenceMember createImplicitReferenceMemberToAssociationClass(
+			BinaryAssociation a, Class cls, AsymmetricPerspective pThis,
+			AsymmetricPerspective pThat) {
+		BinaryAssociation a2 = new BinaryAssociation();
+		ActivePerspective active = new ActivePerspective();
+		active.setPhrase(pThis.getPhrase());
+		active.setOnePerspective(true);
+		active.setConditional(false);
+		active.setViewedClass(cls.getName());
+		a2.setActivePerspective(active);
+
+		PassivePerspective passive = new PassivePerspective();
+		passive.setConditional(pThat.isConditional());
+		passive.setOnePerspective(false);
+		passive.setPhrase(pThat.getPhrase());
+		passive.setViewedClass(a.getAssociationClass());
+		a2.setPassivePerspective(passive);
+		a2.setRnum(a.getRnum());
+		MyReferenceMember ref = createMyReferenceMemberForDirectAssociation(
+				a2, cls, active, passive);
+		return ref;
 	}
 
 	private MyReferenceMember createMyReferenceMemberForDirectAssociation(
