@@ -107,8 +107,8 @@ The java model compiler includes the following features (<img src="https://githu
 * Auto-detection of signals to self <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
 * Uses Akka actors to handle concurrency <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
 * Generated toString, equals and hashCode methods for composite ids <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
-* Generated toString method for entities
-* Generated toString method for events
+* Entity toString method
+* Event toString method <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
 * Generated find methods for attribute groups
 * Id Builders <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
 * Event Builders  <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">

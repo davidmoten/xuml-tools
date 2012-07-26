@@ -1086,8 +1086,23 @@ public class ClassWriter {
 
 			out.format("            }\n");
 
+			if (event.getParameters().size() > 0) {
+				out.format("            @%s\n", info.addType(Override.class));
+				out.format("            public String toString() {\n");
+				out.format(
+						"                return %s.toStringHelper(this.getClass())\n",
+						info.addType(Objects.class));
+				for (MyParameter p : event.getParameters()) {
+					out.format("                    .add(\"%s\", %s)\n",
+							p.getFieldName(), p.getFieldName());
+				}
+				out.format("                    .toString();\n");
+				out.format("            }\n");
+			}
+
 			// close event class definition
 			out.format("        }\n\n");
+
 		}
 		out.format("    }\n\n");
 	}
