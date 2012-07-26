@@ -160,6 +160,7 @@ In terms of the role transactions play in relation to signals:
 The system should be developed and tested with the aim of no uncaught exceptions being thrown.
 
 If an exception occurs during the processing of a transaction then
+
 1. The transaction is rolled back and processing of the signal is aborted
 1. An error is optionally written to the application log (not implemented yet)
 1. The signal that prompted the exception remains in the persisted signals table and the number of failures of that signal is incremented in the table.
