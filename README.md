@@ -12,9 +12,7 @@ This project is **in active development** and has not reached alpha release stat
 
 <img src="https://github.com/davidmoten/xuml-tools/raw/master/xuml-diagrams/src/docs/class-diagram.png">
 
-Continuous integration with Jenkins for this project is [here](https://xuml-tools.ci.cloudbees.com/).
-
-<a href="https://xuml-tools.ci.cloudbees.com/"><img  src="http://web-static-cloudfront.s3.amazonaws.com/images/badges/BuiltOnDEV.png"/></a>
+Continuous integration with Jenkins for this project is [here](https://xuml-tools.ci.cloudbees.com/). <a href="https://xuml-tools.ci.cloudbees.com/"><img  src="http://web-static-cloudfront.s3.amazonaws.com/images/badges/BuiltOnDEV.png"/></a>
 
 Maven site is [here](https://xuml-tools.ci.cloudbees.com/job/xuml-tools_site/site/). Includes [Javadocs](https://xuml-tools.ci.cloudbees.com/job/xuml-tools_site/site/apidocs/index.html), Cobertura test coverage, FindBugs, CPD, PMD, JavaNCSS, Checkstyle and other reports.
 
