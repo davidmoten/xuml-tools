@@ -123,6 +123,20 @@ The java model compiler includes the following features (<img src="https://githu
  * Suffix <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
  * ValidationPattern <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
  * DefaultValue
+* Database tests
+ * Derby <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
+ * Postgres
+ * MySQL
+ * Oracle
+ * H2
+ * DB2
+ * Hypersonic
+ * SQL Server
+* JPA Provider tests
+ * Hibernate <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
+ * EclipseLink
+ * TopLink
+ * OpenJPA
 
 The todo list includes:
 * Event polymorphism
