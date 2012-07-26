@@ -45,32 +45,45 @@ public class EntityActor extends UntypedActor {
 			// otherwise perform the event on the entity after it has been
 			// refreshed within the scope of the current entity manager
 
-			EntityManager em = emf.createEntityManager();
-			EntityTransaction tx = em.getTransaction();
-			tx.begin();
-			log.info("started transaction");
-			Entity<?> entity = em.merge(signal.getEntity());
-			log.info("merged");
-			em.refresh(entity);
-			log.info("calling event "
-					+ signal.getEvent().getClass().getSimpleName()
-					+ " on entity id = " + signal.getEntity().getId());
-			entity.helper().setEntityManager(em);
-			entity.event(signal.getEvent());
-			entity.helper().setEntityManager(em);
-			log.info("removing signal from persistence");
-			em.createQuery(
-					"delete from " + QueuedSignal.class.getSimpleName()
-							+ " where id=:id")
-					.setParameter("id", signal.getId()).executeUpdate();
-			tx.commit();
-			log.info("commited");
-			em.close();
-			getSender().tell(new CloseEntityActor(signal.getEntity()));
-			// only after successful commit do we send the signals to other
-			// entities made during onEntry procedure.
-			entity.helper().sendQueuedSignals();
-			closed = true;
+			EntityManager em = null;
+			EntityTransaction tx = null;
+			Entity<?> entity = null;
+			try {
+				em = emf.createEntityManager();
+				tx = em.getTransaction();
+				tx.begin();
+				log.info("started transaction");
+				entity = em.merge(signal.getEntity());
+				log.info("merged");
+				em.refresh(entity);
+				log.info("calling event "
+						+ signal.getEvent().getClass().getSimpleName()
+						+ " on entity id = " + signal.getEntity().getId());
+				entity.helper().setEntityManager(em);
+				entity.event(signal.getEvent());
+				entity.helper().setEntityManager(em);
+				log.info("removing signal from persistence");
+				em.createQuery(
+						"delete from " + QueuedSignal.class.getSimpleName()
+								+ " where id=:id")
+						.setParameter("id", signal.getId()).executeUpdate();
+				tx.commit();
+				log.info("commited");
+				em.close();
+				// only after successful commit do we send the signals to other
+				// entities made during onEntry procedure.
+				entity.helper().sendQueuedSignals();
+				closed = true;
+			} catch (RuntimeException e) {
+				if (tx != null && tx.isActive())
+					tx.rollback();
+				if (em != null && em.isOpen())
+					em.close();
+				// TODO apply FailureStrategy
+			} finally {
+				getSender().tell(new CloseEntityActor(signal.getEntity()));
+
+			}
 		}
 	}
 
