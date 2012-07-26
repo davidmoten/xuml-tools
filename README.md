@@ -142,7 +142,8 @@ The todo list includes:
 * Event polymorphism
 * Comprehensive unit testing
 * Synchronous signalling (?) 
-* Integration with other products (OpenXava?)
+* Integration with other products 
+ * GUI generation (OpenXava?)
 
 The items that may be left out:
 * Structured types
