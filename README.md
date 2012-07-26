@@ -78,6 +78,12 @@ With the model compiler we seek to implement the approach taken by Mellor & Balc
 <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/xuml-model-compiler.png" width="600">
 
 The java model compiler includes the following features (<img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">denotes done):
+
+<table>
+  <tr><th>Feature</th><th>Status</th></tr>
+  <tr><td>Generates JPA entities</td><td><img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png"></td></tr>
+</table>
+
 * Generates JPA entities  <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png"> 
 * Generates State Machine  <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png"> 
 * All association types
@@ -90,7 +96,7 @@ The java model compiler includes the following features (<img src="https://githu
  * * to * <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
  * * to * with Association Class <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
  * 1..* to * with Association Class <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
- * 1..* to 1..* with Association Class 
+ * 1..* to 1..* with Association Class <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
  * Unary 1 <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
  * Unary 0..1 <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
  * Unary * <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
