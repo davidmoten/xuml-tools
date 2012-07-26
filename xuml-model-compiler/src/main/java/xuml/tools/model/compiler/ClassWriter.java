@@ -960,7 +960,7 @@ public class ClassWriter {
 
 		// create Events static class and each Event declared within
 		jd(out, "Event declarations.", "    ");
-		out.format("    public static class Events {\n\n");
+		out.format("    public static class Events {\n");
 
 		// write state names that have signatures
 		Map<String, MyEvent> stateEvent = Maps.newHashMap();
@@ -998,6 +998,7 @@ public class ClassWriter {
 						+ info.getJavaClassSimpleName() + ">";
 			} else
 				creationEventImplements = "";
+			out.println();
 			jd(out, "Event implementation for event '" + event.getName() + "'",
 					"        ");
 
@@ -1031,7 +1032,8 @@ public class ClassWriter {
 			}
 			constructor.append("){\n");
 			constructor.append(constructorBody);
-			constructor.append("            }\n\n");
+			constructor.append("            }\n");
+			out.println();
 			jd(out, "Constructor.", "            ");
 			out.println(constructor);
 
