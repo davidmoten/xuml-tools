@@ -58,9 +58,20 @@ public class BinaryAssociationOneManyToOneManyAssociationClassTest {
 		}
 	}
 
-	// TODO fix so one side is not nullable so can persist in test below
+	@Test(expected = RelationshipNotEstablishedException.class)
+	public void testCanCreateInstanceOfBWithoutA() {
 
-	// @Test
+		EntityManager em = Context.createEntityManager();
+		try {
+			em.getTransaction().begin();
+			B.create("b").persist(em);
+			em.getTransaction().commit();
+		} finally {
+			em.close();
+		}
+	}
+
+	@Test
 	public void testCanCreateInstanceOfBWithA() {
 
 		EntityManager em = Context.createEntityManager();

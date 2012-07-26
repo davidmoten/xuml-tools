@@ -753,8 +753,12 @@ public class ClassWriter {
 						!ref.isInPrimaryId(), !ref.isInPrimaryId());
 				writeField(out, ref);
 			} else if (isRelationship(ref, Mult.ONE, Mult.MANY)) {
+				// ONE_TO_MANY and ONE_TO_ONE_MANY have PERSIST excluded from
+				// CascadeType so can do ONE_MANY to ONE_MANY via association
+				// class without persistence exceptions due to circular
+				// dependencies.
 				out.format(
-						"    @%s(mappedBy=\"%s\",cascade=%s.ALL,fetch=%s.LAZY,targetEntity=%s.class)\n",
+						"    @%s(mappedBy=\"%s\",cascade={%3$s.MERGE,%3$s.REFRESH,%3$s.REMOVE},fetch=%4$s.LAZY,targetEntity=%5$s.class)\n",
 						info.addType(OneToMany.class), ref.getThisFieldName(),
 						info.addType(CascadeType.class),
 						info.addType(FetchType.class),
@@ -770,8 +774,12 @@ public class ClassWriter {
 			} else if (isRelationship(ref, Mult.ONE, Mult.ONE_MANY)) {
 				writeValidationNotEmpty(out, ref.getFieldName(),
 						validationMethods);
+				// ONE_TO_MANY and ONE_TO_ONE_MANY have PERSIST excluded from
+				// CascadeType so can do ONE_MANY to ONE_MANY via association
+				// class without persistence exceptions due to circular
+				// dependencies.
 				out.format(
-						"    @%s(mappedBy=\"%s\",cascade=%s.ALL,fetch=%s.LAZY,targetEntity=%s.class)\n",
+						"    @%s(mappedBy=\"%s\",cascade={%3$s.MERGE,%3$s.REFRESH,%3$s.REMOVE},fetch=%4$s.LAZY,targetEntity=%5$s.class)\n",
 						info.addType(OneToMany.class), ref.getThisFieldName(),
 						info.addType(CascadeType.class),
 						info.addType(FetchType.class),

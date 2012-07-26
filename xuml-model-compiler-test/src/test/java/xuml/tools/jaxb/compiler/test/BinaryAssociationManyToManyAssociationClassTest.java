@@ -56,6 +56,8 @@ public class BinaryAssociationManyToManyAssociationClassTest {
 		a1.getC().add(c2);
 		b2.getC().add(c2);
 
+		c1.persist(em);
+		c2.persist(em);
 		em.getTransaction().commit();
 
 		em.close();
