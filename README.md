@@ -79,11 +79,6 @@ With the model compiler we seek to implement the approach taken by Mellor & Balc
 
 The java model compiler includes the following features (<img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">denotes done):
 
-<table>
-  <tr><th>Feature</th><th>Status</th></tr>
-  <tr><td>Generates JPA entities</td><td><img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png"></td></tr>
-</table>
-
 * Generates JPA entities  <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png"> 
 * Generates State Machine  <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png"> 
 * All association types
