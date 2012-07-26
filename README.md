@@ -110,7 +110,7 @@ The java model compiler includes the following features (<img src="https://githu
 * Entity toString method 
 * Event toString method <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
 * Generated find methods for attribute groups
-* Id Builders <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
+* Composite Id Builders <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
 * Event Builders  <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
 * Domain and global type constraints honoured:
  * MaxLength <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
