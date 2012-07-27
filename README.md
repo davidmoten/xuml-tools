@@ -179,6 +179,15 @@ The system should be developed and tested with the aim of no uncaught exceptions
 
 An example of setting up an EntityActorListenerFactory is in [AbcTest.java](https://github.com/davidmoten/xuml-tools/blob/master/xuml-model-compiler-test/src/test/java/xuml/tools/jaxb/compiler/test/AbcTest.java).
 
+More examples:
+
+<table>
+  <tr><th>Purpose</th><th>Class</th></tr>
+  <tr>Log failures<td></td><td>[EntityActorListenerLogging.java](https://github.com/davidmoten/xuml-tools/blob/master/xuml-model-compiler-runtime/src/test/java/xuml/tools/model/compiler/runtime/actor/EntityActorListenerLogging.java)</td></tr>
+  <tr>Retry on failure with 5 min delay<td></td><td>[EntityActorListenerRetryOnFailure.java](https://github.com/davidmoten/xuml-tools/blob/master/xuml-model-compiler-runtime/src/test/java/xuml/tools/model/compiler/runtime/actor/EntityActorListenerRetryOnFailure.java)</td></tr>
+  <tr>Stop all signal processing on failure<td></td><td>[EntityActorListenerStopsAllSignalProcessingOnFailure.java](https://github.com/davidmoten/xuml-tools/blob/master/xuml-model-compiler-runtime/src/test/java/xuml/tools/model/compiler/runtime/actor/EntityActorListenerStopsAllSignalProcessingOnFailure.java)</td></tr>
+</table>
+
 Web Class Diagram Viewer
 ------------------------
 The following examples are based on storing the domain xml and the associated presentation settings on the server. To be investigated is the http://www.diagram.ly approach (see this [interview](http://doeswhat.com/2011/04/11/interview-with-david-benson-diagramly/)) where all user data is stored on the client machine and the application does no account management. Might be worth pursuing.
