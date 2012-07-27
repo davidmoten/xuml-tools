@@ -13,14 +13,14 @@ public class PersistenceHelper {
 		DERBY, H2, HSQLDB;
 	}
 
-	public static EntityManagerFactory createEmf(String name, String schema,
-			DatabaseType type) {
+	public static EntityManagerFactory createEmf(String name,
+			final String schema, DatabaseType type) {
 		return Persistence.createEntityManagerFactory(name,
 				getProperties(name, schema, type));
 	}
 
 	public static EntityManagerFactory createEmf(String name, String schema) {
-		return createEmf(name, schema, DatabaseType.H2);
+		return createEmf(name, schema, DatabaseType.HSQLDB);
 	}
 
 	public static EntityManagerFactory createEmf(String name) {
@@ -46,6 +46,7 @@ public class PersistenceHelper {
 					+ "-db;INIT=CREATE SCHEMA IF NOT EXISTS " + schema;
 			insertDatabaseSpecificProperties(map, dialect, driver, url);
 		} else if (type == DatabaseType.HSQLDB) {
+			// TODO does not work because does not create required schema
 			String dialect = "org.hibernate.dialect.HSQLDialect";
 			String driver = "org.hsqldb.jdbcDriver";
 			String url = "jdbc:hsqldb:mem:" + name

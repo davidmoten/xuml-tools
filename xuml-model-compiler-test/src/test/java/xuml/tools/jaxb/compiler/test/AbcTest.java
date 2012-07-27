@@ -101,7 +101,7 @@ public class AbcTest {
 	public static void setup() {
 
 		// create the entity manager factory
-		EntityManagerFactory emf = PersistenceHelper.createEmf("abc", "abc");
+		EntityManagerFactory emf = PersistenceHelper.createEmf("abc");
 
 		// Intercept entity processing to log activity
 		// set this before setting EntityManagerFactory

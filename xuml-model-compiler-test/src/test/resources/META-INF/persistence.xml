@@ -10,198 +10,72 @@
 		<class>abc.C</class>
 		<class>xuml.tools.model.compiler.runtime.QueuedSignal</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
-		<!-- 
-		<properties>
-			<property name="hibernate.dialect" value="org.hibernate.dialect.DerbyDialect" />
-			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
-			<property name="hibernate.connection.driver_class" value="org.apache.derby.jdbc.EmbeddedDriver" />
-			<property name="hibernate.connection.url" value="jdbc:derby:memory:abc-db;create=true" />
-			<property name="hibernate.connection.pool_size" value="5" />
-			<property name="hibernate.show_sql" value="false" />
-			<property name="hibernate.format_sql" value="true" />
-		</properties>
-		 -->
 	</persistence-unit>
 	<persistence-unit name="one-to-zero-one">
 		<class>one_to_zero_one.A</class>
 		<class>one_to_zero_one.B</class>
 		<class>xuml.tools.model.compiler.runtime.QueuedSignal</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
-		<properties>
-			<property name="hibernate.dialect" value="org.hibernate.dialect.DerbyDialect" />
-			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
-			<property name="hibernate.connection.driver_class" value="org.apache.derby.jdbc.EmbeddedDriver" />
-			<property name="hibernate.connection.url" value="jdbc:derby:memory:onetoone-db;create=true" />
-			<property name="hibernate.connection.pool_size" value="5" />
-			<property name="hibernate.show_sql" value="true" />
-			<property name="hibernate.format_sql" value="true" />
-		</properties>
 	</persistence-unit>
 	<persistence-unit name="one-to-many">
 		<class>one_to_many.A</class>
 		<class>one_to_many.B</class>
 		<class>xuml.tools.model.compiler.runtime.QueuedSignal</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
-		<properties>
-			<property name="hibernate.dialect" value="org.hibernate.dialect.DerbyDialect" />
-			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
-			<property name="hibernate.connection.driver_class" value="org.apache.derby.jdbc.EmbeddedDriver" />
-			<property name="hibernate.connection.url" value="jdbc:derby:memory:onetomany-db;create=true" />
-			<property name="hibernate.connection.pool_size" value="5" />
-			<property name="hibernate.show_sql" value="true" />
-			<property name="hibernate.format_sql" value="true" />
-		</properties>
 	</persistence-unit>
 	<persistence-unit name="one-to-one">
 		<class>one_to_one.A</class>
 		<class>one_to_one.B</class>
 		<class>xuml.tools.model.compiler.runtime.QueuedSignal</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
-		<properties>
-			<property name="hibernate.dialect" value="org.hibernate.dialect.DerbyDialect" />
-			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
-			<property name="hibernate.connection.driver_class" value="org.apache.derby.jdbc.EmbeddedDriver" />
-			<property name="hibernate.connection.url" value="jdbc:derby:memory:onetoone-db;create=true" />
-			<property name="hibernate.connection.pool_size" value="5" />
-			<property name="hibernate.show_sql" value="true" />
-			<property name="hibernate.format_sql" value="true" />
-		</properties>
 	</persistence-unit>
 	<persistence-unit name="zero-one-to-many">
 		<class>zero_one_to_many.A</class>
 		<class>zero_one_to_many.B</class>
 		<class>xuml.tools.model.compiler.runtime.QueuedSignal</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
-		<properties>
-			<property name="hibernate.dialect" value="org.hibernate.dialect.DerbyDialect" />
-			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
-			<property name="hibernate.connection.driver_class" value="org.apache.derby.jdbc.EmbeddedDriver" />
-			<property name="hibernate.connection.url"
-				value="jdbc:derby:memory:zeroonetoone-db;create=true" />
-			<property name="hibernate.connection.pool_size" value="5" />
-			<property name="hibernate.show_sql" value="true" />
-			<property name="hibernate.format_sql" value="true" />
-		</properties>
 	</persistence-unit>
 	<persistence-unit name="one-to-one-many">
 		<class>one_to_one_many.A</class>
 		<class>one_to_one_many.B</class>
 		<class>xuml.tools.model.compiler.runtime.QueuedSignal</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
-		<properties>
-			<property name="hibernate.dialect" value="org.hibernate.dialect.DerbyDialect" />
-			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
-			<property name="hibernate.connection.driver_class" value="org.apache.derby.jdbc.EmbeddedDriver" />
-			<property name="hibernate.connection.url"
-				value="jdbc:derby:memory:onetoonemany-db;create=true" />
-			<property name="hibernate.connection.pool_size" value="5" />
-			<property name="hibernate.show_sql" value="true" />
-			<property name="hibernate.format_sql" value="true" />
-		</properties>
 	</persistence-unit>
 	<persistence-unit name="zero-one-to-one-many">
 		<class>zero_one_to_one_many.A</class>
 		<class>zero_one_to_one_many.B</class>
 		<class>xuml.tools.model.compiler.runtime.QueuedSignal</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
-		<properties>
-			<property name="hibernate.dialect" value="org.hibernate.dialect.DerbyDialect" />
-			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
-			<property name="hibernate.connection.driver_class" value="org.apache.derby.jdbc.EmbeddedDriver" />
-			<property name="hibernate.connection.url"
-				value="jdbc:derby:memory:zeroonetoonemany-db;create=true" />
-			<property name="hibernate.connection.pool_size" value="5" />
-			<property name="hibernate.show_sql" value="true" />
-			<property name="hibernate.format_sql" value="true" />
-		</properties>
 	</persistence-unit>
 	<persistence-unit name="unary-one">
 		<class>unary_one.A</class>
 		<class>xuml.tools.model.compiler.runtime.QueuedSignal</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
-		<properties>
-			<property name="hibernate.dialect" value="org.hibernate.dialect.DerbyDialect" />
-			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
-			<property name="hibernate.connection.driver_class" value="org.apache.derby.jdbc.EmbeddedDriver" />
-			<property name="hibernate.connection.url" value="jdbc:derby:memory:unaryone-db;create=true" />
-			<property name="hibernate.connection.pool_size" value="5" />
-			<property name="hibernate.show_sql" value="true" />
-			<property name="hibernate.format_sql" value="true" />
-		</properties>
 	</persistence-unit>
 	<persistence-unit name="unary-zero-one">
 		<class>unary_zero_one.A</class>
 		<class>xuml.tools.model.compiler.runtime.QueuedSignal</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
-		<properties>
-			<property name="hibernate.dialect" value="org.hibernate.dialect.DerbyDialect" />
-			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
-			<property name="hibernate.connection.driver_class" value="org.apache.derby.jdbc.EmbeddedDriver" />
-			<property name="hibernate.connection.url"
-				value="jdbc:derby:memory:unaryzeroone-db;create=true" />
-			<property name="hibernate.connection.pool_size" value="5" />
-			<property name="hibernate.show_sql" value="true" />
-			<property name="hibernate.format_sql" value="true" />
-		</properties>
 	</persistence-unit>
 	<persistence-unit name="unary-many">
 		<class>unary_many.A</class>
 		<class>xuml.tools.model.compiler.runtime.QueuedSignal</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
-		<properties>
-			<property name="hibernate.dialect" value="org.hibernate.dialect.DerbyDialect" />
-			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
-			<property name="hibernate.connection.driver_class" value="org.apache.derby.jdbc.EmbeddedDriver" />
-			<property name="hibernate.connection.url"
-				value="jdbc:derby:memory:unarymany-db;create=true" />
-			<property name="hibernate.connection.pool_size" value="5" />
-			<property name="hibernate.show_sql" value="true" />
-			<property name="hibernate.format_sql" value="true" />
-		</properties>
 	</persistence-unit>
 	<persistence-unit name="unary-one-many">
 		<class>unary_one_many.A</class>
 		<class>xuml.tools.model.compiler.runtime.QueuedSignal</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
-		<properties>
-			<property name="hibernate.dialect" value="org.hibernate.dialect.DerbyDialect" />
-			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
-			<property name="hibernate.connection.driver_class" value="org.apache.derby.jdbc.EmbeddedDriver" />
-			<property name="hibernate.connection.url"
-				value="jdbc:derby:memory:unaryonemany-db;create=true" />
-			<property name="hibernate.connection.pool_size" value="5" />
-			<property name="hibernate.show_sql" value="true" />
-			<property name="hibernate.format_sql" value="true" />
-		</properties>
 	</persistence-unit>
 	<persistence-unit name="secondary-identifiers">
 		<class>secondary_identifiers.A</class>
 		<class>xuml.tools.model.compiler.runtime.QueuedSignal</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
-		<properties>
-			<property name="hibernate.dialect" value="org.hibernate.dialect.DerbyDialect" />
-			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
-			<property name="hibernate.connection.driver_class" value="org.apache.derby.jdbc.EmbeddedDriver" />
-			<property name="hibernate.connection.url"
-				value="jdbc:derby:memory:secondaryidentifiers-db;create=true" />
-			<property name="hibernate.connection.pool_size" value="5" />
-			<property name="hibernate.show_sql" value="true" />
-			<property name="hibernate.format_sql" value="true" />
-		</properties>
 	</persistence-unit>
 	<persistence-unit name="all-types">
 		<class>all_types.A</class>
 		<class>xuml.tools.model.compiler.runtime.QueuedSignal</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
-		<properties>
-			<property name="hibernate.dialect" value="org.hibernate.dialect.DerbyDialect" />
-			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
-			<property name="hibernate.connection.driver_class" value="org.apache.derby.jdbc.EmbeddedDriver" />
-			<property name="hibernate.connection.url" value="jdbc:derby:memory:alltypes-db;create=true" />
-			<property name="hibernate.connection.pool_size" value="5" />
-			<property name="hibernate.show_sql" value="true" />
-			<property name="hibernate.format_sql" value="true" />
-		</properties>
 	</persistence-unit>
 	<persistence-unit name="specialization">
 		<class>specialization.A</class>
@@ -209,16 +83,6 @@
 		<class>specialization.C</class>
 		<class>xuml.tools.model.compiler.runtime.QueuedSignal</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
-		<properties>
-			<property name="hibernate.dialect" value="org.hibernate.dialect.DerbyDialect" />
-			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
-			<property name="hibernate.connection.driver_class" value="org.apache.derby.jdbc.EmbeddedDriver" />
-			<property name="hibernate.connection.url"
-				value="jdbc:derby:memory:specialization-db;create=true" />
-			<property name="hibernate.connection.pool_size" value="5" />
-			<property name="hibernate.show_sql" value="true" />
-			<property name="hibernate.format_sql" value="true" />
-		</properties>
 	</persistence-unit>
 	<persistence-unit name="bookstore">
 		<class>bookstore.CreditCardCharge</class>
@@ -233,44 +97,17 @@
 		<class>bookstore.StockedProduct</class>
 		<class>xuml.tools.model.compiler.runtime.QueuedSignal</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
-		<properties>
-			<property name="hibernate.dialect" value="org.hibernate.dialect.DerbyDialect" />
-			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
-			<property name="hibernate.connection.driver_class" value="org.apache.derby.jdbc.EmbeddedDriver" />
-			<property name="hibernate.connection.url" value="jdbc:derby:memory:bookstore-db;create=true" />
-			<property name="hibernate.connection.pool_size" value="5" />
-			<property name="hibernate.show_sql" value="true" />
-			<property name="hibernate.format_sql" value="true" />
-		</properties>
 	</persistence-unit>
 	<persistence-unit name="extensions">
 		<class>extensions.A</class>
 		<class>xuml.tools.model.compiler.runtime.QueuedSignal</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
-		<properties>
-			<property name="hibernate.dialect" value="org.hibernate.dialect.DerbyDialect" />
-			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
-			<property name="hibernate.connection.driver_class" value="org.apache.derby.jdbc.EmbeddedDriver" />
-			<property name="hibernate.connection.url" value="jdbc:derby:memory:extensions-db;create=true" />
-			<property name="hibernate.connection.pool_size" value="5" />
-			<property name="hibernate.show_sql" value="true" />
-			<property name="hibernate.format_sql" value="true" />
-		</properties>
 	</persistence-unit>
 	<persistence-unit name="many-to-many">
 		<class>many_to_many.A</class>
 		<class>many_to_many.B</class>
 		<class>xuml.tools.model.compiler.runtime.QueuedSignal</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
-		<properties>
-			<property name="hibernate.dialect" value="org.hibernate.dialect.DerbyDialect" />
-			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
-			<property name="hibernate.connection.driver_class" value="org.apache.derby.jdbc.EmbeddedDriver" />
-			<property name="hibernate.connection.url" value="jdbc:derby:memory:manytomany-db;create=true" />
-			<property name="hibernate.connection.pool_size" value="5" />
-			<property name="hibernate.show_sql" value="true" />
-			<property name="hibernate.format_sql" value="true" />
-		</properties>
 	</persistence-unit>
 	<persistence-unit name="many-to-many-association">
 		<class>many_to_many_association.A</class>
@@ -278,15 +115,6 @@
 		<class>many_to_many_association.C</class>
 		<class>xuml.tools.model.compiler.runtime.QueuedSignal</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
-		<properties>
-			<property name="hibernate.dialect" value="org.hibernate.dialect.DerbyDialect" />
-			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
-			<property name="hibernate.connection.driver_class" value="org.apache.derby.jdbc.EmbeddedDriver" />
-			<property name="hibernate.connection.url" value="jdbc:derby:memory:manytomanyassociation-db;create=true" />
-			<property name="hibernate.connection.pool_size" value="5" />
-			<property name="hibernate.show_sql" value="true" />
-			<property name="hibernate.format_sql" value="true" />
-		</properties>
 	</persistence-unit>
 	<persistence-unit name="one-many-to-one-many-association">
 		<class>one_many_to_one_many_association.A</class>
@@ -294,15 +122,6 @@
 		<class>one_many_to_one_many_association.C</class>
 		<class>xuml.tools.model.compiler.runtime.QueuedSignal</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
-		<properties>
-			<property name="hibernate.dialect" value="org.hibernate.dialect.DerbyDialect" />
-			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
-			<property name="hibernate.connection.driver_class" value="org.apache.derby.jdbc.EmbeddedDriver" />
-			<property name="hibernate.connection.url" value="jdbc:derby:memory:onemanytoonemanyassociation-db;create=true" />
-			<property name="hibernate.connection.pool_size" value="5" />
-			<property name="hibernate.show_sql" value="true" />
-			<property name="hibernate.format_sql" value="true" />
-		</properties>
 	</persistence-unit>
 	<persistence-unit name="one-many-to-many-association">
 		<class>one_many_to_many_association.A</class>
@@ -310,15 +129,6 @@
 		<class>one_many_to_many_association.C</class>
 		<class>xuml.tools.model.compiler.runtime.QueuedSignal</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
-		<properties>
-			<property name="hibernate.dialect" value="org.hibernate.dialect.DerbyDialect" />
-			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
-			<property name="hibernate.connection.driver_class" value="org.apache.derby.jdbc.EmbeddedDriver" />
-			<property name="hibernate.connection.url" value="jdbc:derby:memory:onemanytomanyassociation-db;create=true" />
-			<property name="hibernate.connection.pool_size" value="5" />
-			<property name="hibernate.show_sql" value="true" />
-			<property name="hibernate.format_sql" value="true" />
-		</properties>
 	</persistence-unit>
 
 </persistence>
