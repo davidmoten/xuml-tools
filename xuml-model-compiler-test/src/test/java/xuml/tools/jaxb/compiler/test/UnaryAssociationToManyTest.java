@@ -12,7 +12,6 @@ import org.junit.Test;
 import unary_many.A;
 import unary_many.A.AId;
 import unary_many.Context;
-import xuml.tools.util.database.DerbyUtil;
 
 public class UnaryAssociationToManyTest {
 
