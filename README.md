@@ -187,6 +187,7 @@ More examples:
   <tr><td>Log failures</td><td><a href="https://github.com/davidmoten/xuml-tools/blob/master/xuml-model-compiler-runtime/src/test/java/xuml/tools/model/compiler/runtime/actor/EntityActorListenerLogging.java">EntityActorListenerLogging.java</a></td></tr>
   <tr><td>Retry on failure with 5 min delay</td><td><a href="https://github.com/davidmoten/xuml-tools/blob/master/xuml-model-compiler-runtime/src/test/java/xuml/tools/model/compiler/runtime/actor/EntityActorListenerRetryOnFailure.java">EntityActorListenerRetryOnFailure.java</a></td></tr>
   <tr><td>Stop all signal processing on failure</td><td><a href="https://github.com/davidmoten/xuml-tools/blob/master/xuml-model-compiler-runtime/src/test/java/xuml/tools/model/compiler/runtime/actor/EntityActorListenerStopsAllSignalProcessingOnFailure.java">EntityActorListenerStopsAllSignalProcessingOnFailure.java</a></td></tr>
+  <tr><td>Stop signal processing on single entity on failure</td><td><a href="https://github.com/davidmoten/xuml-tools/blob/master/xuml-model-compiler-runtime/src/test/java/xuml/tools/model/compiler/runtime/actor/EntityActorListenerStopsSignalProcessingSingleEntityOnFailure.java">EntityActorListenerStopsSignalProcessingSingleEntityOnFailure.java</a></td></tr>
 </table>
 
 Web Class Diagram Viewer
