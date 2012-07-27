@@ -183,7 +183,7 @@ More examples:
 
 <table>
   <tr><th>Purpose</th><th>Class</th></tr>
-  <tr><td>Log failures</td><td>[EntityActorListenerLogging.java](https://github.com/davidmoten/xuml-tools/blob/master/xuml-model-compiler-runtime/src/test/java/xuml/tools/model/compiler/runtime/actor/EntityActorListenerLogging.java)</td></tr>
+  <tr><td>Log failures</td><td><a href="https://github.com/davidmoten/xuml-tools/blob/master/xuml-model-compiler-runtime/src/test/java/xuml/tools/model/compiler/runtime/actor/EntityActorListenerLogging.java">EntityActorListenerLogging.java</a></td></tr>
   <tr><td>Retry on failure with 5 min delay</td><td>[EntityActorListenerRetryOnFailure.java](https://github.com/davidmoten/xuml-tools/blob/master/xuml-model-compiler-runtime/src/test/java/xuml/tools/model/compiler/runtime/actor/EntityActorListenerRetryOnFailure.java)</td></tr>
   <tr><td>Stop all signal processing on failure</td><td>[EntityActorListenerStopsAllSignalProcessingOnFailure.java](https://github.com/davidmoten/xuml-tools/blob/master/xuml-model-compiler-runtime/src/test/java/xuml/tools/model/compiler/runtime/actor/EntityActorListenerStopsAllSignalProcessingOnFailure.java)</td></tr>
 </table>
