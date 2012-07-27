@@ -176,6 +176,8 @@ In terms of the role transactions play in relation to signals:
 ### Exception handling ###
 The system should be developed and tested with the aim of no uncaught exceptions being thrown. However, unexpected exceptions need to be dealt with properly when they occur. For this purpose the developer may implement an [EntityActorListener](https://github.com/davidmoten/xuml-tools/blob/master/xuml-model-compiler-runtime/src/main/java/xuml/tools/model/compiler/runtime/actor/EntityActorListener.java) to perform retries, log/notify errors, or even halt processing on one or all entities.
 
+An example of setting up an EntityActorListenerFactory is in [AbcTest.java](https://github.com/davidmoten/xuml-tools/blob/master/xuml-model-compiler-test/src/test/java/xuml/tools/jaxb/compiler/test/AbcTest.java).
+
 Web Class Diagram Viewer
 ------------------------
 The following examples are based on storing the domain xml and the associated presentation settings on the server. To be investigated is the http://www.diagram.ly approach (see this [interview](http://doeswhat.com/2011/04/11/interview-with-david-benson-diagramly/)) where all user data is stored on the client machine and the application does no account management. Might be worth pursuing.

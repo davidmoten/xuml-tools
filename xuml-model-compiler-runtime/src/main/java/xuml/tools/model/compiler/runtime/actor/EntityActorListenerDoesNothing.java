@@ -14,17 +14,20 @@ public class EntityActorListenerDoesNothing implements EntityActorListener {
 	}
 
 	@Override
-	public void beforeProcessing(Entity<?> entity, Signal<?> signal) {
+	public void beforeProcessing(Entity<?> entity, Signal<?> signal,
+			EntityActor actor) {
 		// does nothing
 	}
 
 	@Override
-	public void afterProcessing(Entity<?> entity, Signal<?> signal) {
+	public void afterProcessing(Entity<?> entity, Signal<?> signal,
+			EntityActor actor) {
 		// does nothing
 	}
 
 	@Override
-	public void failure(Entity<?> entity, Signal<?> signal, Exception ex) {
+	public void failure(Entity<?> entity, Signal<?> signal, Exception ex,
+			EntityActor actor) {
 		// does nothing
 	}
 

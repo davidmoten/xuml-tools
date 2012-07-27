@@ -5,10 +5,11 @@ import xuml.tools.model.compiler.runtime.message.Signal;
 
 public interface EntityActorListener {
 
-	void beforeProcessing(Entity<?> entity, Signal<?> signal);
+	void beforeProcessing(Entity<?> entity, Signal<?> signal, EntityActor actor);
 
-	void afterProcessing(Entity<?> entity, Signal<?> signal);
+	void afterProcessing(Entity<?> entity, Signal<?> signal, EntityActor actor);
 
-	void failure(Entity<?> entity, Signal<?> signal, Exception e);
+	void failure(Entity<?> entity, Signal<?> signal, Exception e,
+			EntityActor actor);
 
 }

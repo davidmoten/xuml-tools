@@ -13,6 +13,11 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import xuml.tools.model.compiler.runtime.Entity;
+import xuml.tools.model.compiler.runtime.actor.EntityActor;
+import xuml.tools.model.compiler.runtime.actor.EntityActorListener;
+import xuml.tools.model.compiler.runtime.actor.EntityActorListenerFactory;
+import xuml.tools.model.compiler.runtime.message.Signal;
 import xuml.tools.util.database.DerbyUtil;
 import abc.A;
 import abc.A.AId;
@@ -20,6 +25,8 @@ import abc.A.BehaviourFactory;
 import abc.A.Events.Create;
 import abc.A.Events.StateSignature_DoneSomething;
 import abc.Context;
+import akka.event.Logging;
+import akka.event.LoggingAdapter;
 import akka.util.Duration;
 
 public class AbcTest {
@@ -99,6 +106,9 @@ public class AbcTest {
 		// create the entity manager factory
 		EntityManagerFactory emf = Persistence
 				.createEntityManagerFactory("abc");
+
+		// Intercept entity processing to log activity
+		Context.setEntityActorListenerFactory(createEntityActorListenerFactory());
 
 		// pass the EntityManagerFactory to the generated xuml Context
 		Context.setEntityManagerFactory(emf);
@@ -190,6 +200,57 @@ public class AbcTest {
 						System.out.println("counted " + count + " B entities");
 					}
 				};
+			}
+		};
+	}
+
+	private static EntityActorListenerFactory createEntityActorListenerFactory() {
+		return new EntityActorListenerFactory() {
+
+			// use the same listener for all entities
+			private final EntityActorListener listener = createEntityActorListener();
+
+			@Override
+			public EntityActorListener create(String entityUniqueId) {
+				return listener;
+			}
+		};
+	}
+
+	/**
+	 * This listener logs activity using the Akka actor system logger.
+	 * 
+	 * @return
+	 */
+	private static EntityActorListener createEntityActorListener() {
+		return new EntityActorListener() {
+
+			private int processed = 0;
+
+			@Override
+			public void beforeProcessing(Entity<?> entity, Signal<?> signal,
+					EntityActor actor) {
+				LoggingAdapter log = Logging.getLogger(actor.getContext()
+						.system(), this);
+				log.info("before processing");
+			}
+
+			@Override
+			public void afterProcessing(Entity<?> entity, Signal<?> signal,
+					EntityActor actor) {
+				// count the number processed and log it
+				processed++;
+				LoggingAdapter log = Logging.getLogger(actor.getContext()
+						.system(), this);
+				log.info("after processing " + processed);
+			}
+
+			@Override
+			public void failure(Entity<?> entity, Signal<?> signal,
+					Exception e, EntityActor actor) {
+				LoggingAdapter log = Logging.getLogger(actor.getContext()
+						.system(), this);
+				log.error(e, e.getMessage());
 			}
 		};
 	}

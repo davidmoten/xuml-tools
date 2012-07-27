@@ -53,7 +53,7 @@ public class EntityActor extends UntypedActor {
 			EntityTransaction tx = null;
 			Entity<?> entity = null;
 			try {
-				listener.beforeProcessing(entity, signal);
+				listener.beforeProcessing(entity, signal, this);
 				em = emf.createEntityManager();
 				tx = em.getTransaction();
 				tx.begin();
@@ -74,7 +74,7 @@ public class EntityActor extends UntypedActor {
 						.setParameter("id", signal.getId()).executeUpdate();
 				tx.commit();
 				log.info("commited");
-				listener.afterProcessing(entity, signal);
+				listener.afterProcessing(entity, signal, this);
 				em.close();
 				// only after successful commit do we send the signals to other
 				// entities made during onEntry procedure.
@@ -85,7 +85,7 @@ public class EntityActor extends UntypedActor {
 					tx.rollback();
 				if (em != null && em.isOpen())
 					em.close();
-				listener.failure(entity, signal, e);
+				listener.failure(entity, signal, e, this);
 			} finally {
 				getSender().tell(new CloseEntityActor(signal.getEntity()));
 			}
