@@ -21,6 +21,7 @@ import xuml.tools.model.compiler.runtime.CreationEvent;
 import xuml.tools.model.compiler.runtime.Entity;
 import xuml.tools.model.compiler.runtime.Event;
 import xuml.tools.model.compiler.runtime.Signaller;
+import xuml.tools.model.compiler.runtime.actor.EntityActorListenerFactory;
 
 import com.google.common.collect.Lists;
 
@@ -132,7 +133,7 @@ public class CodeGeneratorJava {
 		out.format(
 				"    public static void setEntityManagerFactory(%s emf) {\n",
 				types.addType(EntityManagerFactory.class));
-		out.format("        signaller = new %s(emf);\n",
+		out.format("        signaller = new %s(emf,listenerFactory);\n",
 				types.addType(Signaller.class), types.addType(Signaller.class));
 		for (Subsystem subsystem : domain.getSubsystem()) {
 			for (JAXBElement<? extends SubsystemElement> element : subsystem
@@ -147,7 +148,20 @@ public class CodeGeneratorJava {
 				}
 			}
 		}
-		out.format("    }\n");
+		out.format("    }\n\n");
+
+		out.format("    private static %s listenerFactory;\n\n",
+				types.addType(EntityActorListenerFactory.class));
+		out.format(
+				"    public static void setEntityActorListenerFactory(%s listenerFactory) {\n",
+				types.addType(EntityActorListenerFactory.class));
+		out.format("        if (signaller !=null)\n");
+		out.format(
+				"            throw new %s(\"EntityActorListenerFactory must be set before EntityManagerFactory\");\n",
+				types.addType(RuntimeException.class));
+		out.format("        Context.listenerFactory = listenerFactory;\n");
+		out.format("    }\n\n");
+
 		out.format("    public static %s createEntityManager() {\n",
 				types.addType(EntityManager.class));
 		out.format("        return signaller.getEntityManagerFactory().createEntityManager();\n");
