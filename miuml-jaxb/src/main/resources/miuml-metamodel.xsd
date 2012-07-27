@@ -323,11 +323,6 @@
 						</documentation>
 					</annotation>
 				</attribute>
-				<attribute name="Association" type="t:Rnum" use="optional">
-					<annotation>
-						<documentation>R120</documentation>
-					</annotation>
-				</attribute>
 			</extension>
 		</complexContent>
 	</complexType>
@@ -698,7 +693,7 @@
 	<complexType name="AssociativeReference">
 		<complexContent>
 			<annotation>
-				<documentation>R152. TReference and PReference via R153 have been
+				<documentation>R120,R152. TReference and PReference via R153 have been
 					collapsed into AssociativeReference. Differentiation is via the
 					Class attribute.
 				</documentation>

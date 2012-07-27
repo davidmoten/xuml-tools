@@ -7,11 +7,12 @@ import java.util.List;
 
 import javax.xml.bind.JAXBElement;
 
-
 import org.apache.commons.io.IOUtils;
 
+import xuml.tools.miuml.metamodel.jaxb.AssociativeReference;
 import xuml.tools.miuml.metamodel.jaxb.Attribute;
 import xuml.tools.miuml.metamodel.jaxb.BinaryAssociation;
+import xuml.tools.miuml.metamodel.jaxb.Class;
 import xuml.tools.miuml.metamodel.jaxb.DerivedAttribute;
 import xuml.tools.miuml.metamodel.jaxb.Domain;
 import xuml.tools.miuml.metamodel.jaxb.Domains;
@@ -88,7 +89,9 @@ public class ClassDiagramGenerator {
 		for (JAXBElement<? extends SubsystemElement> element : subsystem
 				.getSubsystemElement())
 			if (element.getValue() instanceof xuml.tools.miuml.metamodel.jaxb.Class)
-				generateClass(s, (xuml.tools.miuml.metamodel.jaxb.Class) element.getValue());
+				generateClass(s,
+						(xuml.tools.miuml.metamodel.jaxb.Class) element
+								.getValue());
 			else if (element.getValue() instanceof Relationship) {
 				Relationship r = (Relationship) element.getValue();
 				if (r instanceof BinaryAssociation)
@@ -166,17 +169,20 @@ public class ClassDiagramGenerator {
 		return "R" + n;
 	}
 
-	private void generateClass(StringBuilder s, xuml.tools.miuml.metamodel.jaxb.Class cls) {
+	private void generateClass(StringBuilder s,
+			xuml.tools.miuml.metamodel.jaxb.Class cls) {
 		System.out.println("class=" + cls.getName());
 		s.append("<div id=\"" + cls.getName().replaceAll(" ", "_")
 				+ "\" class=\"cls draggable");
 
-		if (cls.getAssociation() != null)
+		BigInteger assocationClassRelationship = getAssociationClassRelationship(cls);
+
+		if (assocationClassRelationship != null)
 			s.append(" associationClass");
 		s.append("\"");
-		if (cls.getAssociation() != null)
+		if (assocationClassRelationship != null)
 			s.append(" relationshipName=\""
-					+ getRelationshipName(cls.getAssociation()) + "\" ");
+					+ getRelationshipName(assocationClassRelationship) + "\" ");
 		s.append(">\n");
 		s.append("  <div class=\"attributes\">\n");
 		for (JAXBElement<? extends Attribute> attr : cls.getAttribute()) {
@@ -242,5 +248,17 @@ public class ClassDiagramGenerator {
 			s.append("</div>");
 		}
 		s.append("</div>\n");
+	}
+
+	private BigInteger getAssociationClassRelationship(Class cls) {
+		for (JAXBElement<? extends Attribute> element : cls.getAttribute())
+			if (element.getValue() instanceof ReferentialAttribute) {
+				ReferentialAttribute ref = (ReferentialAttribute) element
+						.getValue();
+				if (ref.getReference().getValue() instanceof AssociativeReference) {
+					return ref.getReference().getValue().getRelationship();
+				}
+			}
+		return null;
 	}
 }

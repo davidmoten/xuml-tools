@@ -54,7 +54,7 @@ public class CodeGeneratorJava {
 	}
 
 	public void generate(File destination) {
-
+		log("generating " + destination);
 		ModeledDomain md = domain;
 		Lookups lookups = new Lookups(domains, md);
 		for (Class cls : getClasses(md))
@@ -203,7 +203,7 @@ public class CodeGeneratorJava {
 		}
 	}
 
-	private void log(String message) {
+	private static void log(String message) {
 		java.lang.System.out.println(message);
 	}
 
@@ -241,7 +241,7 @@ public class CodeGeneratorJava {
 	private static void writeToFile(byte[] bytes, File file) {
 		try {
 			file.getParentFile().mkdirs();
-			java.lang.System.out.println("writing to " + file);
+			log("writing to " + file);
 			FileOutputStream fos = new FileOutputStream(file);
 			fos.write(bytes);
 			fos.close();

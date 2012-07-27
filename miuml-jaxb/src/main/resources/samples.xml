@@ -310,11 +310,17 @@
 					Type="Bank Card Approval Code" />
 			</Class>
 
-			<Class Name="Product Selection" Association="4">
+			<Class Name="Product Selection">
 				<IndependentAttribute Name="Product Selection ID"
 					Type="arbitraryId">
 					<Identifier Number="1" />
 				</IndependentAttribute>
+				<ReferentialAttribute Name="Product"  >
+					<AssociativeReference Class="Product" Attribute="Product ID" Relationship="4"/>
+				</ReferentialAttribute>
+				<ReferentialAttribute Name="Shopping Cart"  >
+					<AssociativeReference Class="Shopping Cart" Attribute="Cart ID" Relationship="4"/>
+				</ReferentialAttribute>
 				<IndependentAttribute Name="Quantity" Type="Count" />
 				<IndependentAttribute Name="Unit price of selection"
 					Type="Money" />
