@@ -2,6 +2,8 @@ package xuml.tools.model.compiler.runtime;
 
 import java.io.Serializable;
 
+import akka.util.Duration;
+
 public interface Entity<T> {
 
 	Serializable getId();
@@ -15,8 +17,8 @@ public interface Entity<T> {
 	String uniqueId();
 
 	/**
-	 * All events go through here. ThreadLocal will be used to detect if an
-	 * event is to self or not. Events to self are queued up to run
+	 * Signals the entity with the given event. ThreadLocal will be used to
+	 * detect if an event is to self or not. Events to self are queued up to run
 	 * synchronously after the on-entry procedure on this entity associated with
 	 * the event is run and before the transaction is committed. Only after the
 	 * transaction is committed successfully will the signals to other entities
@@ -25,6 +27,19 @@ public interface Entity<T> {
 	 * @param event
 	 */
 	T signal(Event<T> event);
+
+	/**
+	 * Signals the entity with the given event after the given delay.
+	 * ThreadLocal will be used to detect if an event is to self or not. Events
+	 * to self are queued up to run synchronously after the on-entry procedure
+	 * on this entity associated with the event is run and before the
+	 * transaction is committed. Only after the transaction is committed
+	 * successfully will the signals to other entities that were made by the
+	 * on-entry procedure be sent.
+	 * 
+	 * @param event
+	 */
+	T signal(Event<T> event, Duration delay);
 
 	/**
 	 * Runs the on-entry procedure associated with this event. No transaction is

@@ -63,6 +63,7 @@ import xuml.tools.model.compiler.runtime.RelationshipNotEstablishedException;
 import xuml.tools.model.compiler.runtime.Signaller;
 import xuml.tools.model.compiler.runtime.TooManySpecializationsException;
 import xuml.tools.model.compiler.runtime.ValidationException;
+import akka.util.Duration;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
@@ -102,7 +103,7 @@ public class ClassWriter {
 		writeStateGetterAndSetter(out, info);
 		writeStates(out, info);
 		writeEvents(out, info);
-		writeEventCallMethods(out, info);
+		writeSignalMethods(out, info);
 		writeStaticCreateMethods(out, info);
 		writeMergeMethod(out, info);
 		writePersistMethod(out, info);
@@ -1248,7 +1249,7 @@ public class ClassWriter {
 				ref.getFullClassName(), ref.getFieldName(), true);
 	}
 
-	private void writeEventCallMethods(PrintStream out, ClassInfo info) {
+	private void writeSignalMethods(PrintStream out, ClassInfo info) {
 
 		// add event call methods
 		jd(out,
@@ -1265,6 +1266,22 @@ public class ClassWriter {
 			out.format("        //no behaviour for this class\n");
 		out.format("        return this;\n");
 		out.format("    }\n\n");
+
+		jd(out,
+				"Asychronously queues the given signal against this entity for processing\nafter the delay specified. If duration is null then the signal will be sent immediately.",
+				"    ");
+		out.format("    @%s\n", info.addType(Transient.class));
+		out.format("    @%s\n", info.addType(Override.class));
+		out.format("    public %s signal(%s<%s> event, %s delay){\n",
+				info.getJavaClassSimpleName(), info.addType(Event.class),
+				info.getJavaClassSimpleName(), info.addType(Duration.class));
+		if (info.hasBehaviour())
+			out.format("        helper().signal(event, delay);\n");
+		else
+			out.format("        //no behaviour for this class\n");
+		out.format("        return this;\n");
+		out.format("    }\n\n");
+
 		jd(out, "Synchronously runs the on entry procedure associated\n"
 				+ "with this event and also any signals to self that are\n"
 				+ "made during the procedure. This method should not\n"

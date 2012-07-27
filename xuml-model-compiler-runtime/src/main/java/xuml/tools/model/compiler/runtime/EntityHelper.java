@@ -6,6 +6,7 @@ import java.util.Stack;
 import javax.persistence.EntityManager;
 
 import xuml.tools.model.compiler.runtime.message.Signal;
+import akka.util.Duration;
 
 import com.google.common.collect.Lists;
 
@@ -20,7 +21,7 @@ public class EntityHelper {
 
 	private final Entity entity;
 	private final Stack<Call> stack = new Stack<Call>();
-	private final List<Signal> signalsToOther = Lists.newArrayList();
+	private final List<SignalWithDelay> signalsToOther = Lists.newArrayList();
 	private final Signaller signaller;
 
 	public EntityHelper(Signaller signaller, Entity entity) {
@@ -36,24 +37,30 @@ public class EntityHelper {
 	}
 
 	public <T extends Entity<T>> void signal(Event<T> event) {
+		signal(event, null);
+	}
+
+	public <T extends Entity<T>> void signal(Event<T> event, Duration delay) {
 		Info info = signaller.getInfo();
 		// do an object equals because RootActor will guarantee that only one
 		// instance is being used to refer to a database entity at any given
 		// time.
 		boolean isSignalToSelf = entity == info.getCurrentEntity();
 		if (isSignalToSelf)
+			// delay is ignored signals to self
 			stack.peek().getEventsToSelf().add(event);
 		else
-			signaller.signal(entity, event);
+			signaller.signal(entity, event, delay);
 	}
 
-	public <T> void queueSignal(Signal<T> signal) {
-		signalsToOther.add(signal);
+	public <T> void queueSignal(Signal<T> signal, Duration delay) {
+		signalsToOther.add(new SignalWithDelay(signal, delay));
 	}
 
 	public void sendQueuedSignals() {
-		for (Signal signal : signalsToOther) {
-			signaller.signal(signal.getEntity(), signal.getEvent());
+		for (SignalWithDelay signal : signalsToOther) {
+			signaller.signal(signal.signal.getEntity(),
+					signal.signal.getEvent(), signal.delay);
 		}
 	}
 
@@ -90,6 +97,17 @@ public class EntityHelper {
 
 	public EntityManager getEntityManager() {
 		return signaller.getInfo().getCurrentEntityManager();
+	}
+
+	private static class SignalWithDelay {
+		Signal signal;
+		Duration delay;
+
+		public SignalWithDelay(Signal signal, Duration delay) {
+			super();
+			this.signal = signal;
+			this.delay = delay;
+		}
 	}
 
 }

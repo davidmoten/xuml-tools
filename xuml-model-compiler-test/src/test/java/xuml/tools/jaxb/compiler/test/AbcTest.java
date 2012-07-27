@@ -2,6 +2,8 @@ package xuml.tools.jaxb.compiler.test;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.concurrent.TimeUnit;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -18,6 +20,7 @@ import abc.A.BehaviourFactory;
 import abc.A.Events.Create;
 import abc.A.Events.StateSignature_DoneSomething;
 import abc.Context;
+import akka.util.Duration;
 
 public class AbcTest {
 
@@ -51,10 +54,12 @@ public class AbcTest {
 				A.Events.Create.builder().aOne("value1.3").aTwo("value2.3")
 						.accountNumber("1234").build());
 
-		// send asynchronous signals to the a2 and a3
+		// send asynchronous signals to a1 and a2
 		a1.signal(new A.Events.SomethingDone(11));
 		a2.signal(new A.Events.SomethingDone(12));
-		a3.signal(new A.Events.SomethingDone(13));
+		// send asynchronous signal to a3 after a tiny delay (5ms)
+		a3.signal(new A.Events.SomethingDone(13),
+				Duration.create(5, TimeUnit.MILLISECONDS));
 
 		// wait a bit for all signals to be processed
 		Thread.sleep(2000);

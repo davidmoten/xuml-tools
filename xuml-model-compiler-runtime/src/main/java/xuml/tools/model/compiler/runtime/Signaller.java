@@ -11,6 +11,7 @@ import xuml.tools.model.compiler.runtime.message.Signal;
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
+import akka.util.Duration;
 
 public class Signaller {
 
@@ -62,19 +63,23 @@ public class Signaller {
 		}
 	}
 
-	public <T extends Entity<T>> void signal(Entity<T> entity, Event<T> event) {
+	public <T extends Entity<T>> void signal(Entity<T> entity, Event<T> event,
+			Duration delay) {
 		@SuppressWarnings("unchecked")
 		long id = persistSignal(entity.getId(), (Class<T>) entity.getClass(),
 				event);
 		Signal<T> signal = new Signal<T>(entity, event, id);
-		signal(signal);
+		signal(signal, delay);
 	}
 
-	private <T> void signal(Signal<T> signal) {
+	private <T> void signal(Signal<T> signal, Duration delay) {
 		if (signalInitiatedFromEvent()) {
-			info.get().getCurrentEntity().helper().queueSignal(signal);
+			info.get().getCurrentEntity().helper().queueSignal(signal, delay);
 		} else {
-			root.tell(signal);
+			if (delay == null)
+				root.tell(signal);
+			else
+				actorSystem.scheduler().scheduleOnce(delay, root, signal);
 		}
 	}
 
@@ -109,7 +114,7 @@ public class Signaller {
 		em.getTransaction().commit();
 		em.close();
 		if (entity != null) {
-			signal(new Signal(entity, event, sig.id));
+			signal(new Signal(entity, event, sig.id), null);
 		} else
 			System.out.println("ENTITY NOT FOUND for entityClassName="
 					+ sig.entityClassName + ",id=" + id);
