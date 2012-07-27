@@ -109,6 +109,7 @@ The java model compiler includes the following features (<img src="https://githu
 * Signals to self buffered and executed within one transaction <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png"> 
 * Asynchronous persistent signalling  <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png"> 
 * Auto-detection of signals to self <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
+* Custom exception handlers <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
 * Uses Akka actors to handle concurrency <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
 * Composite Id toString, equals and hashCode methods <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
 * Entity toString method 
