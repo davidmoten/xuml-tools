@@ -1,5 +1,8 @@
 package xuml.tools.jaxb.compiler.test;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Map;
 
 import javax.persistence.EntityManagerFactory;
@@ -49,11 +52,23 @@ public class PersistenceHelper {
 			// TODO does not work because does not create required schema
 			String dialect = "org.hibernate.dialect.HSQLDialect";
 			String driver = "org.hsqldb.jdbcDriver";
-			String url = "jdbc:hsqldb:mem:" + name
-					+ "-db;INIT=CREATE SCHEMA IF NOT EXISTS " + schema;
+			String url = "jdbc:hsqldb:file:" + name + "-db";
+			createSchema(url, schema);
 			insertDatabaseSpecificProperties(map, dialect, driver, url);
 		}
 		return map;
+	}
+
+	private static void createSchema(String url, String schema) {
+		try {
+			Connection con = DriverManager.getConnection(url);
+			con.createStatement().execute(
+					"create schema " + schema + " authorization sa");
+			con.close();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+
 	}
 
 	private static void insertDatabaseSpecificProperties(
