@@ -698,7 +698,10 @@
 	<complexType name="AssociativeReference">
 		<complexContent>
 			<annotation>
-				<documentation>R152. TReference and PReference via R153 have been collapsed into AssociativeReference. Differentiation is via the Class attribute.</documentation>
+				<documentation>R152. TReference and PReference via R153 have been
+					collapsed into AssociativeReference. Differentiation is via the
+					Class attribute.
+				</documentation>
 			</annotation>
 			<extension base="t:ToOneReference">
 				<attribute name="Class" type="t:Name" use="required" />
@@ -1009,6 +1012,12 @@
 				<sequence>
 					<element name="StateSignature" type="t:StateSignature"
 						minOccurs="0" />
+					<element name="Extension" type="t:Extension" minOccurs="0"
+						maxOccurs="unbounded">
+						<annotation>
+							<documentation>Extension point for miuml tools</documentation>
+						</annotation>
+					</element>
 				</sequence>
 				<attribute name="Snum" type="t:PositiveInteger" use="optional">
 					<annotation>
@@ -1069,6 +1078,12 @@
 						minOccurs="0" maxOccurs="unbounded">
 						<annotation>
 							<documentation>R513</documentation>
+						</annotation>
+					</element>
+					<element name="Extension" type="t:Extension" minOccurs="0"
+						maxOccurs="unbounded">
+						<annotation>
+							<documentation>Extension point for miuml tools</documentation>
 						</annotation>
 					</element>
 				</sequence>

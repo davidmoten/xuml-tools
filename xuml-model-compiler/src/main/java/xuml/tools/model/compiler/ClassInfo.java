@@ -618,7 +618,6 @@ public class ClassInfo extends ClassInfoBase {
 				MyJoinColumn jc = new MyJoinColumn(nameManager.toColumnName(
 						g.getSuperclass(), attributeName),
 						member.getColumnName());
-				System.out.println(jc);
 				joins.add(jc);
 			}
 			return new MyReferenceMember(g.getSuperclass(),
@@ -721,8 +720,8 @@ public class ClassInfo extends ClassInfoBase {
 		passive.setViewedClass(a.getAssociationClass());
 		a2.setPassivePerspective(passive);
 		a2.setRnum(a.getRnum());
-		MyReferenceMember ref = createMyReferenceMemberForDirectAssociation(
-				a2, cls, active, passive);
+		MyReferenceMember ref = createMyReferenceMemberForDirectAssociation(a2,
+				cls, active, passive);
 		return ref;
 	}
 
@@ -764,7 +763,6 @@ public class ClassInfo extends ClassInfoBase {
 					member.getAttributeName());
 			MyJoinColumn jc = new MyJoinColumn(nameManager.toColumnName(
 					cls.getName(), attributeName), member.getColumnName());
-			System.out.println(jc);
 			joins.add(jc);
 		}
 		return joins;

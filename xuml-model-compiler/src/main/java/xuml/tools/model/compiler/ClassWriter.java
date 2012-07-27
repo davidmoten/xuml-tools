@@ -568,7 +568,6 @@ public class ClassWriter {
 		jd(out,
 				"Returns a unique id for this instance as a String. \nUsed for synchronizing access to entities.",
 				"    ");
-		// out.format("    @%s\n", info.addType(Transient.class));
 		out.format("    @%s\n", info.addType(Override.class));
 		out.format("    public String uniqueId(){\n");
 		out.format("        return %s.class.getName() + \":\" + getId();\n",
@@ -1121,7 +1120,6 @@ public class ClassWriter {
 			Set<String> validationMethods) {
 		jd(out, "Calls all validation methods just before updating database.",
 				"    ");
-		out.format("    @%s\n", info.addType(Transient.class));
 		out.format("    @%s\n", info.addType(PreUpdate.class));
 		out.format("    void validateBeforeUpdate(){\n");
 		for (String methodName : validationMethods)
@@ -1131,7 +1129,6 @@ public class ClassWriter {
 		jd(out,
 				"Calls all validation methods just before first persist of this entity.",
 				"    ");
-		out.format("    @%s\n", info.addType(Transient.class));
 		out.format("    @%s\n", info.addType(PrePersist.class));
 		out.format("    void validateBeforePersist(){\n");
 		for (String methodName : validationMethods)
@@ -1255,7 +1252,6 @@ public class ClassWriter {
 		jd(out,
 				"Asychronously queues the given signal against this entity for processing.",
 				"    ");
-		// out.format("    @%s\n", info.addType(Transient.class));
 		out.format("    @%s\n", info.addType(Override.class));
 		out.format("    public %s signal(%s<%s> event){\n",
 				info.getJavaClassSimpleName(), info.addType(Event.class),
@@ -1270,7 +1266,6 @@ public class ClassWriter {
 		jd(out,
 				"Asychronously queues the given signal against this entity for processing\nafter the delay specified. If duration is null then the signal will be sent immediately.",
 				"    ");
-		// out.format("    @%s\n", info.addType(Transient.class));
 		out.format("    @%s\n", info.addType(Override.class));
 		out.format("    public %s signal(%s<%s> event, %s delay){\n",
 				info.getJavaClassSimpleName(), info.addType(Event.class),
@@ -1287,7 +1282,6 @@ public class ClassWriter {
 				+ "made during the procedure. This method should not\n"
 				+ "be called directly except in a unit testing scenario\n"
 				+ "perhaps. Call signal method instead.", "    ");
-		// out.format("    @%s\n", info.addType(Transient.class));
 		out.format("    @%s\n", info.addType(Override.class));
 		out.format("    public %s event(%s<%s> event){\n\n",
 				info.getJavaClassSimpleName(), info.addType(Event.class),
@@ -1316,7 +1310,6 @@ public class ClassWriter {
 			for (MyEvent event : info.getEvents()) {
 
 				jd(out, "Synchronously perform the change.", "    ");
-				// out.format("    @%s\n", info.addType(Transient.class));
 
 				out.format("    private void processEvent(Events.%s event){\n",
 						event.getSimpleClassName());
