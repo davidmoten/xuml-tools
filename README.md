@@ -169,7 +169,7 @@ In terms of the role transactions play in relation to signals:
 1. If the on-entry procedure initiates a *Signal to self* that signal is added to a temporary *Signal to self* queue specific to the current transaction. 
 1. If the on-entry procedure initiates a *Signal to other* that signal is added to a second temporary *Signal to other* queue specific to the current transaction. 
 1. Once the on-entry-procedure completes, the queue of *Signal to self* is processed in arrival order.
-1. The signal is then removed from the signal table (using the unique id assigned at time of . 
+1. The signal is then removed from the signal table (using the unique id assigned at time of sending). 
 1. **Only then is the transaction committed**. 
 1. If and only if the transaction succeeds the queue of *Signal to other* is processed (the signals are sent).
 
