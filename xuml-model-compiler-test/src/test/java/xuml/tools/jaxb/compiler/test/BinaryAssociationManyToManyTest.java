@@ -2,7 +2,6 @@ package xuml.tools.jaxb.compiler.test;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 
 import many_to_many.A;
 import many_to_many.B;
@@ -12,15 +11,12 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import xuml.tools.util.database.DerbyUtil;
-
 public class BinaryAssociationManyToManyTest {
 
 	@BeforeClass
 	public static void setup() {
-		DerbyUtil.disableDerbyLog();
-		EntityManagerFactory emf = Persistence
-				.createEntityManagerFactory("many-to-many");
+		EntityManagerFactory emf = PersistenceHelper.createEmf("many-to-many");
+
 		Context.setEntityManagerFactory(emf);
 	}
 

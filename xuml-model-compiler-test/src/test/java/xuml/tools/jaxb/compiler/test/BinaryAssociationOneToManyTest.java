@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
 
 import one_to_many.A;
@@ -24,8 +23,7 @@ public class BinaryAssociationOneToManyTest {
 	@BeforeClass
 	public static void setup() {
 		DerbyUtil.disableDerbyLog();
-		EntityManagerFactory emf = Persistence
-				.createEntityManagerFactory("one-to-many");
+		EntityManagerFactory emf = PersistenceHelper.createEmf("one-to-many");
 		Context.setEntityManagerFactory(emf);
 	}
 

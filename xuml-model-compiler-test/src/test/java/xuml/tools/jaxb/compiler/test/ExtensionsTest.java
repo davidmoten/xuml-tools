@@ -6,7 +6,6 @@ import static org.junit.Assert.assertTrue;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -21,8 +20,7 @@ public class ExtensionsTest {
 	@BeforeClass
 	public static void setup() {
 		DerbyUtil.disableDerbyLog();
-		EntityManagerFactory emf = Persistence
-				.createEntityManagerFactory("extensions");
+		EntityManagerFactory emf = PersistenceHelper.createEmf("extensions");
 		Context.setEntityManagerFactory(emf);
 	}
 

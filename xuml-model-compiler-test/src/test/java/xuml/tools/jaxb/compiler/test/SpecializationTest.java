@@ -1,7 +1,5 @@
 package xuml.tools.jaxb.compiler.test;
 
-import static javax.persistence.Persistence.createEntityManagerFactory;
-
 import javax.persistence.EntityManager;
 
 import org.junit.AfterClass;
@@ -21,7 +19,8 @@ public class SpecializationTest {
 	@BeforeClass
 	public static void setup() {
 		DerbyUtil.disableDerbyLog();
-		Context.setEntityManagerFactory(createEntityManagerFactory("specialization"));
+		Context.setEntityManagerFactory(PersistenceHelper
+				.createEmf("specialization"));
 	}
 
 	@AfterClass

@@ -2,13 +2,11 @@ package xuml.tools.jaxb.compiler.test;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import xuml.tools.util.database.DerbyUtil;
 import bookstore.Context;
 import bookstore.Order;
 import bookstore.Order.Behaviour;
@@ -17,11 +15,9 @@ public class BookstoreTest {
 
 	@BeforeClass
 	public static void setup() {
-		DerbyUtil.disableDerbyLog();
 
 		// create the entity manager factory
-		EntityManagerFactory emf = Persistence
-				.createEntityManagerFactory("bookstore");
+		EntityManagerFactory emf = PersistenceHelper.createEmf("bookstore");
 
 		// pass the EntityManagerFactory to the generated xuml Context
 		Context.setEntityManagerFactory(emf);

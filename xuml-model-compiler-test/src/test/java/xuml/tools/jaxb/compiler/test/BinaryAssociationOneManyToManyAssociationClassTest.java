@@ -2,7 +2,6 @@ package xuml.tools.jaxb.compiler.test;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.persistence.RollbackException;
 
 import one_many_to_many_association.A;
@@ -15,15 +14,13 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import xuml.tools.model.compiler.runtime.RelationshipNotEstablishedException;
-import xuml.tools.util.database.DerbyUtil;
 
 public class BinaryAssociationOneManyToManyAssociationClassTest {
 
 	@BeforeClass
 	public static void setup() {
-		DerbyUtil.disableDerbyLog();
-		EntityManagerFactory emf = Persistence
-				.createEntityManagerFactory("one-many-to-many-association");
+		EntityManagerFactory emf = PersistenceHelper
+				.createEmf("one-many-to-many-association");
 		Context.setEntityManagerFactory(emf);
 	}
 

@@ -4,13 +4,11 @@ import java.util.Date;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import xuml.tools.util.database.DerbyUtil;
 import all_types.A;
 import all_types.Context;
 
@@ -18,9 +16,7 @@ public class AllTypesTest {
 
 	@BeforeClass
 	public static void setup() {
-		DerbyUtil.disableDerbyLog();
-		EntityManagerFactory emf = Persistence
-				.createEntityManagerFactory("all-types");
+		EntityManagerFactory emf = PersistenceHelper.createEmf("all-types");
 		Context.setEntityManagerFactory(emf);
 	}
 

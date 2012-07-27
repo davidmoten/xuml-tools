@@ -10,6 +10,7 @@
 		<class>abc.C</class>
 		<class>xuml.tools.model.compiler.runtime.QueuedSignal</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
+		<!-- 
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.DerbyDialect" />
 			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
@@ -19,6 +20,7 @@
 			<property name="hibernate.show_sql" value="false" />
 			<property name="hibernate.format_sql" value="true" />
 		</properties>
+		 -->
 	</persistence-unit>
 	<persistence-unit name="one-to-zero-one">
 		<class>one_to_zero_one.A</class>

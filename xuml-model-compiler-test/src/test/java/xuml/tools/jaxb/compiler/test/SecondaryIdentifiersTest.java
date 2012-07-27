@@ -2,7 +2,6 @@ package xuml.tools.jaxb.compiler.test;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.persistence.RollbackException;
 
 import org.hibernate.exception.ConstraintViolationException;
@@ -20,8 +19,8 @@ public class SecondaryIdentifiersTest {
 	@BeforeClass
 	public static void setup() {
 		DerbyUtil.disableDerbyLog();
-		EntityManagerFactory emf = Persistence
-				.createEntityManagerFactory("secondary-identifiers");
+		EntityManagerFactory emf = PersistenceHelper
+				.createEmf("secondary-identifiers");
 		Context.setEntityManagerFactory(emf);
 	}
 

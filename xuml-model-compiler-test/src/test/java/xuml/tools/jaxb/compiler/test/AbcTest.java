@@ -6,7 +6,6 @@ import java.util.concurrent.TimeUnit;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -18,7 +17,6 @@ import xuml.tools.model.compiler.runtime.actor.EntityActor;
 import xuml.tools.model.compiler.runtime.actor.EntityActorListener;
 import xuml.tools.model.compiler.runtime.actor.EntityActorListenerFactory;
 import xuml.tools.model.compiler.runtime.message.Signal;
-import xuml.tools.util.database.DerbyUtil;
 import abc.A;
 import abc.A.AId;
 import abc.A.BehaviourFactory;
@@ -101,13 +99,12 @@ public class AbcTest {
 	 */
 	@BeforeClass
 	public static void setup() {
-		DerbyUtil.disableDerbyLog();
 
 		// create the entity manager factory
-		EntityManagerFactory emf = Persistence
-				.createEntityManagerFactory("abc");
+		EntityManagerFactory emf = PersistenceHelper.createEmf("abc", "abc");
 
 		// Intercept entity processing to log activity
+		// set this before setting EntityManagerFactory
 		Context.setEntityActorListenerFactory(createEntityActorListenerFactory());
 
 		// pass the EntityManagerFactory to the generated xuml Context

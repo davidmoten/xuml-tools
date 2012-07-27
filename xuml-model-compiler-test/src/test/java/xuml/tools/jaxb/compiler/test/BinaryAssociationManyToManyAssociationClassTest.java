@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 
 import many_to_many_association.A;
 import many_to_many_association.B;
@@ -15,15 +14,12 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import xuml.tools.util.database.DerbyUtil;
-
 public class BinaryAssociationManyToManyAssociationClassTest {
 
 	@BeforeClass
 	public static void setup() {
-		DerbyUtil.disableDerbyLog();
-		EntityManagerFactory emf = Persistence
-				.createEntityManagerFactory("many-to-many-association");
+		EntityManagerFactory emf = PersistenceHelper
+				.createEmf("many-to-many-association");
 		Context.setEntityManagerFactory(emf);
 	}
 

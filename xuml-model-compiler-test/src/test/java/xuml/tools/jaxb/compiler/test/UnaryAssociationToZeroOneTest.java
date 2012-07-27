@@ -4,7 +4,6 @@ import static org.junit.Assert.assertNotNull;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -22,7 +21,7 @@ public class UnaryAssociationToZeroOneTest {
 	@BeforeClass
 	public static void setup() {
 		DerbyUtil.disableDerbyLog();
-		emf = Persistence.createEntityManagerFactory("unary-zero-one");
+		emf = PersistenceHelper.createEmf("unary-zero-one");
 		Context.setEntityManagerFactory(emf);
 	}
 
