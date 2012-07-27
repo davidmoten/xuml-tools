@@ -11,6 +11,20 @@
 		<class>xuml.tools.model.compiler.runtime.QueuedSignal</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 	</persistence-unit>
+	<persistence-unit name="abc2">
+		<description>test of object-db with abc</description>
+		<provider>com.objectdb.jpa.Provider</provider>
+		<class>abc.A</class>
+		<class>abc.B</class>
+		<class>abc.C</class>
+		<class>xuml.tools.model.compiler.runtime.QueuedSignal</class>
+		<exclude-unlisted-classes>true</exclude-unlisted-classes>
+		<properties>
+			<property name="javax.persistence.jdbc.url" value="objectdb:target/abc2.odb" />
+			<property name="javax.persistence.jdbc.user" value="admin" />
+			<property name="javax.persistence.jdbc.password" value="admin" />
+		</properties>
+	</persistence-unit>
 	<persistence-unit name="one-to-zero-one">
 		<class>one_to_zero_one.A</class>
 		<class>one_to_zero_one.B</class>

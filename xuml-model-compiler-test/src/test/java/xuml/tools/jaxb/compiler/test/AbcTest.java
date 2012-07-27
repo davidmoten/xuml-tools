@@ -191,7 +191,7 @@ public class AbcTest {
 						// demonstrate/unit test getting access to the current
 						// entity manager when needed
 						Object count = Context.em()
-								.createQuery("select count(*) from B b")
+								.createQuery("select count(b) from B b")
 								.getResultList();
 						System.out.println("counted " + count + " B entities");
 					}

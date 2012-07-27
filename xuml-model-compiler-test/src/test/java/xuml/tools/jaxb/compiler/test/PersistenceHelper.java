@@ -10,7 +10,7 @@ import com.google.common.collect.Maps;
 public class PersistenceHelper {
 
 	public static enum DatabaseType {
-		DERBY, H2, HSQLDB;
+		DERBY, H2, HSQLDB, OBJECT_DB;
 	}
 
 	public static EntityManagerFactory createEmf(String name,
