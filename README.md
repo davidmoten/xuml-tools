@@ -146,6 +146,7 @@ The todo list includes:
 * Event polymorphism
 * Comprehensive unit testing
 * Synchronous signalling (?) 
+* Extensions for binding with existing databases (to override default generated JPA annotations).
 * Integration with other products 
  * GUI generation (OpenXava?)
 
