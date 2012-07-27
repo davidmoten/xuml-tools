@@ -13,13 +13,11 @@ import unary_one_many.A;
 import unary_one_many.A.AId;
 import unary_one_many.Context;
 import xuml.tools.model.compiler.runtime.RelationshipNotEstablishedException;
-import xuml.tools.util.database.DerbyUtil;
 
 public class UnaryAssociationToOneManyTest {
 
 	@BeforeClass
 	public static void setup() {
-		DerbyUtil.disableDerbyLog();
 		EntityManagerFactory emf = PersistenceHelper
 				.createEmf("unary-one-many");
 		Context.setEntityManagerFactory(emf);

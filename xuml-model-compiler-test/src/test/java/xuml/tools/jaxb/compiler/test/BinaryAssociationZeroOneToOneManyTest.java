@@ -10,7 +10,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import xuml.tools.model.compiler.runtime.RelationshipNotEstablishedException;
-import xuml.tools.util.database.DerbyUtil;
 import zero_one_to_one_many.A;
 import zero_one_to_one_many.A.AId;
 import zero_one_to_one_many.B;
@@ -21,7 +20,6 @@ public class BinaryAssociationZeroOneToOneManyTest {
 
 	@BeforeClass
 	public static void setup() {
-		DerbyUtil.disableDerbyLog();
 		EntityManagerFactory emf = PersistenceHelper
 				.createEmf("zero-one-to-one-many");
 		Context.setEntityManagerFactory(emf);

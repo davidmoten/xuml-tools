@@ -12,7 +12,6 @@ import org.junit.Test;
 import unary_zero_one.A;
 import unary_zero_one.A.AId;
 import unary_zero_one.Context;
-import xuml.tools.util.database.DerbyUtil;
 
 public class UnaryAssociationToZeroOneTest {
 
@@ -20,7 +19,6 @@ public class UnaryAssociationToZeroOneTest {
 
 	@BeforeClass
 	public static void setup() {
-		DerbyUtil.disableDerbyLog();
 		emf = PersistenceHelper.createEmf("unary-zero-one");
 		Context.setEntityManagerFactory(emf);
 	}

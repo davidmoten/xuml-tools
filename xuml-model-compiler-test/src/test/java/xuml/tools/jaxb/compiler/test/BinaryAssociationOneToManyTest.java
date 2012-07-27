@@ -16,13 +16,10 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import xuml.tools.util.database.DerbyUtil;
-
 public class BinaryAssociationOneToManyTest {
 
 	@BeforeClass
 	public static void setup() {
-		DerbyUtil.disableDerbyLog();
 		EntityManagerFactory emf = PersistenceHelper.createEmf("one-to-many");
 		Context.setEntityManagerFactory(emf);
 	}

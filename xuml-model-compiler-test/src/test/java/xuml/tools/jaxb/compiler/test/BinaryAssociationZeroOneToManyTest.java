@@ -9,7 +9,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import xuml.tools.util.database.DerbyUtil;
 import zero_one_to_many.A;
 import zero_one_to_many.A.AId;
 import zero_one_to_many.B;
@@ -20,7 +19,6 @@ public class BinaryAssociationZeroOneToManyTest {
 
 	@BeforeClass
 	public static void setup() {
-		DerbyUtil.disableDerbyLog();
 		EntityManagerFactory emf = PersistenceHelper
 				.createEmf("zero-one-to-many");
 		Context.setEntityManagerFactory(emf);

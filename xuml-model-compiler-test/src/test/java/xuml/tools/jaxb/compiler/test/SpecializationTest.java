@@ -12,13 +12,11 @@ import specialization.C;
 import specialization.Context;
 import xuml.tools.model.compiler.runtime.RelationshipNotEstablishedException;
 import xuml.tools.model.compiler.runtime.TooManySpecializationsException;
-import xuml.tools.util.database.DerbyUtil;
 
 public class SpecializationTest {
 
 	@BeforeClass
 	public static void setup() {
-		DerbyUtil.disableDerbyLog();
 		Context.setEntityManagerFactory(PersistenceHelper
 				.createEmf("specialization"));
 	}

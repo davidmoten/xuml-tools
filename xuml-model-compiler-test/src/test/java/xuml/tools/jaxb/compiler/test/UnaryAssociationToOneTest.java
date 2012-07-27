@@ -13,13 +13,11 @@ import org.junit.Test;
 import unary_one.A;
 import unary_one.A.AId;
 import unary_one.Context;
-import xuml.tools.util.database.DerbyUtil;
 
 public class UnaryAssociationToOneTest {
 
 	@BeforeClass
 	public static void setup() {
-		DerbyUtil.disableDerbyLog();
 		EntityManagerFactory emf = PersistenceHelper.createEmf("unary-one");
 		Context.setEntityManagerFactory(emf);
 	}

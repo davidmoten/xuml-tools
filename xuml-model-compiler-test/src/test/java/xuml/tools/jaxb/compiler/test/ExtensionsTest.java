@@ -11,7 +11,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import xuml.tools.util.database.DerbyUtil;
 import extensions.A;
 import extensions.Context;
 
@@ -19,7 +18,6 @@ public class ExtensionsTest {
 
 	@BeforeClass
 	public static void setup() {
-		DerbyUtil.disableDerbyLog();
 		EntityManagerFactory emf = PersistenceHelper.createEmf("extensions");
 		Context.setEntityManagerFactory(emf);
 	}

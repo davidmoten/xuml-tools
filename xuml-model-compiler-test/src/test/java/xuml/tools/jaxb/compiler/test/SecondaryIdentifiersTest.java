@@ -12,13 +12,11 @@ import org.junit.Test;
 
 import secondary_identifiers.A;
 import secondary_identifiers.Context;
-import xuml.tools.util.database.DerbyUtil;
 
 public class SecondaryIdentifiersTest {
 
 	@BeforeClass
 	public static void setup() {
-		DerbyUtil.disableDerbyLog();
 		EntityManagerFactory emf = PersistenceHelper
 				.createEmf("secondary-identifiers");
 		Context.setEntityManagerFactory(emf);

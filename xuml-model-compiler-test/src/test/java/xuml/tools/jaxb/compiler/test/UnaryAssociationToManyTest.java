@@ -18,7 +18,6 @@ public class UnaryAssociationToManyTest {
 
 	@BeforeClass
 	public static void setup() {
-		DerbyUtil.disableDerbyLog();
 		EntityManagerFactory emf = PersistenceHelper.createEmf("unary-many");
 		Context.setEntityManagerFactory(emf);
 	}

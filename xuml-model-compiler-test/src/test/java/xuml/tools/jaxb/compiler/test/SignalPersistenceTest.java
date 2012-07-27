@@ -14,13 +14,11 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import xuml.tools.model.compiler.runtime.Util;
-import xuml.tools.util.database.DerbyUtil;
 
 public class SignalPersistenceTest {
 
 	@BeforeClass
 	public static void setup() {
-		DerbyUtil.disableDerbyLog();
 		EntityManagerFactory emf = PersistenceHelper
 				.createEmf("one-to-zero-one");
 		Context.setEntityManagerFactory(emf);
