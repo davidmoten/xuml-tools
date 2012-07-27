@@ -129,12 +129,12 @@ The java model compiler includes the following features (<img src="https://githu
  * DefaultValue
 * Database tests
  * Derby <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
+ * H2 <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
+ * HSQLDB
  * Postgres
  * MySQL
  * Oracle
- * H2 <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
  * DB2
- * HSQLDB
  * SQL Server
 * JPA Provider tests
  * Hibernate <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
