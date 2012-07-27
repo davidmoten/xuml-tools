@@ -174,7 +174,7 @@ In terms of the role transactions play in relation to signals:
 1. If and only if the transaction succeeds the queue of *Signal to other* is processed (the signals are sent).
 
 ### Exception handling ###
-The system should be developed and tested with the aim of no uncaught exceptions being thrown. However, unexpected exceptions need to be dealt with properly when they occur. For this purpose the developer may implement an EntityActorListenerFactory to perform retries, log/notify errors, or even halt processing on one or all entities.
+The system should be developed and tested with the aim of no uncaught exceptions being thrown. However, unexpected exceptions need to be dealt with properly when they occur. For this purpose the developer may implement an [EntityActorListener](https://github.com/davidmoten/xuml-tools/blob/master/xuml-model-compiler-runtime/src/main/java/xuml/tools/model/compiler/runtime/actor/EntityActorListener.java) to perform retries, log/notify errors, or even halt processing on one or all entities.
 
 Web Class Diagram Viewer
 ------------------------
