@@ -21,6 +21,7 @@ public class RootActor extends UntypedActor {
 	private EntityManagerFactory emf;
 	private final HashMap<String, ActorRef> actors = Maps.newHashMap();
 	private final LoggingAdapter log;
+	private EntityActorListenerFactory listenerFactory;
 
 	public RootActor() {
 		log = Logging.getLogger(getContext().system(), this);
@@ -31,6 +32,8 @@ public class RootActor extends UntypedActor {
 		log.info("received message " + message.getClass().getName());
 		if (message instanceof EntityManagerFactory)
 			handleMessage((EntityManagerFactory) message);
+		else if (message instanceof EntityActorListenerFactory)
+			listenerFactory = (EntityActorListenerFactory) message;
 		else if (message instanceof Signal)
 			handleMessage((Signal<?>) message);
 		else if (message instanceof CloseEntityActor)
@@ -62,6 +65,8 @@ public class RootActor extends UntypedActor {
 			ActorRef actor = createActor();
 			actors.put(key, actor);
 			actor.tell(emf, getSelf());
+			if (listenerFactory != null)
+				actor.tell(listenerFactory.create(key), getSelf());
 		}
 		return actors.get(key);
 	}

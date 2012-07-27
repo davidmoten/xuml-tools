@@ -18,6 +18,8 @@ public class EntityActor extends UntypedActor {
 	private EntityManagerFactory emf;
 	private boolean closed = false;
 	private final LoggingAdapter log;
+	private EntityActorListener listener = EntityActorListenerDoesNothing
+			.getInstance();
 
 	public EntityActor() {
 		log = Logging.getLogger(getContext().system(), this);
@@ -28,6 +30,8 @@ public class EntityActor extends UntypedActor {
 		log.info("received message " + message.getClass().getName());
 		if (message instanceof EntityManagerFactory)
 			handleMessage((EntityManagerFactory) message);
+		else if (message instanceof EntityActorListener)
+			listener = (EntityActorListener) message;
 		else if (message instanceof Signal) {
 			handleMessage((Signal<?>) message);
 		} else if (message instanceof StopEntityActor) {
@@ -49,6 +53,7 @@ public class EntityActor extends UntypedActor {
 			EntityTransaction tx = null;
 			Entity<?> entity = null;
 			try {
+				listener.beforeProcessing(entity, signal);
 				em = emf.createEntityManager();
 				tx = em.getTransaction();
 				tx.begin();
@@ -69,6 +74,7 @@ public class EntityActor extends UntypedActor {
 						.setParameter("id", signal.getId()).executeUpdate();
 				tx.commit();
 				log.info("commited");
+				listener.afterProcessing(entity, signal);
 				em.close();
 				// only after successful commit do we send the signals to other
 				// entities made during onEntry procedure.
@@ -79,10 +85,9 @@ public class EntityActor extends UntypedActor {
 					tx.rollback();
 				if (em != null && em.isOpen())
 					em.close();
-				// TODO apply FailureStrategy
+				listener.failure(entity, signal, e);
 			} finally {
 				getSender().tell(new CloseEntityActor(signal.getEntity()));
-
 			}
 		}
 	}
