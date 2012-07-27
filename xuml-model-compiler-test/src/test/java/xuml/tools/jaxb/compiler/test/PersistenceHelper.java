@@ -20,7 +20,7 @@ public class PersistenceHelper {
 	}
 
 	public static EntityManagerFactory createEmf(String name, String schema) {
-		return createEmf(name, schema, DatabaseType.HSQLDB);
+		return createEmf(name, schema, DatabaseType.H2);
 	}
 
 	public static EntityManagerFactory createEmf(String name) {

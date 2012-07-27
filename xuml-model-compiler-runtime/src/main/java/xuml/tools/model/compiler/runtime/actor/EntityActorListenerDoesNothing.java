@@ -1,6 +1,5 @@
 package xuml.tools.model.compiler.runtime.actor;
 
-import xuml.tools.model.compiler.runtime.Entity;
 import xuml.tools.model.compiler.runtime.message.Signal;
 
 public class EntityActorListenerDoesNothing implements EntityActorListener {
@@ -14,20 +13,17 @@ public class EntityActorListenerDoesNothing implements EntityActorListener {
 	}
 
 	@Override
-	public void beforeProcessing(Entity<?> entity, Signal<?> signal,
-			EntityActor actor) {
+	public void beforeProcessing(Signal<?> signal, EntityActor actor) {
 		// does nothing
 	}
 
 	@Override
-	public void afterProcessing(Entity<?> entity, Signal<?> signal,
-			EntityActor actor) {
+	public void afterProcessing(Signal<?> signal, EntityActor actor) {
 		// does nothing
 	}
 
 	@Override
-	public void failure(Entity<?> entity, Signal<?> signal, Exception ex,
-			EntityActor actor) {
+	public void failure(Signal<?> signal, Exception ex, EntityActor actor) {
 		// does nothing
 	}
 

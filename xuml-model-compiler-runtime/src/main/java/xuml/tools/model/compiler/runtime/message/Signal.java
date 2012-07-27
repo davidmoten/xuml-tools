@@ -27,4 +27,17 @@ public class Signal<T> {
 		return event;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Signal [entity=");
+		builder.append(entity.uniqueId());
+		builder.append(", event=");
+		builder.append(event);
+		builder.append(", id=");
+		builder.append(id);
+		builder.append("]");
+		return builder.toString();
+	}
+
 }

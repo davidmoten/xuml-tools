@@ -12,7 +12,6 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import xuml.tools.model.compiler.runtime.Entity;
 import xuml.tools.model.compiler.runtime.actor.EntityActor;
 import xuml.tools.model.compiler.runtime.actor.EntityActorListener;
 import xuml.tools.model.compiler.runtime.actor.EntityActorListenerFactory;
@@ -225,16 +224,14 @@ public class AbcTest {
 			private int processed = 0;
 
 			@Override
-			public void beforeProcessing(Entity<?> entity, Signal<?> signal,
-					EntityActor actor) {
+			public void beforeProcessing(Signal<?> signal, EntityActor actor) {
 				LoggingAdapter log = Logging.getLogger(actor.getContext()
 						.system(), this);
 				log.info("before processing");
 			}
 
 			@Override
-			public void afterProcessing(Entity<?> entity, Signal<?> signal,
-					EntityActor actor) {
+			public void afterProcessing(Signal<?> signal, EntityActor actor) {
 				// count the number processed and log it
 				processed++;
 				LoggingAdapter log = Logging.getLogger(actor.getContext()
@@ -243,8 +240,7 @@ public class AbcTest {
 			}
 
 			@Override
-			public void failure(Entity<?> entity, Signal<?> signal,
-					Exception e, EntityActor actor) {
+			public void failure(Signal<?> signal, Exception e, EntityActor actor) {
 				LoggingAdapter log = Logging.getLogger(actor.getContext()
 						.system(), this);
 				log.error(e, e.getMessage());
