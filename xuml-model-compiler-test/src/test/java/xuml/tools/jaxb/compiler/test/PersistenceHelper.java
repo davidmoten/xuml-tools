@@ -49,10 +49,9 @@ public class PersistenceHelper {
 					+ "-db;INIT=CREATE SCHEMA IF NOT EXISTS " + schema;
 			insertDatabaseSpecificProperties(map, dialect, driver, url);
 		} else if (type == DatabaseType.HSQLDB) {
-			// TODO does not work because does not create required schema
 			String dialect = "org.hibernate.dialect.HSQLDialect";
 			String driver = "org.hsqldb.jdbcDriver";
-			String url = "jdbc:hsqldb:file:" + name + "-db";
+			String url = "jdbc:hsqldb:file:target/" + name + "-db";
 			createSchema(url, schema);
 			insertDatabaseSpecificProperties(map, dialect, driver, url);
 		}
