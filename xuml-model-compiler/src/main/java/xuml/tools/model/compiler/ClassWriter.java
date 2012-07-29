@@ -63,6 +63,9 @@ import xuml.tools.model.compiler.runtime.RelationshipNotEstablishedException;
 import xuml.tools.model.compiler.runtime.Signaller;
 import xuml.tools.model.compiler.runtime.TooManySpecializationsException;
 import xuml.tools.model.compiler.runtime.ValidationException;
+import xuml.tools.model.compiler.runtime.query.Field;
+import xuml.tools.model.compiler.runtime.query.NumericExpressionField;
+import xuml.tools.model.compiler.runtime.query.StringExpressionField;
 import akka.util.Duration;
 
 import com.google.common.base.Objects;
@@ -113,6 +116,8 @@ public class ClassWriter {
 		writeBehaviourInterface(out, info);
 		writeBehaviourFactoryInterface(out, info);
 		writeStaticFinderMethods(out, info);
+
+		writeQueryMethods(out, info);
 
 		writeClassClose(out);
 		ByteArrayOutputStream headerBytes = new ByteArrayOutputStream();
@@ -1708,4 +1713,28 @@ public class ClassWriter {
 		return getDelimited(items, ",", "\"", "\"");
 	}
 
+	private void writeQueryMethods(PrintStream out, ClassInfo info) {
+
+		out.format("    private static class Fields {\n");
+		for (MyIndependentAttribute member : info
+				.getNonIdIndependentAttributeMembers()) {
+			MyType type = member.getType().getMyType();
+			Class<?> c;
+			if (type == MyType.REAL || type == MyType.INTEGER) {
+				out.format(
+						"        static final %1$s<%3$s> %2$s = new %1$s<%3$s>(new %4$s<%3$s>(\"%2$s\",%3$s.class),%3$s.class);\n",
+						info.addType(NumericExpressionField.class),
+						member.getFieldName(), info.getJavaClassSimpleName(),
+						info.addType(Field.class));
+			} else {
+				out.format(
+						"        static final %1$s<%3$s> %2$s = new %1$s<%3$s>(new %4$s<%3$s>(\"%2$s\",%3$s.class),%3$s.class);\n",
+						info.addType(StringExpressionField.class),
+						member.getFieldName(), info.getJavaClassSimpleName(),
+						info.addType(Field.class));
+			}
+		}
+		out.format("    }\n\n");
+
+	}
 }

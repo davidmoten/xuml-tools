@@ -22,4 +22,8 @@ public class StringComparison<T extends Entity<T>> extends BooleanExpression<T> 
 	public StringExpression<T> getExpression2() {
 		return e2;
 	}
+
+	public StringComparisonOperator getOp() {
+		return op;
+	}
 }

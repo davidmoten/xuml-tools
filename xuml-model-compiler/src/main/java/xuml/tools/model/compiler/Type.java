@@ -30,6 +30,10 @@ public class Type {
 		this(cls.getName(), null, false);
 	}
 
+	public Type(Class<?> cls, Type... generic) {
+		this(cls.getName(), Arrays.asList(generic), false);
+	}
+
 	public Type(String base) {
 		this(base, null, false);
 	}

@@ -1,19 +1,16 @@
 package xuml.tools.model.compiler.runtime.query;
 
-import java.math.BigDecimal;
-
 import xuml.tools.model.compiler.runtime.Entity;
 
-public class NumericConstant<T extends Entity<T>> implements
-		NumericExpression<T> {
+public class NumericConstant<T extends Entity<T>> extends NumericExpression<T> {
 
-	private final BigDecimal value;
+	private final Number value;
 
-	public NumericConstant(BigDecimal value) {
+	public NumericConstant(Number value) {
 		this.value = value;
 	}
 
-	public BigDecimal getValue() {
+	public Number getValue() {
 		return value;
 	}
 
