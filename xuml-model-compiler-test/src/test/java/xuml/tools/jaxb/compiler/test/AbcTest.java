@@ -110,7 +110,7 @@ public class AbcTest {
 		Context.setEntityManagerFactory(emf);
 
 		// set the behaviour factory for the class A
-		A.setBehaviourFactory(createBehaviourFactory());
+		A.setBehaviourFactory(createBehaviourFactoryForA());
 	}
 
 	/**
@@ -167,7 +167,7 @@ public class AbcTest {
 	 * 
 	 * @return
 	 */
-	private static BehaviourFactory createBehaviourFactory() {
+	private static BehaviourFactory createBehaviourFactoryForA() {
 		return new A.BehaviourFactory() {
 			@Override
 			public A.Behaviour create(final A entity) {
