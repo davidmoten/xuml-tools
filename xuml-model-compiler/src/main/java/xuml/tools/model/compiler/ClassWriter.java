@@ -1715,23 +1715,23 @@ public class ClassWriter {
 
 	private void writeQueryMethods(PrintStream out, ClassInfo info) {
 
-		out.format("    private static class Fields {\n");
+		out.format("    public static class Field {\n");
 		for (MyIndependentAttribute member : info
 				.getNonIdIndependentAttributeMembers()) {
 			MyType type = member.getType().getMyType();
 			Class<?> c;
 			if (type == MyType.REAL || type == MyType.INTEGER) {
 				out.format(
-						"        static final %1$s<%3$s> %2$s = new %1$s<%3$s>(new %4$s<%3$s>(\"%2$s\",%3$s.class),%3$s.class);\n",
+						"        public static final %1$s<%3$s> %2$s = new %1$s<%3$s>(\n            new %4$s(\"%2$s\"));\n",
 						info.addType(NumericExpressionField.class),
 						member.getFieldName(), info.getJavaClassSimpleName(),
-						info.addType(Field.class));
+						Field.class.getName());
 			} else {
 				out.format(
-						"        static final %1$s<%3$s> %2$s = new %1$s<%3$s>(new %4$s<%3$s>(\"%2$s\",%3$s.class),%3$s.class);\n",
+						"        public static final %1$s<%3$s> %2$s = new %1$s<%3$s>(\n            new %4$s(\"%2$s\"));\n",
 						info.addType(StringExpressionField.class),
 						member.getFieldName(), info.getJavaClassSimpleName(),
-						info.addType(Field.class));
+						Field.class.getName());
 			}
 		}
 		out.format("    }\n\n");
