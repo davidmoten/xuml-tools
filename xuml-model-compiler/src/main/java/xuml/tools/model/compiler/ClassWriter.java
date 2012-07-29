@@ -1737,7 +1737,8 @@ public class ClassWriter {
 				info.getJavaClassSimpleName(),
 				info.addType(BooleanExpression.class),
 				info.getJavaClassSimpleName());
-		out.format("        return new %s<%s>(where);\n",
+		out.format(
+				"        return new %s<%s>(where).info(signaller.getInfo());\n",
 				info.addType(SelectBuilder.class),
 				info.getJavaClassSimpleName());
 		out.format("    }\n\n");

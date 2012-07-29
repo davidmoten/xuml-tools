@@ -92,7 +92,7 @@ public class AbcTest {
 		assertEquals("13", a3.load(em).getAThree());
 
 		// demonstrate select statements
-		List<A> list = A.select(aOne.eq("value1.1")).many();
+		List<A> list = A.select(aOne.eq("value1.1")).many(em);
 		// TODO enable assert
 		// assertEquals(1,list.size());
 
