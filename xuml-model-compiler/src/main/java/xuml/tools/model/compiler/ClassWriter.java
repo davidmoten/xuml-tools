@@ -63,8 +63,10 @@ import xuml.tools.model.compiler.runtime.RelationshipNotEstablishedException;
 import xuml.tools.model.compiler.runtime.Signaller;
 import xuml.tools.model.compiler.runtime.TooManySpecializationsException;
 import xuml.tools.model.compiler.runtime.ValidationException;
+import xuml.tools.model.compiler.runtime.query.BooleanExpression;
 import xuml.tools.model.compiler.runtime.query.Field;
 import xuml.tools.model.compiler.runtime.query.NumericExpressionField;
+import xuml.tools.model.compiler.runtime.query.SelectBuilder;
 import xuml.tools.model.compiler.runtime.query.StringExpressionField;
 import akka.util.Duration;
 
@@ -1719,22 +1721,44 @@ public class ClassWriter {
 		for (MyIndependentAttribute member : info
 				.getNonIdIndependentAttributeMembers()) {
 			MyType type = member.getType().getMyType();
-			Class<?> c;
-			if (type == MyType.REAL || type == MyType.INTEGER) {
-				out.format(
-						"        public static final %1$s<%3$s> %2$s = new %1$s<%3$s>(\n            new %4$s(\"%2$s\"));\n",
-						info.addType(NumericExpressionField.class),
-						member.getFieldName(), info.getJavaClassSimpleName(),
-						Field.class.getName());
-			} else {
-				out.format(
-						"        public static final %1$s<%3$s> %2$s = new %1$s<%3$s>(\n            new %4$s(\"%2$s\"));\n",
-						info.addType(StringExpressionField.class),
-						member.getFieldName(), info.getJavaClassSimpleName(),
-						Field.class.getName());
-			}
+			String fieldName = member.getFieldName();
+			String fieldNameInQuery = fieldName;
+			writeQueryField(out, info, type, fieldName, fieldNameInQuery);
+		}
+		for (MyIdAttribute member : info.getPrimaryIdAttributeMembers()) {
+			MyType type = member.getType().getMyType();
+			String fieldName = member.getFieldName();
+			String fieldNameInQuery = "id." + fieldName;
+			writeQueryField(out, info, type, fieldName, fieldNameInQuery);
 		}
 		out.format("    }\n\n");
+		out.format("    public static %s<%s> select(%s<%s> where) {\n",
+				info.addType(SelectBuilder.class),
+				info.getJavaClassSimpleName(),
+				info.addType(BooleanExpression.class),
+				info.getJavaClassSimpleName());
+		out.format("        return new %s<%s>(where);\n",
+				info.addType(SelectBuilder.class),
+				info.getJavaClassSimpleName());
+		out.format("    }\n\n");
 
+	}
+
+	private void writeQueryField(PrintStream out, ClassInfo info, MyType type,
+			String fieldName, String fieldNameInQuery) {
+		Class<?> c;
+		if (type == MyType.REAL || type == MyType.INTEGER) {
+			out.format(
+					"        public static final %1$s<%3$s> %2$s = new %1$s<%3$s>(\n            new %4$s(\"%5$s\"));\n",
+					info.addType(NumericExpressionField.class), fieldName,
+					info.getJavaClassSimpleName(), Field.class.getName(),
+					fieldNameInQuery);
+		} else {
+			out.format(
+					"        public static final %1$s<%3$s> %2$s = new %1$s<%3$s>(\n            new %4$s(\"%5$s\"));\n",
+					info.addType(StringExpressionField.class), fieldName,
+					info.getJavaClassSimpleName(), Field.class.getName(),
+					fieldNameInQuery);
+		}
 	}
 }
