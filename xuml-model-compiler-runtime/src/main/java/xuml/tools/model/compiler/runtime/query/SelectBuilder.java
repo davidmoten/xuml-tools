@@ -14,6 +14,7 @@ public class SelectBuilder<T extends Entity<T>> {
 
 	private final BooleanExpression<T> e;
 	private Info info;
+	private Class<T> entityClass;
 
 	public SelectBuilder(BooleanExpression<T> e) {
 		this.e = e;
@@ -21,6 +22,11 @@ public class SelectBuilder<T extends Entity<T>> {
 
 	public SelectBuilder<T> select(BooleanExpression<T> exp) {
 		return new SelectBuilder<T>(e.and(exp));
+	}
+
+	public SelectBuilder<T> entityClass(Class<T> cls) {
+		entityClass = cls;
+		return this;
 	}
 
 	public SelectBuilder<T> info(Info info) {
