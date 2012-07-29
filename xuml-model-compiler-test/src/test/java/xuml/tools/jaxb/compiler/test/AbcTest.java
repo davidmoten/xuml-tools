@@ -202,6 +202,10 @@ public class AbcTest {
 								.createQuery("select count(b) from B b")
 								.getResultList();
 						System.out.println("counted " + count + " B entities");
+
+						// also demonstrate select many using a SelectBuilder
+						List<A> list = A.select(aOne.eq("value1.1")).many();
+						System.out.println("list size = " + list.size());
 					}
 				};
 			}
