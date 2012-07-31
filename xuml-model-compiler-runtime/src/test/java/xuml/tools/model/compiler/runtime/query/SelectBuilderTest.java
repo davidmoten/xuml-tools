@@ -49,6 +49,41 @@ public class SelectBuilderTest {
 				.getClause());
 	}
 
+	@Test
+	public void testClauseGenerationPlus() {
+		assertEquals("((field+field)<=3)", builder(f.plus(f).lte(3))
+				.getClause());
+	}
+
+	@Test
+	public void testClauseGenerationMinus() {
+		assertEquals("((field-field)<=3)", builder(f.minus(f).lte(3))
+				.getClause());
+	}
+
+	@Test
+	public void testClauseGenerationTimes() {
+		assertEquals("((field*field)<=3)", builder(f.times(f).lte(3))
+				.getClause());
+	}
+
+	@Test
+	public void testClauseGenerationDivide() {
+		assertEquals("((field/field)<=3)", builder(f.divide(f).lte(3))
+				.getClause());
+	}
+
+	@Test
+	public void testSqlGivenNonEmptyClause() {
+		assertEquals("select e from Ent e where (field=1)",
+				SelectBuilder.getSql(Ent.class, "(field=1)"));
+	}
+
+	@Test
+	public void testSqlGivenEmptyClause() {
+		assertEquals("select e from Ent e", SelectBuilder.getSql(Ent.class, ""));
+	}
+
 	/*********************/
 	/** Utility Methods **/
 	/*********************/

@@ -11,7 +11,6 @@ import xuml.tools.model.compiler.runtime.Info;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
 
 public class SelectBuilder<T extends Entity<T>> {
 
@@ -58,8 +57,19 @@ public class SelectBuilder<T extends Entity<T>> {
 		Preconditions.checkNotNull(em, "entity manager is null!");
 		Preconditions.checkNotNull(e, "BooleanExpression cannot be null");
 		String clause = getClause();
-		// TODO use clause
-		return Lists.newArrayList();
+		String sql = getSql(entityClass, clause);
+		return em.createQuery(sql, entityClass).getResultList();
+	}
+
+	@VisibleForTesting
+	static String getSql(Class<?> entityClass, String clause) {
+		String prefix = "select e from " + entityClass.getSimpleName() + " e";
+		String sql;
+		if (clause.length() > 0)
+			sql = prefix + " where " + clause;
+		else
+			sql = prefix;
+		return sql;
 	}
 
 	@VisibleForTesting
