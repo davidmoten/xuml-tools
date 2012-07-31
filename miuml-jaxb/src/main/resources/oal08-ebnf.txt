@@ -1,0 +1,120 @@
+action ::= block EOF ;
+block ::= ( statement )* ;
+statement ::= ( implicit_ib_transform_statement | function_statement | implicit_assignment_statement |
+implicit_invocation_statement | assignment_statement | control_statement | break_statement |
+bridge_statement | send_statement | continue_statement | create_object_statement |
+create_event_statement | delete_statement | for_statement | generate_statement | if_statement |
+relate_statement | return_statement | select_statement | transform_statement | while_statement |
+unrelate_statement | debug_statement | empty_statement ) Semicolon ;
+assignment_statement ::= ASSIGN assignment_expr ;
+break_statement ::= BREAK ;
+bridge_statement ::= BRIDGE ( ( ( member_access | param_data_access ) EQUAL bridge_invocation ) |
+bridge_invocation ) ;
+send_statement ::= SEND ( ( ( member_access | param_data_access ) EQUAL
+message_invocation )
+| message_invocation ) ;
+continue_statement ::= CONTINUE ;
+create_event_statement ::= CREATE EVENT INSTANCE local_variable OF event_spec ;
+create_object_statement ::= CREATE OBJECT INSTANCE ( ( local_variable OF )=> local_variable )? OF
+object_keyletters ;
+delete_statement ::= DELETE OBJECT INSTANCE inst_ref_var ;
+empty_statement ::= ;
+for_statement ::= FOR EACH local_variable IN inst_ref_set_var block END FOR ;
+generate_statement ::= GENERATE ( event_spec | member_access ) ;
+if_statement ::= IF expr block ( ( ELIF expr block )+ )? ( ELSE block )? END IF ;
+implicit_assignment_statement ::= assignment_expr ;
+implicit_invocation_statement ::= invocation ;
+implicit_ib_transform_statement ::= transform_ib_invocation ;
+relate_statement ::= RELATE inst_ref_var TO inst_ref_var ACROSS relationship ( DOT phrase )?
+( USING assoc_obj_inst_ref_var )? ;
+return_statement ::= RETURN ( expr )? ;
+select_statement ::= SELECT ( ONE local_variable object_spec | ANY local_variable object_spec | MANY
+local_variable object_spec ) ;
+transform_statement ::= TRANSFORM ( ( ( member_access | param_data_access ) EQUAL
+transform_invocation ) | transform_invocation ) ;
+function_statement ::= DOUBLECOLON function_invocation ;
+unrelate_statement ::= UNRELATE inst_ref_var FROM inst_ref_var ACROSS relationship ( DOT
+phrase )? ( USING assoc_obj_inst_ref_var )? ;
+while_statement ::= WHILE expr block END WHILE ;
+assignment_expr ::= ( member_access EQUAL expr |( PARAM DOT )=> param_data_access EQUAL
+expr ) ;
+bridge_invocation ::= ee_keyletters DOUBLECOLON bridge_function LPAREN ( invocation_parameters )?
+RPAREN ;
+message_invocation ::= interface_or_port_name DOUBLECOLON message_name LPAREN
+( invocation_parameters )? RPAREN ( TO ( rval ) )? ;
+invocation ::= identifier DOUBLECOLON invocation_function LPAREN ( invocation_parameters )?
+RPAREN ;
+bridge_expr ::= BRIDGE bridge_invocation ;
+invocation_expr ::= invocation ;
+enumerator_access ::= enum_data_type DOUBLECOLON enumerator ;
+event_spec ::= event_label ( TIMES )? ( COLON event_meaning )? ( LPAREN ( supp_data )? RPAREN )?
+TO ( ( ( object_keyletters CLASS )=> object_keyletters CLASS | object_keyletters CREATOR ) |
+( inst_ref_var_or_ee_keyletters ) ) ;
+invocation_parameters ::= data_item COLON expr ( COMMA data_item COLON expr )* ;
+inst_ref_var_or_ee_keyletters ::= ( local_variable | GENERAL_NAME | kw_as_id2 ) ;
+interface_or_port_name ::= general_name ;
+message_name ::= general_name ;
+instance_chain ::= ( ARROW object_keyletters LSQBR relationship ( DOT phrase )? RSQBR )+ ;
+object_spec ::= ( RELATED BY local_variable instance_chain ( where_spec )? | FROM INSTANCES OF
+object_keyletters ( where_spec )? ) ;
+supp_data ::= supp_data_item COLON expr ( COMMA supp_data_item COLON expr )* ;
+function_invocation ::= function_function LPAREN ( invocation_parameters )? RPAREN ;
+transform_ib_invocation ::= inst_ref_var DOT transformer_function LPAREN ( invocation_parameters )?
+RPAREN ;
+transform_invocation ::= object_keyletters DOUBLECOLON transformer_function LPAREN
+( invocation_parameters )? RPAREN ;
+where_spec ::= WHERE expr ;
+assoc_obj_inst_ref_var ::= inst_ref_var ;
+bridge_function ::= function_name ;
+invocation_function ::= function_name ;
+data_item ::= data_item_name ;
+data_item_name ::= general_name ;
+enum_data_type ::= general_name ;
+enumerator ::= general_name ;
+keyletters ::= general_name ;
+ee_keyletters ::= keyletters ;
+event_label ::= general_name ;
+event_meaning ::= ( phrase ) ;
+general_name ::= ( limited_name | GENERAL_NAME | kw_as_id1 | kw_as_id2 | kw_as_id3 ) ;
+svc_general_name ::= ( limited_name | GENERAL_NAME | kw_as_id1 | kw_as_id2 | kw_as_id3 |
+kw_as_id4 ) ;
+limited_name ::= ID | RELID ;
+inst_ref_set_var ::= local_variable ;
+inst_ref_var ::= local_variable ;
+local_variable ::= root_element_label ;
+root_element_label ::= ( SELECTED | SELF | limited_name | kw_as_id1 ) ;
+element_label ::= general_name ;
+function_name ::= general_name ;
+svc_function_name ::= svc_general_name ;
+identifier ::= general_name ;
+object_keyletters ::= keyletters ;
+phrase ::= ( TICKED_PHRASE | svc_general_name ) ;
+relationship ::= RELID ;
+supp_data_item ::= data_item_name ;
+function_function ::= svc_function_name ;
+transformer_function ::= function_name ;
+expr ::= sub_expr ;
+sub_expr ::= conjunction ( OR conjunction )* ;
+conjunction ::= relational_expr ( AND relational_expr )* ;
+relational_expr ::= addition ( comparison_operator addition )? ;
+addition ::= multiplication ( plus_or_minus multiplication )* ;
+multiplication ::= boolean_negation | sign_expr ( mult_op sign_expr )* ;
+sign_expr ::= ( plus_or_minus )? term ;
+boolean_negation ::= NOT term ;
+term ::= cardinality_op | empty_op | not_empty_op | rval | LPAREN ( assignment_expr | expr ) RPAREN ;
+cardinality_op ::= CARDINALITY local_variable ;
+empty_op ::= EMPTY local_variable ;
+not_empty_op ::= NOT_EMPTY local_variable ;
+instance_start_segment ::= root_element_label ( array_refs )? ;
+instance_access_segment ::= element_label ( array_refs )? ;
+member_access ::= instance_start_segment ( DOT instance_access_segment )* ;
+param_data_access ::= PARAM DOT member_access ;
+event_data_access ::= RCVD_EVT DOT member_access ;
+array_refs ::= ( LSQBR expr RSQBR )+ ;
+rval ::= DOUBLECOLON function_invocation | transform_ib_invocation | invocation_expr |
+enumerator_access | member_access | constant_value | (RCVD_EVT DOT) => event_data_access |
+bridge_expr | (PARAM DOT) => param_data_access | QMARK ;
+constant_value ::= FRACTION | NUMBER | STRING | TRUE | FALSE ;
+comparison_operator ::= DOUBLEEQUAL | NOTEQUAL | LESSTHAN | LE | GT | GE ;
+plus_or_minus ::= PLUS | MINUS ;
+mult_op ::= TIMES | DIV | MOD ;

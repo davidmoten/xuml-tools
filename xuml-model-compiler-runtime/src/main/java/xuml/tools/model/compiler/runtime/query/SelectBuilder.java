@@ -52,23 +52,34 @@ public class SelectBuilder<T extends Entity<T>> {
 		return this;
 	}
 
-	public List<T> many() {
-		return many(info.getCurrentEntityManager());
-	}
-
 	public T one() {
 		return one(info.getCurrentEntityManager());
 	}
 
-	private static class ClauseAndParameters {
-		String clause;
-		Map<String, Object> parameters = Maps.newHashMap();
+	public T one(EntityManager em) {
+		List<T> list = many(em);
+		if (list.size() == 1)
+			return list.get(0);
+		else
+			throw new RuntimeException("returned " + list.size()
+					+ " results and only one was expected");
+	}
 
-		ClauseAndParameters(String clause, Map<String, Object> parameters) {
-			super();
-			this.clause = clause;
-			this.parameters = parameters;
-		}
+	public T any(EntityManager em) {
+		List<T> list = many(em);
+		if (list.size() >= 1)
+			return list.get(0);
+		else
+			throw new RuntimeException("returned " + list.size()
+					+ " results and at least one was expected");
+	}
+
+	public T any() {
+		return any(info.getCurrentEntityManager());
+	}
+
+	public List<T> many() {
+		return many(info.getCurrentEntityManager());
 	}
 
 	public List<T> many(EntityManager em) {
@@ -253,13 +264,15 @@ public class SelectBuilder<T extends Entity<T>> {
 			throw new RuntimeException("not implemented " + op);
 	}
 
-	public T one(EntityManager em) {
-		List<T> list = many();
-		if (list.size() == 1)
-			return list.get(0);
-		else
-			throw new RuntimeException("returned " + list.size()
-					+ " results and only one was expected");
+	private static class ClauseAndParameters {
+		String clause;
+		Map<String, Object> parameters = Maps.newHashMap();
+
+		ClauseAndParameters(String clause, Map<String, Object> parameters) {
+			super();
+			this.clause = clause;
+			this.parameters = parameters;
+		}
 	}
 
 }

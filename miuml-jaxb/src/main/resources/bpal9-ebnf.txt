@@ -1,0 +1,100 @@
+statement ::= ( assignment_statement | control_statement | break_statement | bridge_statement
+continue_statement | transform_statement | bridge_or_transform_statement | create_event_statement
+create_object_statement | delete_statement | for_statement | generate_statement | if_statement
+relate_statement | unrelate_statement | select_statement | while_statement | return_statement
+empty_statement ) SEMI ;
+assignment_statement ::= [ ASSIGN ] assignment_expr ;
+break_statement ::= BREAKTOKEN ;
+bridge_statement ::= BRIDGE [ ( local_variable | attribute_access ) EQUAL ] bridge_invocation ;
+bridge_or_transform_statement ::= bridge_or_transform_invocation ;
+control_statement ::= CONTROL STOP ;
+continue_statement ::= CONTINUE ;
+create_event_statement ::= CREATE EVENT INSTANCE local_variable OF event_spec ;
+create_object_statement ::= CREATE OBJECT INSTANCE [ ( local_variable OF )? local_variable ] OF
+object_keyletters ;
+delete_statement ::= DELETE OBJECT INSTANCE inst_ref_var ;
+empty_statement ::= ;
+for_statement ::= FOR EACH local_variable IN inst_ref_set_var ( statement )* ( END FOR | Eof ) ;
+generate_statement ::= GENERATE ( event_spec | local_variable ) ;
+if_statement ::= IF expr ( statement )* [ ( ELIF expr ( statement )* )+ ] [ ELSE ( statement )* ] ( END IF | Eof ) ;
+relate_statement ::= RELATE inst_ref_var TO inst_ref_var ACROSS relationship [ DOT phrase ] [ USING
+assoc_obj_inst_ref_var ] ;
+return_statement ::= RETURN [ expr ] ;
+select_statement ::= SELECT ( ONE local_variable object_spec | ANY local_variable object_spec | MANY
+local_variable object_spec ) ;
+transform_statement ::= TRANSFORM [ ( local_variable | attribute_access ) EQUAL ] transform_invocation ;
+unrelate_statement ::= UNRELATE inst_ref_var FROM inst_ref_var ACROSS relationship [ DOT phrase ] [
+USING assoc_obj_inst_ref_var ] ;
+while_statement ::= WHILE expr ( statement )* ( END WHILE | Eof ) ;
+assignment_expr ::= ( local_variable EQUAL )? local_variable EQUAL expr | ( attribute_access EQUAL )?
+attribute_access EQUAL expr | event_data_access EQUAL expr ;
+attribute_access ::= inst_ref_var DOT attribute ;
+bridge_invocation::=ee_keylettersDOUBLECOLONbridge_functionLPAREN[bridge_or_transform_parameters]
+RPAREN ;
+bridge_or_transform_invocation ::= obj_or_ee_keyletters DOUBLECOLON function_name LPAREN [
+bridge_or_transform_parameters ] RPAREN ;
+bridge_or_transform_expr ::= BRIDGE bridge_invocation | TRANSFORM transform_invocation |
+bridge_or_transform_invocation ;
+bridge_or_transform_parameters ::= bridge_or_transform_data_item
+bridge_or_transform_data_item COLON expr )* ;
+COLON
+expr
+(
+COMMA
+event_data_access ::= RCVD_EVT DOT supp_data_item ;
+event_spec ::= event_label [ COLON event_meaning ] [ LPAREN [ supp_data ] RPAREN ] TO ( ( (
+object_keyletters ASSIGNER )? object_keyletters ASSIGNER | ( object_keyletters CREATOR )?
+object_keyletters CREATOR ) | ( inst_ref_var_or_ee_keyletters ) ) ;
+inst_ref_var_or_ee_keyletters ::= ( local_variable | GENERAL_NAME | kw_as_id3 ) ;
+instance_chain ::= local_variable ( ARROW object_keyletters LSQBR relationship [ DOT phrase ] RSQBR )+ ;
+object_spec ::= ( RELATED BY instance_chain | FROM INSTANCES OF object_keyletters ) [ WHERE expr ] ;
+param_data_access ::= PARAM DOT bridge_or_transform_data_item ;
+supp_data ::= supp_data_item COLON expr ( COMMA supp_data_item COLON expr )* ;
+transform_invocation ::= object_keyletters DOUBLECOLON
+bridge_or_transform_parameters ] RPAREN ;
+transformer_function
+LPAREN
+[
+where_spec ::= expr ;
+assoc_obj_inst_ref_var ::= inst_ref_var ;
+attribute ::= general_name ;
+bridge_function ::= function_name ;
+bridge_or_transform_data_item ::= data_item_name ;
+data_item_name ::= general_name ;
+keyletters ::= general_name ;
+ee_keyletters ::= keyletters ;
+event_label ::= general_name ;
+event_meaning ::= ( phrase | general_name ) ;
+general_name ::= ( limited_name | GENERAL_NAME | kw_as_id2 | kw_as_id4 ) ;
+limited_name ::= ID | RELID ;
+inst_ref_set_var ::= local_variable ;
+inst_ref_var ::= local_variable ;
+kw_as_id1 ::= ACROSS .. USING;
+kw_as_id2 ::= ACROSS .. TRUETOKEN;
+kw_as_id3 ::= BRIDGE .. TRUETOKEN;
+kw_as_id4 ::= PARAM .. SELF;
+local_variable ::= ( limited_name | kw_as_id1 | SELECTED | SELF | GARBAGE ) ;
+function_name ::= general_name ;
+obj_or_ee_keyletters ::= keyletters ;
+object_keyletters ::= keyletters ;
+phrase ::= ( PHRASE | BADPHRASE_NL | Eof ) ;
+relationship ::= RELID ;
+supp_data_item ::= data_item_name ;
+transformer_function ::= function_name ;
+expr ::= sub_expr ;
+sub_expr ::= conjunction ( OR conjunction )* ;
+conjunction ::= relational_expr ( AND relational_expr )* ;
+relational_expr ::= addition [ COMPARISON_OPERATOR addition ] ;
+addition ::= multiplication ( PLUS_OR_MINUS multiplication )* ;
+multiplication ::= boolean_negation | sign_expr ( MULT_OP sign_expr )* ;
+sign_expr ::= [ PLUS | MINUS ] term ;
+boolean_negation ::= NOT term ;
+term ::= ( CARDINALITY | EMPTY | NOTEMPTY ) local_variable | rval | LPAREN ( ( assignment_expr )?
+assignment_expr | expr ) RPAREN ;
+rval ::= constant_value | variable | attribute_access | event_data_access | bridge_or_transform_expr |
+param_data_access | QMARK ;
+BridgePoint Action Language
+79
+variable ::= local_variable ;
+constant_value ::= ( FRACTION | NUMBER | TRUETOKEN | FALSETOKEN ) | quoted_string ;
+quoted_string ::= QUOTE ( STRING | BADSTRING_NL | Eof ) ;
