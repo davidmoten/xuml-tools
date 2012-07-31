@@ -2,6 +2,7 @@ package xuml.tools.model.compiler.runtime.query;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -75,9 +76,10 @@ public class SelectBuilder<T extends Entity<T>> {
 		ClauseAndParameters c = getClauseAndParameters();
 		String sql = getSql(entityClass, c.clause);
 		System.out.println(sql);
+		System.out.println(c.parameters);
 		TypedQuery<T> query = em.createQuery(sql, entityClass);
 		for (Entry<String, Object> p : c.parameters.entrySet())
-			query.setParameter(p.getKey(), p.getValue());
+			query = query.setParameter(p.getKey(), p.getValue());
 		return query.getResultList();
 	}
 
@@ -102,6 +104,8 @@ public class SelectBuilder<T extends Entity<T>> {
 	}
 
 	private ClauseAndParameters getClauseAndParameters(BooleanExpression<T> e) {
+		if (e == null)
+			return new ClauseAndParameters("", new HashMap<String, Object>());
 		Map<String, Object> parameters = Maps.newHashMap();
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		PrintStream out = new PrintStream(bytes);
@@ -163,7 +167,7 @@ public class SelectBuilder<T extends Entity<T>> {
 			addToParameters(parameters, out, c.getValue());
 		} else if (e instanceof StringExpressionField) {
 			StringExpressionField<T> f = (StringExpressionField<T>) e;
-			out.print(f.getField().getName());
+			out.print("e." + f.getField().getName());
 		}
 		out.close();
 		return new ClauseAndParameters(bytes.toString(), parameters);
@@ -229,7 +233,7 @@ public class SelectBuilder<T extends Entity<T>> {
 			addToParameters(parameters, out, c.getValue());
 		} else if (e instanceof NumericExpressionField) {
 			NumericExpressionField<T> f = (NumericExpressionField<T>) e;
-			out.print(f.getField().getName());
+			out.print("e." + f.getField().getName());
 		}
 		out.close();
 		return new ClauseAndParameters(bytes.toString(), parameters);

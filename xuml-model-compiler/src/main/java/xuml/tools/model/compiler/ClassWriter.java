@@ -1743,6 +1743,12 @@ public class ClassWriter {
 				info.getJavaClassSimpleName(), info.getJavaClassSimpleName());
 		out.format("    }\n\n");
 
+		out.format("    public static %s<%s> select() {\n",
+				info.addType(SelectBuilder.class),
+				info.getJavaClassSimpleName());
+		out.format("        return select(null);\n");
+		out.format("    }\n\n");
+
 	}
 
 	private void writeQueryField(PrintStream out, ClassInfo info, MyType type,

@@ -22,69 +22,69 @@ public class SelectBuilderTest {
 
 	@Test
 	public void testClauseGenerationEquals() {
-		assertEquals("(field = :_p1)", builder(f.eq(3)).getClause());
+		assertEquals("(e.field = :_p1)", builder(f.eq(3)).getClause());
 	}
 
 	@Test
 	public void testClauseGenerationLessThan() {
-		assertEquals("(field < :_p1)", builder(f.lt(3)).getClause());
+		assertEquals("(e.field < :_p1)", builder(f.lt(3)).getClause());
 	}
 
 	@Test
 	public void testClauseGenerationLessThanOrEquals() {
-		assertEquals("(field <= :_p1)", builder(f.lte(3)).getClause());
+		assertEquals("(e.field <= :_p1)", builder(f.lte(3)).getClause());
 	}
 
 	@Test
 	public void testClauseGenerationGreaterThan() {
-		assertEquals("(field > :_p1)", builder(f.gt(3)).getClause());
+		assertEquals("(e.field > :_p1)", builder(f.gt(3)).getClause());
 	}
 
 	@Test
 	public void testClauseGenerationGreaterThanOrEquals() {
-		assertEquals("(field >= :_p1)", builder(f.gte(3)).getClause());
+		assertEquals("(e.field >= :_p1)", builder(f.gte(3)).getClause());
 	}
 
 	@Test
 	public void testClauseGenerationAnd() {
-		assertEquals("((field > :_p1) and (field < :_p2))",
+		assertEquals("((e.field > :_p1) and (e.field < :_p2))",
 				builder(f.gt(1).and(f.lt(3))).getClause());
 	}
 
 	@Test
 	public void testClauseGenerationOr() {
-		assertEquals("((field > :_p1) or (field < :_p2))",
+		assertEquals("((e.field > :_p1) or (e.field < :_p2))",
 				builder(f.gt(1).or(f.lt(3))).getClause());
 	}
 
 	@Test
 	public void testClauseGenerationPlus() {
-		assertEquals("((field + field) <= :_p1)", builder(f.plus(f).lte(3))
+		assertEquals("((e.field + e.field) <= :_p1)", builder(f.plus(f).lte(3))
 				.getClause());
 	}
 
 	@Test
 	public void testClauseGenerationMinus() {
-		assertEquals("((field - field) <= :_p1)", builder(f.minus(f).lte(3))
-				.getClause());
+		assertEquals("((e.field - e.field) <= :_p1)",
+				builder(f.minus(f).lte(3)).getClause());
 	}
 
 	@Test
 	public void testClauseGenerationTimes() {
-		assertEquals("((field * field) <= :_p1)", builder(f.times(f).lte(3))
-				.getClause());
+		assertEquals("((e.field * e.field) <= :_p1)",
+				builder(f.times(f).lte(3)).getClause());
 	}
 
 	@Test
 	public void testClauseGenerationDivide() {
-		assertEquals("((field / field) <= :_p1)", builder(f.divide(f).lte(3))
-				.getClause());
+		assertEquals("((e.field / e.field) <= :_p1)",
+				builder(f.divide(f).lte(3)).getClause());
 	}
 
 	@Test
 	public void testSqlGivenNonEmptyClause() {
-		assertEquals("select e from Ent e where (field=1)",
-				SelectBuilder.getSql(Ent.class, "(field=1)"));
+		assertEquals("select e from Ent e where (e.field=1)",
+				SelectBuilder.getSql(Ent.class, "(e.field=1)"));
 	}
 
 	@Test
@@ -94,7 +94,7 @@ public class SelectBuilderTest {
 
 	@Test
 	public void testClauseGenerationStringEquals() {
-		assertEquals("(field = :_p1)", builder(g.eq("hello")).getClause());
+		assertEquals("(e.field = :_p1)", builder(g.eq("hello")).getClause());
 	}
 
 	/*********************/
