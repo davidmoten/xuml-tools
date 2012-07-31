@@ -1,5 +1,7 @@
 package xuml.tools.model.compiler.runtime.query;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -48,8 +50,47 @@ public class SelectBuilder<T extends Entity<T>> {
 
 	public List<T> many(EntityManager em) {
 		Preconditions.checkNotNull(em, "entity manager is null!");
-		// TODO implement getResults
+		Preconditions.checkNotNull(e, "BooleanExpression cannot be null");
+		String clause = getWhereClause(e);
 		return Lists.newArrayList();
+	}
+
+	private String getWhereClause(BooleanExpression<T> e) {
+		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+		PrintStream out = new PrintStream(bytes);
+		if (e instanceof Not) {
+			Not<T> not = (Not<T>) e;
+			out.print("!(" + getWhereClause(not.getExpression()) + ")");
+		} else if (e instanceof NumericComparison) {
+			NumericComparison<T> c = (NumericComparison<T>) e;
+			String op;
+			if (c.getOperator() == NumericComparisonOperator.EQ)
+				op = "=";
+			else if (c.getOperator() == NumericComparisonOperator.NEQ)
+				op = "!=";
+			else if (c.getOperator() == NumericComparisonOperator.LT)
+				op = "<";
+			else if (c.getOperator() == NumericComparisonOperator.GT)
+				op = ">";
+			else if (c.getOperator() == NumericComparisonOperator.LTE)
+				op = "<=";
+			else if (c.getOperator() == NumericComparisonOperator.GTE)
+				op = ">=";
+			else
+				throw new RuntimeException("unimplemented operator "
+						+ c.getOperator());
+			out.print(getWhereClause(c.getExpression1()) + op
+					+ getWhereClause(c.getExpression2()));
+		}
+		out.close();
+		return bytes.toString();
+	}
+
+	private String getWhereClause(NumericExpression<T> expression1) {
+		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+		PrintStream out = new PrintStream(bytes);
+		out.close();
+		return bytes.toString();
 	}
 
 	public T one(EntityManager em) {
