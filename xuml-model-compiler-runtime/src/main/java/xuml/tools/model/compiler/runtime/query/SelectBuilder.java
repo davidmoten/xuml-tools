@@ -58,11 +58,13 @@ public class SelectBuilder<T extends Entity<T>> {
 
 	public T one(EntityManager em) {
 		List<T> list = many(em);
-		if (list.size() == 1)
+		int size = list.size();
+		if (size == 1)
 			return list.get(0);
+		else if (size == 0)
+			return null;
 		else
-			throw new RuntimeException("returned " + list.size()
-					+ " results and only one was expected");
+			throw new RuntimeException("expected 0 or 1 but found " + size);
 	}
 
 	public T any(EntityManager em) {
@@ -70,8 +72,7 @@ public class SelectBuilder<T extends Entity<T>> {
 		if (list.size() >= 1)
 			return list.get(0);
 		else
-			throw new RuntimeException("returned " + list.size()
-					+ " results and at least one was expected");
+			return null;
 	}
 
 	public T any() {
