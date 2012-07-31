@@ -3,14 +3,14 @@ package xuml.tools.model.compiler.runtime.query;
 
 public class Field {
 
-	private final String fieldName;
+	private final String name;
 
-	public Field(String fieldName) {
-		this.fieldName = fieldName;
+	public Field(String name) {
+		this.name = name;
 	}
 
-	public String getValue() {
-		return fieldName;
+	public String getName() {
+		return name;
 	}
 
 }

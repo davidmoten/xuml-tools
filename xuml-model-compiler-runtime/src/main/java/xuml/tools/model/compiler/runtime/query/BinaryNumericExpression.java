@@ -24,7 +24,7 @@ public class BinaryNumericExpression<T extends Entity<T>> extends
 		return e2;
 	}
 
-	public BinaryNumericOperator getOp() {
+	public BinaryNumericOperator getOperator() {
 		return op;
 	}
 

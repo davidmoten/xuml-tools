@@ -7,10 +7,12 @@ public class BinaryBooleanExpression<T extends Entity<T>> extends
 
 	private final BooleanExpression<T> e1;
 	private final BooleanExpression<T> e2;
+	private final BinaryBooleanOperator op;
 
 	public BinaryBooleanExpression(BooleanExpression<T> e1,
 			BinaryBooleanOperator op, BooleanExpression<T> e2) {
 		this.e1 = e1;
+		this.op = op;
 		this.e2 = e2;
 
 	}
@@ -21,5 +23,9 @@ public class BinaryBooleanExpression<T extends Entity<T>> extends
 
 	public BooleanExpression<T> getExpression2() {
 		return e2;
+	}
+
+	public BinaryBooleanOperator getOperator() {
+		return op;
 	}
 }
