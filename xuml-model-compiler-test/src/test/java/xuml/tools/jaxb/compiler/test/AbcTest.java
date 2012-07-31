@@ -93,8 +93,7 @@ public class AbcTest {
 
 		// demonstrate select statements
 		List<A> list = A.select(aOne.eq("value1.1")).many(em);
-		// TODO enable assert
-		// assertEquals(1,list.size());
+		assertEquals(1, list.size());
 
 		em.close();
 

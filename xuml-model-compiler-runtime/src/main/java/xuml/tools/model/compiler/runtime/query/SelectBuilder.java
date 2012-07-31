@@ -3,20 +3,26 @@ package xuml.tools.model.compiler.runtime.query;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
 import xuml.tools.model.compiler.runtime.Entity;
 import xuml.tools.model.compiler.runtime.Info;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Maps;
 
 public class SelectBuilder<T extends Entity<T>> {
 
 	private final BooleanExpression<T> e;
 	private Info info;
 	private Class<T> entityClass;
+	private final AtomicInteger parameterNo = new AtomicInteger(0);
 
 	public SelectBuilder(BooleanExpression<T> e) {
 		this.e = e;
@@ -53,12 +59,30 @@ public class SelectBuilder<T extends Entity<T>> {
 		return one(info.getCurrentEntityManager());
 	}
 
+	private static class ClauseAndParameters {
+		String clause;
+		Map<String, Object> parameters = Maps.newHashMap();
+
+		ClauseAndParameters(String clause, Map<String, Object> parameters) {
+			super();
+			this.clause = clause;
+			this.parameters = parameters;
+		}
+	}
+
 	public List<T> many(EntityManager em) {
 		Preconditions.checkNotNull(em, "entity manager is null!");
-		Preconditions.checkNotNull(e, "BooleanExpression cannot be null");
-		String clause = getClause();
-		String sql = getSql(entityClass, clause);
-		return em.createQuery(sql, entityClass).getResultList();
+		ClauseAndParameters c = getClauseAndParameters();
+		String sql = getSql(entityClass, c.clause);
+		System.out.println(sql);
+		TypedQuery<T> query = em.createQuery(sql, entityClass);
+		for (Entry<String, Object> p : c.parameters.entrySet())
+			query.setParameter(p.getKey(), p.getValue());
+		return query.getResultList();
+	}
+
+	private ClauseAndParameters getClauseAndParameters() {
+		return getClauseAndParameters(e);
 	}
 
 	@VisibleForTesting
@@ -74,29 +98,90 @@ public class SelectBuilder<T extends Entity<T>> {
 
 	@VisibleForTesting
 	String getClause() {
-		return getClause(e);
+		return getClauseAndParameters(e).clause;
 	}
 
-	private String getClause(BooleanExpression<T> e) {
+	private ClauseAndParameters getClauseAndParameters(BooleanExpression<T> e) {
+		Map<String, Object> parameters = Maps.newHashMap();
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		PrintStream out = new PrintStream(bytes);
 		if (e instanceof Not) {
 			Not<T> not = (Not<T>) e;
-			out.print("!(" + getClause(not.getExpression()) + ")");
+			ClauseAndParameters c = getClauseAndParameters(not.getExpression());
+			parameters.putAll(c.parameters);
+			out.print("!(" + c.clause + ")");
 		} else if (e instanceof NumericComparison) {
 			NumericComparison<T> c = (NumericComparison<T>) e;
-			String op = getOperator(c.getOperator());
-			out.print("(" + getClause(c.getExpression1()) + op
-					+ getClause(c.getExpression2()) + ")");
+			ClauseAndParameters c1 = getClauseAndParameters(c.getExpression1());
+			ClauseAndParameters c2 = getClauseAndParameters(c.getExpression2());
+			parameters.putAll(c1.parameters);
+			parameters.putAll(c2.parameters);
+			out.print("(" + c1.clause + " " + getOperator(c.getOperator())
+					+ " " + c2.clause + ")");
 		} else if (e instanceof BinaryBooleanExpression) {
-			BinaryBooleanExpression<T> b = (BinaryBooleanExpression<T>) e;
-			out.print("(" + getClause(b.getExpression1()) + " "
-					+ getOperator(b.getOperator()) + " "
-					+ getClause(b.getExpression2()) + ")");
-
+			BinaryBooleanExpression<T> c = (BinaryBooleanExpression<T>) e;
+			ClauseAndParameters c1 = getClauseAndParameters(c.getExpression1());
+			ClauseAndParameters c2 = getClauseAndParameters(c.getExpression2());
+			parameters.putAll(c1.parameters);
+			parameters.putAll(c2.parameters);
+			out.print("(" + c1.clause + " " + getOperator(c.getOperator())
+					+ " " + c2.clause + ")");
+		} else if (e instanceof StringComparison) {
+			StringComparison<T> c = (StringComparison<T>) e;
+			ClauseAndParameters c1 = getClauseAndParameters(c.getExpression1());
+			ClauseAndParameters c2 = getClauseAndParameters(c.getExpression2());
+			parameters.putAll(c1.parameters);
+			parameters.putAll(c2.parameters);
+			out.print("(" + c1.clause + " " + getOperator(c.getOperator())
+					+ " " + c2.clause + ")");
 		}
 		out.close();
-		return bytes.toString();
+		return new ClauseAndParameters(bytes.toString(), parameters);
+	}
+
+	private String getOperator(StringComparisonOperator op) {
+		if (op == StringComparisonOperator.EQ)
+			return "=";
+		else
+			throw new RuntimeException("not implemented " + op);
+	}
+
+	private ClauseAndParameters getClauseAndParameters(StringExpression<T> e) {
+		Map<String, Object> parameters = Maps.newHashMap();
+		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+		PrintStream out = new PrintStream(bytes);
+		if (e instanceof BinaryStringExpression) {
+			BinaryStringExpression<T> c = (BinaryStringExpression<T>) e;
+			ClauseAndParameters c1 = getClauseAndParameters(c.getExpression1());
+			ClauseAndParameters c2 = getClauseAndParameters(c.getExpression2());
+			parameters.putAll(c1.parameters);
+			parameters.putAll(c2.parameters);
+			out.print("(" + c1.clause + " " + getOperator(c.getOperator())
+					+ " " + c2.clause + ")");
+		} else if (e instanceof StringConstant) {
+			StringConstant<T> c = (StringConstant<T>) e;
+			addToParameters(parameters, out, c.getValue());
+		} else if (e instanceof StringExpressionField) {
+			StringExpressionField<T> f = (StringExpressionField<T>) e;
+			out.print(f.getField().getName());
+		}
+		out.close();
+		return new ClauseAndParameters(bytes.toString(), parameters);
+	}
+
+	private void addToParameters(Map<String, Object> parameters,
+			PrintStream out, Object object) {
+		int index = parameterNo.incrementAndGet();
+		String parameterName = "_p" + index;
+		parameters.put(parameterName, object);
+		out.print(":" + parameterName);
+	}
+
+	private String getOperator(BinaryStringOperator op) {
+		if (op == BinaryStringOperator.PLUS)
+			return "+";
+		else
+			throw new RuntimeException("not implemented " + op);
 	}
 
 	private String getOperator(BinaryBooleanOperator op) {
@@ -127,23 +212,27 @@ public class SelectBuilder<T extends Entity<T>> {
 		return op;
 	}
 
-	private String getClause(NumericExpression<T> e) {
+	private ClauseAndParameters getClauseAndParameters(NumericExpression<T> e) {
+		Map<String, Object> parameters = Maps.newHashMap();
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		PrintStream out = new PrintStream(bytes);
 		if (e instanceof BinaryNumericExpression) {
-			BinaryNumericExpression<T> b = (BinaryNumericExpression<T>) e;
-			String op = getOperator(b.getOperator());
-			out.print("(" + getClause(b.getExpression1()) + op
-					+ getClause(b.getExpression2()) + ")");
+			BinaryNumericExpression<T> c = (BinaryNumericExpression<T>) e;
+			ClauseAndParameters c1 = getClauseAndParameters(c.getExpression1());
+			ClauseAndParameters c2 = getClauseAndParameters(c.getExpression2());
+			parameters.putAll(c1.parameters);
+			parameters.putAll(c2.parameters);
+			out.print("(" + c1.clause + " " + getOperator(c.getOperator())
+					+ " " + c2.clause + ")");
 		} else if (e instanceof NumericConstant) {
 			NumericConstant<T> c = (NumericConstant<T>) e;
-			out.print(c.getValue());
+			addToParameters(parameters, out, c.getValue());
 		} else if (e instanceof NumericExpressionField) {
 			NumericExpressionField<T> f = (NumericExpressionField<T>) e;
 			out.print(f.getField().getName());
 		}
 		out.close();
-		return bytes.toString();
+		return new ClauseAndParameters(bytes.toString(), parameters);
 	}
 
 	private String getOperator(BinaryNumericOperator op) {

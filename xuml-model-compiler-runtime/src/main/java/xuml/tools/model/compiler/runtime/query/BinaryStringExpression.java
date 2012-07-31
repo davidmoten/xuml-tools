@@ -2,14 +2,15 @@ package xuml.tools.model.compiler.runtime.query;
 
 import xuml.tools.model.compiler.runtime.Entity;
 
-public class StringComparison<T extends Entity<T>> extends BooleanExpression<T> {
+public class BinaryStringExpression<T extends Entity<T>> extends
+		StringExpression<T> {
 
 	private final StringExpression<T> e1;
 	private final StringExpression<T> e2;
-	private final StringComparisonOperator op;
+	private final BinaryStringOperator op;
 
-	public StringComparison(StringExpression<T> e1,
-			StringComparisonOperator op, StringExpression<T> e2) {
+	public BinaryStringExpression(StringExpression<T> e1,
+			BinaryStringOperator op, StringExpression<T> e2) {
 		this.e1 = e1;
 		this.op = op;
 		this.e2 = e2;
@@ -23,7 +24,7 @@ public class StringComparison<T extends Entity<T>> extends BooleanExpression<T> 
 		return e2;
 	}
 
-	public StringComparisonOperator getOperator() {
+	public BinaryStringOperator getOperator() {
 		return op;
 	}
 }
