@@ -53,6 +53,7 @@ public class AbcTest {
 		// create some entities (this happens synchronously)
 		A a1 = Context.create(A.class, new A.Events.Create("value1.1",
 				"value2.1", "1234"));
+		assertEquals("value1.1", a1.getId().getAOne());
 		A a2 = Context.create(A.class, new A.Events.Create("value1.2",
 				"value2.2", "1234"));
 		// use Builder pattern for this one (all Events and Id classes have
@@ -155,8 +156,8 @@ public class AbcTest {
 		// check that the entity was persisted
 		{
 			EntityManager em = Context.createEntityManager();
-			Assert.assertNotNull(em.find(A.class, new A.AId("value1.4",
-					"value2.4")));
+			Assert.assertNotNull(em.find(A.class, AId.builder()
+					.aOne("value1.4").aTwo("value2.4").build()));
 			em.close();
 		}
 
@@ -190,7 +191,8 @@ public class AbcTest {
 
 					@Override
 					public void onEntryHasStarted(Create event) {
-						entity.setId(new AId(event.getAOne(), event.getATwo()));
+						entity.setId(AId.builder().aOne(event.getAOne())
+								.aTwo(event.getATwo()).build());
 						entity.setAThree(event.getAccountNumber());
 						System.out.println("created");
 					}
