@@ -157,6 +157,18 @@ public class SelectBuilder<T extends Entity<T>> {
 	private String getOperator(StringComparisonOperator op) {
 		if (op == StringComparisonOperator.EQ)
 			return "=";
+		else if (op == StringComparisonOperator.NEQ)
+			return "!=";
+		else if (op == StringComparisonOperator.GT)
+			return ">";
+		else if (op == StringComparisonOperator.GTE)
+			return ">=";
+		else if (op == StringComparisonOperator.LT)
+			return "<";
+		else if (op == StringComparisonOperator.LTE)
+			return "<=";
+		else if (op == StringComparisonOperator.LIKE)
+			return "like";
 		else
 			throw new RuntimeException("not implemented " + op);
 	}
@@ -176,6 +188,10 @@ public class SelectBuilder<T extends Entity<T>> {
 		} else if (e instanceof StringConstant) {
 			StringConstant<T> c = (StringConstant<T>) e;
 			addToParameters(parameters, out, c.getValue());
+		} else if (e instanceof IsNullString) {
+			IsNullString<T> n = (IsNullString<T>) e;
+			ClauseAndParameters c = getClauseAndParameters(n.getExpression());
+			out.print(c.clause + " is null");
 		} else if (e instanceof StringExpressionField) {
 			StringExpressionField<T> f = (StringExpressionField<T>) e;
 			out.print("e." + f.getField().getName());
@@ -242,6 +258,10 @@ public class SelectBuilder<T extends Entity<T>> {
 		} else if (e instanceof NumericConstant) {
 			NumericConstant<T> c = (NumericConstant<T>) e;
 			addToParameters(parameters, out, c.getValue());
+		} else if (e instanceof IsNullNumeric) {
+			IsNullNumeric<T> n = (IsNullNumeric<T>) e;
+			ClauseAndParameters c = getClauseAndParameters(n.getExpression());
+			out.print(c.clause + " is null");
 		} else if (e instanceof NumericExpressionField) {
 			NumericExpressionField<T> f = (NumericExpressionField<T>) e;
 			out.print("e." + f.getField().getName());

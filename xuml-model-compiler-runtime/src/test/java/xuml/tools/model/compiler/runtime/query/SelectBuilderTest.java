@@ -97,6 +97,8 @@ public class SelectBuilderTest {
 		assertEquals("(e.field = :_p1)", builder(g.eq("hello")).getClause());
 	}
 
+	// TODO do the other tests
+
 	/*********************/
 	/** Utility Methods **/
 	/*********************/
