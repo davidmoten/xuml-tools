@@ -711,8 +711,7 @@ public class ClassWriter {
 							validationMethods);
 					out.format(
 							"    @%s(mappedBy=\"%s\",fetch=%s.LAZY,targetEntity=%s.class)\n",
-							info.addType(OneToOne.class),
-							ref.getThisFieldName(),
+							info.addType(OneToOne.class), ref.getMappedBy(),
 							info.addType(FetchType.class),
 							info.addType(ref.getFullClassName()));
 					writeField(out, ref);
@@ -743,8 +742,7 @@ public class ClassWriter {
 				} else {
 					out.format(
 							"    @%s(mappedBy=\"%s\",fetch=%s.LAZY,targetEntity=%s.class)\n",
-							info.addType(OneToOne.class),
-							ref.getThisFieldName(),
+							info.addType(OneToOne.class), ref.getMappedBy(),
 							info.addType(FetchType.class),
 							info.addType(ref.getFullClassName()));
 					writeField(out, ref);
@@ -766,7 +764,7 @@ public class ClassWriter {
 				// dependencies.
 				out.format(
 						"    @%s(mappedBy=\"%s\",cascade={%3$s.MERGE,%3$s.REFRESH,%3$s.REMOVE},fetch=%4$s.LAZY,targetEntity=%5$s.class)\n",
-						info.addType(OneToMany.class), ref.getThisFieldName(),
+						info.addType(OneToMany.class), ref.getMappedBy(),
 						info.addType(CascadeType.class),
 						info.addType(FetchType.class),
 						info.addType(ref.getFullClassName()));
@@ -787,7 +785,7 @@ public class ClassWriter {
 				// dependencies.
 				out.format(
 						"    @%s(mappedBy=\"%s\",cascade={%3$s.MERGE,%3$s.REFRESH,%3$s.REMOVE},fetch=%4$s.LAZY,targetEntity=%5$s.class)\n",
-						info.addType(OneToMany.class), ref.getThisFieldName(),
+						info.addType(OneToMany.class), ref.getMappedBy(),
 						info.addType(CascadeType.class),
 						info.addType(FetchType.class),
 						info.addType(ref.getFullClassName()));
@@ -808,8 +806,7 @@ public class ClassWriter {
 					out.format("    //primary side of relationship\n");
 					out.format(
 							"    @%s(mappedBy=\"%s\",fetch=%s.LAZY,targetEntity=%s.class)\n",
-							info.addType(OneToOne.class),
-							ref.getThisFieldName(),
+							info.addType(OneToOne.class), ref.getMappedBy(),
 							info.addType(FetchType.class),
 							info.addType(ref.getFullClassName()));
 				} else {
@@ -827,7 +824,7 @@ public class ClassWriter {
 			} else if (isRelationship(ref, Mult.ZERO_ONE, Mult.MANY)) {
 				out.format(
 						"    @%s(mappedBy=\"%s\",cascade=%s.ALL,fetch=%s.LAZY,targetEntity=%s.class)\n",
-						info.addType(OneToMany.class), ref.getThisFieldName(),
+						info.addType(OneToMany.class), ref.getMappedBy(),
 						info.addType(CascadeType.class),
 						info.addType(FetchType.class),
 						info.addType(ref.getFullClassName()));
@@ -845,7 +842,7 @@ public class ClassWriter {
 						validationMethods);
 				out.format(
 						"    @%s(mappedBy=\"%s\",cascade=%s.ALL,fetch=%s.LAZY,targetEntity=%s.class)\n",
-						info.addType(OneToMany.class), ref.getThisFieldName(),
+						info.addType(OneToMany.class), ref.getMappedBy(),
 						info.addType(CascadeType.class),
 						info.addType(FetchType.class),
 						info.addType(ref.getFullClassName()));
@@ -1210,7 +1207,7 @@ public class ClassWriter {
 		out.format("    //secondary side of relationship\n");
 		out.format(
 				"    @%s(mappedBy=\"%s\",targetEntity=%s.class,cascade=%s.ALL,fetch=%s.LAZY)\n",
-				info.addType(ManyToMany.class), ref.getThisFieldName(),
+				info.addType(ManyToMany.class), ref.getMappedBy(),
 				info.addType(ref.getFullClassName()),
 				info.addType(CascadeType.class), info.addType(FetchType.class));
 		writeMultipleField(out, ref);
@@ -1221,14 +1218,21 @@ public class ClassWriter {
 				info.addType(ref.getFullClassName()), ref.getFieldName());
 		writeGetterAndSetter(out, info, ref.getSimpleClassName(),
 				ref.getFullClassName(), ref.getFieldName(), false);
+		// writeRelateTo(out, ref);
+	}
 
-		String thisFieldName = ref.getFieldName();
-		String thatFieldName = Util.lowerFirst(ref.getSimpleClassName());
-		out.format("    public void relateToAcrossR%s(%s %s) {\n", "Unknown",
-				info.addType(ref.getFullClassName()), thatFieldName);
+	private void writeRelateTo(PrintStream out, MyReferenceMember ref) {
+		String fieldName = ref.getFieldName();
+		String mappedBy = Util.lowerFirst(ref.getSimpleClassName());
+		out.format("    public void relateToAcrossR%s(%s %s) {\n",
+				ref.getRnum(), info.addType(ref.getFullClassName()), fieldName);
 		if (ref.getThatMult().equals(Mult.ONE)
 				|| ref.getThatMult().equals(Mult.ZERO_ONE)) {
 			// TODO implement relateTo
+			out.format("        set%s(%s);\n", Util.upperFirst(fieldName),
+					fieldName);
+			// out.format("        %s.set%s(this);\n", fieldName,
+			// Util.upperFirst(mappedBy));
 		}
 		out.format("    }\n\n");
 	}

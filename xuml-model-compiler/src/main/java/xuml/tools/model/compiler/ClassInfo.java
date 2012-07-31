@@ -601,7 +601,8 @@ public class ClassInfo extends ClassInfoBase {
 			return new MyReferenceMember(spec.getName(),
 					infoOther.getClassFullName(), Mult.ONE, Mult.ZERO_ONE,
 					"specializes", "generalizes", fieldName, null,
-					thisFieldName, (MyManyToMany) null, false);
+					thisFieldName, (MyManyToMany) null, false, g.getRnum()
+							.toString());
 		} else {
 			ClassInfo infoOther = getClassInfo(g.getSuperclass());
 			String fieldName = nameManager.toFieldName(cls.getName(),
@@ -623,7 +624,8 @@ public class ClassInfo extends ClassInfoBase {
 			return new MyReferenceMember(g.getSuperclass(),
 					infoOther.getClassFullName(), Mult.ZERO_ONE, Mult.ONE,
 					"generalizes", "specializes", fieldName, joins,
-					thisFieldName, (MyManyToMany) null, false);
+					thisFieldName, (MyManyToMany) null, false, g.getRnum()
+							.toString());
 		}
 	}
 
@@ -666,13 +668,13 @@ public class ClassInfo extends ClassInfoBase {
 			list.add(new MyReferenceMember(getJavaClassSimpleName(),
 					getClassFullName(), fromMult, toMult(p), p.getPhrase()
 							+ " Inverse", p.getPhrase(), fieldName2, joins2,
-					fieldName1, null, false));
+					fieldName1, null, false, a.getRnum().toString()));
 		}
 		{
 			list.add(new MyReferenceMember(getJavaClassSimpleName(),
 					getClassFullName(), toMult(p), fromMult, p.getPhrase(), p
 							.getPhrase() + " Inverse", fieldName1, joins,
-					fieldName2, null, false));
+					fieldName2, null, false, a.getRnum().toString()));
 		}
 		return list;
 	}
@@ -752,7 +754,7 @@ public class ClassInfo extends ClassInfoBase {
 		return new MyReferenceMember(pThat.getViewedClass(),
 				infoOther.getClassFullName(), toMult(pThis), toMult(pThat),
 				pThis.getPhrase(), pThat.getPhrase(), fieldName, joins,
-				thisFieldName, manyToMany, inPrimaryId);
+				thisFieldName, manyToMany, inPrimaryId, a.getRnum().toString());
 	}
 
 	private List<MyJoinColumn> getJoinColumns(BigInteger rnum, Class cls,
