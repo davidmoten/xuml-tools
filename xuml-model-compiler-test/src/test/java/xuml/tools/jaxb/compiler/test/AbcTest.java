@@ -2,6 +2,7 @@ package xuml.tools.jaxb.compiler.test;
 
 import static abc.A.Field.aOne;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
@@ -93,15 +94,17 @@ public class AbcTest {
 		assertEquals("12", a2.load(em).getAThree());
 		assertEquals("13", a3.load(em).getAThree());
 
+		// demonstrate select statements
 		{
-			List<A> list = A.select(null).many(em);
+			List<A> list = A.select().many(em);
 			assertTrue(list.size() >= 3);
 		}
 
-		// demonstrate select statements
 		{
 			List<A> list = A.select(aOne.eq("value1.1")).many(em);
 			assertEquals(1, list.size());
+			assertNull(A.select(aOne.eq("zz")).any(em));
+			assertNull(A.select(aOne.eq("zz")).one(em));
 		}
 
 		em.close();

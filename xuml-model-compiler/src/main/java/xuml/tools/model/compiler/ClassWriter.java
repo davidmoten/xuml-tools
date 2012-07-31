@@ -1221,6 +1221,16 @@ public class ClassWriter {
 				info.addType(ref.getFullClassName()), ref.getFieldName());
 		writeGetterAndSetter(out, info, ref.getSimpleClassName(),
 				ref.getFullClassName(), ref.getFieldName(), false);
+
+		String thisFieldName = ref.getFieldName();
+		String thatFieldName = Util.lowerFirst(ref.getSimpleClassName());
+		out.format("    public void relateToAcrossR%s(%s %s) {\n", "Unknown",
+				info.addType(ref.getFullClassName()), thatFieldName);
+		if (ref.getThatMult().equals(Mult.ONE)
+				|| ref.getThatMult().equals(Mult.ZERO_ONE)) {
+			// TODO implement relateTo
+		}
+		out.format("    }\n\n");
 	}
 
 	private void writeGetterAndSetter(PrintStream out, ClassInfo info,
