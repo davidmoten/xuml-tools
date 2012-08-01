@@ -1227,6 +1227,7 @@ public class ClassWriter {
 
 	private void writeRelateTo(PrintStream out, MyReferenceMember ref) {
 		// TODO handle unary relationship relateTo
+		// TODO handle association classes (relateAcrossR1Using)
 		if (isUnary(ref))
 			return;
 
