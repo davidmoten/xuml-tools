@@ -1610,6 +1610,15 @@ public class ClassWriter {
 	}
 
 	private void writeStaticFinderMethods(PrintStream out, ClassInfo info) {
+
+		out.format("    public static %s find(%s id) {\n", info
+				.getJavaClassSimpleName(), info.addType(getIdType(info)
+				.getBase()), getIdType(info).getClass().getSimpleName());
+		// TODO return the found thing using current entity manager
+		out.format("        return Context.em().find(%s.class,id);\n",
+				info.getJavaClassSimpleName());
+		out.format("    }\n\n");
+
 		for (MyFind find : info.getFinders()) {
 			jd(out,
 					"Static finder method generated due to xuml-tools extension <b>Find</b>.",

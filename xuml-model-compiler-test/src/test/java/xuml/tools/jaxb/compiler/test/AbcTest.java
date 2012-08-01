@@ -189,25 +189,23 @@ public class AbcTest {
 	private static BehaviourFactory createBehaviourFactoryForA() {
 		return new A.BehaviourFactory() {
 			@Override
-			public A.Behaviour create(final A entity) {
+			public A.Behaviour create(final A self) {
 				return new A.Behaviour() {
 
 					@Override
 					public void onEntryHasStarted(Create event) {
-						entity.setId(AId.builder().aOne(event.getAOne())
+						self.setId(AId.builder().aOne(event.getAOne())
 								.aTwo(event.getATwo()).build());
-						entity.setAThree(event.getAccountNumber());
+						self.setAThree(event.getAccountNumber());
 						System.out.println("created");
 					}
 
 					@Override
 					public void onEntryDoneSomething(
 							StateSignature_DoneSomething event) {
-						entity.setAThree(event.getTheCount() + "");
-						System.out
-								.println("setting A.athree="
-										+ entity.getAThree() + " for "
-										+ entity.getId());
+						self.setAThree(event.getTheCount() + "");
+						System.out.println("setting A.athree="
+								+ self.getAThree() + " for " + self.getId());
 						// demonstrate/unit test getting access to the current
 						// entity manager when needed
 						Object count = Context.em()
