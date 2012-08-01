@@ -1615,8 +1615,21 @@ public class ClassWriter {
 				.getJavaClassSimpleName(), info.addType(getIdType(info)
 				.getBase()), getIdType(info).getClass().getSimpleName());
 		// TODO return the found thing using current entity manager
-		out.format("        return Context.em().find(%s.class,id);\n",
+		out.format("        if (Context.em()!=null) {\n");
+		out.format("            return Context.em().find(%s.class,id);\n",
 				info.getJavaClassSimpleName());
+		out.format("        } else {\n");
+		out.format("            %s em = Context.createEntityManager();\n",
+				info.addType(EntityManager.class));
+		out.format("            try {\n");
+		out.format("                %s result = em.find(%s.class,id);\n",
+				info.getJavaClassSimpleName(), info.getJavaClassSimpleName());
+		out.format("                return result;\n");
+		out.format("            } finally {\n");
+		out.format("                em.close();\n");
+		out.format("            }\n");
+		// TODO do try finally em.close() so em not left open on error
+		out.format("        }\n");
 		out.format("    }\n\n");
 
 		for (MyFind find : info.getFinders()) {
