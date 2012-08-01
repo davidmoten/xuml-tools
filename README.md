@@ -189,15 +189,7 @@ More examples:
 </table>
 
 ### Action Language ###
-The current plan is to make the semantics of say BPAL 97 (Bridgepoint Action Language used by examples in Mellor & Balcer) available in a concise form as methods on the generated java entities or as static utility methods. The desired functionality includes:
-
-* relate to across relationship <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
-* select any,one,many with where clause <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
-* select using association class
-* create methods <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
-* deletion methods
-* generate methods <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
-* property setters and getters <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
+The current plan is to make the semantics of say BPAL 97 (Bridgepoint Action Language used by examples in Mellor & Balcer) available in a concise form as methods on the generated java entities or as static utility methods. Examples are below:
 
 <table>
 	<tr><th>Action<th>BPAL97</th><th>Java</th><th>Status</th></tr>
