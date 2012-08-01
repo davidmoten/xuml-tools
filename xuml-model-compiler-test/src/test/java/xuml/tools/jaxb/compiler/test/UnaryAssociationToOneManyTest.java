@@ -48,8 +48,8 @@ public class UnaryAssociationToOneManyTest {
 			em.getTransaction().begin();
 			A a = A.create(new AId("boo", "baa"));
 			A child = A.create(new AId("boo2", "baa2"));
-			a.getHasChildren().add(child);
-			child.setHasChildrenInverse(a);
+			a.getHasChildren_R1().add(child);
+			child.setHasChildrenInverse_R1(a);
 			em.persist(a);
 			em.getTransaction().commit();
 		} finally {
@@ -64,11 +64,11 @@ public class UnaryAssociationToOneManyTest {
 			em.getTransaction().begin();
 			A a = A.create(new AId("boo", "baa"));
 			A child = A.create(new AId("boo2", "baa2"));
-			a.getHasChildren().add(child);
-			a.setHasChildrenInverse(a);
-			child.setHasChildrenInverse(a);
-			child.getHasChildren().add(child);
-			child.setHasChildrenInverse(child);
+			a.getHasChildren_R1().add(child);
+			a.setHasChildrenInverse_R1(a);
+			child.setHasChildrenInverse_R1(a);
+			child.getHasChildren_R1().add(child);
+			child.setHasChildrenInverse_R1(child);
 			em.persist(a);
 			em.getTransaction().commit();
 			em.close();
@@ -77,7 +77,7 @@ public class UnaryAssociationToOneManyTest {
 			EntityManager em = Context.createEntityManager();
 			em.getTransaction().begin();
 			A a = em.find(A.class, new A.AId("boo", "baa"));
-			assertEquals(1, a.getHasChildren().size());
+			assertEquals(1, a.getHasChildren_R1().size());
 			em.getTransaction().commit();
 			em.close();
 		}

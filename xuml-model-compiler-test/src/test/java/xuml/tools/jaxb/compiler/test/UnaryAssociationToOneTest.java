@@ -47,10 +47,10 @@ public class UnaryAssociationToOneTest {
 			em.getTransaction().begin();
 			A a = A.create(new AId("boo", "baa"));
 			A parent = A.create(new AId("boo2", "baa2"));
-			a.setHasParent(parent);
-			a.setHasParentInverse(parent);
-			parent.setHasParent(parent);
-			parent.setHasParentInverse(parent);
+			a.setHasParent_R1(parent);
+			a.setHasParentInverse_R1(parent);
+			parent.setHasParent_R1(parent);
+			parent.setHasParentInverse_R1(parent);
 			em.persist(a);
 			em.getTransaction().commit();
 			em.close();
@@ -59,7 +59,7 @@ public class UnaryAssociationToOneTest {
 			EntityManager em = Context.createEntityManager();
 			em.getTransaction().begin();
 			A a = em.find(A.class, new A.AId("boo", "baa"));
-			assertNotNull(a.getHasParent());
+			assertNotNull(a.getHasParent_R1());
 			em.getTransaction().commit();
 			em.close();
 		}

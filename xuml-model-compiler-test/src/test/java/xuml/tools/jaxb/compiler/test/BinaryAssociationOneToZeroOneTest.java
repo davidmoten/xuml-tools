@@ -60,7 +60,7 @@ public class BinaryAssociationOneToZeroOneTest {
 			em.getTransaction().begin();
 			A a2 = A.create(new AId("boo", "baa"));
 			B b = B.create(new BId("some2", "thing2"));
-			b.setA(a2);
+			b.setA_R1(a2);
 			em.persist(b);
 			em.getTransaction().commit();
 			em.close();
@@ -69,7 +69,7 @@ public class BinaryAssociationOneToZeroOneTest {
 			EntityManager em = Context.createEntityManager();
 			em.getTransaction().begin();
 			A a2 = em.find(A.class, new A.AId("boo", "baa"));
-			assertNotNull(a2.getB());
+			assertNotNull(a2.getB_R1());
 			em.getTransaction().commit();
 			em.close();
 		}

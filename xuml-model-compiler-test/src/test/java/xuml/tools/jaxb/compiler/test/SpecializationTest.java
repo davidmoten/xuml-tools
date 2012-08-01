@@ -35,8 +35,8 @@ public class SpecializationTest {
 			A a = A.create("something");
 			B b = B.create("hello");
 			a.setTwo(2);
-			a.setB(b);
-			b.setA(a);
+			a.setB_R1(b);
+			b.setA_R1(a);
 			b.setNumber(3);
 			a.persist(em);
 			b.persist(em);
@@ -69,10 +69,10 @@ public class SpecializationTest {
 			B b = B.create("hello3");
 			C c = C.create("there3");
 			a.setTwo(2);
-			a.setB(b);
-			a.setC(c);
-			c.setA(a);
-			b.setA(a);
+			a.setB_R1(b);
+			a.setC_R1(c);
+			c.setA_R1(a);
+			b.setA_R1(a);
 			b.setNumber(3);
 			a.persist(em);
 			b.persist(em);

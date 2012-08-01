@@ -62,10 +62,10 @@ public class BinaryAssociationOneToOneManyTest {
 			A a = A.create(new AId("boo", "baa"));
 			B b = B.create(new BId("some2", "thing2"));
 			B b2 = B.create(new BId("some3", "thing3"));
-			a.getB().add(b);
-			a.getB().add(b2);
-			b.setA(a);
-			b2.setA(a);
+			a.getB_R1().add(b);
+			a.getB_R1().add(b2);
+			b.setA_R1(a);
+			b2.setA_R1(a);
 			a.persist(em);
 			b.persist(em);
 			b2.persist(em);
@@ -76,7 +76,7 @@ public class BinaryAssociationOneToOneManyTest {
 			EntityManager em = Context.createEntityManager();
 			em.getTransaction().begin();
 			A a2 = em.find(A.class, new A.AId("boo", "baa"));
-			assertEquals(2, a2.getB().size());
+			assertEquals(2, a2.getB_R1().size());
 			em.getTransaction().commit();
 			em.close();
 		}

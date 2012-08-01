@@ -66,7 +66,7 @@ public class NameManager {
 			return map.get(key);
 		else {
 			String optimalFieldName = Util.lowerFirst(Util
-					.toJavaIdentifier(viewedClass));
+					.toJavaIdentifier(viewedClass)) + "_R" + rNum;
 			String currentKey = map.inverse().get(optimalFieldName);
 			String fieldName;
 			if (currentKey == null)

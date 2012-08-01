@@ -40,17 +40,17 @@ public class BinaryAssociationManyToManyAssociationClassTest {
 		B b2 = B.create("boo2").persist(em);
 		C c1 = new C("c1");
 		c1.setDescription("example");
-		c1.setA(a1);
-		c1.setB(b1);
-		a1.getC().add(c1);
-		b1.getC().add(c1);
+		c1.setA_R1(a1);
+		c1.setB_R1(b1);
+		a1.getC_R1().add(c1);
+		b1.getC_R1().add(c1);
 
 		C c2 = new C("c2");
 		c2.setDescription("example2");
-		c2.setA(a1);
-		c2.setB(b2);
-		a1.getC().add(c2);
-		b2.getC().add(c2);
+		c2.setA_R1(a1);
+		c2.setB_R1(b2);
+		a1.getC_R1().add(c2);
+		b2.getC_R1().add(c2);
 
 		c1.persist(em);
 		c2.persist(em);
@@ -59,7 +59,7 @@ public class BinaryAssociationManyToManyAssociationClassTest {
 		em.close();
 
 		em = Context.createEntityManager();
-		assertEquals(2, a1.load(em).getB().size());
+		assertEquals(2, a1.load(em).getB_R1().size());
 
 		em.close();
 	}

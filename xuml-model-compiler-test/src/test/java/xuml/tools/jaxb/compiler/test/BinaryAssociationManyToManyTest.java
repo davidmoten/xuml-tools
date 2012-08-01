@@ -34,15 +34,15 @@ public class BinaryAssociationManyToManyTest {
 		A a2 = A.create("thing2").persist(em);
 		B b1 = B.create("boo").persist(em);
 		B b2 = B.create("boo2").persist(em);
-		a1.getB().add(b1);
-		a1.getB().add(b2);
-		b1.getA().add(a1);
-		b2.getA().add(a1);
+		a1.getB_R1().add(b1);
+		a1.getB_R1().add(b2);
+		b1.getA_R1().add(a1);
+		b2.getA_R1().add(a1);
 
-		a2.getB().add(b1);
-		a2.getB().add(b2);
-		b1.getA().add(a2);
-		b2.getA().add(a2);
+		a2.getB_R1().add(b1);
+		a2.getB_R1().add(b2);
+		b1.getA_R1().add(a2);
+		b2.getA_R1().add(a2);
 
 		em.getTransaction().commit();
 		em.close();
