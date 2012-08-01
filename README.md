@@ -199,6 +199,7 @@ The current plan is to make the semantics of say BPAL 97 (Bridgepoint Action Lan
 * generate methods <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
 * property setters and getters <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
 
+The principle is to write java on-entry methods using the above abstractions without resorting to direct use of an *EntityManager*. The current *EntityManager* is always available via *Context.em()* but for simplicity and to maximize compile-time checking it is recommended to avoid using it. You might want to resort to using *Context.em()* for some performance tweak for example but try the *EntityManager*-free approach first.
 
 As an example, consider the following block of BPAL taken from figure B.3 in Mellor & Balcer:
 
