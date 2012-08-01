@@ -201,11 +201,11 @@ The current plan is to make the semantics of say BPAL 97 (Bridgepoint Action Lan
 
 <table>
 	<tr><th>Action<th>BPAL97</th><th>Java</th></tr>
-	<tr><td>Create object</td><td><b>create object instance</b> customer <b>of</b> Customer;</td><td>Customer customer = Customer.create();</td></tr>
-	<tr><td>Write attribute</td><td>customer.firstName = 'Dave';</td><td>customer.setFirstName("Dave");</td></tr>
-	<tr><td>Read attribute</td><td>customer.firstName</td><td>customer.getFirstName()</td></tr>
-	<tr><td>Delete object</td><td><b>delete object instance</b> customer;</td><td>customer.delete();</td></tr>
-    <tr><td>Class extent</td><td><b>select many</b> customers <b>from instances of</b> Customer;</td><td>List&lt;Customer&gt; customers = Customer.select().many();</td>
+	<tr><td><i>Create object</i></td><td><b>create object instance</b> customer <b>of</b> Customer;</td><td>Customer customer = Customer.create();</td></tr>
+	<tr><td><i>Write attribute</i></td><td>customer.firstName = 'Dave';</td><td>customer.setFirstName("Dave");</td></tr>
+	<tr><td><i>Read attribute</i></td><td>customer.firstName</td><td>customer.getFirstName()</td></tr>
+	<tr><td><i>Delete object</i></td><td><b>delete object instance</b> customer;</td><td>customer.delete();</td></tr>
+    <tr><td><i>Class extent</i></td><td><b>select many</b> customers <b>from instances of</b> Customer;</td><td>List&lt;Customer&gt; customers = Customer.select().many();</td>
     <tr><td>Qualification (one object)</td><td><b>select any</b> customer <b>from instances of</b> Customer <b>where</b> selected.numPurchases>1 <b>and</b> selected.city='Canberra';</td><td>Customer customer = Customer.select(numPurchases().gt(1).and(city().eq("Canberra")).any();</td></tr>
 </table>
 
