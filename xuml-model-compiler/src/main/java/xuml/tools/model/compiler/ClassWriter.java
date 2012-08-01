@@ -1232,8 +1232,8 @@ public class ClassWriter {
 
 		String fieldName = ref.getFieldName();
 		String mappedBy = Util.lowerFirst(ref.getMappedBy());
-		out.format("    public void relateAcrossR%sTo(%s %s) {\n",
-				ref.getRnum(), info.addType(ref.getFullClassName()), fieldName);
+		out.format("    public void relateAcrossR%s(%s %s) {\n", ref.getRnum(),
+				info.addType(ref.getFullClassName()), fieldName);
 		Mult thisMult = ref.getThisMult();
 		Mult thatMult = ref.getThatMult();
 
