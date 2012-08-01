@@ -188,6 +188,13 @@ More examples:
   <tr><td>Stop signal processing on single entity on failure</td><td><a href="https://github.com/davidmoten/xuml-tools/blob/master/xuml-model-compiler-runtime/src/test/java/xuml/tools/model/compiler/runtime/actor/EntityActorListenerStopsSignalProcessingSingleEntityOnFailure.java">EntityActorListenerStopsSignalProcessingSingleEntityOnFailure.java</a></td></tr>
 </table>
 
+### Action Language ###
+The current plan is to make the semantics of say BPAL 97 (Bridgepoint Action Language used by examples in Mellor & Balcer) available in a concise form as methods on the generated java entities or as static utility methods.
+
+As an example, consider the following block of BPAL taken from figure B.3 in Mellor & Balcer:
+
+<img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/bfig03.gif">
+
 Web Class Diagram Viewer
 ------------------------
 The following examples are based on storing the domain xml and the associated presentation settings on the server. To be investigated is the http://www.diagram.ly approach (see this [interview](http://doeswhat.com/2011/04/11/interview-with-david-benson-diagramly/)) where all user data is stored on the client machine and the application does no account management. Might be worth pursuing.
