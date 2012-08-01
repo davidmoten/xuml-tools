@@ -209,6 +209,7 @@ The current plan is to make the semantics of say BPAL 97 (Bridgepoint Action Lan
     <tr><td><i>Qualification (one object)</i></td><td><b>select any</b> customer <b>from instances of</b> Customer <b>where</b> selected.numPurchases>1 <b>and</b> selected.city='Canberra';</td><td>Customer customer = Customer.select(numPurchases().gt(1).and(city().eq("Canberra")).any();</td></tr>
     <tr><td><i>Qualification (many objects)</i></td><td><b>select many</b> customers <b>from instances of</b> Customer <b>where</b> selected.numPurchases>1 <b>and</b> selected.city='Canberra';</td><td>List&lt;Customer&gt; customer = Customer.select(numPurchases().gt(1).and(city().eq("Canberra")).many();</td></tr>
 	<tr><td><i>Create link</i></td><td><b>relate</b> customer <b>to</b> order <b>across</b> R1;</td><td>customer.relateAcrossR1(order);</td></tr>
+	<tr><td><i>Traverse link</i></td><td><b>select many</b> order <b>related by</b> customer -&gt; Order;</td><td>customer = order.getCustomer_R1();</td></tr>
 </table>
 
 The principle is to write java on-entry methods using the above abstractions without resorting to direct use of an *EntityManager*. The current *EntityManager* is always available via *Context.em()* but for simplicity and to maximize compile-time checking it is recommended to avoid using it. You might want to resort to using *Context.em()* for some performance tweak for example but try the *EntityManager*-free approach first.
