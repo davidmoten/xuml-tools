@@ -202,7 +202,7 @@ The current plan is to make the semantics of say BPAL 97 (Bridgepoint Action Lan
 
 As an example, consider the following block of BPAL taken from figure B.3 in Mellor & Balcer:
 
-<img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/bfig03.gif">
+<!-- <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/bfig03.gif"> -->
 
 Web Class Diagram Viewer
 ------------------------
