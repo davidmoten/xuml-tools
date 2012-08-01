@@ -200,8 +200,9 @@ The current plan is to make the semantics of say BPAL 97 (Bridgepoint Action Lan
 * property setters and getters <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
 
 <table>
-	<tr><th>BPAL</th><th>Java</th></tr>
-	<tr><td><b>create object instance</b> customer <b>of</b> Customer;</td><td>Customer customer = Customer.create();</td></tr>
+	<tr><th>Action<th>BPAL97</th><th>Java</th></tr>
+	<tr><td>Create object</td><td><b>create object instance</b> customer <b>of</b> Customer;</td><td>Customer customer = Customer.create();</td></tr>
+	<tr><td>Write attribute</td><td><b>customer.firstName = 'Dave';</td><td>customer.setFirstName("Dave");s</td></tr>
 </table>
 
 The principle is to write java on-entry methods using the above abstractions without resorting to direct use of an *EntityManager*. The current *EntityManager* is always available via *Context.em()* but for simplicity and to maximize compile-time checking it is recommended to avoid using it. You might want to resort to using *Context.em()* for some performance tweak for example but try the *EntityManager*-free approach first.
