@@ -215,12 +215,6 @@ The current plan is to make the semantics of say BPAL 97 (Bridgepoint Action Lan
 
 The principle is to write java on-entry methods using the above abstractions without resorting to direct use of an *EntityManager*. The current *EntityManager* is always available via *Context.em()* but for simplicity and to maximize compile-time checking it is recommended to avoid using it. You might want to resort to using *Context.em()* for some performance tweak for example but try the *EntityManager*-free approach first.
 
-As an example, consider the following block of BPAL taken from figure B.3 in Mellor & Balcer:
-
-<!-- <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/bfig03.gif"> -->
-
-
-
 Web Class Diagram Viewer
 ------------------------
 The following examples are based on storing the domain xml and the associated presentation settings on the server. To be investigated is the http://www.diagram.ly approach (see this [interview](http://doeswhat.com/2011/04/11/interview-with-david-benson-diagramly/)) where all user data is stored on the client machine and the application does no account management. Might be worth pursuing.
