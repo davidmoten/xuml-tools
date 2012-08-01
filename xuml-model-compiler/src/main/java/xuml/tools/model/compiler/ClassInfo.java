@@ -744,7 +744,7 @@ public class ClassInfo extends ClassInfoBase {
 				pThat.getViewedClass(), a.getRnum());
 		// now establish the name of the field for this class as seen in the
 		// other class
-		String thisFieldName = nameManager.toFieldName(otherClassName,
+		String mappedBy = nameManager.toFieldName(otherClassName,
 				cls.getName(), a.getRnum());
 		boolean inPrimaryId = inPrimaryId(a.getRnum());
 
@@ -754,7 +754,7 @@ public class ClassInfo extends ClassInfoBase {
 		return new MyReferenceMember(pThat.getViewedClass(),
 				infoOther.getClassFullName(), toMult(pThis), toMult(pThat),
 				pThis.getPhrase(), pThat.getPhrase(), fieldName, joins,
-				thisFieldName, manyToMany, inPrimaryId, a.getRnum().toString());
+				mappedBy, manyToMany, inPrimaryId, a.getRnum().toString());
 	}
 
 	private List<MyJoinColumn> getJoinColumns(BigInteger rnum, Class cls,

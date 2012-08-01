@@ -1218,21 +1218,32 @@ public class ClassWriter {
 				info.addType(ref.getFullClassName()), ref.getFieldName());
 		writeGetterAndSetter(out, info, ref.getSimpleClassName(),
 				ref.getFullClassName(), ref.getFieldName(), false);
-		// writeRelateTo(out, ref);
+		writeRelateTo(out, ref);
+	}
+
+	private boolean isUnary(MyReferenceMember ref) {
+		return ref.getFullClassName().equals(info.getClassFullName());
 	}
 
 	private void writeRelateTo(PrintStream out, MyReferenceMember ref) {
+		// TODO handle unary relationship relateTo
+		if (isUnary(ref))
+			return;
+
 		String fieldName = ref.getFieldName();
-		String mappedBy = Util.lowerFirst(ref.getSimpleClassName());
-		out.format("    public void relateToAcrossR%s(%s %s) {\n",
+		String mappedBy = Util.lowerFirst(ref.getMappedBy());
+		out.format("    public void relateAcrossR%sTo(%s %s) {\n",
 				ref.getRnum(), info.addType(ref.getFullClassName()), fieldName);
-		if (ref.getThatMult().equals(Mult.ONE)
-				|| ref.getThatMult().equals(Mult.ZERO_ONE)) {
+		Mult thisMult = ref.getThisMult();
+		Mult thatMult = ref.getThatMult();
+		if (thatMult.equals(Mult.ONE) || thatMult.equals(Mult.ZERO_ONE)) {
 			// TODO implement relateTo
 			out.format("        set%s(%s);\n", Util.upperFirst(fieldName),
 					fieldName);
-			// out.format("        %s.set%s(this);\n", fieldName,
-			// Util.upperFirst(mappedBy));
+		}
+		if (thisMult.equals(Mult.ONE) || thisMult.equals(Mult.ZERO_ONE)) {
+			out.format("        %s.set%s(this);\n", fieldName,
+					Util.upperFirst(mappedBy));
 		}
 		out.format("    }\n\n");
 	}
