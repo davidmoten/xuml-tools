@@ -10,7 +10,7 @@ xuml-tools
 
 This project is **in active development** and has not reached alpha release status yet (will be soon methinks).
 
-<img src="https://github.com/davidmoten/xuml-tools/raw/master/xuml-diagrams/src/docs/class-diagram.png">
+<img src="../../raw/master/xuml-diagrams/src/docs/class-diagram.png">
 
 Continuous integration with Jenkins for this project is [here](https://xuml-tools.ci.cloudbees.com/). <a href="https://xuml-tools.ci.cloudbees.com/"><img  src="http://web-static-cloudfront.s3.amazonaws.com/images/badges/BuiltOnDEV.png"/></a>
 
@@ -66,68 +66,68 @@ Alternatively, look at the maven plugin below that you would insert into your po
 </build>
 ```
 
-The module [**xuml-model-compiler-test**](https://github.com/davidmoten/xuml-tools/tree/master/xuml-model-compiler-test) tests all association types and demonstrates usage. In particular the test class [AbcTest.java](https://github.com/davidmoten/xuml-tools/blob/master/xuml-model-compiler-test/src/test/java/xuml/tools/jaxb/compiler/test/AbcTest.java) demonstrates normal system lifecycle.
+The module [**xuml-model-compiler-test**](../../tree/master/xuml-model-compiler-test) tests all association types and demonstrates usage. In particular the test class [AbcTest.java](../../blob/master/xuml-model-compiler-test/src/test/java/xuml/tools/jaxb/compiler/test/AbcTest.java) demonstrates normal system lifecycle.
 
 Model schema
 ------------
-Models are defined in xml that is compliant to the miUML xuml-tools [schema](https://github.com/davidmoten/xuml-tools/blob/master/miuml-jaxb/src/main/resources/miuml-metamodel.xsd). A sample of xml compliant with the schema is [samples.xml](https://github.com/davidmoten/xuml-tools/blob/master/miuml-jaxb/src/main/resources/samples.xml).
+Models are defined in xml that is compliant to the miUML xuml-tools [schema](../../blob/master/miuml-jaxb/src/main/resources/miuml-metamodel.xsd). A sample of xml compliant with the schema is [samples.xml](../../blob/master/miuml-jaxb/src/main/resources/samples.xml).
 
 Java model compiler
 -------------------
 With the model compiler we seek to implement the approach taken by Mellor & Balcer in their super book [*Executable UML - A Foundation for Model Driven Architecture*](http://www.executableumlbook.com/). The most notable exception is using Java as the Action Language.
 
-<img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/xuml-model-compiler.png" width="600">
+<img src="../../raw/master/src/docs/xuml-model-compiler.png" width="600">
 
-The java model compiler includes the following features (<img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">denotes done):
+The java model compiler includes the following features (<img src="../../raw/master/src/docs/tick.png">denotes done):
 
-* Generates JPA entities  <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png"> 
-* Generates State Machine  <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png"> 
+* Generates JPA entities  <img src="../../raw/master/src/docs/tick.png"> 
+* Generates State Machine  <img src="../../raw/master/src/docs/tick.png"> 
 * All association types
- * 1 to 1 <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
- * 0..1 to 1 <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png"> 
- * 1 to * <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
- * 0..1 to * <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
- * 1 to 1..* <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
- * 0..1 to 1..* <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
- * * to * <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
- * * to * with Association Class <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
- * 1..* to * with Association Class <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
- * 1..* to 1..* with Association Class <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
- * Unary 1 <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
- * Unary 0..1 <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
- * Unary * <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
+ * 1 to 1 <img src="../../raw/master/src/docs/tick.png">
+ * 0..1 to 1 <img src="../../raw/master/src/docs/tick.png"> 
+ * 1 to * <img src="../../raw/master/src/docs/tick.png">
+ * 0..1 to * <img src="../../raw/master/src/docs/tick.png">
+ * 1 to 1..* <img src="../../raw/master/src/docs/tick.png">
+ * 0..1 to 1..* <img src="../../raw/master/src/docs/tick.png">
+ * * to * <img src="../../raw/master/src/docs/tick.png">
+ * * to * with Association Class <img src="../../raw/master/src/docs/tick.png">
+ * 1..* to * with Association Class <img src="../../raw/master/src/docs/tick.png">
+ * 1..* to 1..* with Association Class <img src="../../raw/master/src/docs/tick.png">
+ * Unary 1 <img src="../../raw/master/src/docs/tick.png">
+ * Unary 0..1 <img src="../../raw/master/src/docs/tick.png">
+ * Unary * <img src="../../raw/master/src/docs/tick.png">
  * Unary * with Association Class
- * Unary 1..* <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
+ * Unary 1..* <img src="../../raw/master/src/docs/tick.png">
  * Unary 1..* with Association Class
-* Event and State signatures <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
-* Concise usage <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
-* Composite primary identifiers  <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png"> 
-* Secondary identifiers as unique constraints <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png"> 
-* Specializations <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
-* Signals to self buffered and executed within one transaction <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png"> 
-* Asynchronous persistent signalling  <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png"> 
-* Auto-detection of signals to self <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
-* Custom exception handlers <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
-* Uses Akka actors to handle concurrency <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
-* Composite Id toString, equals and hashCode methods <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
+* Event and State signatures <img src="../../raw/master/src/docs/tick.png">
+* Concise usage <img src="../../raw/master/src/docs/tick.png">
+* Composite primary identifiers  <img src="../../raw/master/src/docs/tick.png"> 
+* Secondary identifiers as unique constraints <img src="../../raw/master/src/docs/tick.png"> 
+* Specializations <img src="../../raw/master/src/docs/tick.png">
+* Signals to self buffered and executed within one transaction <img src="../../raw/master/src/docs/tick.png"> 
+* Asynchronous persistent signalling  <img src="../../raw/master/src/docs/tick.png"> 
+* Auto-detection of signals to self <img src="../../raw/master/src/docs/tick.png">
+* Custom exception handlers <img src="../../raw/master/src/docs/tick.png">
+* Uses Akka actors to handle concurrency <img src="../../raw/master/src/docs/tick.png">
+* Composite Id toString, equals and hashCode methods <img src="../../raw/master/src/docs/tick.png">
 * Entity toString method 
-* Event toString method <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
+* Event toString method <img src="../../raw/master/src/docs/tick.png">
 * Generated find methods for attribute groups
-* Composite Id Builder pattern <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
-* Event Builder pattern  <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
+* Composite Id Builder pattern <img src="../../raw/master/src/docs/tick.png">
+* Event Builder pattern  <img src="../../raw/master/src/docs/tick.png">
 * Domain and global type constraints honoured:
- * MaxLength <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
- * MinLength <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
- * Precision <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
- * LowerLimit <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
- * UpperLimit <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
- * Prefix <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
- * Suffix <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
- * ValidationPattern <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
+ * MaxLength <img src="../../raw/master/src/docs/tick.png">
+ * MinLength <img src="../../raw/master/src/docs/tick.png">
+ * Precision <img src="../../raw/master/src/docs/tick.png">
+ * LowerLimit <img src="../../raw/master/src/docs/tick.png">
+ * UpperLimit <img src="../../raw/master/src/docs/tick.png">
+ * Prefix <img src="../../raw/master/src/docs/tick.png">
+ * Suffix <img src="../../raw/master/src/docs/tick.png">
+ * ValidationPattern <img src="../../raw/master/src/docs/tick.png">
  * DefaultValue
 * Database tests
- * Derby <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
- * H2 <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
+ * Derby <img src="../../raw/master/src/docs/tick.png">
+ * H2 <img src="../../raw/master/src/docs/tick.png">
  * HSQLDB
  * Postgres
  * MySQL
@@ -135,7 +135,7 @@ The java model compiler includes the following features (<img src="https://githu
  * DB2
  * SQL Server
 * JPA Provider tests
- * Hibernate <img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png">
+ * Hibernate <img src="../../raw/master/src/docs/tick.png">
  * EclipseLink
  * TopLink
  * OpenJPA
@@ -174,18 +174,18 @@ In terms of the role transactions play in relation to signals:
 1. If and only if the transaction succeeds the queue of *Signal to other* is processed (the signals are sent).
 
 ### Exception handling ###
-The system should be developed and tested with the aim of no uncaught exceptions being thrown. However, unexpected exceptions need to be dealt with properly when they occur. For this purpose the developer may implement an [EntityActorListener](https://github.com/davidmoten/xuml-tools/blob/master/xuml-model-compiler-runtime/src/main/java/xuml/tools/model/compiler/runtime/actor/EntityActorListener.java) to perform retries, log/notify errors, or even halt processing on one or all entities.
+The system should be developed and tested with the aim of no uncaught exceptions being thrown. However, unexpected exceptions need to be dealt with properly when they occur. For this purpose the developer may implement an [EntityActorListener](../../blob/master/xuml-model-compiler-runtime/src/main/java/xuml/tools/model/compiler/runtime/actor/EntityActorListener.java) to perform retries, log/notify errors, or even halt processing on one or all entities.
 
-An example of setting up an [EntityActorListenerFactory](https://github.com/davidmoten/xuml-tools/blob/master/xuml-model-compiler-runtime/src/main/java/xuml/tools/model/compiler/runtime/actor/EntityActorListenerFactory.java) and assigning it to the current Context is in [AbcTest.java](https://github.com/davidmoten/xuml-tools/blob/master/xuml-model-compiler-test/src/test/java/xuml/tools/jaxb/compiler/test/AbcTest.java).
+An example of setting up an [EntityActorListenerFactory](../../blob/master/xuml-model-compiler-runtime/src/main/java/xuml/tools/model/compiler/runtime/actor/EntityActorListenerFactory.java) and assigning it to the current Context is in [AbcTest.java](../../blob/master/xuml-model-compiler-test/src/test/java/xuml/tools/jaxb/compiler/test/AbcTest.java).
 
 More examples:
 
 <table>
   <tr><th>Purpose</th><th>Class</th></tr>
-  <tr><td>Log failures</td><td><a href="https://github.com/davidmoten/xuml-tools/blob/master/xuml-model-compiler-runtime/src/test/java/xuml/tools/model/compiler/runtime/actor/EntityActorListenerLogging.java">EntityActorListenerLogging.java</a></td></tr>
-  <tr><td>Retry on failure with 5 min delay</td><td><a href="https://github.com/davidmoten/xuml-tools/blob/master/xuml-model-compiler-runtime/src/test/java/xuml/tools/model/compiler/runtime/actor/EntityActorListenerRetryOnFailure.java">EntityActorListenerRetryOnFailure.java</a></td></tr>
-  <tr><td>Stop all signal processing on failure</td><td><a href="https://github.com/davidmoten/xuml-tools/blob/master/xuml-model-compiler-runtime/src/test/java/xuml/tools/model/compiler/runtime/actor/EntityActorListenerStopsAllSignalProcessingOnFailure.java">EntityActorListenerStopsAllSignalProcessingOnFailure.java</a></td></tr>
-  <tr><td>Stop signal processing on single entity on failure</td><td><a href="https://github.com/davidmoten/xuml-tools/blob/master/xuml-model-compiler-runtime/src/test/java/xuml/tools/model/compiler/runtime/actor/EntityActorListenerStopsSignalProcessingSingleEntityOnFailure.java">EntityActorListenerStopsSignalProcessingSingleEntityOnFailure.java</a></td></tr>
+  <tr><td>Log failures</td><td><a href="../../blob/master/xuml-model-compiler-runtime/src/test/java/xuml/tools/model/compiler/runtime/actor/EntityActorListenerLogging.java">EntityActorListenerLogging.java</a></td></tr>
+  <tr><td>Retry on failure with 5 min delay</td><td><a href="../../blob/master/xuml-model-compiler-runtime/src/test/java/xuml/tools/model/compiler/runtime/actor/EntityActorListenerRetryOnFailure.java">EntityActorListenerRetryOnFailure.java</a></td></tr>
+  <tr><td>Stop all signal processing on failure</td><td><a href="../../blob/master/xuml-model-compiler-runtime/src/test/java/xuml/tools/model/compiler/runtime/actor/EntityActorListenerStopsAllSignalProcessingOnFailure.java">EntityActorListenerStopsAllSignalProcessingOnFailure.java</a></td></tr>
+  <tr><td>Stop signal processing on single entity on failure</td><td><a href="../../blob/master/xuml-model-compiler-runtime/src/test/java/xuml/tools/model/compiler/runtime/actor/EntityActorListenerStopsSignalProcessingSingleEntityOnFailure.java">EntityActorListenerStopsSignalProcessingSingleEntityOnFailure.java</a></td></tr>
 </table>
 
 ### Action Language ###
@@ -193,14 +193,14 @@ The current plan is to make the semantics of say BPAL 97 (Bridgepoint Action Lan
 
 <table>
 	<tr><th>Action<th>BPAL97</th><th>Java</th><th>Status</th></tr>
-	<tr><td><i>Create object</i></td><td><b>create object instance</b> customer <b>of</b> Customer;</td><td>Customer customer = Customer.create();</td><td><img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png"></td></tr>
-	<tr><td><i>Write attribute</i></td><td>customer.firstName = 'Dave';</td><td>customer.setFirstName("Dave");</td><td><img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png"></td></tr>
-	<tr><td><i>Read attribute</i></td><td>customer.firstName</td><td>customer.getFirstName()</td><td><img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png"></td></tr>
-	<tr><td><i>Delete object</i></td><td><b>delete object instance</b> customer;</td><td>customer.delete();</td><td><img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png"></td></tr>
-    <tr><td><i>Class extent</i></td><td><b>select many</b> customers <b>from instances of</b> Customer;</td><td>List&lt;Customer&gt; customers = Customer.select().many();</td><td><img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png"></td></tr>
-    <tr><td><i>Qualification (one object)</i></td><td><b>select any</b> customer <b>from instances of</b> Customer <b>where</b> selected.numPurchases>1 <b>and</b> selected.city='Canberra';</td><td>Customer customer = Customer.select(numPurchases().gt(1).and(city().eq("Canberra")).any();</td><td><img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png"></td></tr>
-    <tr><td><i>Qualification (many objects)</i></td><td><b>select many</b> customers <b>from instances of</b> Customer <b>where</b> selected.numPurchases>1 <b>and</b> selected.city='Canberra';</td><td>List&lt;Customer&gt; customer = Customer.select(numPurchases().gt(1).and(city().eq("Canberra")).many();</td><td><img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png"></td></tr>
-	<tr><td><i>Create link</i></td><td><b>relate</b> customer <b>to</b> order <b>across</b> R1;</td><td>customer.relateAcrossR1(order);</td><td><img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png"></td></tr>
+	<tr><td><i>Create object</i></td><td><b>create object instance</b> customer <b>of</b> Customer;</td><td>Customer customer = Customer.create();</td><td><img src="../../raw/master/src/docs/tick.png"></td></tr>
+	<tr><td><i>Write attribute</i></td><td>customer.firstName = 'Dave';</td><td>customer.setFirstName("Dave");</td><td><img src="../../raw/master/src/docs/tick.png"></td></tr>
+	<tr><td><i>Read attribute</i></td><td>customer.firstName</td><td>customer.getFirstName()</td><td><img src="../../raw/master/src/docs/tick.png"></td></tr>
+	<tr><td><i>Delete object</i></td><td><b>delete object instance</b> customer;</td><td>customer.delete();</td><td><img src="../../raw/master/src/docs/tick.png"></td></tr>
+    <tr><td><i>Class extent</i></td><td><b>select many</b> customers <b>from instances of</b> Customer;</td><td>List&lt;Customer&gt; customers = Customer.select().many();</td><td><img src="../../raw/master/src/docs/tick.png"></td></tr>
+    <tr><td><i>Qualification (one object)</i></td><td><b>select any</b> customer <b>from instances of</b> Customer <b>where</b> selected.numPurchases>1 <b>and</b> selected.city='Canberra';</td><td>Customer customer = Customer.select(numPurchases().gt(1).and(city().eq("Canberra")).any();</td><td><img src="../../raw/master/src/docs/tick.png"></td></tr>
+    <tr><td><i>Qualification (many objects)</i></td><td><b>select many</b> customers <b>from instances of</b> Customer <b>where</b> selected.numPurchases>1 <b>and</b> selected.city='Canberra';</td><td>List&lt;Customer&gt; customer = Customer.select(numPurchases().gt(1).and(city().eq("Canberra")).many();</td><td><img src="../../raw/master/src/docs/tick.png"></td></tr>
+	<tr><td><i>Create link</i></td><td><b>relate</b> customer <b>to</b> order <b>across</b> R1;</td><td>customer.relateAcrossR1(order);</td><td><img src="../../raw/master/src/docs/tick.png"></td></tr>
 	<tr><td><i>Traverse link</i></td><td><b>select many</b> order <b>related by</b> customer -&gt; Order[R1];</td><td>customer = order.getCustomer_R1();</td><td><img src="../../raw/master/src/docs/tick.png"></td></tr>
 	<tr><td><i>Delete link</i></td><td><b>unrelate</b> order <b>from </b> customer <b>across</b> R1;</td><td>customer.unrelateAcrossR1(order);</td><td><img src="../../raw/master/src/docs/tick.png"></td></tr>
 	<tr><td>Create link object</td><td><b>relate</b> author <b>to</b> book <b>across</b> R3 <b>creating</b> authorship;</td><td>Authorship authorship = author.relateAcrossR3(book);</td><td></td></tr>
