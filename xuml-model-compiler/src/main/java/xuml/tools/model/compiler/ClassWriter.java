@@ -1636,9 +1636,13 @@ public class ClassWriter {
 		out.format("        this.%1$s=%1$s;\n", attribute.getFieldName());
 		out.format("    }\n\n");
 
-		// TODO use NameManager to avoid standard methods
-		out.format("    public %s %s(%s %s){\n", info.getJavaClassSimpleName(),
-				attribute.getFieldName(), type, attribute.getFieldName());
+		jd(out,
+				"Sets the attribute to the given value and returns this\n(enables method chaining).",
+				"    ");
+		out.format("    public %s set%s_(%s %s){\n",
+				info.getJavaClassSimpleName(),
+				Util.upperFirst(attribute.getFieldName()), type,
+				attribute.getFieldName());
 		out.format("        set%s(%s);\n",
 				Util.upperFirst(attribute.getFieldName()),
 				attribute.getFieldName());

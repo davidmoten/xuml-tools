@@ -203,7 +203,10 @@ public class AbcTest {
 					@Override
 					public void onEntryDoneSomething(
 							StateSignature_DoneSomething event) {
-						self.aThree(event.getTheCount() + "");
+						// use the method chaining version of setAThree
+						// (underscore appended)
+						System.out.println(self.setAThree_(
+								event.getTheCount() + "").getId());
 						System.out.println("setting A.athree="
 								+ self.getAThree() + " for " + self.getId());
 						// demonstrate/unit test getting access to the current
