@@ -1854,7 +1854,7 @@ public class ClassWriter {
 
 	private void writeQueryMethods(PrintStream out, ClassInfo info) {
 
-		out.format("    public static class Field {\n");
+		out.format("    public static class Attribute {\n");
 		for (MyIndependentAttribute member : info
 				.getNonIdIndependentAttributeMembers()) {
 			MyType type = member.getType().getMyType();

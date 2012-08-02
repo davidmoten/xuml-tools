@@ -1,6 +1,6 @@
 package xuml.tools.jaxb.compiler.test;
 
-import static abc.A.Field.aOne;
+import static abc.A.Attribute.aOne;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
