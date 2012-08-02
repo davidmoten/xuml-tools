@@ -5,7 +5,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
-import xuml.tools.model.compiler.runtime.actor.EntityActorListenerFactory;
+import xuml.tools.model.compiler.runtime.actor.SignalProcessorListenerFactory;
 import xuml.tools.model.compiler.runtime.actor.RootActor;
 import xuml.tools.model.compiler.runtime.message.EntityCommit;
 import xuml.tools.model.compiler.runtime.message.Signal;
@@ -28,7 +28,7 @@ public class Signaller {
 	private final EntityManagerFactory emf;
 
 	public Signaller(EntityManagerFactory emf,
-			EntityActorListenerFactory listenerFactory) {
+			SignalProcessorListenerFactory listenerFactory) {
 		this.emf = emf;
 		root.tell(emf);
 		if (listenerFactory != null)

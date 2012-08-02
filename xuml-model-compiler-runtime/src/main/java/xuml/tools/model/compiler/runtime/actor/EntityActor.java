@@ -18,7 +18,7 @@ public class EntityActor extends UntypedActor {
 	private EntityManagerFactory emf;
 	private boolean closed = false;
 	private final LoggingAdapter log;
-	private EntityActorListener listener = EntityActorListenerDoesNothing
+	private SignalProcessorListener listener = SignalProcessorListenerDoesNothing
 			.getInstance();
 
 	public EntityActor() {
@@ -30,8 +30,8 @@ public class EntityActor extends UntypedActor {
 		log.info("received message " + message.getClass().getName());
 		if (message instanceof EntityManagerFactory)
 			handleMessage((EntityManagerFactory) message);
-		else if (message instanceof EntityActorListener)
-			listener = (EntityActorListener) message;
+		else if (message instanceof SignalProcessorListener)
+			listener = (SignalProcessorListener) message;
 		else if (message instanceof Signal) {
 			handleMessage((Signal<?>) message);
 		} else if (message instanceof StopEntityActor) {

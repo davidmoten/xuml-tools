@@ -174,18 +174,18 @@ In terms of the role transactions play in relation to signals:
 1. If and only if the transaction succeeds the queue of *Signal to other* is processed (the signals are sent).
 
 ### Exception handling ###
-The system should be developed and tested with the aim of no uncaught exceptions being thrown. However, unexpected exceptions need to be dealt with properly when they occur. For this purpose the developer may implement an [EntityActorListener](../../blob/master/xuml-model-compiler-runtime/src/main/java/xuml/tools/model/compiler/runtime/actor/EntityActorListener.java) to perform retries, log/notify errors, or even halt processing on one or all entities.
+The system should be developed and tested with the aim of no uncaught exceptions being thrown. However, unexpected exceptions need to be dealt with properly when they occur. For this purpose the developer may implement an [SignalProcessorListener](../../blob/master/xuml-model-compiler-runtime/src/main/java/xuml/tools/model/compiler/runtime/actor/SignalProcessorListener.java) to perform retries, log/notify errors, or even halt processing on one or all entities.
 
-An example of setting up an [EntityActorListenerFactory](../../blob/master/xuml-model-compiler-runtime/src/main/java/xuml/tools/model/compiler/runtime/actor/EntityActorListenerFactory.java) and assigning it to the current Context is in [AbcTest.java](../../blob/master/xuml-model-compiler-test/src/test/java/xuml/tools/jaxb/compiler/test/AbcTest.java).
+An example of setting up an [SignalProcessorListenerFactory](../../blob/master/xuml-model-compiler-runtime/src/main/java/xuml/tools/model/compiler/runtime/actor/SignalProcessorListenerFactory.java) and assigning it to the current Context is in [AbcTest.java](../../blob/master/xuml-model-compiler-test/src/test/java/xuml/tools/jaxb/compiler/test/AbcTest.java).
 
 More examples:
 
 <table>
   <tr><th>Purpose</th><th>Class</th></tr>
-  <tr><td>Log failures</td><td><a href="../../blob/master/xuml-model-compiler-runtime/src/test/java/xuml/tools/model/compiler/runtime/actor/EntityActorListenerLogging.java">EntityActorListenerLogging.java</a></td></tr>
-  <tr><td>Retry on failure with 5 min delay</td><td><a href="../../blob/master/xuml-model-compiler-runtime/src/test/java/xuml/tools/model/compiler/runtime/actor/EntityActorListenerRetryOnFailure.java">EntityActorListenerRetryOnFailure.java</a></td></tr>
-  <tr><td>Stop all signal processing on failure</td><td><a href="../../blob/master/xuml-model-compiler-runtime/src/test/java/xuml/tools/model/compiler/runtime/actor/EntityActorListenerStopsAllSignalProcessingOnFailure.java">EntityActorListenerStopsAllSignalProcessingOnFailure.java</a></td></tr>
-  <tr><td>Stop signal processing on single entity on failure</td><td><a href="../../blob/master/xuml-model-compiler-runtime/src/test/java/xuml/tools/model/compiler/runtime/actor/EntityActorListenerStopsSignalProcessingSingleEntityOnFailure.java">EntityActorListenerStopsSignalProcessingSingleEntityOnFailure.java</a></td></tr>
+  <tr><td>Log failures</td><td><a href="../../blob/master/xuml-model-compiler-runtime/src/test/java/xuml/tools/model/compiler/runtime/actor/SignalProcessorListenerLogging.java">SignalProcessorListenerLogging.java</a></td></tr>
+  <tr><td>Retry on failure with 5 min delay</td><td><a href="../../blob/master/xuml-model-compiler-runtime/src/test/java/xuml/tools/model/compiler/runtime/actor/SignalProcessorListenerRetryOnFailure.java">SignalProcessorListenerRetryOnFailure.java</a></td></tr>
+  <tr><td>Stop all signal processing on failure</td><td><a href="../../blob/master/xuml-model-compiler-runtime/src/test/java/xuml/tools/model/compiler/runtime/actor/SignalProcessorListenerStopsAllSignalProcessingOnFailure.java">SignalProcessorListenerStopsAllSignalProcessingOnFailure.java</a></td></tr>
+  <tr><td>Stop signal processing on single entity on failure</td><td><a href="../../blob/master/xuml-model-compiler-runtime/src/test/java/xuml/tools/model/compiler/runtime/actor/SignalProcessorListenerStopsSignalProcessingSingleEntityOnFailure.java">SignalProcessorListenerStopsSignalProcessingSingleEntityOnFailure.java</a></td></tr>
 </table>
 
 ### Action Language ###

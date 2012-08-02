@@ -7,7 +7,7 @@ import xuml.tools.model.compiler.runtime.message.Signal;
 import com.google.common.collect.Sets;
 
 public class EntityActorListenerStopsSignalProcessingSingleEntityOnFailure
-		implements EntityActorListener {
+		implements SignalProcessorListener {
 
 	private static Set<String> stoppedEntities = Sets.newHashSet();
 

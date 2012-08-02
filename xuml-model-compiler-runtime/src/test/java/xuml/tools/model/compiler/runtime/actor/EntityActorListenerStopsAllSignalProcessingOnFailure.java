@@ -3,7 +3,7 @@ package xuml.tools.model.compiler.runtime.actor;
 import xuml.tools.model.compiler.runtime.message.Signal;
 
 public class EntityActorListenerStopsAllSignalProcessingOnFailure implements
-		EntityActorListener {
+		SignalProcessorListener {
 
 	private static boolean failureOccured = false;
 

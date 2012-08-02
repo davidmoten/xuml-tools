@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 
 import xuml.tools.model.compiler.runtime.message.Signal;
 
-public class EntityActorListenerLogging implements EntityActorListener {
+public class EntityActorListenerLogging implements SignalProcessorListener {
 
 	private static Logger log = Logger
 			.getLogger(EntityActorListenerLogging.class.getName());

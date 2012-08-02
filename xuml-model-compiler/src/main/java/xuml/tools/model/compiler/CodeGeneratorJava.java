@@ -21,7 +21,7 @@ import xuml.tools.model.compiler.runtime.CreationEvent;
 import xuml.tools.model.compiler.runtime.Entity;
 import xuml.tools.model.compiler.runtime.Event;
 import xuml.tools.model.compiler.runtime.Signaller;
-import xuml.tools.model.compiler.runtime.actor.EntityActorListenerFactory;
+import xuml.tools.model.compiler.runtime.actor.SignalProcessorListenerFactory;
 
 import com.google.common.collect.Lists;
 
@@ -151,10 +151,10 @@ public class CodeGeneratorJava {
 		out.format("    }\n\n");
 
 		out.format("    private static %s listenerFactory;\n\n",
-				types.addType(EntityActorListenerFactory.class));
+				types.addType(SignalProcessorListenerFactory.class));
 		out.format(
 				"    public static void setEntityActorListenerFactory(%s listenerFactory) {\n",
-				types.addType(EntityActorListenerFactory.class));
+				types.addType(SignalProcessorListenerFactory.class));
 		out.format("        if (signaller !=null)\n");
 		out.format(
 				"            throw new %s(\"EntityActorListenerFactory must be set before EntityManagerFactory\");\n",

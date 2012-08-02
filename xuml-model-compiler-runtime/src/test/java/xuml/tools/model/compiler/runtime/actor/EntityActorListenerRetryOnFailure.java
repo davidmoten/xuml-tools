@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 import xuml.tools.model.compiler.runtime.message.Signal;
 import akka.util.Duration;
 
-public class EntityActorListenerRetryOnFailure implements EntityActorListener {
+public class EntityActorListenerRetryOnFailure implements SignalProcessorListener {
 
 	private static Logger log = Logger
 			.getLogger(EntityActorListenerRetryOnFailure.class.getName());

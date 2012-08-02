@@ -17,8 +17,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import xuml.tools.model.compiler.runtime.actor.EntityActor;
-import xuml.tools.model.compiler.runtime.actor.EntityActorListener;
-import xuml.tools.model.compiler.runtime.actor.EntityActorListenerFactory;
+import xuml.tools.model.compiler.runtime.actor.SignalProcessorListener;
+import xuml.tools.model.compiler.runtime.actor.SignalProcessorListenerFactory;
 import xuml.tools.model.compiler.runtime.message.Signal;
 import abc.A;
 import abc.A.AId;
@@ -225,14 +225,14 @@ public class AbcTest {
 		};
 	}
 
-	private static EntityActorListenerFactory createEntityActorListenerFactory() {
-		return new EntityActorListenerFactory() {
+	private static SignalProcessorListenerFactory createEntityActorListenerFactory() {
+		return new SignalProcessorListenerFactory() {
 
 			// use the same listener for all entities
-			private final EntityActorListener listener = createEntityActorListener();
+			private final SignalProcessorListener listener = createEntityActorListener();
 
 			@Override
-			public EntityActorListener create(String entityUniqueId) {
+			public SignalProcessorListener create(String entityUniqueId) {
 				return listener;
 			}
 		};
@@ -243,8 +243,8 @@ public class AbcTest {
 	 * 
 	 * @return
 	 */
-	private static EntityActorListener createEntityActorListener() {
-		return new EntityActorListener() {
+	private static SignalProcessorListener createEntityActorListener() {
+		return new SignalProcessorListener() {
 
 			private int processed = 0;
 
