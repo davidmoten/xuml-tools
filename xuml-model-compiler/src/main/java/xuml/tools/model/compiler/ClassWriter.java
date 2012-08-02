@@ -1235,7 +1235,8 @@ public class ClassWriter {
 
 		String fieldName = ref.getFieldName();
 		String mappedBy = Util.lowerFirst(ref.getMappedBy());
-		out.format("    public void relateAcrossR%s(%s %s) {\n", ref.getRnum(),
+		out.format("    public %s relateAcrossR%s(%s %s) {\n",
+				info.getJavaClassSimpleName(), ref.getRnum(),
 				info.addType(ref.getFullClassName()), fieldName);
 		Mult thisMult = ref.getThisMult();
 		Mult thatMult = ref.getThatMult();
@@ -1256,7 +1257,7 @@ public class ClassWriter {
 			out.format("        %s.get%s().add(this);\n", fieldName,
 					Util.upperFirst(mappedBy), fieldName);
 		}
-
+		out.format("        return this;\n");
 		out.format("    }\n\n");
 	}
 
@@ -1268,8 +1269,9 @@ public class ClassWriter {
 
 		String fieldName = ref.getFieldName();
 		String mappedBy = Util.lowerFirst(ref.getMappedBy());
-		out.format("    public void unrelateAcrossR%s(%s %s) {\n",
-				ref.getRnum(), info.addType(ref.getFullClassName()), fieldName);
+		out.format("    public %s unrelateAcrossR%s(%s %s) {\n",
+				info.getJavaClassSimpleName(), ref.getRnum(),
+				info.addType(ref.getFullClassName()), fieldName);
 		Mult thisMult = ref.getThisMult();
 		Mult thatMult = ref.getThatMult();
 
@@ -1290,6 +1292,7 @@ public class ClassWriter {
 					Util.upperFirst(mappedBy), fieldName);
 		}
 
+		out.format("        return this;\n");
 		out.format("    }\n\n");
 	}
 
