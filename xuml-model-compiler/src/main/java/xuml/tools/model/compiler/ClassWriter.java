@@ -1635,6 +1635,15 @@ public class ClassWriter {
 				attribute.getFieldName());
 		out.format("        this.%1$s=%1$s;\n", attribute.getFieldName());
 		out.format("    }\n\n");
+
+		// TODO use NameManager to avoid standard methods
+		out.format("    public %s %s(%s %s){\n", info.getJavaClassSimpleName(),
+				attribute.getFieldName(), type, attribute.getFieldName());
+		out.format("        set%s(%s);\n",
+				Util.upperFirst(attribute.getFieldName()),
+				attribute.getFieldName());
+		out.format("        return this;\n");
+		out.format("    }\n\n");
 	}
 
 	private void writeStaticFinderMethods(PrintStream out, ClassInfo info) {
