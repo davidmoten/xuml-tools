@@ -123,7 +123,7 @@ public class AbcTest {
 
 		// Intercept entity processing to log activity
 		// set this before setting EntityManagerFactory
-		Context.setEntityActorListenerFactory(createEntityActorListenerFactory());
+		Context.setEntityActorListenerFactory(createSignalProcessorListenerFactory());
 
 		// pass the EntityManagerFactory to the generated xuml Context
 		Context.setEntityManagerFactory(emf);
@@ -182,6 +182,49 @@ public class AbcTest {
 	}
 
 	/**
+	 * Behaviour for an A entity.
+	 * 
+	 * @author dxm
+	 * 
+	 */
+	private static class ABehaviour implements A.Behaviour {
+
+		private final A self;
+
+		ABehaviour(A self) {
+			this.self = self;
+		}
+
+		@Override
+		public void onEntryHasStarted(Create event) {
+			self.setId(AId.builder().aOne(event.getAOne())
+					.aTwo(event.getATwo()).build());
+			self.setAThree(event.getAccountNumber());
+			System.out.println("created");
+		}
+
+		@Override
+		public void onEntryDoneSomething(StateSignature_DoneSomething event) {
+			// use the method chaining version of setAThree
+			// (underscore appended)
+			System.out.println(self.setAThree_(event.getTheCount() + "")
+					.getId());
+			System.out.println("setting A.athree=" + self.getAThree() + " for "
+					+ self.getId());
+			// demonstrate/unit test getting access to the current
+			// entity manager when needed
+			Object count = Context.em().createQuery("select count(b) from B b")
+					.getResultList();
+			System.out.println("counted " + count + " B entities");
+
+			// also demonstrate select many using a SelectBuilder
+			List<A> list = A.select(aOne.eq("value1.1")).many();
+			System.out.println("list size = " + list.size());
+		}
+
+	}
+
+	/**
 	 * Returns a {@link BehaviourFactory} for A.
 	 * 
 	 * @return
@@ -189,47 +232,17 @@ public class AbcTest {
 	private static BehaviourFactory createBehaviourFactoryForA() {
 		return new A.BehaviourFactory() {
 			@Override
-			public A.Behaviour create(final A self) {
-				return new A.Behaviour() {
-
-					@Override
-					public void onEntryHasStarted(Create event) {
-						self.setId(AId.builder().aOne(event.getAOne())
-								.aTwo(event.getATwo()).build());
-						self.setAThree(event.getAccountNumber());
-						System.out.println("created");
-					}
-
-					@Override
-					public void onEntryDoneSomething(
-							StateSignature_DoneSomething event) {
-						// use the method chaining version of setAThree
-						// (underscore appended)
-						System.out.println(self.setAThree_(
-								event.getTheCount() + "").getId());
-						System.out.println("setting A.athree="
-								+ self.getAThree() + " for " + self.getId());
-						// demonstrate/unit test getting access to the current
-						// entity manager when needed
-						Object count = Context.em()
-								.createQuery("select count(b) from B b")
-								.getResultList();
-						System.out.println("counted " + count + " B entities");
-
-						// also demonstrate select many using a SelectBuilder
-						List<A> list = A.select(aOne.eq("value1.1")).many();
-						System.out.println("list size = " + list.size());
-					}
-				};
+			public A.Behaviour create(final A entity) {
+				return new ABehaviour(entity);
 			}
 		};
 	}
 
-	private static SignalProcessorListenerFactory createEntityActorListenerFactory() {
+	private static SignalProcessorListenerFactory createSignalProcessorListenerFactory() {
 		return new SignalProcessorListenerFactory() {
 
 			// use the same listener for all entities
-			private final SignalProcessorListener listener = createEntityActorListener();
+			private final SignalProcessorListener listener = createSignalProcessorListener();
 
 			@Override
 			public SignalProcessorListener create(String entityUniqueId) {
@@ -243,7 +256,7 @@ public class AbcTest {
 	 * 
 	 * @return
 	 */
-	private static SignalProcessorListener createEntityActorListener() {
+	private static SignalProcessorListener createSignalProcessorListener() {
 		return new SignalProcessorListener() {
 
 			private int processed = 0;
@@ -288,5 +301,4 @@ public class AbcTest {
 			A.setBehaviourFactory(f);
 		}
 	}
-
 }
