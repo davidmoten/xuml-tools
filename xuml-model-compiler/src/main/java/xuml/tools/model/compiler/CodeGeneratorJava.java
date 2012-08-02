@@ -170,13 +170,33 @@ public class CodeGeneratorJava {
 		out.format("        signaller.close();\n");
 		out.format("    }\n\n");
 
+		out.format(
+				"    public static <T extends %s<T>> T remove(T entity) {\n",
+				types.addType(Entity.class));
+		out.format("        boolean emOpenAlready = em()!=null;\n");
+		out.format("        %s em;\n", types.addType(EntityManager.class));
+		out.format("        if (emOpenAlready)\n");
+		out.format("            em = em();\n");
+		out.format("        else\n");
+		out.format("            em = createEntityManager();\n");
+		out.format("        em.remove(entity);\n");
+		out.format("        if (!emOpenAlready)\n");
+		out.format("            em.close();\n");
+		out.format("        return entity;\n");
+		out.format("    }\n\n");
+
 		out.format("    public static <T extends %s<T>> T load(T entity) {\n",
 				types.addType(Entity.class));
-		out.format("        %s em = createEntityManager();\n",
-				types.addType(EntityManager.class));
+		out.format("        boolean emOpenAlready = em()!=null;\n");
+		out.format("        %s em;\n", types.addType(EntityManager.class));
+		out.format("        if (emOpenAlready)\n");
+		out.format("            em = em();\n");
+		out.format("        else\n");
+		out.format("            em = createEntityManager();\n");
 		out.format("        T t = em.merge(entity);\n");
 		out.format("        em.refresh(t);\n");
-		out.format("        em.close();\n");
+		out.format("        if (!emOpenAlready)\n");
+		out.format("            em.close();\n");
 		out.format("        return t;\n");
 		out.format("    }\n\n");
 

@@ -112,6 +112,7 @@ public class ClassWriter {
 		writeStaticCreateMethods(out, info);
 		writeMergeMethod(out, info);
 		writePersistMethod(out, info);
+		writeRemoveMethod(out, info);
 		writeRefreshMethod(out, info);
 		writeLoadMethod(out, info);
 		writeToStringMethod(out, info);
@@ -1448,6 +1449,33 @@ public class ClassWriter {
 				info.addType(EntityManager.class));
 		out.format("        em.refresh(this);\n");
 		out.format("        return this;\n");
+		out.format("    }\n\n");
+	}
+
+	private void writeRemoveMethod(PrintStream out, ClassInfo info) {
+		jd(out,
+				"Same as EntityManager.remove() except inverted to facilitate method chaining. Returns this.",
+				"    ");
+		out.format("    public %s remove(%s em) {\n",
+				info.getJavaClassSimpleName(),
+				info.addType(EntityManager.class));
+		out.format("        em.remove(this);\n");
+		out.format("        return this;\n");
+		out.format("    }\n\n");
+
+		jd(out,
+				"Same as EntityManager.remove() except inverted to facilitate method chaining. Returns this.",
+				"    ");
+		out.format("    public %s remove() {\n", info.getJavaClassSimpleName(),
+				info.addType(EntityManager.class));
+		out.format("        Context.remove(this);\n");
+		out.format("        return this;\n");
+		out.format("    }\n\n");
+
+		jd(out, "Same as this.remove()", "    ");
+		out.format("    public %s delete() {\n", info.getJavaClassSimpleName(),
+				info.addType(EntityManager.class));
+		out.format("        return remove();\n");
 		out.format("    }\n\n");
 	}
 
