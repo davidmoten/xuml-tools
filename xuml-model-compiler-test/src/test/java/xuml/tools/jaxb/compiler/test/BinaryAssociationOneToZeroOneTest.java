@@ -60,7 +60,7 @@ public class BinaryAssociationOneToZeroOneTest {
 			em.getTransaction().begin();
 			A a2 = A.create(new AId("boo", "baa"));
 			B b = B.create(new BId("some2", "thing2"));
-			b.setA_R1(a2);
+			a2.relateAcrossR1(b);
 			em.persist(b);
 			em.getTransaction().commit();
 			em.close();

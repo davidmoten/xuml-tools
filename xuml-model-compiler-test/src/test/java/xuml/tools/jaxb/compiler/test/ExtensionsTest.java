@@ -32,10 +32,9 @@ public class ExtensionsTest {
 		EntityManager em = Context.createEntityManager();
 		try {
 			em.getTransaction().begin();
-			A a = new A();
-			a.setEmail("fred@somewhere.com");
-			a.setPostcode(2601);
-			a.persist(em);
+			// demonstrate method chaining
+			A a = new A().setEmail_("fred@somewhere.com").setPostcode_(2601)
+					.persist(em);
 
 			// check that field 'one' has been generated
 			assertNotNull(a.getId());

@@ -1220,6 +1220,7 @@ public class ClassWriter {
 		writeGetterAndSetter(out, info, ref.getSimpleClassName(),
 				ref.getFullClassName(), ref.getFieldName(), false);
 		writeRelateTo(out, ref);
+		writeUnrelateTo(out, ref);
 	}
 
 	private boolean isUnary(MyReferenceMember ref) {
@@ -1259,6 +1260,39 @@ public class ClassWriter {
 		out.format("    }\n\n");
 	}
 
+	private void writeUnrelateTo(PrintStream out, MyReferenceMember ref) {
+		// TODO handle unary relationship relateTo
+		// TODO handle association classes (relateAcrossR1Using)
+		if (isUnary(ref))
+			return;
+
+		String fieldName = ref.getFieldName();
+		String mappedBy = Util.lowerFirst(ref.getMappedBy());
+		out.format("    public void unrelateAcrossR%s(%s %s) {\n",
+				ref.getRnum(), info.addType(ref.getFullClassName()), fieldName);
+		Mult thisMult = ref.getThisMult();
+		Mult thatMult = ref.getThatMult();
+
+		// set the local field
+		if (thatMult.equals(Mult.ONE) || thatMult.equals(Mult.ZERO_ONE)) {
+			out.format("        set%s(null);\n", Util.upperFirst(fieldName),
+					fieldName);
+		} else {
+			out.format("        get%s().remove(%s);\n",
+					Util.upperFirst(fieldName), fieldName);
+		}
+		// set the field on the other object
+		if (thisMult.equals(Mult.ONE) || thisMult.equals(Mult.ZERO_ONE)) {
+			out.format("        %s.set%s(null);\n", fieldName,
+					Util.upperFirst(mappedBy));
+		} else {
+			out.format("        %s.get%s().remove(this);\n", fieldName,
+					Util.upperFirst(mappedBy), fieldName);
+		}
+
+		out.format("    }\n\n");
+	}
+
 	private void writeGetterAndSetter(PrintStream out, ClassInfo info,
 			String simpleClassName, String fullClassName, String fieldName,
 			boolean isMultiple) {
@@ -1287,6 +1321,8 @@ public class ClassWriter {
 				.addType(Sets.class));
 		writeGetterAndSetter(out, info, ref.getSimpleClassName(),
 				ref.getFullClassName(), ref.getFieldName(), true);
+		writeRelateTo(out, ref);
+		writeUnrelateTo(out, ref);
 	}
 
 	private void writeSignalMethods(PrintStream out, ClassInfo info) {

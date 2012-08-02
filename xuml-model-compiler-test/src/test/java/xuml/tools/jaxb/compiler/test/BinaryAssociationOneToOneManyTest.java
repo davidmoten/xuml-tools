@@ -62,10 +62,8 @@ public class BinaryAssociationOneToOneManyTest {
 			A a = A.create(new AId("boo", "baa"));
 			B b = B.create(new BId("some2", "thing2"));
 			B b2 = B.create(new BId("some3", "thing3"));
-			a.getB_R1().add(b);
-			a.getB_R1().add(b2);
-			b.setA_R1(a);
-			b2.setA_R1(a);
+			a.relateAcrossR1(b);
+			a.relateAcrossR1(b2);
 			a.persist(em);
 			b.persist(em);
 			b2.persist(em);
