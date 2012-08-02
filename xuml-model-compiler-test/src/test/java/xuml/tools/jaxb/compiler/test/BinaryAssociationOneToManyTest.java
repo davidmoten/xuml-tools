@@ -63,8 +63,8 @@ public class BinaryAssociationOneToManyTest {
 			A a = A.create(new AId("boo", "baa"));
 			B b = B.create(new BId("some2", "thing2"));
 			B b2 = B.create(new BId("some3", "thing3"));
-			a.relateAcrossR1(b);
-			a.relateAcrossR1(b2);
+			// demo method chaining of relateAcross
+			a.relateAcrossR1(b).relateAcrossR1(b2);
 			a.persist(em);
 			b.persist(em);
 			b2.persist(em);
