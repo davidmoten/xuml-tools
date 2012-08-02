@@ -203,7 +203,7 @@ The current plan is to make the semantics of say BPAL 97 (Bridgepoint Action Lan
 	<tr><td><i>Create link</i></td><td><b>relate</b> customer <b>to</b> order <b>across</b> R1;</td><td>customer.relateAcrossR1(order);</td><td><img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png"></td></tr>
 	<tr><td><i>Traverse link</i></td><td><b>select many</b> order <b>related by</b> customer -&gt; Order[R1];</td><td>customer = order.getCustomer_R1();</td><td><img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png"></td></tr>
 	<tr><td><i>Delete link</i></td><td><b>unrelate</b> order <b>from </b> customer <b>across</b> R1;</td><td>customer.unrelateAcrossR1(order);</td><td></td></tr>
-	<tr><td>Create link object</td><td><b>relate</b> author <b>to</b> book <b>across</b> R3 <b>creating</b> authorship;</td><td>Authorship authorship = author.createLinkObject(book);</td><td></td></tr>
+	<tr><td>Create link object</td><td><b>relate</b> author <b>to</b> book <b>across</b> R3 <b>creating</b> authorship;</td><td>Authorship authorship = author.relateAcrossR3(book);</td><td></td></tr>
 	<tr><td>Traverse link</td><td><b></b><td><td></td><td></td></tr>
 	<tr><td>Unrelate link</td><td><b></b><td><td></td><td></td></tr>
 	<tr><td>Create specialization</td><td><b></b><td><td></td><td></td></tr>
