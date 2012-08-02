@@ -204,11 +204,11 @@ The current plan is to make the semantics of say BPAL 97 (Bridgepoint Action Lan
 	<tr><td><i>Traverse link</i></td><td><b>select many</b> order <b>related by</b> customer -&gt; Order[R1];</td><td>customer = order.getCustomer_R1();</td><td><img src="https://github.com/davidmoten/xuml-tools/raw/master/src/docs/tick.png"></td></tr>
 	<tr><td><i>Delete link</i></td><td><b>unrelate</b> order <b>from </b> customer <b>across</b> R1;</td><td>customer.unrelateAcrossR1(order);</td><td></td></tr>
 	<tr><td>Create link object</td><td><b>relate</b> author <b>to</b> book <b>across</b> R3 <b>creating</b> authorship;</td><td>Authorship authorship = author.relateAcrossR3(book);</td><td></td></tr>
-	<tr><td>Traverse link</td><td><b>select one</b> authorship <b>that relates</b> author <b>to</b> book <b>across</b> R3<td><td>?</td><td></td></tr>
-	<tr><td>Unrelate link</td><td><b>unrelate</b> author <b>from</b> book <b>across</b> R3<td><td>?</td><td></td></tr>
-	<tr><td>Create specialization</td><td><b></b><td><td></td><td></td></tr>
-	<tr><td>Reclassify specialization</td><td><b></b><td><td></td><td></td></tr>
-	<tr><td>Delete specialization</td><td><b></b><td><td></td><td></td></tr>
+	<tr><td>Traverse link</td><td><b>select one</b> authorship <b>that relates</b> author <b>to</b> book <b>across</b> R3</td><td>?</td><td></td></tr>
+	<tr><td>Unrelate link</td><td><b>unrelate</b> author <b>from</b> book <b>across</b> R3</td><td>?</td><td></td></tr>
+	<tr><td>Create specialization</td><td><b></b></td><td></td><td></td></tr>
+	<tr><td>Reclassify specialization</td><td><b></b></td><td></td><td></td></tr>
+	<tr><td>Delete specialization</td><td><b></b></td><td></td><td></td></tr>
 </table>
 
 The principle is to write java on-entry methods using the above abstractions without resorting to direct use of an *EntityManager*. The current *EntityManager* is always available via *Context.em()* but for simplicity and to maximize compile-time checking it is recommended to avoid using it. You might want to resort to using *Context.em()* for some performance tweak for example but try the *EntityManager*-free approach first.
