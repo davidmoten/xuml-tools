@@ -55,6 +55,7 @@
 							<domain>test-domain</domain>
 							<schema>test_domain</schema>
 							<packageName>test</packageName>
+							<implementationPackageName>behaviour</implementationPackageName>
 							<implementationSourceDirectory>${basedir}/src/main/java</implementationSourceDirectory>
 							<implementationOverwrite>false</implementationOverwrite>
 						</configuration>
