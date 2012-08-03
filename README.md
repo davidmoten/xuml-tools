@@ -182,7 +182,7 @@ More examples:
 
 <table>
   <tr><th>Purpose</th><th>Class</th></tr>
-  <tr><td>Log failures</td><td><a href="../../blob/master/xuml-model-compiler-runtime/src/main/java/xuml/tools/model/compiler/runtime/SignalProcessorListenerUtilLogging.java">SignalProcessorListenerLogging.java</a></td></tr>
+  <tr><td>Log failures</td><td><a href="../../blob/master/xuml-model-compiler-runtime/src/main/java/xuml/tools/model/compiler/runtime/SignalProcessorListenerUtilLogging.java">SignalProcessorListenerUtilLogging.java</a></td></tr>
   <tr><td>Retry on failure with 5 min delay</td><td><a href="../../blob/master/xuml-model-compiler-runtime/src/test/java/xuml/tools/model/compiler/runtime/SignalProcessorListenerRetryOnFailure.java">SignalProcessorListenerRetryOnFailure.java</a></td></tr>
   <tr><td>Stop all signal processing on failure</td><td><a href="../../blob/master/xuml-model-compiler-runtime/src/test/java/xuml/tools/model/compiler/runtime/SignalProcessorListenerStopsAllSignalProcessingOnFailure.java">SignalProcessorListenerStopsAllSignalProcessingOnFailure.java</a></td></tr>
   <tr><td>Stop signal processing on single entity on failure</td><td><a href="../../blob/master/xuml-model-compiler-runtime/src/test/java/xuml/tools/model/compiler/runtime/SignalProcessorListenerStopsSignalProcessingSingleEntityOnFailure.java">SignalProcessorListenerStopsSignalProcessingSingleEntityOnFailure.java</a></td></tr>
