@@ -43,18 +43,21 @@ public class CodeGeneratorJava {
 	private final File entitySourceDirectory;
 	private final String implementationPackageName;
 	private final File implementationSourceDirectory;
+	private final boolean overwriteImplementation;
 
 	public CodeGeneratorJava(Domains domains, String domainName,
 			String domainPackageName, String domainSchema,
 			File entitySourceDirectory, File resourcesDirectory,
 			String implementationPackageName,
-			File implementationSourceDirectory, boolean generatePersistenceXml) {
+			File implementationSourceDirectory, boolean generatePersistenceXml,
+			boolean overwriteImplementation) {
 		this.domains = domains;
 		this.entitySourceDirectory = entitySourceDirectory;
 		this.resourcesDirectory = resourcesDirectory;
 		this.implementationPackageName = implementationPackageName;
 		this.implementationSourceDirectory = implementationSourceDirectory;
 		this.generatePersistenceXml = generatePersistenceXml;
+		this.overwriteImplementation = overwriteImplementation;
 		this.domain = Util.getModeledDomain(domains, domainName);
 		this.domainPackageName = domainPackageName;
 		this.domainSchema = domainSchema;
@@ -91,7 +94,8 @@ public class CodeGeneratorJava {
 			String java = w.generate();
 			File file = new File(destination,
 					getClassImplementationFilename(cls));
-			writeToFile(java.getBytes(), file);
+			if (!file.exists() || overwriteImplementation)
+				writeToFile(java.getBytes(), file);
 		}
 	}
 

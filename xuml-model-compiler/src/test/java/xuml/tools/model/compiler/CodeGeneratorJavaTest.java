@@ -130,10 +130,10 @@ public class CodeGeneratorJavaTest {
 		File entitySourceDirectory = new File("target/generated");
 		File implementationSourceDirectory = entitySourceDirectory;
 		File resourcesDirectory = new File("target");
-		String implementationPackageName = domainPackageName
-				+ ".impl";
+		String implementationPackageName = domainPackageName + ".impl";
 		new CodeGeneratorJava(domains, domainName, domainPackageName, schema,
-				entitySourceDirectory, resourcesDirectory, implementationPackageName, implementationSourceDirectory, true)
-				.generate();
+				entitySourceDirectory, resourcesDirectory,
+				implementationPackageName, implementationSourceDirectory, true,
+				true).generate();
 	}
 }

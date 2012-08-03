@@ -105,6 +105,13 @@ public class GenerateJpaMojo extends AbstractMojo {
 	private File implementationSourceDirectory;
 
 	/**
+	 * Implementation generated source directory.
+	 * 
+	 * @parameter default-value="false"
+	 */
+	private boolean overwriteImplementation;
+
+	/**
 	 * Resources directory.
 	 * 
 	 * @parameter default-value="${project.build.directory}/generated-resources"
@@ -151,7 +158,7 @@ public class GenerateJpaMojo extends AbstractMojo {
 		new CodeGeneratorJava(domains, domain, packageName, schema,
 				outputSourceDirectory, resourcesDirectory,
 				implementationPackageName, implementationSourceDirectory,
-				generatePersistenceXml).generate();
+				generatePersistenceXml, overwriteImplementation).generate();
 	}
 
 	private void generateClassDiagrams(
