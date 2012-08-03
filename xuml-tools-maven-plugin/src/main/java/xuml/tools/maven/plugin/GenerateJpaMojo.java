@@ -109,7 +109,7 @@ public class GenerateJpaMojo extends AbstractMojo {
 	 * 
 	 * @parameter default-value="false"
 	 */
-	private boolean overwriteImplementation;
+	private boolean implementationOverwrite;
 
 	/**
 	 * Resources directory.
@@ -158,7 +158,7 @@ public class GenerateJpaMojo extends AbstractMojo {
 		new CodeGeneratorJava(domains, domain, packageName, schema,
 				outputSourceDirectory, resourcesDirectory,
 				implementationPackageName, implementationSourceDirectory,
-				generatePersistenceXml, overwriteImplementation).generate();
+				generatePersistenceXml, implementationOverwrite).generate();
 	}
 
 	private void generateClassDiagrams(
