@@ -41,6 +41,8 @@ public class CodeGeneratorJava {
 	private final boolean generatePersistenceXml;
 	private final NameManager nameManager;
 	private final File entitySourceDirectory;
+	private final String implementationPackageName;
+	private final File implementationSourceDirectory;
 
 	public CodeGeneratorJava(Domains domains, String domainName,
 			String domainPackageName, String domainSchema,
@@ -50,6 +52,8 @@ public class CodeGeneratorJava {
 		this.domains = domains;
 		this.entitySourceDirectory = entitySourceDirectory;
 		this.resourcesDirectory = resourcesDirectory;
+		this.implementationPackageName = implementationPackageName;
+		this.implementationSourceDirectory = implementationSourceDirectory;
 		this.generatePersistenceXml = generatePersistenceXml;
 		this.domain = Util.getModeledDomain(domains, domainName);
 		this.domainPackageName = domainPackageName;
@@ -65,13 +69,40 @@ public class CodeGeneratorJava {
 		log("generating " + entitySourceDirectory);
 		ModeledDomain md = domain;
 		Lookups lookups = new Lookups(domains, md);
-		for (Class cls : getClasses(md))
+		for (Class cls : getClasses(md)) {
 			createEntityJavaSource(cls, entitySourceDirectory, lookups);
+			createImplementationJavaSource(cls, implementationSourceDirectory,
+					lookups);
+		}
 		if (generatePersistenceXml)
 			createPersistenceXml(domain, new File(resourcesDirectory,
 					"META-INF/persistence.xml"));
 		createContext(domain, entitySourceDirectory, lookups);
 		log("finished generation");
+	}
+
+	private void createImplementationJavaSource(Class cls, File destination,
+			Lookups lookups) {
+		ClassInfo info = createClassInfo(cls);
+		if (info.hasBehaviour()) {
+			log("generating " + getFullClassImplementationName(cls));
+			BehaviourImplementationWriter w = new BehaviourImplementationWriter(
+					info, getFullClassImplementationName(cls));
+			String java = w.generate();
+			File file = new File(destination,
+					getClassImplementationFilename(cls));
+			writeToFile(java.getBytes(), file);
+		}
+	}
+
+	private String getClassImplementationFilename(Class cls) {
+		String s = getFullClassImplementationName(cls);
+		return s.replace(".", "/") + ".java";
+	}
+
+	private String getFullClassImplementationName(Class cls) {
+		return implementationPackageName + "." + getClassJavaSimpleName(cls)
+				+ "Behaviour";
 	}
 
 	private void createPersistenceXml(ModeledDomain domain, File file) {

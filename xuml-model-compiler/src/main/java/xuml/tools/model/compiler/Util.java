@@ -7,7 +7,6 @@ import xuml.tools.miuml.metamodel.jaxb.Domains;
 import xuml.tools.miuml.metamodel.jaxb.ModeledDomain;
 import xuml.tools.miuml.metamodel.jaxb.Perspective;
 
-
 public class Util {
 
 	public static String getMultiplicityAbbreviation(Perspective p) {
@@ -117,6 +116,21 @@ public class Util {
 			}
 		}
 		return null;
+	}
+
+	public static String getPackage(String className) {
+		if (!className.contains("."))
+			return className;
+		else
+			return className.substring(0, className.lastIndexOf("."));
+	}
+
+	public static String getSimpleClassName(String className) {
+		if (!className.contains("."))
+			return className;
+		else
+			return className.substring(className.lastIndexOf(".") + 1,
+					className.length());
 	}
 
 }
