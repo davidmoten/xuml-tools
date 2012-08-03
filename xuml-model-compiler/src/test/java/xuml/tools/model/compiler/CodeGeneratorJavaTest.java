@@ -127,7 +127,13 @@ public class CodeGeneratorJavaTest {
 		File resources = new File("target/generated-resources");
 		if (!resources.exists())
 			resources.mkdirs();
+		File entitySourceDirectory = new File("target/generated");
+		File implementationSourceDirectory = entitySourceDirectory;
+		File resourcesDirectory = new File("target");
+		String implementationPackageName = domainPackageName
+				+ ".impl";
 		new CodeGeneratorJava(domains, domainName, domainPackageName, schema,
-				"target", true).generate(new File("target/generated/"));
+				entitySourceDirectory, resourcesDirectory, implementationPackageName, implementationSourceDirectory, true)
+				.generate();
 	}
 }

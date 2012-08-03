@@ -47,6 +47,8 @@ import xuml.tools.model.compiler.CodeGeneratorJava;
  */
 public class GenerateJpaMojo extends AbstractMojo {
 
+	private static final String DEFAULT_IMPLEMENTATION_SUB_PACKAGE = "behaviour";
+
 	/**
 	 * @parameter default-value="${project}"
 	 * @required
@@ -88,11 +90,26 @@ public class GenerateJpaMojo extends AbstractMojo {
 	private String schema;
 
 	/**
+	 * Package name for generated implementation source. Defaults to packageName
+	 * + ".behaviour".
+	 * 
+	 * @parameter
+	 */
+	private String implementationPackageName;
+
+	/**
+	 * Implementation generated source directory.
+	 * 
+	 * @parameter default-value="${project.build.directory}/generated-sources"
+	 */
+	private File implementationSourceDirectory;
+
+	/**
 	 * Resources directory.
 	 * 
 	 * @parameter default-value="${project.build.directory}/generated-resources"
 	 */
-	private String resourcesDirectory;
+	private File resourcesDirectory;
 
 	/**
 	 * If and only if true generate META-INF/persistence.xml in
@@ -112,26 +129,33 @@ public class GenerateJpaMojo extends AbstractMojo {
 
 	@Override
 	public void execute() throws MojoExecutionException {
-		File f = outputSourceDirectory;
 
-		if (!f.exists()) {
-			f.mkdirs();
-		}
-		InputStream is = getClass().getResourceAsStream(domainsXml);
-		if (is == null)
-			try {
-				is = new FileInputStream(domainsXml);
-			} catch (FileNotFoundException e) {
-				throw new MojoExecutionException(e.getMessage(), e);
-			}
-		xuml.tools.miuml.metamodel.jaxb.Domains domains = new Marshaller()
-				.unmarshal(is);
-		new CodeGeneratorJava(domains, domain, packageName, schema,
-				resourcesDirectory, generatePersistenceXml)
-				.generate(outputSourceDirectory);
+		createDirectory(outputSourceDirectory);
+		createDirectory(implementationSourceDirectory);
+
+		xuml.tools.miuml.metamodel.jaxb.Domains domains = getDomains();
+
+		if (implementationPackageName == null)
+			implementationPackageName = packageName + "."
+					+ DEFAULT_IMPLEMENTATION_SUB_PACKAGE;
+
+		generate(domains);
+
 		project.addCompileSourceRoot(outputSourceDirectory.getAbsolutePath());
 		// TODO add resourcesDirectory to resources
 
+		generateClassDiagrams(domains);
+	}
+
+	private void generate(xuml.tools.miuml.metamodel.jaxb.Domains domains) {
+		new CodeGeneratorJava(domains, domain, packageName, schema,
+				outputSourceDirectory, resourcesDirectory,
+				implementationPackageName, implementationSourceDirectory,
+				generatePersistenceXml).generate();
+	}
+
+	private void generateClassDiagrams(
+			xuml.tools.miuml.metamodel.jaxb.Domains domains) {
 		String localRepo = project.getProperties().getProperty(
 				"settings.localRepository");
 
@@ -148,7 +172,6 @@ public class GenerateJpaMojo extends AbstractMojo {
 			}
 		}
 
-		File resources = new File(resourcesDirectory);
 		int domainIndex = 0;
 		for (JAXBElement<? extends Domain> domain : domains.getDomain()) {
 			if (domain.getValue() instanceof ModeledDomain) {
@@ -160,11 +183,32 @@ public class GenerateJpaMojo extends AbstractMojo {
 							domainIndex, ssIndex);
 					String name = md.getName().replaceAll(" ", "_") + "_"
 							+ ssIndex + ".html";
-					writeToFile(resources, name, s);
+					writeToFile(resourcesDirectory, name, s);
 					ssIndex++;
 				}
 			}
 			domainIndex++;
+		}
+	}
+
+	private xuml.tools.miuml.metamodel.jaxb.Domains getDomains()
+			throws MojoExecutionException {
+		InputStream is = getClass().getResourceAsStream(domainsXml);
+		if (is == null)
+			try {
+				is = new FileInputStream(domainsXml);
+			} catch (FileNotFoundException e) {
+				throw new MojoExecutionException(e.getMessage(), e);
+			}
+		xuml.tools.miuml.metamodel.jaxb.Domains domains = new Marshaller()
+				.unmarshal(is);
+		return domains;
+	}
+
+	private void createDirectory(File directory) {
+		if (!directory.exists()) {
+			if (directory.mkdirs())
+				getLog().info("created directory " + directory);
 		}
 	}
 

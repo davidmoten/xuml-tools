@@ -37,14 +37,18 @@ public class CodeGeneratorJava {
 	private final String domainPackageName;
 	private final String domainSchema;
 	private final Domains domains;
-	private final String resourcesDirectory;
+	private final File resourcesDirectory;
 	private final boolean generatePersistenceXml;
 	private final NameManager nameManager;
+	private final File entitySourceDirectory;
 
 	public CodeGeneratorJava(Domains domains, String domainName,
 			String domainPackageName, String domainSchema,
-			String resourcesDirectory, boolean generatePersistenceXml) {
+			File entitySourceDirectory, File resourcesDirectory,
+			String implementationPackageName,
+			File implementationSourceDirectory, boolean generatePersistenceXml) {
 		this.domains = domains;
+		this.entitySourceDirectory = entitySourceDirectory;
 		this.resourcesDirectory = resourcesDirectory;
 		this.generatePersistenceXml = generatePersistenceXml;
 		this.domain = Util.getModeledDomain(domains, domainName);
@@ -53,16 +57,20 @@ public class CodeGeneratorJava {
 		this.nameManager = new NameManager();
 	}
 
-	public void generate(File destination) {
-		log("generating " + destination);
+	public void generate() {
+		generateEntitySources();
+	}
+
+	private void generateEntitySources() {
+		log("generating " + entitySourceDirectory);
 		ModeledDomain md = domain;
 		Lookups lookups = new Lookups(domains, md);
 		for (Class cls : getClasses(md))
-			createImplementation(cls, destination, lookups);
+			createEntityJavaSource(cls, entitySourceDirectory, lookups);
 		if (generatePersistenceXml)
 			createPersistenceXml(domain, new File(resourcesDirectory,
 					"META-INF/persistence.xml"));
-		createContext(domain, destination, lookups);
+		createContext(domain, entitySourceDirectory, lookups);
 		log("finished generation");
 	}
 
@@ -227,7 +235,7 @@ public class CodeGeneratorJava {
 		java.lang.System.out.println(message);
 	}
 
-	private void createImplementation(Class cls, File destination,
+	private void createEntityJavaSource(Class cls, File destination,
 			Lookups lookups) {
 		ClassWriter w = new ClassWriter(createClassInfo(cls));
 		String java = w.generate();
