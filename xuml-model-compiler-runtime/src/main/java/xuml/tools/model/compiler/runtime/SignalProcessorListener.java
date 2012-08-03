@@ -1,5 +1,6 @@
-package xuml.tools.model.compiler.runtime.actor;
+package xuml.tools.model.compiler.runtime;
 
+import xuml.tools.model.compiler.runtime.actor.EntityActor;
 import xuml.tools.model.compiler.runtime.message.Signal;
 
 public interface SignalProcessorListener {

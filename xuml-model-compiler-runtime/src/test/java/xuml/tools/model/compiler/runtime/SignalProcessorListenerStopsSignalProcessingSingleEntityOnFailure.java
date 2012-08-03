@@ -1,12 +1,14 @@
-package xuml.tools.model.compiler.runtime.actor;
+package xuml.tools.model.compiler.runtime;
 
 import java.util.Set;
 
+import xuml.tools.model.compiler.runtime.SignalProcessorListener;
+import xuml.tools.model.compiler.runtime.actor.EntityActor;
 import xuml.tools.model.compiler.runtime.message.Signal;
 
 import com.google.common.collect.Sets;
 
-public class EntityActorListenerStopsSignalProcessingSingleEntityOnFailure
+public class SignalProcessorListenerStopsSignalProcessingSingleEntityOnFailure
 		implements SignalProcessorListener {
 
 	private static Set<String> stoppedEntities = Sets.newHashSet();

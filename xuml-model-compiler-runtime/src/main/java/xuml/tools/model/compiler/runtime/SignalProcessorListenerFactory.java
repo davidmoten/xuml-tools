@@ -1,4 +1,4 @@
-package xuml.tools.model.compiler.runtime.actor;
+package xuml.tools.model.compiler.runtime;
 
 public interface SignalProcessorListenerFactory {
 

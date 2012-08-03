@@ -6,6 +6,8 @@ import javax.persistence.EntityTransaction;
 
 import xuml.tools.model.compiler.runtime.Entity;
 import xuml.tools.model.compiler.runtime.QueuedSignal;
+import xuml.tools.model.compiler.runtime.SignalProcessorListener;
+import xuml.tools.model.compiler.runtime.SignalProcessorListenerDoesNothing;
 import xuml.tools.model.compiler.runtime.message.CloseEntityActor;
 import xuml.tools.model.compiler.runtime.message.Signal;
 import xuml.tools.model.compiler.runtime.message.StopEntityActor;

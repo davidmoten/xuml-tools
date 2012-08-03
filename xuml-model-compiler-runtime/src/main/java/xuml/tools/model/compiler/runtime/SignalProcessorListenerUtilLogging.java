@@ -1,23 +1,25 @@
-package xuml.tools.model.compiler.runtime.actor;
+package xuml.tools.model.compiler.runtime;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import xuml.tools.model.compiler.runtime.actor.EntityActor;
 import xuml.tools.model.compiler.runtime.message.Signal;
 
-public class EntityActorListenerLogging implements SignalProcessorListener {
+public class SignalProcessorListenerUtilLogging implements
+		SignalProcessorListener {
 
 	private static Logger log = Logger
-			.getLogger(EntityActorListenerLogging.class.getName());
+			.getLogger(SignalProcessorListenerUtilLogging.class.getName());
 
 	@Override
 	public void beforeProcessing(Signal<?> signal, EntityActor actor) {
-		log.info("before processing " + signal);
+		log.fine("before processing " + signal);
 	}
 
 	@Override
 	public void afterProcessing(Signal<?> signal, EntityActor actor) {
-		log.info("after processing " + signal);
+		log.fine("after processing " + signal);
 	}
 
 	@Override

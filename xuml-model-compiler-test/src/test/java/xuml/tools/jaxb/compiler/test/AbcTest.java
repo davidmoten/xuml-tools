@@ -16,9 +16,9 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import xuml.tools.model.compiler.runtime.SignalProcessorListener;
+import xuml.tools.model.compiler.runtime.SignalProcessorListenerFactory;
 import xuml.tools.model.compiler.runtime.actor.EntityActor;
-import xuml.tools.model.compiler.runtime.actor.SignalProcessorListener;
-import xuml.tools.model.compiler.runtime.actor.SignalProcessorListenerFactory;
 import xuml.tools.model.compiler.runtime.message.Signal;
 import abc.A;
 import abc.A.AId;

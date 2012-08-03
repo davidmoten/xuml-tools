@@ -5,7 +5,6 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
-import xuml.tools.model.compiler.runtime.actor.SignalProcessorListenerFactory;
 import xuml.tools.model.compiler.runtime.actor.RootActor;
 import xuml.tools.model.compiler.runtime.message.EntityCommit;
 import xuml.tools.model.compiler.runtime.message.Signal;

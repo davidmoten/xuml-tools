@@ -1,8 +1,10 @@
-package xuml.tools.model.compiler.runtime.actor;
+package xuml.tools.model.compiler.runtime;
 
+import xuml.tools.model.compiler.runtime.SignalProcessorListener;
+import xuml.tools.model.compiler.runtime.actor.EntityActor;
 import xuml.tools.model.compiler.runtime.message.Signal;
 
-public class EntityActorListenerStopsAllSignalProcessingOnFailure implements
+public class SignalProcessorListenerStopsAllSignalProcessingOnFailure implements
 		SignalProcessorListener {
 
 	private static boolean failureOccured = false;

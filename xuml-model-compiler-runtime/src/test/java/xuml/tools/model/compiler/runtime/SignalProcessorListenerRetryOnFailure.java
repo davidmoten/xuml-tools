@@ -1,16 +1,18 @@
-package xuml.tools.model.compiler.runtime.actor;
+package xuml.tools.model.compiler.runtime;
 
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import xuml.tools.model.compiler.runtime.SignalProcessorListener;
+import xuml.tools.model.compiler.runtime.actor.EntityActor;
 import xuml.tools.model.compiler.runtime.message.Signal;
 import akka.util.Duration;
 
-public class EntityActorListenerRetryOnFailure implements SignalProcessorListener {
+public class SignalProcessorListenerRetryOnFailure implements SignalProcessorListener {
 
 	private static Logger log = Logger
-			.getLogger(EntityActorListenerRetryOnFailure.class.getName());
+			.getLogger(SignalProcessorListenerRetryOnFailure.class.getName());
 
 	private static final Duration DELAY = Duration.create(5, TimeUnit.MINUTES);
 

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import javax.persistence.EntityManagerFactory;
 
 import xuml.tools.model.compiler.runtime.Entity;
+import xuml.tools.model.compiler.runtime.SignalProcessorListenerFactory;
 import xuml.tools.model.compiler.runtime.message.CloseEntityActor;
 import xuml.tools.model.compiler.runtime.message.Signal;
 import xuml.tools.model.compiler.runtime.message.StopEntityActor;

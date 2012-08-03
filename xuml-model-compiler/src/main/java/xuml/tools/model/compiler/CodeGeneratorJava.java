@@ -20,8 +20,8 @@ import xuml.tools.miuml.metamodel.jaxb.SubsystemElement;
 import xuml.tools.model.compiler.runtime.CreationEvent;
 import xuml.tools.model.compiler.runtime.Entity;
 import xuml.tools.model.compiler.runtime.Event;
+import xuml.tools.model.compiler.runtime.SignalProcessorListenerFactory;
 import xuml.tools.model.compiler.runtime.Signaller;
-import xuml.tools.model.compiler.runtime.actor.SignalProcessorListenerFactory;
 
 import com.google.common.collect.Lists;
 
