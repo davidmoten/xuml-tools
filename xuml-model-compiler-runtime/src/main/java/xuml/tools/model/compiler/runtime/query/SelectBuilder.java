@@ -150,6 +150,50 @@ public class SelectBuilder<T extends Entity<T>> {
 			parameters.putAll(c2.parameters);
 			out.print("(" + c1.clause + " " + getOperator(c.getOperator())
 					+ " " + c2.clause + ")");
+		} else if (e instanceof DateComparison) {
+			DateComparison<T> c = (DateComparison<T>) e;
+			ClauseAndParameters c1 = getClauseAndParameters(c.getExpression1());
+			ClauseAndParameters c2 = getClauseAndParameters(c.getExpression2());
+			parameters.putAll(c1.parameters);
+			parameters.putAll(c2.parameters);
+			out.print("(" + c1.clause + " " + getOperator(c.getOperator())
+					+ " " + c2.clause + ")");
+		}
+		out.close();
+		return new ClauseAndParameters(bytes.toString(), parameters);
+	}
+
+	private String getOperator(DateComparisonOperator op) {
+		if (op == DateComparisonOperator.EQ)
+			return "=";
+		else if (op == DateComparisonOperator.NEQ)
+			return "!=";
+		else if (op == DateComparisonOperator.LT)
+			return "<";
+		else if (op == DateComparisonOperator.GT)
+			return ">";
+		else if (op == DateComparisonOperator.LTE)
+			return "<=";
+		else if (op == DateComparisonOperator.GTE)
+			return ">=";
+		else
+			throw new RuntimeException("not implemented " + op);
+	}
+
+	private ClauseAndParameters getClauseAndParameters(DateExpression<T> e) {
+		Map<String, Object> parameters = Maps.newHashMap();
+		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+		PrintStream out = new PrintStream(bytes);
+		if (e instanceof DateConstant) {
+			DateConstant<T> c = (DateConstant<T>) e;
+			addToParameters(parameters, out, c.getValue());
+		} else if (e instanceof IsNullDate) {
+			IsNullDate<T> n = (IsNullDate<T>) e;
+			ClauseAndParameters c = getClauseAndParameters(n.getExpression());
+			out.print(c.clause + " is null");
+		} else if (e instanceof DateExpressionField) {
+			DateExpressionField<T> f = (DateExpressionField<T>) e;
+			out.print("e." + f.getField().getName());
 		}
 		out.close();
 		return new ClauseAndParameters(bytes.toString(), parameters);
