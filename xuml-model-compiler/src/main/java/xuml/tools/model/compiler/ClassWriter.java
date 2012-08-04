@@ -1350,7 +1350,7 @@ public class ClassWriter {
 				info.getJavaClassSimpleName(), info.addType(Event.class),
 				info.getJavaClassSimpleName());
 		if (info.hasBehaviour())
-			out.format("        helper().signal(uniqueId(), event);\n");
+			out.format("        helper().signal(event);\n");
 		else
 			out.format("        //no behaviour for this class\n");
 		out.format("        return this;\n");
@@ -1366,7 +1366,7 @@ public class ClassWriter {
 		if (info.hasBehaviour())
 			// TODO not right, should be sending object uniqueId as from, get
 			// from ThreadLocal
-			out.format("        helper().signal(uniqueId(), event, delay);\n");
+			out.format("        helper().signal(event, delay);\n");
 		else
 			out.format("        //no behaviour for this class\n");
 		out.format("        return this;\n");
