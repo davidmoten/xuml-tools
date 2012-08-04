@@ -36,11 +36,13 @@ public class EntityHelper {
 		info.setCurrentEntity(entity);
 	}
 
-	public <T extends Entity<T>> void signal(Event<T> event) {
-		signal(event, null);
+	public <T extends Entity<T>> void signal(String fromEntityUniqueId,
+			Event<T> event) {
+		signal(fromEntityUniqueId, event, null);
 	}
 
-	public <T extends Entity<T>> void signal(Event<T> event, Duration delay) {
+	public <T extends Entity<T>> void signal(String fromEntityUniqueId,
+			Event<T> event, Duration delay) {
 		Info info = signaller.getInfo();
 		// do an object equals because RootActor will guarantee that only one
 		// instance is being used to refer to a database entity at any given
@@ -50,7 +52,7 @@ public class EntityHelper {
 			// delay is ignored signals to self
 			stack.peek().getEventsToSelf().add(event);
 		else
-			signaller.signal(entity, event, delay);
+			signaller.signal(fromEntityUniqueId, entity, event, delay);
 	}
 
 	public <T> void queueSignal(Signal<T> signal) {
@@ -59,8 +61,9 @@ public class EntityHelper {
 
 	public void sendQueuedSignals() {
 		for (Signal signal : signalsToOther) {
-			signaller.signal(signal.getEntity(), signal.getEvent(),
-					signal.getTime(), signal.getRepeatInterval());
+			signaller.signal(signal.getFromEntityUniqueId(),
+					signal.getEntity(), signal.getEvent(), signal.getTime(),
+					signal.getRepeatInterval());
 		}
 	}
 

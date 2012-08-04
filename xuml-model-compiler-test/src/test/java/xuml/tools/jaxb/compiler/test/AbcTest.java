@@ -165,7 +165,7 @@ public class AbcTest {
 		}
 
 		// test the reloading of a persisted signal to a1
-		Context.persistSignal(a.getId(), A.class,
+		Context.persistSignal("fromSomeId", a.getId(), A.class,
 				new A.Events.SomethingDone(14), System.currentTimeMillis(),
 				null);
 		assertEquals(1, Context.sendSignalsInQueue());

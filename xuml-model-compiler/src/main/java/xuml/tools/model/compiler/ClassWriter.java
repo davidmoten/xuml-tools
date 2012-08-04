@@ -1350,7 +1350,7 @@ public class ClassWriter {
 				info.getJavaClassSimpleName(), info.addType(Event.class),
 				info.getJavaClassSimpleName());
 		if (info.hasBehaviour())
-			out.format("        helper().signal(event);\n");
+			out.format("        helper().signal(uniqueId(), event);\n");
 		else
 			out.format("        //no behaviour for this class\n");
 		out.format("        return this;\n");
@@ -1364,7 +1364,7 @@ public class ClassWriter {
 				info.getJavaClassSimpleName(), info.addType(Event.class),
 				info.getJavaClassSimpleName(), info.addType(Duration.class));
 		if (info.hasBehaviour())
-			out.format("        helper().signal(event, delay);\n");
+			out.format("        helper().signal(uniqueId(), event, delay);\n");
 		else
 			out.format("        //no behaviour for this class\n");
 		out.format("        return this;\n");

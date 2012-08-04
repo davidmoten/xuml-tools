@@ -17,16 +17,17 @@ import javax.persistence.TemporalType;
 public class QueuedSignal {
 
 	public QueuedSignal() {
-		// jpa requires no-arg constructor
+		// no-arg constructor required by JPA
 	}
 
 	public QueuedSignal(byte[] idContent, String entityClassName,
 			String eventClassName, byte[] eventContent, long time,
-			Long repeatIntervalMs) {
+			Long repeatIntervalMs, String fromEntityUniqueId) {
 		this.idContent = idContent;
 		this.entityClassName = entityClassName;
 		this.eventClassName = eventClassName;
 		this.eventContent = eventContent;
+		this.fromEntityUniqueId = fromEntityUniqueId;
 		this.time = new Date(time);
 		this.repeatIntervalMs = repeatIntervalMs;
 	}
@@ -57,6 +58,9 @@ public class QueuedSignal {
 	@Column(name = "repeat_interval_ms", nullable = true)
 	public Long repeatIntervalMs;
 
+	@Column(name = "from_entity")
+	public String fromEntityUniqueId;
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -74,6 +78,8 @@ public class QueuedSignal {
 		builder.append(time);
 		builder.append(", repeatIntervalMs=");
 		builder.append(repeatIntervalMs);
+		builder.append(", fromEntityUniqueId=");
+		builder.append(fromEntityUniqueId);
 		builder.append("]");
 		return builder.toString();
 	}

@@ -71,14 +71,15 @@ public class Signaller {
 		}
 	}
 
-	public <T extends Entity<T>> void signal(Entity<T> entity, Event<T> event,
-			Duration delay) {
-		signal(entity, event, delay, null);
+	public <T extends Entity<T>> void signal(String fromEntityUniqueId,
+			Entity<T> entity, Event<T> event, Duration delay) {
+		signal(fromEntityUniqueId, entity, event, delay, null);
 	}
 
-	public <T extends Entity<T>> void signal(Entity<T> entity, Event<T> event,
-			Long time, Duration repeatInterval) {
-		signal(entity, event, getDelay(time), repeatInterval);
+	public <T extends Entity<T>> void signal(String fromEntityUniqueId,
+			Entity<T> entity, Event<T> event, Long time, Duration repeatInterval) {
+		signal(fromEntityUniqueId, entity, event, getDelay(time),
+				repeatInterval);
 	}
 
 	private Duration getDelay(Long time) {
@@ -89,8 +90,9 @@ public class Signaller {
 			return Duration.create(time - now, TimeUnit.MILLISECONDS);
 	}
 
-	public <T extends Entity<T>> void signal(Entity<T> entity, Event<T> event,
-			Duration delay, Duration repeatInterval) {
+	public <T extends Entity<T>> void signal(String fromEntityUniqueId,
+			Entity<T> entity, Event<T> event, Duration delay,
+			Duration repeatInterval) {
 		long time;
 		long now = System.currentTimeMillis();
 		if (delay == null)
@@ -99,11 +101,12 @@ public class Signaller {
 			time = now + delay.toMillis();
 		Long repeatIntervalMs = repeatInterval == null ? null : repeatInterval
 				.toMillis();
+
 		@SuppressWarnings("unchecked")
-		long id = persistSignal(entity.getId(), (Class<T>) entity.getClass(),
-				event, time, repeatIntervalMs);
-		Signal<T> signal = new Signal<T>(entity, event, id, delay,
-				repeatInterval);
+		long id = persistSignal(fromEntityUniqueId, entity.getId(),
+				(Class<T>) entity.getClass(), event, time, repeatIntervalMs);
+		Signal<T> signal = new Signal<T>(fromEntityUniqueId, entity, event, id,
+				delay, repeatInterval);
 		signal(signal);
 	}
 
@@ -228,8 +231,9 @@ public class Signaller {
 		Entity entity = (Entity) em.find(entityClass, id);
 		em.getTransaction().commit();
 		em.close();
+		// TODO reschedule signals
 		if (entity != null) {
-			signal(new Signal(entity, event, sig.id));
+			signal(new Signal(sig.fromEntityUniqueId, entity, event, sig.id));
 		} else
 			System.out.println("ENTITY NOT FOUND for entityClassName="
 					+ sig.entityClassName + ",id=" + id);
@@ -243,12 +247,14 @@ public class Signaller {
 		}
 	}
 
-	public <T extends Entity<T>> long persistSignal(Object id, Class<T> cls,
-			Event<T> event, long time, Long repeatIntervalMs) {
+	public <T extends Entity<T>> long persistSignal(String fromEntityUniqueId,
+			Object id, Class<T> cls, Event<T> event, long time,
+			Long repeatIntervalMs) {
 		byte[] idBytes = Util.toBytes(id);
 		byte[] eventBytes = Util.toBytes(event);
 		QueuedSignal signal = new QueuedSignal(idBytes, cls.getName(), event
-				.getClass().getName(), eventBytes, time, repeatIntervalMs);
+				.getClass().getName(), eventBytes, time, repeatIntervalMs,
+				fromEntityUniqueId);
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
 		em.persist(signal);

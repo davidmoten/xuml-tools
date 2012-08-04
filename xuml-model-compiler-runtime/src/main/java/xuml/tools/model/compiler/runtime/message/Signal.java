@@ -12,9 +12,11 @@ public class Signal<T> {
 	// epoch time ms to process signal
 	private final Long timeMs;
 	private final Duration repeatInterval;
+	private final String fromEntityUniqueId;
 
-	public Signal(Entity<T> entity, Event<T> event, long id, Long timeMs,
-			Duration repeatInterval) {
+	public Signal(String fromEntityUniqueId, Entity<T> entity, Event<T> event,
+			long id, Long timeMs, Duration repeatInterval) {
+		this.fromEntityUniqueId = fromEntityUniqueId;
 		this.entity = entity;
 		this.event = event;
 		this.id = id;
@@ -22,13 +24,15 @@ public class Signal<T> {
 		this.repeatInterval = repeatInterval;
 	}
 
-	public Signal(Entity<T> entity, Event<T> event, long id, Long timeMs) {
-		this(entity, event, id, timeMs, null);
+	public Signal(String fromEntityUniqueId, Entity<T> entity, Event<T> event,
+			long id, Long timeMs) {
+		this(fromEntityUniqueId, entity, event, id, timeMs, null);
 	}
 
-	public Signal(Entity<T> entity, Event<T> event, long id, Duration delay,
-			Duration repeatInterval) {
-		this(entity, event, id, getTime(delay), repeatInterval);
+	public Signal(String fromEntityUniqueId, Entity<T> entity, Event<T> event,
+			long id, Duration delay, Duration repeatInterval) {
+		this(fromEntityUniqueId, entity, event, id, getTime(delay),
+				repeatInterval);
 	}
 
 	private static Long getTime(Duration delay) {
@@ -38,8 +42,9 @@ public class Signal<T> {
 			return System.currentTimeMillis() + delay.toMillis();
 	}
 
-	public Signal(Entity<T> entity, Event<T> event, long id) {
-		this(entity, event, id, null);
+	public Signal(String fromEntityUniqueId, Entity<T> entity, Event<T> event,
+			long id) {
+		this(fromEntityUniqueId, entity, event, id, null);
 	}
 
 	public long getId() {
@@ -60,6 +65,10 @@ public class Signal<T> {
 
 	public Long getTime() {
 		return timeMs;
+	}
+
+	public String getFromEntityUniqueId() {
+		return fromEntityUniqueId;
 	}
 
 	@Override
