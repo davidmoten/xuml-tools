@@ -1,6 +1,7 @@
 package xuml.tools.model.compiler.runtime;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -68,21 +69,53 @@ public class Signaller {
 
 	public <T extends Entity<T>> void signal(Entity<T> entity, Event<T> event,
 			Duration delay) {
-		@SuppressWarnings("unchecked")
-		long id = persistSignal(entity.getId(), (Class<T>) entity.getClass(),
-				event);
-		Signal<T> signal = new Signal<T>(entity, event, id);
-		signal(signal, delay);
+		signal(entity, event, delay, null);
 	}
 
-	private <T> void signal(Signal<T> signal, Duration delay) {
+	public <T extends Entity<T>> void signal(Entity<T> entity, Event<T> event,
+			Long time, Duration repeatInterval) {
+		signal(entity, event, getDelay(time), repeatInterval);
+	}
+
+	private Duration getDelay(Long time) {
+		long now = System.currentTimeMillis();
+		if (time == null || time <= now)
+			return null;
+		else
+			return Duration.create(time - now, TimeUnit.MILLISECONDS);
+	}
+
+	public <T extends Entity<T>> void signal(Entity<T> entity, Event<T> event,
+			Duration delay, Duration repeatInterval) {
+		@SuppressWarnings("unchecked")
+		long time;
+		long now = System.currentTimeMillis();
+		if (delay == null)
+			time = now;
+		else
+			time = now + delay.toMillis();
+		Long repeatIntervalMs = repeatInterval == null ? null : repeatInterval
+				.toMillis();
+		long id = persistSignal(entity.getId(), (Class<T>) entity.getClass(),
+				event, time, repeatIntervalMs);
+		Signal<T> signal = new Signal<T>(entity, event, id, delay,
+				repeatInterval);
+		signal(signal);
+	}
+
+	private <T> void signal(Signal<T> signal) {
 		if (signalInitiatedFromEvent()) {
-			info.get().getCurrentEntity().helper().queueSignal(signal, delay);
+			info.get().getCurrentEntity().helper().queueSignal(signal);
 		} else {
-			if (delay == null)
+			long now = System.currentTimeMillis();
+			long delayMs = (signal.getTime() == null ? now : signal.getTime())
+					- now;
+			if (delayMs <= 0)
 				root.tell(signal);
 			else
-				actorSystem.scheduler().scheduleOnce(delay, root, signal);
+				actorSystem.scheduler().scheduleOnce(
+						Duration.create(delayMs, TimeUnit.MILLISECONDS), root,
+						signal);
 		}
 	}
 
@@ -117,7 +150,7 @@ public class Signaller {
 		em.getTransaction().commit();
 		em.close();
 		if (entity != null) {
-			signal(new Signal(entity, event, sig.id), null);
+			signal(new Signal(entity, event, sig.id));
 		} else
 			System.out.println("ENTITY NOT FOUND for entityClassName="
 					+ sig.entityClassName + ",id=" + id);
@@ -132,11 +165,11 @@ public class Signaller {
 	}
 
 	public <T extends Entity<T>> long persistSignal(Object id, Class<T> cls,
-			Event<T> event) {
+			Event<T> event, long time, Long repeatIntervalMs) {
 		byte[] idBytes = Util.toBytes(id);
 		byte[] eventBytes = Util.toBytes(event);
 		QueuedSignal signal = new QueuedSignal(idBytes, cls.getName(), event
-				.getClass().getName(), eventBytes);
+				.getClass().getName(), eventBytes, time, repeatIntervalMs);
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
 		em.persist(signal);

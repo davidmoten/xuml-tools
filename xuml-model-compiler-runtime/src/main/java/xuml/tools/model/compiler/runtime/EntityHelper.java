@@ -21,7 +21,7 @@ public class EntityHelper {
 
 	private final Entity entity;
 	private final Stack<Call> stack = new Stack<Call>();
-	private final List<SignalWithDelay> signalsToOther = Lists.newArrayList();
+	private final List<Signal> signalsToOther = Lists.newArrayList();
 	private final Signaller signaller;
 
 	public EntityHelper(Signaller signaller, Entity entity) {
@@ -53,14 +53,14 @@ public class EntityHelper {
 			signaller.signal(entity, event, delay);
 	}
 
-	public <T> void queueSignal(Signal<T> signal, Duration delay) {
-		signalsToOther.add(new SignalWithDelay(signal, delay));
+	public <T> void queueSignal(Signal<T> signal) {
+		signalsToOther.add(signal);
 	}
 
 	public void sendQueuedSignals() {
-		for (SignalWithDelay signal : signalsToOther) {
-			signaller.signal(signal.signal.getEntity(),
-					signal.signal.getEvent(), signal.delay);
+		for (Signal signal : signalsToOther) {
+			signaller.signal(signal.getEntity(), signal.getEvent(),
+					signal.getTime(), signal.getRepeatInterval());
 		}
 	}
 

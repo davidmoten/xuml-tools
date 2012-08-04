@@ -159,9 +159,9 @@ public class CodeGeneratorJava {
 		out.format("        return signaller.sendSignalsInQueue();\n");
 		out.format("    }\n\n");
 		out.format(
-				"    public static <T extends %s<T>> long persistSignal(Object id, Class<T> cls, %s<T> event) {\n",
+				"    public static <T extends %s<T>> long persistSignal(Object id, Class<T> cls, %s<T> event, long time, Long repeatIntervalMs) {\n",
 				types.addType(Entity.class), types.addType(Event.class));
-		out.format("        return signaller.persistSignal(id,cls,event);\n");
+		out.format("        return signaller.persistSignal(id,cls,event,time,repeatIntervalMs);\n");
 		out.format("    }\n\n");
 		out.format("    public static void stop() {\n");
 		out.format("        signaller.stop();\n");

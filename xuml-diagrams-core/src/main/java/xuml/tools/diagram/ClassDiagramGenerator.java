@@ -171,7 +171,7 @@ public class ClassDiagramGenerator {
 
 	private void generateClass(StringBuilder s,
 			xuml.tools.miuml.metamodel.jaxb.Class cls) {
-		System.out.println("class=" + cls.getName());
+		// System.out.println("class=" + cls.getName());
 		s.append("<div id=\"" + cls.getName().replaceAll(" ", "_")
 				+ "\" class=\"cls draggable");
 
@@ -187,7 +187,7 @@ public class ClassDiagramGenerator {
 		s.append("  <div class=\"attributes\">\n");
 		for (JAXBElement<? extends Attribute> attr : cls.getAttribute()) {
 
-			System.out.println("attribute=" + attr.getValue().getName());
+			// System.out.println("attribute=" + attr.getValue().getName());
 			List<String> items = new ArrayList<String>();
 			for (IdentifierAttribute id : attr.getValue().getIdentifier())
 				items.add(getIdentifierName(id.getNumber()));
