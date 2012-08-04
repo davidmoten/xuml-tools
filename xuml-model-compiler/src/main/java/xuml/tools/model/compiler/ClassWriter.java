@@ -1024,6 +1024,17 @@ public class ClassWriter {
 					info.addType(Serializable.class), stateSignatureImplements,
 					creationEventImplements);
 
+			// add signature key method
+			StringBuffer signature = new StringBuffer();
+			for (MyParameter p : event.getParameters()) {
+				signature.append(p.getType());
+				signature.append(";");
+			}
+
+			out.format("            public String signatureKey() {\n");
+			out.format("                return \"%s\";\n", signature.toString());
+			out.format("            }\n");
+
 			StringBuilder constructorBody = new StringBuilder();
 			for (MyParameter p : event.getParameters()) {
 				constructorBody.append("                this."

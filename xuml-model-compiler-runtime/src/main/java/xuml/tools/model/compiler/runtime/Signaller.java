@@ -109,12 +109,12 @@ public class Signaller {
 
 	private static class EntityEvent {
 		String entityUniqueId;
-		String eventClass;
+		String eventSignature;
 
-		EntityEvent(String entityUniqueId, String eventClass) {
+		EntityEvent(String entityUniqueId, String eventSignature) {
 			super();
 			this.entityUniqueId = entityUniqueId;
-			this.eventClass = eventClass;
+			this.eventSignature = eventSignature;
 		}
 
 		@Override
@@ -124,8 +124,9 @@ public class Signaller {
 			result = prime
 					* result
 					+ ((entityUniqueId == null) ? 0 : entityUniqueId.hashCode());
-			result = prime * result
-					+ ((eventClass == null) ? 0 : eventClass.hashCode());
+			result = prime
+					* result
+					+ ((eventSignature == null) ? 0 : eventSignature.hashCode());
 			return result;
 		}
 
@@ -143,10 +144,10 @@ public class Signaller {
 					return false;
 			} else if (!entityUniqueId.equals(other.entityUniqueId))
 				return false;
-			if (eventClass == null) {
-				if (other.eventClass != null)
+			if (eventSignature == null) {
+				if (other.eventSignature != null)
 					return false;
-			} else if (!eventClass.equals(other.eventClass))
+			} else if (!eventSignature.equals(other.eventSignature))
 				return false;
 			return true;
 		}
@@ -165,10 +166,14 @@ public class Signaller {
 			if (delayMs <= 0)
 				root.tell(signal);
 			else {
-				// TODO use event signature class not event class
+				// There can be at most one delayed signal of a given event
+				// signature outstanding for each sender-receiver instance pair
+				// at any one time. Mellor & Balcer p194.
+				// TODO key off combination of sender and receiver not just
+				// receiver.
 				synchronized (this) {
 					EntityEvent key = new EntityEvent(signal.getEntity()
-							.uniqueId(), signal.getEvent().getClass().getName());
+							.uniqueId(), signal.getEvent().signatureKey());
 					Cancellable current = scheduleCancellers.get(key);
 					if (current != null)
 						current.cancel();
