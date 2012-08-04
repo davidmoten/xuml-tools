@@ -210,9 +210,9 @@ The current plan is to make the semantics of say BPAL 97 (Bridgepoint Action Lan
 	<tr><td>Reclassify specialization</td><td><b></b></td><td></td><td></td></tr>
 	<tr><td>Delete specialization</td><td><b></b></td><td></td><td></td></tr>
 	<tr><td>Generate signal</td><td><b>generate</b> <i>event</i> <b>to</b> <i>object</i></td><td></td><td></td></tr>
-	<tr><td>Generate signal with delay</td><td><b>generate</b> <i>event</i> <b>to</b> <i>object</i> <b>with delay</b> <i>delay in microseconds</i></td><td></td><td></td></tr>
-	<tr><td>Generate signal with delay and repeat</td><td><b>generate</b> <i>event</i> <b>to</b> <i>object</i> <b>with delay</b> <i>&lt;delay in microseconds&gt;</i> <b>repeat</b> <i><lt;repeatInterval in micros&gt;</i></td><td></td><td></td></tr>
-	<tr><td>Cancel signal with delay</td><td><b></b></td><td></td><td></td></tr>
+	<tr><td>Generate signal with delay</td><td><b>generate</b> <i>event</i> <b>to</b> <i>object</i> <b>delay</b> <i>delay in microseconds</i></td><td></td><td></td></tr>
+	<tr><td>Generate signal with delay and repeat</td><td><b>generate</b> <i>event</i> <b>to</b> <i>object</i> <b>delay</b> <i>&lt;delay in microseconds&gt;</i> <b>repeat</b> <i><lt;repeatInterval in micros&gt;</i></td><td></td><td></td></tr>
+	<tr><td>Cancel signal with delay</td><td><b>cancel</b> <i>&lt;signal&gt;</i> <b>from</b> <i>&lt;object&gt;</i> <b>to</b> <i>&lt;object&gt;</i></td><td></td><td></td></tr>
 </table>
 
 The principle is to write java on-entry methods using the above abstractions without resorting to direct use of an *EntityManager*. The current *EntityManager* is always available via *Context.em()* but for simplicity and to maximize compile-time checking it is recommended to avoid using it. You might want to resort to using *Context.em()* for some performance tweak for example but try the *EntityManager*-free approach first.
