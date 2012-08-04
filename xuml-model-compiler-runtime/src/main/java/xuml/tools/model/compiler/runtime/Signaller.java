@@ -172,6 +172,11 @@ public class Signaller {
 	private final Map<EntityEvent, Cancellable> scheduleCancellers = Maps
 			.newHashMap();
 
+	public <T> void cancelSignal(String fromEntityUniqueId, Entity<T> entity,
+			String eventSignatureKey) {
+		cancelSignal(fromEntityUniqueId, entity.uniqueId(), eventSignatureKey);
+	}
+
 	private <T> void signal(Signal<T> signal) {
 		if (signalInitiatedFromEvent()) {
 			info.get().getCurrentEntity().helper().queueSignal(signal);
@@ -186,13 +191,10 @@ public class Signaller {
 				// signature outstanding for each sender-receiver instance pair
 				// at any one time. Mellor & Balcer p194.
 				synchronized (this) {
-					EntityEvent key = new EntityEvent(
+					EntityEvent key = cancelSignal(
 							signal.getFromEntityUniqueId(), signal.getEntity()
 									.uniqueId(), signal.getEvent()
 									.signatureKey());
-					Cancellable current = scheduleCancellers.get(key);
-					if (current != null)
-						current.cancel();
 
 					Cancellable cancellable;
 					if (signal.getRepeatInterval() == null)
@@ -212,6 +214,16 @@ public class Signaller {
 				}
 			}
 		}
+	}
+
+	private <T> EntityEvent cancelSignal(String fromEntityUniqueid,
+			String toEntityUniqueId, String eventSignatureKey) {
+		EntityEvent key = new EntityEvent(fromEntityUniqueid, toEntityUniqueId,
+				eventSignatureKey);
+		Cancellable current = scheduleCancellers.get(key);
+		if (current != null)
+			current.cancel();
+		return key;
 	}
 
 	@SuppressWarnings({ "unchecked" })

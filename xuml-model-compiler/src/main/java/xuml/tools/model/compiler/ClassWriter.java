@@ -1364,9 +1364,17 @@ public class ClassWriter {
 				info.getJavaClassSimpleName(), info.addType(Event.class),
 				info.getJavaClassSimpleName(), info.addType(Duration.class));
 		if (info.hasBehaviour())
+			// TODO not right, should be sending object uniqueId as from, get
+			// from ThreadLocal
 			out.format("        helper().signal(uniqueId(), event, delay);\n");
 		else
 			out.format("        //no behaviour for this class\n");
+		out.format("        return this;\n");
+		out.format("    }\n\n");
+
+		out.format("    public %s cancelSignal(String eventSignatureKey) {\n ",
+				info.getJavaClassSimpleName());
+		// TODO implement cancelSignal
 		out.format("        return this;\n");
 		out.format("    }\n\n");
 
