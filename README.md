@@ -212,7 +212,7 @@ The current plan is to make the semantics of say BPAL 97 (Bridgepoint Action Lan
 	<tr><td>Generate signal</td><td><b>generate</b> addSelection<b>to</b> <i>order</i>;</td><td>order.signal(addSelection);</td><td></td></tr>
 	<tr><td>Generate signal with delay</td><td><b>generate</b> addSelection <b>to</b> order <b>delay</b> 5 minutes</td><td>order.signal(addSelection, Duration.create(5,TimeUnit.MINUTES));</td><td></td></tr>
 	<tr><td>Generate signal with delay and repeat</td><td></td><td></td><td></td></tr>
-	<tr><td>Cancel signal with delay</td><td><b>cancel</b> <i>&lt;signal&gt;</i> <b>from</b> <i>&lt;object&gt;</i> <b>to</b> <i>&lt;object&gt;</i></td><td></td><td></td></tr>
+	<tr><td>Cancel signal with delay</td><td><b>cancel</b> addSelection <b>from</b> customer <b>to</b> order</td><td>order.cancelSignal(addSelection);</td><td></td></tr>
 </table>
 
 The principle is to write java on-entry methods using the above abstractions without resorting to direct use of an *EntityManager*. The current *EntityManager* is always available via *Context.em()* but for simplicity and to maximize compile-time checking it is recommended to avoid using it. You might want to resort to using *Context.em()* for some performance tweak for example but try the *EntityManager*-free approach first.
