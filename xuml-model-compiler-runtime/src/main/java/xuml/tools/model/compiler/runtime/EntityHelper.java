@@ -99,15 +99,4 @@ public class EntityHelper {
 		return signaller.getInfo().getCurrentEntityManager();
 	}
 
-	private static class SignalWithDelay {
-		Signal signal;
-		Duration delay;
-
-		public SignalWithDelay(Signal signal, Duration delay) {
-			super();
-			this.signal = signal;
-			this.delay = delay;
-		}
-	}
-
 }

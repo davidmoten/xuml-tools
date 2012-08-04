@@ -1,6 +1,7 @@
 package xuml.tools.model.compiler.runtime;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import javax.persistence.EntityManager;
@@ -11,8 +12,11 @@ import xuml.tools.model.compiler.runtime.message.EntityCommit;
 import xuml.tools.model.compiler.runtime.message.Signal;
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
+import akka.actor.Cancellable;
 import akka.actor.Props;
 import akka.util.Duration;
+
+import com.google.common.collect.Maps;
 
 public class Signaller {
 
@@ -87,7 +91,6 @@ public class Signaller {
 
 	public <T extends Entity<T>> void signal(Entity<T> entity, Event<T> event,
 			Duration delay, Duration repeatInterval) {
-		@SuppressWarnings("unchecked")
 		long time;
 		long now = System.currentTimeMillis();
 		if (delay == null)
@@ -96,12 +99,61 @@ public class Signaller {
 			time = now + delay.toMillis();
 		Long repeatIntervalMs = repeatInterval == null ? null : repeatInterval
 				.toMillis();
+		@SuppressWarnings("unchecked")
 		long id = persistSignal(entity.getId(), (Class<T>) entity.getClass(),
 				event, time, repeatIntervalMs);
 		Signal<T> signal = new Signal<T>(entity, event, id, delay,
 				repeatInterval);
 		signal(signal);
 	}
+
+	private static class EntityEvent {
+		String entityUniqueId;
+		String eventClass;
+
+		EntityEvent(String entityUniqueId, String eventClass) {
+			super();
+			this.entityUniqueId = entityUniqueId;
+			this.eventClass = eventClass;
+		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime
+					* result
+					+ ((entityUniqueId == null) ? 0 : entityUniqueId.hashCode());
+			result = prime * result
+					+ ((eventClass == null) ? 0 : eventClass.hashCode());
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			EntityEvent other = (EntityEvent) obj;
+			if (entityUniqueId == null) {
+				if (other.entityUniqueId != null)
+					return false;
+			} else if (!entityUniqueId.equals(other.entityUniqueId))
+				return false;
+			if (eventClass == null) {
+				if (other.eventClass != null)
+					return false;
+			} else if (!eventClass.equals(other.eventClass))
+				return false;
+			return true;
+		}
+	}
+
+	private final Map<EntityEvent, Cancellable> scheduleCancellers = Maps
+			.newHashMap();
 
 	private <T> void signal(Signal<T> signal) {
 		if (signalInitiatedFromEvent()) {
@@ -112,10 +164,32 @@ public class Signaller {
 					- now;
 			if (delayMs <= 0)
 				root.tell(signal);
-			else
-				actorSystem.scheduler().scheduleOnce(
-						Duration.create(delayMs, TimeUnit.MILLISECONDS), root,
-						signal);
+			else {
+				// TODO use event signature class not event class
+				synchronized (this) {
+					EntityEvent key = new EntityEvent(signal.getEntity()
+							.uniqueId(), signal.getEvent().getClass().getName());
+					Cancellable current = scheduleCancellers.get(key);
+					if (current != null)
+						current.cancel();
+
+					Cancellable cancellable;
+					if (signal.getRepeatInterval() == null)
+						cancellable = actorSystem.scheduler()
+								.scheduleOnce(
+										Duration.create(delayMs,
+												TimeUnit.MILLISECONDS), root,
+										signal);
+					else
+						cancellable = actorSystem.scheduler()
+								.schedule(
+										Duration.create(delayMs,
+												TimeUnit.MILLISECONDS),
+										signal.getRepeatInterval(), root,
+										signal);
+					scheduleCancellers.put(key, cancellable);
+				}
+			}
 		}
 	}
 
