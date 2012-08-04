@@ -111,11 +111,14 @@ public class Signaller {
 	}
 
 	private static class EntityEvent {
+		String fromEntityUniqueId;
 		String entityUniqueId;
 		String eventSignature;
 
-		EntityEvent(String entityUniqueId, String eventSignature) {
+		EntityEvent(String fromEntityUniqueId, String entityUniqueId,
+				String eventSignature) {
 			super();
+			this.fromEntityUniqueId = fromEntityUniqueId;
 			this.entityUniqueId = entityUniqueId;
 			this.eventSignature = eventSignature;
 		}
@@ -130,6 +133,10 @@ public class Signaller {
 			result = prime
 					* result
 					+ ((eventSignature == null) ? 0 : eventSignature.hashCode());
+			result = prime
+					* result
+					+ ((fromEntityUniqueId == null) ? 0 : fromEntityUniqueId
+							.hashCode());
 			return result;
 		}
 
@@ -152,8 +159,14 @@ public class Signaller {
 					return false;
 			} else if (!eventSignature.equals(other.eventSignature))
 				return false;
+			if (fromEntityUniqueId == null) {
+				if (other.fromEntityUniqueId != null)
+					return false;
+			} else if (!fromEntityUniqueId.equals(other.fromEntityUniqueId))
+				return false;
 			return true;
 		}
+
 	}
 
 	private final Map<EntityEvent, Cancellable> scheduleCancellers = Maps
@@ -172,11 +185,11 @@ public class Signaller {
 				// There can be at most one delayed signal of a given event
 				// signature outstanding for each sender-receiver instance pair
 				// at any one time. Mellor & Balcer p194.
-				// TODO key off combination of sender and receiver not just
-				// receiver.
 				synchronized (this) {
-					EntityEvent key = new EntityEvent(signal.getEntity()
-							.uniqueId(), signal.getEvent().signatureKey());
+					EntityEvent key = new EntityEvent(
+							signal.getFromEntityUniqueId(), signal.getEntity()
+									.uniqueId(), signal.getEvent()
+									.signatureKey());
 					Cancellable current = scheduleCancellers.get(key);
 					if (current != null)
 						current.cancel();
