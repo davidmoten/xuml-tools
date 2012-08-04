@@ -1031,8 +1031,12 @@ public class ClassWriter {
 				signature.append(";");
 			}
 
+			out.format(
+					"            public static final String signatureKey = \"%s\";\n\n",
+					signature.toString());
+
 			out.format("            public String signatureKey() {\n");
-			out.format("                return \"%s\";\n", signature.toString());
+			out.format("                return signatureKey;\n");
 			out.format("            }\n");
 
 			StringBuilder constructorBody = new StringBuilder();
@@ -1376,6 +1380,12 @@ public class ClassWriter {
 				info.getJavaClassSimpleName());
 		// TODO implement cancelSignal
 		out.format("        return this;\n");
+		out.format("    }\n\n");
+
+		out.format("    public %s cancelSignal(Event<%s> event) {\n ",
+				info.getJavaClassSimpleName(), info.getJavaClassSimpleName());
+		// TODO implement cancelSignal
+		out.format("        return cancelSignal(event.signatureKey());\n");
 		out.format("    }\n\n");
 
 		jd(out, "Synchronously runs the on entry procedure associated\n"
