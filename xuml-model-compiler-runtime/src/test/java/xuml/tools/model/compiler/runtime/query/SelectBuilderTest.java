@@ -141,5 +141,11 @@ public class SelectBuilderTest {
 			return null;
 		}
 
+		@Override
+		public Ent signal(Event<Ent> event, long time) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
 	}
 }
