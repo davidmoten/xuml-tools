@@ -209,7 +209,7 @@ The current plan is to make the semantics of say BPAL 97 (Bridgepoint Action Lan
 	<tr><td>Create specialization</td><td><b></b></td><td></td><td></td></tr>
 	<tr><td>Reclassify specialization</td><td><b></b></td><td></td><td></td></tr>
 	<tr><td>Delete specialization</td><td><b></b></td><td></td><td></td></tr>
-	<tr><td>Generate signal</td><td><b>generate</b> addSelection <b>to</b> <i>order</i>;</td><td>order.signal(addSelection);</td><td><img src="../../raw/master/src/docs/tick.png"></td></tr>
+	<tr><td>Generate signal</td><td><b>generate</b> addSelection <b>to</b> order;</td><td>order.signal(addSelection);</td><td><img src="../../raw/master/src/docs/tick.png"></td></tr>
 	<tr><td>Generate signal with delay</td><td><b>generate</b> addSelection <b>to</b> order <b>delay</b> 5 minutes</td><td>order.signal(addSelection, Duration.create(5,TimeUnit.MINUTES));</td><td><img src="../../raw/master/src/docs/tick.png"></td></tr>
 	<tr><td>Generate signal at time</td><td><b>generate</b> addSelection <b>to</b> order <b>at</b> <i>&lt;time&gt;</i></td><td>order.signal(addSelection, epochTimeMs);</td><td><img src="../../raw/master/src/docs/tick.png"></td></tr>
 	<tr><td>Generate signal with delay and repeat</td><td></td><td></td><td></td></tr>
