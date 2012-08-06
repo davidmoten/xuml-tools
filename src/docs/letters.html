@@ -11,17 +11,18 @@
 	.letter {background-image: url(tile.png); width:43px;height:43px; font-size:3em; text-align:center;}
 	.top {z-index: 2; position: relative}
 	.bottom {z-index: 1; position: relative}
-	.word { list-style-type: none; margin: 0; padding: 10 10 10; margin-right: 10px; position:absolute; border:1px solid red;}
+	.word { list-style-type: none; margin: 0; padding: 10 10 10; margin-right: 10px; position:absolute; border:0px solid red;}
 	.word li { display: inline-block;}
+	.word-handle {}
 	#snaptarget { height: 140px; }
 	</style>
 	<script>
 	$(function() {
-		$( "#draggable" ).draggable({ snap: true });
-		$( ".word" ).dragga
 		$( ".word" ).sortable({
-				connectWith: ".connectedSortable"
+				connectWith: ".connectedSortable",
+				items: "li:not(.ui-state-disabled)"
 			}).disableSelection();
+		$( "#word1" ).draggable({ handle: ".word-handle"});
 		$( ".letter" ).click(function() {
     	    $(this).addClass('top').removeClass('bottom');
     	    $(this).siblings().removeClass('top').addClass('bottom');
@@ -38,6 +39,7 @@
 <br clear="both" />
 
 <ul id=word1" class="word connectedSortable">
+<li class="word-handle ui-state-disabled">h</li>
 <li class="letter ui-state-default">A</li>
 <li class="letter ui-state-default">B</li>
 <li class="letter ui-state-default">C</li>
