@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>jQuery UI Draggable - Snap to element or grid</title>
+	<link rel="stylesheet" href="http://jqueryui.com/themes/base/jquery.ui.all.css">
+	<script src="http://code.jquery.com/jquery-1.7.2.js"></script>
+	<script src="http://code.jquery.com/ui/1.8.22/jquery-ui.min.js"></script>
+	<link rel="stylesheet" href="http://jqueryui.com/demos/demos.css">
+	<style>
+	.letter {background-image: url(tile.png); width:43px;height:43px; font-size:3em; text-align:center;}
+	.top {z-index: 2; position: relative}
+	.bottom {z-index: 1; position: relative}
+	.word { list-style-type: none; margin: 0; padding: 0 0 2.5em; margin-right: 10px;}
+	.word li { display: inline-block;}
+	#snaptarget { height: 140px; }
+	</style>
+	<script>
+	$(function() {
+		$( "#draggable" ).draggable({ snap: true });
+		$( ".word" ).sortable({
+				connectWith: ".connectedSortable"
+			}).disableSelection();
+		$( ".letter" ).click(function() {
+    	    $(this).addClass('top').removeClass('bottom');
+    	    $(this).siblings().removeClass('top').addClass('bottom');
+	        $(this).css("z-index", a++);
+	    });
+	});
+	</script>
+</head>
+<body>
+
+<div class="demo">
+
+<br clear="both" />
+
+<ul class="word connectedSortable">
+<li class="letter ui-state-default">A</li>
+<li class="letter ui-state-default">B</li>
+<li class="letter ui-state-default">C</li>
+</ul>
+
+</div><!-- End demo -->
+
+
+</body>
+</html>
+
+
