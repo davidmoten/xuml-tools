@@ -8,33 +8,74 @@
 	<script src="http://code.jquery.com/ui/1.8.22/jquery-ui.min.js"></script>
 	<link rel="stylesheet" href="http://jqueryui.com/demos/demos.css">
 	<style>
+	.all { border: 1px solid black;padding-bottom:50px; }
 	.letter {background-image: url(tile.png); width:43px;height:43px; font-size:3em; text-align:center;}
 	.top {z-index: 2; position: relative}
 	.bottom {z-index: 1; position: relative}
 	.word { list-style-type: none; margin: 0; padding: 10 10 10; margin-right: 10px; position:absolute; border:0px solid red;}
 	.word li { display: inline-block;}
 	.word-handle { cursor:move; width:10px; height:10px; background-color:gray;}
+	
 	#snaptarget { height: 140px; }
 	</style>
 	<script>
+	function touchHandler(event) {
+	    var touches = event.changedTouches,
+	    first = touches[0],
+	    type = "";
+
+	    switch(event.type)
+		{
+		    case "touchstart": type = "mousedown"; break;
+		    case "touchmove":  type="mousemove"; break;        
+		    case "touchend":   type="mouseup"; break;
+		    default: return;
+		}
+	    var simulatedEvent = document.createEvent("MouseEvent");
+	    simulatedEvent.initMouseEvent(type, true, true, window, 1,
+		                  first.screenX, first.screenY,
+		                  first.clientX, first.clientY, false,
+		                  false, false, false, 0/*left*/, null);
+
+	    first.target.dispatchEvent(simulatedEvent);
+	    event.preventDefault();
+	}
+
+	function makeTouchable() {
+		document.addEventListener("touchstart", touchHandler, true);
+		document.addEventListener("touchmove", touchHandler, true);
+		document.addEventListener("touchend", touchHandler, true);
+		document.addEventListener("touchcancel", touchHandler, true); 
+	}
 	$(function() {
 		$( ".word" ).sortable({
 				connectWith: ".connectedSortable",
 				items: "li:not(.ui-state-disabled)"
 			}).disableSelection();
-		$( ".word-container" ).draggable({ handle: ".word-handle"});
+		$( ".word-container" ).draggable(
+			{ handle: ".word-handle",
+			  containment:".all",
+			  scroll: false
+			  });
 		$( ".letter" ).click(function() {
     	    		$(this).addClass('top').removeClass('bottom');
     	    		$(this).siblings().removeClass('top').addClass('bottom');
 	        //$(this).css("z-index", a++);
 		});
 		$( "#word2").offset({ top: 200, left: 300});
+		$(window).resize(function() {
+			var viewportWidth = $(window).width();
+			var viewportHeight = $(window).height();
+			$( ".all").height(viewportHeight-80).width(viewportWidth-30);
+		});
+		$(window).resize();
+		makeTouchable();
 	});
 	</script>
 </head>
 <body>
 
-<div class="demo">
+<div class="all">
 
 <br clear="both" />
 
@@ -57,7 +98,21 @@
 </ul>
 </div>
 
-</div><!-- End demo -->
+<div id="word3" class="word-container">
+<ul class="word connectedSortable">
+<li class="word-handle ui-state-disabled"></li>
+<li class="letter ui-state-default">A</li>
+</ul>
+</div>
+
+<div id="word4" class="word-container">
+<ul class="word connectedSortable">
+<li class="word-handle ui-state-disabled"></li>
+<li class="letter ui-state-default">M</li>
+</ul>
+</div>
+
+</div>
 
 
 </body>
