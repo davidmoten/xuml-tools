@@ -15,7 +15,7 @@
 	.word { list-style-type: none; margin: 0; padding: 10 10 10; margin-right: 10px; position:absolute; border:0px solid red;}
 	.word li { display: inline-block;}
 	.word-handle { cursor:move; width:10px; height:10px; background-color:gray;}
-	
+	.next { height:43px; text-align:center; }
 	#snaptarget { height: 140px; }
 	</style>
 	<script>
@@ -47,7 +47,8 @@
 		document.addEventListener("touchend", touchHandler, true);
 		document.addEventListener("touchcancel", touchHandler, true); 
 	}
-	$(function() {
+
+	function styleWords() {
 		$( ".word" ).sortable({
 				connectWith: ".connectedSortable",
 				items: "li:not(.ui-state-disabled)"
@@ -60,13 +61,34 @@
 		$( ".letter" ).click(function() {
     	    		$(this).addClass('top').removeClass('bottom');
     	    		$(this).siblings().removeClass('top').addClass('bottom');
-	        //$(this).css("z-index", a++);
 		});
+	}
+
+	$(function() {
+		styleWords();
 		$( "#word2").offset({ top: 200, left: 300});
 		$(window).resize(function() {
 			var viewportWidth = $(window).width();
 			var viewportHeight = $(window).height();
 			$( ".all").height(viewportHeight-80).width(viewportWidth-30);
+		});
+		var x = 0;
+		$( "#next").button({
+     			icons: {
+				primary: 'ui-icon-plus'}
+			}).click(function() {
+				console.log("hello");
+				var  letters = 'AAAAAAAAABBCCDDDDEEEEEEEEEEEEFFGGGHHIIIIIIIIIJKLMNOPQRSTUVWXYZ';
+				var rnum = Math.floor(Math.random() * letters.length);
+				var letter = letters.substring(rnum,rnum+1);
+				var s = '<div id="word class="word-container"><ul class="word connectedSortable">'
+				      + '<li class="word-handle ui-state-disable"></li>'
+				      + '<li class="letter ui-state-default">' + letter 
+				      + '</li></ul></div>'
+				var y = $(window).height()-100;
+				$( s).insertAfter("#word1").offset({ top:y, left:x });
+				x = x + 75;
+				styleWords();
 		});
 		$(window).resize();
 		makeTouchable();
@@ -75,9 +97,10 @@
 </head>
 <body>
 
-<div class="all">
+<div id="all" class="all">
 
 <br clear="both" />
+<div style="text-align: center;"><button id="next" class="ui-state-default ui-corner-all next" type="submit">Next</button></div>
 
 <div id="word1" class="word-container">
 <ul class="word connectedSortable">
