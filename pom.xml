@@ -70,11 +70,24 @@
 		<module>xuml-diagrams</module>
 		<module>xuml-model-compiler</module>
 		<module>xuml-model-compiler-runtime</module>
-		<module>xuml-model-compiler-test</module>
 		<module>miuml-jaxb</module>
 		<module>xuml-tools-maven-plugin</module>
 		<module>xuml-model-archetype</module>
-  </modules>
+  	</modules>	
+	<profiles>
+		<profile>
+			<id>exclude-from-site</id>
+			<activation>
+				<property>
+					<name>site</name>
+					<value>!true</value>
+				</property>
+			</activation>
+			<modules>
+				<module>xuml-model-compiler-test</module>
+			</modules>
+		</profile>
+	</profiles>
 	<build>
 		<plugins>
 			<plugin>
