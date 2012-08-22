@@ -74,7 +74,7 @@
 			$( ".all").height(viewportHeight-80).width(viewportWidth-30);
 		});
 		var  letters = 				'AAAAAAAAABBCCDDDDEEEEEEEEEEEEFFGGGHHIIIIIIIIIJKLLLLMMNNNNNNOOOOOOOOPPQRRRRRRSSSSTTTTTTUUUUVVWWXYYZ';
-		var x = 0;
+		var x =50;
 		$( "#next").button({
      			icons: {
 				primary: 'ui-icon-plus'}
@@ -90,7 +90,7 @@
 				      + '<li class="letter ui-state-default">' 
 				     + letter 
 				      + '</li></ul></div>';
-				var y = $(window).height()-100;
+				var y = $(window).height()-200;
 				$( s).insertAfter("#start").offset({ top:y, left:x });
 				x = x + 75;
 				styleWords();
