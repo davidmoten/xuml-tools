@@ -7,15 +7,16 @@
 	<script src="http://code.jquery.com/jquery-1.7.2.js"></script>
 	<script src="http://code.jquery.com/ui/1.8.22/jquery-ui.min.js"></script>
 	<link rel="stylesheet" href="http://jqueryui.com/demos/demos.css">
+	<!-- 	//background-image: url(tile.png); -->
 	<style>
 	.all { border: 1px solid black;padding-bottom:50px; }
-	.letter {background-image: url(tile.png); width:43px;height:43px; font-size:3em; text-align:center;}
+	.letter { width:55px;height:55px; font-size:4em; text-align:center;background-color:yellow } 
 	.top {z-index: 2; position: relative}
 	.bottom {z-index: 1; position: relative}
 	.word { list-style-type: none; margin: 0; padding: 10 10 10; margin-right: 10px; position:absolute; border:0px solid red;}
 	.word li { display: inline-block;}
 	.word-handle { cursor:move; width:10px; height:10px; background-color:gray;}
-	.next { height:43px; text-align:center; }
+	.next { height:55px; text-align:center; font-size:2em; }
 	#snaptarget { height: 140px; }
 	</style>
 	<script>
@@ -55,7 +56,7 @@
 			}).disableSelection();
 		$( ".word-container" ).draggable(
 			{ handle: ".word-handle",
-			  containment:".all",
+			 // containment:".all",
 			  scroll: false
 			  });
 		$( ".letter" ).click(function() {
@@ -72,23 +73,32 @@
 			var viewportHeight = $(window).height();
 			$( ".all").height(viewportHeight-80).width(viewportWidth-30);
 		});
+		var  letters = 				'AAAAAAAAABBCCDDDDEEEEEEEEEEEEFFGGGHHIIIIIIIIIJKLLLLMMNNNNNNOOOOOOOOPPQRRRRRRSSSSTTTTTTUUUUVVWWXYYZ';
 		var x = 0;
 		$( "#next").button({
      			icons: {
 				primary: 'ui-icon-plus'}
 			}).click(function() {
-				console.log("hello");
-				var  letters = 'AAAAAAAAABBCCDDDDEEEEEEEEEEEEFFGGGHHIIIIIIIIIJKLMNOPQRSTUVWXYZ';
+				
 				var rnum = Math.floor(Math.random() * letters.length);
 				var letter = letters.substring(rnum,rnum+1);
-				var s = '<div id="word class="word-container"><ul class="word connectedSortable">'
-				      + '<li class="word-handle ui-state-disable"></li>'
+				letters = letters.replace(letter,'');
+				console.log(letters);
+				var s = '<div id="word" class="word-container">'
+				      + '<ul class="word connectedSortable">'
+				      + '<li class="word-handle ui-state-disabled"></li>'
 				      + '<li class="letter ui-state-default">' + letter 
 				      + '</li></ul></div>'
 				var y = $(window).height()-100;
-				$( s).insertAfter("#word1").offset({ top:y, left:x });
+				$( s).insertAfter("#start").offset({ top:y, left:x });
 				x = x + 75;
 				styleWords();
+				if (letters.length==0) {
+					$(" #next").text("No more!");
+					$(" #next").button({ icons: {
+						primary: 'ui-icon-plus'},
+						disabled: true });
+				}
 		});
 		$(window).resize();
 		makeTouchable();
@@ -102,6 +112,9 @@
 <br clear="both" />
 <div style="text-align: center;"><button id="next" class="ui-state-default ui-corner-all next" type="submit">Next</button></div>
 
+<div id="start"></div>
+
+<!--
 <div id="word1" class="word-container">
 <ul class="word connectedSortable">
 <li class="word-handle ui-state-disabled"></li>
@@ -110,6 +123,7 @@
 <li class="letter ui-state-default">C</li>
 </ul>
 </div>
+
 
 <div id="word2" class="word-container">
 <ul class="word connectedSortable">
@@ -134,6 +148,8 @@
 <li class="letter ui-state-default">M</li>
 </ul>
 </div>
+
+-->
 
 </div>
 
