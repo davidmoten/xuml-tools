@@ -74,6 +74,8 @@
 		});
 		var  letters = 				'AAAAAAAAABBCCDDDDEEEEEEEEEEEEFFGGGHHIIIIIIIIIJKLLLLMMNNNNNNOOOOOOOOPPQRRRRRRSSSSTTTTTTUUUUVVWWXYYZ';
 		var x =50;
+		var y = $(window).height()-100;
+
 		var wordNumber = 0; 
 		
 		var currentMousePos = { x: -1, y: -1 };
@@ -101,9 +103,13 @@
 				      + '<li class="letter ui-state-default">' 
 				     + letter 
 				      + '</li></ul></div>';
-				var y = $(window).height()-100;
 				$( s).insertAfter("#start").offset({ top:y, left:x });
+
 				x = x + 70;
+				if (x>600) {
+				  x-=600;
+				  y-=70;
+				}
 				styleWords();
 				var pressTimer;
 				var wordDiv = $( '#' + id);
