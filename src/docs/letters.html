@@ -10,12 +10,11 @@
 	<!-- 	//background-image: url(tile.png); -->
 	<style>
 	.all { border: 1px solid black;padding-bottom:50px; }
-	.letter { width:75px;height:75px; font-size:5em; background-color:yellow;padding-left:35px; } 
+	.letter { width:55px;height:55px; font-size:4em; background-color:yellow;text-align:center; } 
 	.top {z-index: 2; position: relative}
 	.bottom {z-index: 1; position: relative}
-	.word { list-style-type: none; margin: 0; padding: 3 3 3; margin-right: 10px; position:absolute; border:0px solid red;}
+	.word { list-style-type: none; margin: 0; padding: 3 3 3; margin-right: 10px; position:absolute; border:0px solid gray;}
 	.word li { display: inline-block;}
-	.word-handle { filter:alpha(opacity=20); opacity:0.2; cursor:move; width:30px; height:30px; background-color:gray;z-index:3; position:relative; left:40px;top:30px;}
 	.next { height:55px; text-align:center; font-size:2em; }
 	#snaptarget { height: 140px; }
 	</style>
@@ -55,7 +54,7 @@
 				items: "li:not(.ui-state-disabled)"
 			}).disableSelection();
 		$( ".word-container" ).draggable(
-			{ handle: ".word-handle",
+			{ 
 			 // containment:".all",
 			  scroll: false
 			  });
@@ -94,14 +93,15 @@
 				var letter = letters.substring(rnum,rnum+1);
 				letters = letters.replace(letter,'');
 				var id  = 'word' + wordNumber;
+				var ulId = 'ul' + wordNumber;
 				wordNumber++;
 				var s = '<div id="' + id + '"'
 				      + ' class="word-container">'
-				      + '<ul class="word connectedSortable">'
+				      + '<ul id="'+ulId +'" class="word connectedSortable">'
 				      + '<li class="letter ui-state-default">' 
 				     + letter 
 				      + '</li></ul></div>';
-				var y = $(window).height()-200;
+				var y = $(window).height()-100;
 				$( s).insertAfter("#start").offset({ top:y, left:x });
 				x = x + 30;
 				styleWords();
@@ -123,7 +123,7 @@
 					    console.log(diffX + " " + diffY);
 					    item.offset({ left: p.left + diffX, top:p.top + diffY });
 				            //item.animate({ top: "-="+ 0 + "px", left: "+=" + 0 + "px"});
-					    item.children().css('border', 'none');
+					    $( '#'+ulId).css('border-width', '0px');
 					  }
 					  return doMouseUp();
 					}).mousedown(function(event){
@@ -140,7 +140,7 @@
 						  console.log(diffX + "," + diffY);
 						  if (diffX<10 && diffY<10) {
 						    console.log("long press detected");
-  						    item.children().css('border','1px solid gray');
+  						    $( '#'+ulId).css('border-width','1px');
 						    moving = true;
 						  }
 						},1000)
