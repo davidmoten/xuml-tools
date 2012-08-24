@@ -76,6 +76,15 @@
 		var  letters = 				'AAAAAAAAABBCCDDDDEEEEEEEEEEEEFFGGGHHIIIIIIIIIJKLLLLMMNNNNNNOOOOOOOOPPQRRRRRRSSSSTTTTTTUUUUVVWWXYYZ';
 		var x =50;
 		var wordNumber = 0; 
+		
+		var currentMousePos = { x: -1, y: -1 };
+		$(document).mousemove(function(event) {
+			currentMousePos = {
+			    x: event.pageX,
+			    y: event.pageY
+			};
+		});
+
 		$( "#next").button({
      			icons: {
 				primary: 'ui-icon-plus'}
@@ -84,10 +93,10 @@
 				var rnum = Math.floor(Math.random() * letters.length);
 				var letter = letters.substring(rnum,rnum+1);
 				letters = letters.replace(letter,'');
-				var s = '<div id="word' 
-				      + wordNumber + '" class="word-container">'
-				      + '<div class="word-handle"></div>'
-/*  + '<li class="word-handle ui-state-disabled"></li>' */
+				var id  = 'word' + wordNumber;
+				wordNumber++;
+				var s = '<div id="' + id + '"'
+				      + ' class="word-container">'
 				      + '<ul class="word connectedSortable">'
 				      + '<li class="letter ui-state-default">' 
 				     + letter 
@@ -96,6 +105,47 @@
 				$( s).insertAfter("#start").offset({ top:y, left:x });
 				x = x + 30;
 				styleWords();
+				var pressTimer;
+				var wordDiv = $( '#' + id);
+				var doMouseUp = wordDiv.mouseup;
+				var doMouseDown = wordDiv.mousedown;
+				var moving = false;
+				var left; 
+   			        var top;
+				var item;
+				var p;
+				wordDiv.mouseup(function(event){
+					  clearTimeout(pressTimer);
+					  console.log("moving=" + moving);
+					  if (moving) {
+					    var diffX = currentMousePos.x - left;
+					    var diffY = currentMousePos.y - top;
+					    console.log(diffX + " " + diffY);
+					    item.offset({ left: p.left + diffX, top:p.top + diffY });
+				            //item.animate({ top: "-="+ 0 + "px", left: "+=" + 0 + "px"});
+					    item.children().css('border', 'none');
+					  }
+					  return doMouseUp();
+					}).mousedown(function(event){
+					  // Set timeout
+					  item = $(this);
+					  p = item.offset();
+					  left = currentMousePos.x;
+					  top = currentMousePos.y;
+					  moving = false;
+					  pressTimer = window.setTimeout(
+						function() { 
+						  var diffX = Math.abs(currentMousePos.x -left);
+						  var diffY = Math.abs(currentMousePos.y - top);
+						  console.log(diffX + "," + diffY);
+						  if (diffX<10 && diffY<10) {
+						    console.log("long press detected");
+  						    item.children().css('border','1px solid gray');
+						    moving = true;
+						  }
+						},1000)
+					  return doMouseDown(); 
+					});
 				if (letters.length==0) {
 					$(" #next").text("No more!");
 					$(" #next").button({ icons: {
