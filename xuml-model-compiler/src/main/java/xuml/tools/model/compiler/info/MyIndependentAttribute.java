@@ -1,7 +1,5 @@
 package xuml.tools.model.compiler.info;
 
-import xuml.tools.model.compiler.ClassInfoBase;
-
 public class MyIndependentAttribute {
 	private final String fieldName;
 	private final String columnName;

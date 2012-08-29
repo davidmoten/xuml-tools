@@ -1,6 +1,5 @@
 package xuml.tools.model.compiler.info;
 
-import xuml.tools.model.compiler.ClassInfoBase;
 
 public class MyPrimaryIdAttributeMember extends
 		MyIndependentAttribute {

@@ -1,7 +1,5 @@
 package xuml.tools.model.compiler.info;
 
-import xuml.tools.model.compiler.ClassInfoBase;
-
 public class MyIdAttribute {
 	private final String fieldName;
 	private final String columnName;
@@ -31,8 +29,7 @@ public class MyIdAttribute {
 	public MyIdAttribute(String attributeName, String fieldName,
 			String columnName, MyTypeDefinition type,
 			MyAttributeExtensions extensions) {
-		this(attributeName, fieldName, columnName, null, null, type,
-				extensions);
+		this(attributeName, fieldName, columnName, null, null, type, extensions);
 	}
 
 	public String getFieldName() {

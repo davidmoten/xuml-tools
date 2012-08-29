@@ -77,8 +77,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
-//TODO not keen on inheritance but was useful while design was evolving, get rid of ClassInfoBase
-public class ClassInfo extends ClassInfoBase {
+public class ClassInfo {
 
 	private final Class cls;
 	private final String packageName;
@@ -99,17 +98,14 @@ public class ClassInfo extends ClassInfoBase {
 		this.lookups = lookups;
 	}
 
-	@Override
 	String getPackage() {
 		return packageName;
 	}
 
-	@Override
 	String getClassDescription() {
 		return classDescription;
 	}
 
-	@Override
 	List<List<String>> getUniqueConstraintColumnNames() {
 		HashMultimap<BigInteger, String> map = getIdentifierAttributeNames();
 		List<List<String>> list = newArrayList();
@@ -198,22 +194,18 @@ public class ClassInfo extends ClassInfoBase {
 		return map;
 	}
 
-	@Override
 	String getSchema() {
 		return schema;
 	}
 
-	@Override
 	String getTable() {
 		return nameManager.toTableName(schema, cls.getName());
 	}
 
-	@Override
 	String getJavaClassSimpleName() {
 		return Util.toClassSimpleName(cls.getName());
 	}
 
-	@Override
 	List<MyIdAttribute> getPrimaryIdAttributeMembers() {
 		Set<Attribute> list = getIdentifierAttributes().get(BigInteger.ONE);
 		return getMyIdAttributes(list);
@@ -354,7 +346,6 @@ public class ClassInfo extends ClassInfoBase {
 				extensions);
 	}
 
-	@Override
 	List<MyIndependentAttribute> getNonIdIndependentAttributeMembers() {
 		List<MyIndependentAttribute> list = newArrayList();
 		for (JAXBElement<? extends Attribute> element : cls.getAttribute()) {
@@ -390,7 +381,6 @@ public class ClassInfo extends ClassInfoBase {
 		return false;
 	}
 
-	@Override
 	List<MyEvent> getEvents() {
 		if (cls.getLifecycle() == null)
 			return newArrayList();
@@ -458,7 +448,6 @@ public class ClassInfo extends ClassInfoBase {
 					+ Util.upperFirst(Util.toJavaIdentifier(stateName));
 	}
 
-	@Override
 	List<String> getStateNames() {
 		List<String> list = Lists.newArrayList();
 		if (cls.getLifecycle() == null)
@@ -470,7 +459,6 @@ public class ClassInfo extends ClassInfoBase {
 		}
 	}
 
-	@Override
 	List<MyTransition> getTransitions() {
 		List<MyTransition> list = Lists.newArrayList();
 		for (Transition transition : cls.getLifecycle().getTransition()) {
@@ -509,7 +497,6 @@ public class ClassInfo extends ClassInfoBase {
 		return null;
 	}
 
-	@Override
 	String getStateAsJavaIdentifier(String stateName) {
 		for (State state : cls.getLifecycle().getState())
 			if (state.getName().equals(stateName))
@@ -518,23 +505,19 @@ public class ClassInfo extends ClassInfoBase {
 		throw new RuntimeException("state not found: " + stateName);
 	}
 
-	@Override
 	boolean isSuperclass() {
 		return lookups.isSuperclass(cls.getName());
 	}
 
-	@Override
 	boolean isSubclass() {
 		return lookups.isSpecialization(cls.getName());
 	}
 
-	@Override
 	MySubclassRole getSubclassRole() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
 	List<MyReferenceMember> getReferenceMembers() {
 
 		List<MyReferenceMember> list = Lists.newArrayList();
@@ -915,35 +898,29 @@ public class ClassInfo extends ClassInfoBase {
 			return Mult.ONE_MANY;
 	}
 
-	@Override
 	Set<String> getAtLeastOneFieldChecks() {
 		// TODO Auto-generated method stub
 		return Sets.newHashSet();
 	}
 
-	@Override
 	String getImports(String relativeToClass) {
 		return getTypes().getImports(relativeToClass);
 	}
 
-	@Override
 	String getIdColumnName() {
 		// TODO Auto-generated method stub
 		return "ID";
 	}
 
-	@Override
 	String getContextPackageName() {
 		// TODO Auto-generated method stub
 		return packageName;
 	}
 
-	@Override
 	TypeRegister getTypes() {
 		return typeRegister;
 	}
 
-	@Override
 	Type getType(String name) {
 		String javaClassName = lookups.getJavaType(name);
 		return new Type(javaClassName);
@@ -1081,5 +1058,63 @@ public class ClassInfo extends ClassInfoBase {
 				String.class), null, null, null, null, t.getDefaultValue()
 				.toString(), null, t.getMinLength(), t.getMaxLength(),
 				t.getPrefix(), t.getSuffix(), t.getValidationPattern());
+	}
+
+	final public String getBehaviourPackage() {
+		return getPackage() + ".behaviour";
+	}
+
+	final public String getBehaviourFactoryFullClassName() {
+		return getBehaviourPackage() + "." + getBehaviourFactorySimpleName();
+	}
+
+	final public String getBehaviourFullClassName() {
+		return getBehaviourPackage() + "." + getJavaClassSimpleName()
+				+ "Behaviour";
+	}
+
+	final public String getBehaviourFactorySimpleName() {
+		return getJavaClassSimpleName() + "BehaviourFactory";
+	}
+
+	final public String addType(java.lang.Class<?> cls) {
+		return getTypes().addType(cls);
+	}
+
+	final public void addTypes(java.lang.Class<?>... classes) {
+		getTypes().addTypes(classes);
+	}
+
+	final public String addType(String fullClassName) {
+		return getTypes().addType(fullClassName);
+	}
+
+	final public String addType(Type type) {
+		return getTypes().addType(type);
+	}
+
+	final public String getContextFullClassName() {
+		return getContextPackageName() + ".Context";
+	}
+
+	final public String getBehaviourFactoryFieldName() {
+		return Util.toJavaIdentifier(getBehaviourFactorySimpleName());
+	}
+
+	final public String getClassFullName() {
+
+		return getPackage() + "." + getJavaClassSimpleName();
+	}
+
+	public String getEmbeddedIdSimpleClassName() {
+		return getJavaClassSimpleName() + "Id";
+	}
+
+	public String getEmbeddedIdAttributeName() {
+		return "id";
+	}
+
+	public boolean hasBehaviour() {
+		return getEvents().size() > 0;
 	}
 }

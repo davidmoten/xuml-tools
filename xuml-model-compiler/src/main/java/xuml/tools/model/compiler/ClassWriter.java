@@ -903,8 +903,7 @@ public class ClassWriter {
 			boolean updatable) {
 		out.format("    @%s(value={\n", info.addType(JoinColumns.class));
 		boolean first = true;
-		for (MyJoinColumn col : ref
-				.getJoinColumns()) {
+		for (MyJoinColumn col : ref.getJoinColumns()) {
 			if (!first)
 				out.format(",\n");
 			first = false;
@@ -1933,7 +1932,6 @@ public class ClassWriter {
 
 	private void writeQueryField(PrintStream out, ClassInfo info, MyType type,
 			String fieldName, String fieldNameInQuery) {
-		Class<?> c;
 		if (type == MyType.REAL || type == MyType.INTEGER) {
 			out.format(
 					"        public static final %1$s<%3$s> %2$s = new %1$s<%3$s>(\n            new %4$s(\"%5$s\"));\n",
