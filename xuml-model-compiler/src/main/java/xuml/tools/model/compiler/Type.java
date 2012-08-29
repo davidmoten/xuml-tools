@@ -1,8 +1,7 @@
 package xuml.tools.model.compiler;
 
+import java.util.Arrays;
 import java.util.List;
-
-import scala.actors.threadpool.Arrays;
 
 import com.google.common.collect.Lists;
 
@@ -21,7 +20,6 @@ public class Type {
 		this.isArray = isArray;
 	}
 
-	@SuppressWarnings("unchecked")
 	public Type(String base, Type generic) {
 		this(base, Arrays.asList(new Type[] { generic }), false);
 	}
