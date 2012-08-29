@@ -77,6 +77,12 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
+/**
+ * Provides information about a metmodel Class definition.
+ * 
+ * @author dxm
+ * 
+ */
 public class ClassInfo {
 
 	private final Class cls;
@@ -88,6 +94,16 @@ public class ClassInfo {
 	private final static Marshaller extensionsMarshaller = new Marshaller();
 	private final NameManager nameManager;
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param nameManager
+	 * @param cls
+	 * @param packageName
+	 * @param classDescription
+	 * @param schema
+	 * @param lookups
+	 */
 	public ClassInfo(NameManager nameManager, Class cls, String packageName,
 			String classDescription, String schema, Lookups lookups) {
 		this.nameManager = nameManager;
@@ -98,6 +114,11 @@ public class ClassInfo {
 		this.lookups = lookups;
 	}
 
+	/**
+	 * The full package name
+	 * 
+	 * @return
+	 */
 	String getPackage() {
 		return packageName;
 	}
@@ -238,25 +259,35 @@ public class ClassInfo {
 		String otherClassName;
 		if (rel instanceof BinaryAssociation) {
 			BinaryAssociation b = (BinaryAssociation) rel;
-			if (isActiveSide(b))
-				otherClassName = b.getPassivePerspective().getViewedClass();
-			else
-				otherClassName = b.getActivePerspective().getViewedClass();
+			otherClassName = getOtherClassName(b);
 		} else if (rel instanceof UnaryAssociation) {
 			// TODO
 			throw new RuntimeException("not sure how to do this one yet");
 		} else if (rel instanceof Generalization) {
 			Generalization g = (Generalization) rel;
-			if (cls.getName().equals(g.getSuperclass()))
-				throw new RuntimeException(
-						"cannot use an id from a specialization as primary id member: "
-								+ g.getRnum());
-			else
-				otherClassName = g.getSuperclass();
+			otherClassName = getOtherClassName(g);
 		} else
 			throw new RuntimeException(
 					"this relationship type not implemented: "
 							+ rel.getClass().getName());
+		return otherClassName;
+	}
+
+	private String getOtherClassName(Generalization g) {
+		if (cls.getName().equals(g.getSuperclass()))
+			throw new RuntimeException(
+					"cannot use an id from a specialization as primary id member: "
+							+ g.getRnum());
+		else
+			return g.getSuperclass();
+	}
+
+	private String getOtherClassName(BinaryAssociation b) {
+		String otherClassName;
+		if (isActiveSide(b))
+			otherClassName = b.getPassivePerspective().getViewedClass();
+		else
+			otherClassName = b.getActivePerspective().getViewedClass();
 		return otherClassName;
 	}
 
@@ -389,55 +420,67 @@ public class ClassInfo {
 		for (JAXBElement<? extends Event> element : cls.getLifecycle()
 				.getEvent()) {
 			Event event = element.getValue();
-
-			final StateModelSignature signature;
-			final String stateName;
-
-			if (event.getEventSignature() != null) {
-				signature = event.getEventSignature();
-				stateName = null;
-			} else {
-				// TODO of eventSignature is null then get signature from
-				// destination state
-				State destinationState = null;
-
-				for (MyTransition transition : getTransitions()) {
-					if (transition.getEventId()
-							.equals(event.getID().toString())) {
-						for (State state : cls.getLifecycle().getState()) {
-							if (transition.getToState().equals(state.getName())) {
-								destinationState = state;
-							}
-						}
-					}
-				}
-				if (destinationState != null) {
-					signature = destinationState.getStateSignature();
-					stateName = destinationState.getName();
-				} else {
-					signature = null;
-					stateName = null;
-				}
-			}
-
-			if (signature == null)
-				throw new RuntimeException(
-						"event/state signature not found for " + cls.getName()
-								+ ",event=" + event.getName());
-
-			List<MyParameter> parameters = Lists.newArrayList();
-			for (StateModelParameter p : signature.getStateModelParameter()) {
-				parameters.add(new MyParameter(Util.toJavaIdentifier(p
-						.getName()), lookups.getJavaType(p.getType())));
-			}
-
-			MyEvent myEvent = new MyEvent(event.getName(),
-					Util.toClassSimpleName(event.getName()), parameters,
-					stateName, getStateSignatureInterfaceName(stateName),
-					event == creationEvent);
+			boolean isCreationEvent = event == creationEvent;
+			MyEvent myEvent = getEvent(event, isCreationEvent);
 			list.add(myEvent);
 		}
 		return list;
+	}
+
+	private MyEvent getEvent(Event event, boolean isCreationEvent) {
+		final StateModelSignature signature;
+		final String stateName;
+
+		if (event.getEventSignature() != null) {
+			signature = event.getEventSignature();
+			stateName = null;
+		} else {
+			// TODO of eventSignature is null then get signature from
+			// destination state
+			State destinationState = getDestinationState(event);
+			if (destinationState != null) {
+				signature = destinationState.getStateSignature();
+				stateName = destinationState.getName();
+			} else {
+				signature = null;
+				stateName = null;
+			}
+		}
+
+		if (signature == null)
+			throw new RuntimeException("event/state signature not found for "
+					+ cls.getName() + ",event=" + event.getName());
+
+		List<MyParameter> parameters = getParameters(signature);
+
+		MyEvent myEvent = new MyEvent(event.getName(),
+				Util.toClassSimpleName(event.getName()), parameters, stateName,
+				getStateSignatureInterfaceName(stateName), isCreationEvent);
+		return myEvent;
+	}
+
+	private List<MyParameter> getParameters(final StateModelSignature signature) {
+		List<MyParameter> parameters = Lists.newArrayList();
+		for (StateModelParameter p : signature.getStateModelParameter()) {
+			parameters.add(new MyParameter(Util.toJavaIdentifier(p.getName()),
+					lookups.getJavaType(p.getType())));
+		}
+		return parameters;
+	}
+
+	private State getDestinationState(Event event) {
+		State destinationState = null;
+
+		for (MyTransition transition : getTransitions()) {
+			if (transition.getEventId().equals(event.getID().toString())) {
+				for (State state : cls.getLifecycle().getState()) {
+					if (transition.getToState().equals(state.getName())) {
+						destinationState = state;
+					}
+				}
+			}
+		}
+		return destinationState;
 	}
 
 	private String getStateSignatureInterfaceName(final String stateName) {
@@ -542,89 +585,102 @@ public class ClassInfo {
 			// current class is an Association Class so prepare the implicit
 			// associations from the ends to the Association Class
 			if (ass.get() instanceof BinaryAssociation) {
-				{
-					BinaryAssociation b = (BinaryAssociation) ass.get();
-					BinaryAssociation b2 = new BinaryAssociation();
-					ActivePerspective p1 = new ActivePerspective();
-					p1.setViewedClass(cls.getName());
-					p1.setOnePerspective(b.getActivePerspective()
-							.isOnePerspective());
-					p1.setConditional(b.getPassivePerspective().isConditional());
-					p1.setPhrase(b.getActivePerspective().getPhrase());
-					b2.setActivePerspective(p1);
-					PassivePerspective p2 = new PassivePerspective();
-					p2.setViewedClass(b.getActivePerspective().getViewedClass());
-					p2.setOnePerspective(true);
-					p2.setConditional(false);
-					p2.setPhrase(b.getPassivePerspective().getPhrase());
-					b2.setPassivePerspective(p2);
-					b2.setRnum(b.getRnum());
-					list.addAll(createMyReferenceMembers(b2, cls));
-				}
-
-				{
-					BinaryAssociation b = (BinaryAssociation) ass.get();
-					BinaryAssociation b2 = new BinaryAssociation();
-					ActivePerspective p1 = new ActivePerspective();
-					p1.setViewedClass(cls.getName());
-					p1.setOnePerspective(b.getActivePerspective()
-							.isOnePerspective());
-					p1.setConditional(b.getActivePerspective().isConditional());
-					p1.setPhrase(b.getPassivePerspective().getPhrase());
-					b2.setActivePerspective(p1);
-					PassivePerspective p2 = new PassivePerspective();
-					p2.setViewedClass(b.getPassivePerspective()
-							.getViewedClass());
-					p2.setOnePerspective(true);
-					p2.setConditional(false);
-					p2.setPhrase(b.getActivePerspective().getPhrase());
-					b2.setPassivePerspective(p2);
-					b2.setRnum(b.getRnum());
-					list.addAll(createMyReferenceMembers(b2, cls));
-				}
+				addReferenceMembers(list, ass);
 			}
 			// TODO handle unary association classesm
 		}
 		return list;
 	}
 
+	private void addReferenceMembers(List<MyReferenceMember> list,
+			Optional<Association> ass) {
+		{
+			BinaryAssociation b = (BinaryAssociation) ass.get();
+			BinaryAssociation b2 = new BinaryAssociation();
+			ActivePerspective p1 = new ActivePerspective();
+			p1.setViewedClass(cls.getName());
+			p1.setOnePerspective(b.getActivePerspective().isOnePerspective());
+			p1.setConditional(b.getPassivePerspective().isConditional());
+			p1.setPhrase(b.getActivePerspective().getPhrase());
+			b2.setActivePerspective(p1);
+			PassivePerspective p2 = new PassivePerspective();
+			p2.setViewedClass(b.getActivePerspective().getViewedClass());
+			p2.setOnePerspective(true);
+			p2.setConditional(false);
+			p2.setPhrase(b.getPassivePerspective().getPhrase());
+			b2.setPassivePerspective(p2);
+			b2.setRnum(b.getRnum());
+			list.addAll(createMyReferenceMembers(b2, cls));
+		}
+
+		{
+			BinaryAssociation b = (BinaryAssociation) ass.get();
+			BinaryAssociation b2 = new BinaryAssociation();
+			ActivePerspective p1 = new ActivePerspective();
+			p1.setViewedClass(cls.getName());
+			p1.setOnePerspective(b.getActivePerspective().isOnePerspective());
+			p1.setConditional(b.getActivePerspective().isConditional());
+			p1.setPhrase(b.getPassivePerspective().getPhrase());
+			b2.setActivePerspective(p1);
+			PassivePerspective p2 = new PassivePerspective();
+			p2.setViewedClass(b.getPassivePerspective().getViewedClass());
+			p2.setOnePerspective(true);
+			p2.setConditional(false);
+			p2.setPhrase(b.getActivePerspective().getPhrase());
+			b2.setPassivePerspective(p2);
+			b2.setRnum(b.getRnum());
+			list.addAll(createMyReferenceMembers(b2, cls));
+		}
+	}
+
 	private MyReferenceMember createMyReferenceMember(Generalization g,
 			Named spec, Class cls, boolean isSuperclass) {
 		if (isSuperclass) {
-			ClassInfo infoOther = getClassInfo(spec.getName());
-			String fieldName = nameManager.toFieldName(cls.getName(),
-					spec.getName(), g.getRnum());
-			String thisFieldName = nameManager.toFieldName(spec.getName(),
-					cls.getName(), g.getRnum());
-			return new MyReferenceMember(spec.getName(),
-					infoOther.getClassFullName(), Mult.ONE, Mult.ZERO_ONE,
-					"specializes", "generalizes", fieldName, null,
-					thisFieldName, (MyManyToMany) null, false, g.getRnum()
-							.toString());
+			return createSuperclassReferenceMember(g, spec, cls);
 		} else {
-			ClassInfo infoOther = getClassInfo(g.getSuperclass());
-			String fieldName = nameManager.toFieldName(cls.getName(),
-					g.getSuperclass(), g.getRnum());
-			String thisFieldName = nameManager.toFieldName(g.getSuperclass(),
-					cls.getName(), g.getRnum());
-			List<MyJoinColumn> joins = newArrayList();
-			for (MyIdAttribute member : infoOther
-					.getPrimaryIdAttributeMembers()) {
-				// TODO handle when matching attribute not found, use some
-				// default, see schema
-				String attributeName = getMatchingAttributeName(g.getRnum(),
-						member.getAttributeName());
-				MyJoinColumn jc = new MyJoinColumn(nameManager.toColumnName(
-						g.getSuperclass(), attributeName),
-						member.getColumnName());
-				joins.add(jc);
-			}
-			return new MyReferenceMember(g.getSuperclass(),
-					infoOther.getClassFullName(), Mult.ZERO_ONE, Mult.ONE,
-					"generalizes", "specializes", fieldName, joins,
-					thisFieldName, (MyManyToMany) null, false, g.getRnum()
-							.toString());
+			return createNonSuperclassReferenceMember(g, cls);
 		}
+	}
+
+	private MyReferenceMember createNonSuperclassReferenceMember(
+			Generalization g, Class cls) {
+		ClassInfo infoOther = getClassInfo(g.getSuperclass());
+		String fieldName = nameManager.toFieldName(cls.getName(),
+				g.getSuperclass(), g.getRnum());
+		String thisFieldName = nameManager.toFieldName(g.getSuperclass(),
+				cls.getName(), g.getRnum());
+		List<MyJoinColumn> joins = newArrayList();
+		for (MyIdAttribute member : infoOther.getPrimaryIdAttributeMembers()) {
+			// TODO handle when matching attribute not found, use some
+			// default, see schema
+			MyJoinColumn jc = createJoinColumn(g, member);
+			joins.add(jc);
+		}
+		return new MyReferenceMember(g.getSuperclass(),
+				infoOther.getClassFullName(), Mult.ZERO_ONE, Mult.ONE,
+				"generalizes", "specializes", fieldName, joins, thisFieldName,
+				(MyManyToMany) null, false, g.getRnum().toString());
+	}
+
+	private MyJoinColumn createJoinColumn(Generalization g, MyIdAttribute member) {
+		String attributeName = getMatchingAttributeName(g.getRnum(),
+				member.getAttributeName());
+		MyJoinColumn jc = new MyJoinColumn(nameManager.toColumnName(
+				g.getSuperclass(), attributeName), member.getColumnName());
+		return jc;
+	}
+
+	private MyReferenceMember createSuperclassReferenceMember(Generalization g,
+			Named spec, Class cls) {
+		ClassInfo infoOther = getClassInfo(spec.getName());
+		String fieldName = nameManager.toFieldName(cls.getName(),
+				spec.getName(), g.getRnum());
+		String thisFieldName = nameManager.toFieldName(spec.getName(),
+				cls.getName(), g.getRnum());
+		return new MyReferenceMember(spec.getName(),
+				infoOther.getClassFullName(), Mult.ONE, Mult.ZERO_ONE,
+				"specializes", "generalizes", fieldName, null, thisFieldName,
+				(MyManyToMany) null, false, g.getRnum().toString());
 	}
 
 	private List<MyReferenceMember> createMyReferenceMembers(Association a,
@@ -646,8 +702,9 @@ public class ClassInfo {
 
 			joins.add(new MyJoinColumn(nameManager.toColumnName(cls.getName(),
 					attributeName), member.getColumnName()));
-			joins2.add(new MyJoinColumn(member.getColumnName(), nameManager
-					.toColumnName(cls.getName(), attributeName)));
+			MyJoinColumn jc = new MyJoinColumn(member.getColumnName(),
+					nameManager.toColumnName(cls.getName(), attributeName));
+			joins2.add(jc);
 		}
 		List<MyReferenceMember> list = Lists.newArrayList();
 
@@ -662,18 +719,14 @@ public class ClassInfo {
 		else
 			fromMult = Mult.ONE;
 
-		{
-			list.add(new MyReferenceMember(getJavaClassSimpleName(),
-					getClassFullName(), fromMult, toMult(p), p.getPhrase()
-							+ " Inverse", p.getPhrase(), fieldName2, joins2,
-					fieldName1, null, false, a.getRnum().toString()));
-		}
-		{
-			list.add(new MyReferenceMember(getJavaClassSimpleName(),
-					getClassFullName(), toMult(p), fromMult, p.getPhrase(), p
-							.getPhrase() + " Inverse", fieldName1, joins,
-					fieldName2, null, false, a.getRnum().toString()));
-		}
+		list.add(new MyReferenceMember(getJavaClassSimpleName(),
+				getClassFullName(), fromMult, toMult(p), p.getPhrase()
+						+ " Inverse", p.getPhrase(), fieldName2, joins2,
+				fieldName1, null, false, a.getRnum().toString()));
+		list.add(new MyReferenceMember(getJavaClassSimpleName(),
+				getClassFullName(), toMult(p), fromMult, p.getPhrase(), p
+						.getPhrase() + " Inverse", fieldName1, joins,
+				fieldName2, null, false, a.getRnum().toString()));
 		return list;
 	}
 
