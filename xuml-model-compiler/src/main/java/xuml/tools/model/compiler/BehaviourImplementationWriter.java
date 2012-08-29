@@ -6,8 +6,8 @@ import java.util.Map;
 
 import org.apache.commons.io.output.ByteArrayOutputStream;
 
-import xuml.tools.model.compiler.ClassInfoBase.MyEvent;
-import xuml.tools.model.compiler.ClassInfoBase.MyTransition;
+import xuml.tools.model.compiler.info.MyEvent;
+import xuml.tools.model.compiler.info.MyTransition;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;

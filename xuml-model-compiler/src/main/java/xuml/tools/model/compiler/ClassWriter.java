@@ -43,20 +43,20 @@ import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang.StringEscapeUtils;
 
-import xuml.tools.model.compiler.ClassInfoBase.Mult;
-import xuml.tools.model.compiler.ClassInfoBase.MyAttributeExtensions;
-import xuml.tools.model.compiler.ClassInfoBase.MyEvent;
-import xuml.tools.model.compiler.ClassInfoBase.MyFind;
-import xuml.tools.model.compiler.ClassInfoBase.MyIdAttribute;
-import xuml.tools.model.compiler.ClassInfoBase.MyIndependentAttribute;
-import xuml.tools.model.compiler.ClassInfoBase.MyJoinColumn;
-import xuml.tools.model.compiler.ClassInfoBase.MyParameter;
-import xuml.tools.model.compiler.ClassInfoBase.MyReferenceMember;
-import xuml.tools.model.compiler.ClassInfoBase.MySpecializations;
-import xuml.tools.model.compiler.ClassInfoBase.MySubclassRole;
-import xuml.tools.model.compiler.ClassInfoBase.MyTransition;
-import xuml.tools.model.compiler.ClassInfoBase.MyType;
-import xuml.tools.model.compiler.ClassInfoBase.MyTypeDefinition;
+import xuml.tools.model.compiler.info.Mult;
+import xuml.tools.model.compiler.info.MyAttributeExtensions;
+import xuml.tools.model.compiler.info.MyEvent;
+import xuml.tools.model.compiler.info.MyFind;
+import xuml.tools.model.compiler.info.MyIdAttribute;
+import xuml.tools.model.compiler.info.MyIndependentAttribute;
+import xuml.tools.model.compiler.info.MyJoinColumn;
+import xuml.tools.model.compiler.info.MyParameter;
+import xuml.tools.model.compiler.info.MyReferenceMember;
+import xuml.tools.model.compiler.info.MySpecializations;
+import xuml.tools.model.compiler.info.MySubclassRole;
+import xuml.tools.model.compiler.info.MyTransition;
+import xuml.tools.model.compiler.info.MyType;
+import xuml.tools.model.compiler.info.MyTypeDefinition;
 import xuml.tools.model.compiler.runtime.CreationEvent;
 import xuml.tools.model.compiler.runtime.EntityHelper;
 import xuml.tools.model.compiler.runtime.Event;
@@ -903,7 +903,7 @@ public class ClassWriter {
 			boolean updatable) {
 		out.format("    @%s(value={\n", info.addType(JoinColumns.class));
 		boolean first = true;
-		for (xuml.tools.model.compiler.ClassInfo.MyJoinColumn col : ref
+		for (MyJoinColumn col : ref
 				.getJoinColumns()) {
 			if (!first)
 				out.format(",\n");
