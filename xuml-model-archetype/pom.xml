@@ -23,6 +23,7 @@
 						<goals>
 							<goal>install</goal>
 							<goal>run</goal>
+							<goal>verify</goal>
 						</goals>
 						<phase>integration-test</phase>
 					</execution>
@@ -36,6 +37,7 @@
 					<pomIncludes>
 						<pomInclude>*</pomInclude>
 					</pomIncludes>
+					<ignoreFailures>false</ignoreFailures>
 					<projectsDirectory>${basedir}/src/test/resources/projects</projectsDirectory>
 					<properties>
 						<archetypeArtifactId>${project.artifactId}</archetypeArtifactId>
