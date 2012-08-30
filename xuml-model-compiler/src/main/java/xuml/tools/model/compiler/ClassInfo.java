@@ -1170,4 +1170,10 @@ public class ClassInfo {
 	public boolean hasBehaviour() {
 		return getEvents().size() > 0;
 	}
+
+	public boolean useGuiceInjection() {
+		// TODO is this the best way to specify guice injection?
+		return "true".equalsIgnoreCase(System.getProperty("guice"));
+	}
+
 }

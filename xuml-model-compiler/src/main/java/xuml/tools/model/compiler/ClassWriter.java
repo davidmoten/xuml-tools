@@ -138,25 +138,32 @@ public class ClassWriter {
 		if (info.isSuperclass()) {
 			List<MySpecializations> list = info.getSpecializations();
 			for (MySpecializations sp : list) {
-				String methodName = "validateSpecializationR" + sp.getRnum();
-				out.format("    private void %s() {\n", methodName);
-				out.format("        int count = 0;\n");
-				for (String fieldName : sp.getFieldNames()) {
-					out.format("        if (%s != null)\n", fieldName);
-					out.format("            count++;\n");
-				}
-				out.format("        if (count == 0)\n");
-				out.format(
-						"            throw new %s(\"wrong number of specializations = \" + count);\n",
-						info.addType(RelationshipNotEstablishedException.class));
-				out.format("        if (count != 1)\n");
-				out.format(
-						"            throw new %s(\"wrong number of specializations = \" + count);\n",
-						info.addType(TooManySpecializationsException.class));
-				out.format("        }\n\n");
+				String methodName = writeSpecializationValidationMethod(out,
+						info, sp);
 				validationMethods.add(methodName);
 			}
 		}
+	}
+
+	private String writeSpecializationValidationMethod(PrintStream out,
+			ClassInfo info, MySpecializations sp) {
+		String methodName = "validateSpecializationR" + sp.getRnum();
+		out.format("    private void %s() {\n", methodName);
+		out.format("        int count = 0;\n");
+		for (String fieldName : sp.getFieldNames()) {
+			out.format("        if (%s != null)\n", fieldName);
+			out.format("            count++;\n");
+		}
+		out.format("        if (count == 0)\n");
+		out.format(
+				"            throw new %s(\"wrong number of specializations = \" + count);\n",
+				info.addType(RelationshipNotEstablishedException.class));
+		out.format("        if (count != 1)\n");
+		out.format(
+				"            throw new %s(\"wrong number of specializations = \" + count);\n",
+				info.addType(TooManySpecializationsException.class));
+		out.format("        }\n\n");
+		return methodName;
 	}
 
 	private void writeClassJavadoc(PrintStream out, ClassInfo info) {
@@ -248,45 +255,24 @@ public class ClassWriter {
 		out.format("    }\n\n");
 		if (info.hasBehaviour()) {
 			String factoryTypeName = "BehaviourFactory";
-
-			jd(out, "If behaviour is not explicitly specified then the\n"
-					+ "behaviour factory is used to create behaviour.", "    ");
 			String behaviourTypeName = "Behaviour";
-			out.format("    private static %s _behaviourFactory;\n\n",
-					factoryTypeName);
 
-			jd(out, BEHAVIOUR_COMMENT, "    ");
-			out.format("    @%s\n", info.addType(Transient.class));
-			out.format("    private %s _behaviour;\n\n", behaviourTypeName);
+			writeBehaviourFields(out, info, factoryTypeName, behaviourTypeName);
 
-			jd(out, "Constructor using Behaviour.", "    ");
-			out.format("    public %s(%s behaviour){\n",
-					info.getJavaClassSimpleName(), behaviourTypeName);
-			out.format("        %s.checkNotNull(_behaviourFactory,\n",
-					info.addType(Preconditions.class));
-			out.format(
-					"            \"You need to call static method setBehaviourFactory before instantiating \" + %s.class.getName());\n",
-					info.getJavaClassSimpleName());
-			out.format("        this._behaviour = behaviour;\n");
-			out.format("    }\n\n");
+			writeConstructorUsingBehaviour(out, info, behaviourTypeName);
 
-			// TODO optionallly add Guice injection
-			// out.format("    @%s\n", info.addType(Inject.class));
-			jd(out, "Sets the BehaviourFactory for all instances of\n"
-					+ "this class. It will only be used when Behaviour\n"
-					+ "is not explicitly provided in the constructor.", "    ");
-			out.format(
-					"    public static void setBehaviourFactory(%s factory){\n",
-					factoryTypeName);
-			out.format("        _behaviourFactory = factory;\n");
-			out.format("    }\n\n");
-
-			jd(out, "Returns the singleton BehaviourFactory for this.", "    ");
-			out.format("    public static %s getBehaviourFactory(){\n",
-					factoryTypeName);
-			out.format("        return _behaviourFactory;\n");
-			out.format("    }\n\n");
+			writeBehaviourFactoryGetterAndSetter(out, factoryTypeName);
 		}
+
+		String idClassName = getIdClassName(info);
+
+		writeConstructorUsingId(out, info, idClassName);
+
+		writeCreatorUsingId(out, info, idClassName);
+
+	}
+
+	private String getIdClassName(ClassInfo info) {
 		String idClassName;
 		if (!hasEmbeddedId()) {
 			if (info.getPrimaryIdAttributeMembers().size() == 0)
@@ -296,14 +282,21 @@ public class ClassWriter {
 					.get(0).getType().getType());
 		} else
 			idClassName = info.getEmbeddedIdSimpleClassName();
+		return idClassName;
+	}
 
+	private void writeConstructorUsingId(PrintStream out, ClassInfo info,
+			String idClassName) {
 		// constructor using Id
 		jd(out, "Constructor using id.", "    ");
 		out.format("    public %s(%s id) {\n", info.getJavaClassSimpleName(),
 				idClassName);
 		out.format("        this.id = id;\n");
 		out.format("    }\n\n");
+	}
 
+	private void writeCreatorUsingId(PrintStream out, ClassInfo info,
+			String idClassName) {
 		// static creator using Id
 		jd(out, "Static creator method using id.", "    ");
 		out.format("    public static %s create(%s id) {\n",
@@ -311,7 +304,51 @@ public class ClassWriter {
 		out.format("        return new %s(id);\n",
 				info.getJavaClassSimpleName());
 		out.format("    }\n\n");
+	}
 
+	private void writeBehaviourFields(PrintStream out, ClassInfo info,
+			String factoryTypeName, String behaviourTypeName) {
+		jd(out, "If behaviour is not explicitly specified then the\n"
+				+ "behaviour factory is used to create behaviour.", "    ");
+		out.format("    private static %s _behaviourFactory;\n\n",
+				factoryTypeName);
+
+		jd(out, BEHAVIOUR_COMMENT, "    ");
+		out.format("    @%s\n", info.addType(Transient.class));
+		out.format("    private %s _behaviour;\n\n", behaviourTypeName);
+	}
+
+	private void writeConstructorUsingBehaviour(PrintStream out,
+			ClassInfo info, String behaviourTypeName) {
+		jd(out, "Constructor using Behaviour.", "    ");
+		if (info.useGuiceInjection())
+			out.format("    @%s\n", info.addType("com.google.inject.Inject"));
+		out.format("    public %s(%s behaviour){\n",
+				info.getJavaClassSimpleName(), behaviourTypeName);
+		out.format("        %s.checkNotNull(_behaviourFactory,\n",
+				info.addType(Preconditions.class));
+		out.format(
+				"            \"You need to call static method setBehaviourFactory before instantiating \" + %s.class.getName());\n",
+				info.getJavaClassSimpleName());
+		out.format("        this._behaviour = behaviour;\n");
+		out.format("    }\n\n");
+	}
+
+	private void writeBehaviourFactoryGetterAndSetter(PrintStream out,
+			String factoryTypeName) {
+		jd(out, "Sets the BehaviourFactory for all instances of\n"
+				+ "this class. It will only be used when Behaviour\n"
+				+ "is not explicitly provided in the constructor.", "    ");
+		out.format("    public static void setBehaviourFactory(%s factory){\n",
+				factoryTypeName);
+		out.format("        _behaviourFactory = factory;\n");
+		out.format("    }\n\n");
+
+		jd(out, "Returns the singleton BehaviourFactory for this.", "    ");
+		out.format("    public static %s getBehaviourFactory(){\n",
+				factoryTypeName);
+		out.format("        return _behaviourFactory;\n");
+		out.format("    }\n\n");
 	}
 
 	private boolean hasEmbeddedId() {
@@ -349,14 +386,7 @@ public class ClassWriter {
 	private void writeIdMember(PrintStream out, ClassInfo info,
 			Set<String> validationMethods) {
 		if (!hasEmbeddedId()) {
-			jd(out, "Primary identifier", "    ");
-			out.format("    @%s\n", info.addType(Id.class));
-			MyIdAttribute attribute = info.getPrimaryIdAttributeMembers()
-					.get(0);
-			// override attribute field name to 'id'
-			writeIndependentAttributeMember(out, "id",
-					attribute.getColumnName(), false, "    ",
-					attribute.getType(), attribute.getExtensions());
+			writeSimpleIdMember(out, info);
 		} else {
 			writeEmbeddedIdField(out, info);
 
@@ -378,6 +408,17 @@ public class ClassWriter {
 
 			out.format("    }\n\n");
 		}
+	}
+
+	private void writeSimpleIdMember(PrintStream out, ClassInfo info) {
+		jd(out, "Primary identifier", "    ");
+		out.format("    @%s\n", info.addType(Id.class));
+		MyIdAttribute attribute = info.getPrimaryIdAttributeMembers()
+				.get(0);
+		// override attribute field name to 'id'
+		writeIndependentAttributeMember(out, "id",
+				attribute.getColumnName(), false, "    ",
+				attribute.getType(), attribute.getExtensions());
 	}
 
 	private void writeEmbeddedIdEquals(PrintStream out, ClassInfo info) {
