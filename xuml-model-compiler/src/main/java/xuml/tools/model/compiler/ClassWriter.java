@@ -50,6 +50,7 @@ import xuml.tools.model.compiler.info.MyFind;
 import xuml.tools.model.compiler.info.MyIdAttribute;
 import xuml.tools.model.compiler.info.MyIndependentAttribute;
 import xuml.tools.model.compiler.info.MyJoinColumn;
+import xuml.tools.model.compiler.info.MyJoinTable;
 import xuml.tools.model.compiler.info.MyParameter;
 import xuml.tools.model.compiler.info.MyReferenceMember;
 import xuml.tools.model.compiler.info.MySpecializations;
@@ -1231,42 +1232,38 @@ public class ClassWriter {
 				info.addType(ManyToMany.class),
 				info.addType(ref.getFullClassName()),
 				info.addType(CascadeType.class), info.addType(FetchType.class));
-		out.format("    @%s(name=\"%s\",schema=\"%s\",\n", info
-				.addType(JoinTable.class), ref.getJoinTable().getJoinTable(),
-				ref.getJoinTable().getJoinTableSchema());
 
-		out.format("            joinColumns={\n");
-		{
-			boolean first = true;
-			for (MyJoinColumn jc : ref.getJoinTable().getJoinColumns()) {
-				if (!first)
-					out.format(",\n");
-				out.format(
-						"                @%s(name=\"%s\",referencedColumnName=\"%s\")",
-						info.addType(JoinColumn.class), jc.getThisColumnName(),
-						jc.getOtherColumnName());
-				first = false;
-
-			}
-		}
-		out.format("},\n");
-		out.format("            inverseJoinColumns={\n");
-		{
-			boolean first = true;
-			for (MyJoinColumn jc : ref.getJoinTable().getInverseJoinColumns()) {
-				if (!first)
-					out.format(",\n");
-				out.format(
-						"                @%s(name=\"%s\",referencedColumnName=\"%s\")",
-						info.addType(JoinColumn.class), jc.getThisColumnName(),
-						jc.getOtherColumnName());
-				first = false;
-
-			}
-		}
-		out.format("})\n");
+		writeJoinTableAnnotation(out, info, ref.getJoinTable());
 
 		writeMultipleField(out, ref);
+	}
+
+	private void writeJoinTableAnnotation(PrintStream out, ClassInfo info,
+			MyJoinTable jt) {
+		out.format("    @%s(name=\"%s\",schema=\"%s\",\n",
+				info.addType(JoinTable.class), jt.getJoinTable(),
+				jt.getJoinTableSchema());
+
+		out.format("            joinColumns={\n");
+		writeJoinColumns(out, info, jt.getJoinColumns());
+		out.format("},\n");
+		out.format("            inverseJoinColumns={\n");
+		writeJoinColumns(out, info, jt.getInverseJoinColumns());
+		out.format("})\n");
+	}
+
+	private void writeJoinColumns(PrintStream out, ClassInfo info,
+			List<MyJoinColumn> cols) {
+		boolean first = true;
+		for (MyJoinColumn jc : cols) {
+			if (!first)
+				out.format(",\n");
+			out.format(
+					"                @%s(name=\"%s\",referencedColumnName=\"%s\")",
+					info.addType(JoinColumn.class), jc.getThisColumnName(),
+					jc.getOtherColumnName());
+			first = false;
+		}
 	}
 
 	private void writeManyToManySecondarySide(PrintStream out, ClassInfo info,
