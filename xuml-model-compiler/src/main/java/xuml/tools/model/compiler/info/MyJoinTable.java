@@ -3,13 +3,13 @@ package xuml.tools.model.compiler.info;
 import java.util.List;
 
 
-public class MyManyToMany {
+public class MyJoinTable {
 	private final String joinTable;
 	private final String joinTableSchema;
 	private final List<MyJoinColumn> joinColumns;
 	private final List<MyJoinColumn> inverseJoinColumns;
 
-	public MyManyToMany(String joinTable, String joinTableSchema,
+	public MyJoinTable(String joinTable, String joinTableSchema,
 			List<MyJoinColumn> joinColumns,
 			List<MyJoinColumn> inverseJoinColumns) {
 		super();

@@ -315,11 +315,13 @@
 					Type="arbitraryId">
 					<Identifier Number="1" />
 				</IndependentAttribute>
-				<ReferentialAttribute Name="Product"  >
-					<AssociativeReference Class="Product" Attribute="Product ID" Relationship="4"/>
+				<ReferentialAttribute Name="Product">
+					<AssociativeReference Class="Product"
+						Attribute="Product ID" Relationship="4" />
 				</ReferentialAttribute>
-				<ReferentialAttribute Name="Shopping Cart"  >
-					<AssociativeReference Class="Shopping Cart" Attribute="Cart ID" Relationship="4"/>
+				<ReferentialAttribute Name="Shopping Cart">
+					<AssociativeReference Class="Shopping Cart"
+						Attribute="Cart ID" Relationship="4" />
 				</ReferentialAttribute>
 				<IndependentAttribute Name="Quantity" Type="Count" />
 				<IndependentAttribute Name="Unit price of selection"
@@ -817,8 +819,8 @@
 
 	<ModeledDomain Name="one-many-to-one-many-association-class">
 
-		<Subsystem Name="one-many-to-one-many-association-class" Floor="161"
-			Ceiling="180">
+		<Subsystem Name="one-many-to-one-many-association-class"
+			Floor="161" Ceiling="180">
 
 			<!-- TODO setup for AssociativeReference -->
 
@@ -935,6 +937,45 @@
 			</Class>
 
 			<UnaryAssociation Rnum="1">
+				<SymmetricPerspective OnePerspective="false"
+					Conditional="true" ViewedClass="A" Phrase="has children" />
+			</UnaryAssociation>
+
+		</Subsystem>
+	</ModeledDomain>
+
+	<ModeledDomain Name="unary-many-association-class">
+
+		<Subsystem Name="unary-many-assocation-class" Floor="221"
+			Ceiling="240">
+
+			<Class Name="A">
+
+				<IndependentAttribute Name="A one" Type="string">
+					<Identifier Number="1" />
+				</IndependentAttribute>
+				<IndependentAttribute Name="A two" Type="string">
+					<Identifier Number="1" />
+				</IndependentAttribute>
+				<ReferentialAttribute Name="A B one">
+					<ToOneReference Relationship="1" Attribute="B one" />
+				</ReferentialAttribute>
+				<ReferentialAttribute Name="A B two">
+					<ToOneReference Relationship="1" Attribute="B two" />
+				</ReferentialAttribute>
+			</Class>
+
+			<Class Name="B">
+				<IndependentAttribute Name="Id" Type="integer">
+					<Identifier Number="1" />
+				</IndependentAttribute>
+				
+				<!-- describe the parent - child relationship -->
+				<IndependentAttribute Name="contactFrequencyPerYear"
+					Type="real" />
+			</Class>
+
+			<UnaryAssociation Rnum="1" AssociationClass="B">
 				<SymmetricPerspective OnePerspective="false"
 					Conditional="true" ViewedClass="A" Phrase="has children" />
 			</UnaryAssociation>

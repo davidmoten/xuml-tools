@@ -183,6 +183,18 @@
 						</configuration>
 					</execution>
 					<execution>
+						<id>unary-many-association-class</id>
+						<goals>
+							<goal>generate-jpa</goal>
+						</goals>
+						<configuration>
+							<domainsXml>/samples.xml</domainsXml>
+							<domain>unary-many-association-class</domain>
+							<schema>unary_many_assocation</schema>
+							<packageName>unary_many_association</packageName>
+						</configuration>
+					</execution>
+					<execution>
 						<id>unary-one-many</id>
 						<goals>
 							<goal>generate-jpa</goal>

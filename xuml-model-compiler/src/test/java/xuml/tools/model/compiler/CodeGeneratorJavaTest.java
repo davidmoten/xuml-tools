@@ -70,6 +70,12 @@ public class CodeGeneratorJavaTest {
 	}
 
 	@Test
+	public void testCodeGenerationForUnaryToManyWithAssociationClass()
+			throws FileNotFoundException {
+		generateClassesForDomain("unary-many-association-class");
+	}
+
+	@Test
 	public void testCodeGenerationForUnaryToOneMany()
 			throws FileNotFoundException {
 		generateClassesForDomain("unary-one-many");

@@ -413,12 +413,10 @@ public class ClassWriter {
 	private void writeSimpleIdMember(PrintStream out, ClassInfo info) {
 		jd(out, "Primary identifier", "    ");
 		out.format("    @%s\n", info.addType(Id.class));
-		MyIdAttribute attribute = info.getPrimaryIdAttributeMembers()
-				.get(0);
+		MyIdAttribute attribute = info.getPrimaryIdAttributeMembers().get(0);
 		// override attribute field name to 'id'
-		writeIndependentAttributeMember(out, "id",
-				attribute.getColumnName(), false, "    ",
-				attribute.getType(), attribute.getExtensions());
+		writeIndependentAttributeMember(out, "id", attribute.getColumnName(),
+				false, "    ", attribute.getType(), attribute.getExtensions());
 	}
 
 	private void writeEmbeddedIdEquals(PrintStream out, ClassInfo info) {
@@ -787,8 +785,7 @@ public class ClassWriter {
 
 	private void writeReferenceMembersOneToOneMany(PrintStream out,
 			ClassInfo info, Set<String> validationMethods, MyReferenceMember ref) {
-		writeValidationNotEmpty(out, ref.getFieldName(),
-				validationMethods);
+		writeValidationNotEmpty(out, ref.getFieldName(), validationMethods);
 		writeReferenceMembersOneToMany(out, info, ref);
 	}
 
@@ -798,8 +795,8 @@ public class ClassWriter {
 				info.addType(ManyToOne.class),
 				info.addType(ref.getFullClassName()),
 				info.addType(FetchType.class));
-		writeJoinColumnsAnnotation(out, ref, true,
-				!ref.isInPrimaryId(), !ref.isInPrimaryId());
+		writeJoinColumnsAnnotation(out, ref, true, !ref.isInPrimaryId(),
+				!ref.isInPrimaryId());
 		writeField(out, ref);
 	}
 
@@ -808,16 +805,14 @@ public class ClassWriter {
 		out.format(
 				"    @%s(mappedBy=\"%s\",cascade=%s.ALL,fetch=%s.LAZY,targetEntity=%s.class)\n",
 				info.addType(OneToMany.class), ref.getMappedBy(),
-				info.addType(CascadeType.class),
-				info.addType(FetchType.class),
+				info.addType(CascadeType.class), info.addType(FetchType.class),
 				info.addType(ref.getFullClassName()));
 		writeMultipleField(out, ref);
 	}
 
 	private void writeReferenceMembersZeroOneToZeroOne(PrintStream out,
 			ClassInfo info, MyReferenceMember ref) {
-		if (info.getJavaClassSimpleName().compareTo(
-				ref.getSimpleClassName()) < 0) {
+		if (info.getJavaClassSimpleName().compareTo(ref.getSimpleClassName()) < 0) {
 			// primary
 			out.format("    //primary side of relationship\n");
 			out.format(
@@ -828,26 +823,24 @@ public class ClassWriter {
 		} else {
 			// secondary
 			out.format("    //secondary side of relationship\n");
-			out.format(
-					"    @%s(targetEntity=%s.class,fetch=%s.LAZY)\n",
+			out.format("    @%s(targetEntity=%s.class,fetch=%s.LAZY)\n",
 					info.addType(OneToOne.class),
 					info.addType(ref.getFullClassName()),
 					info.addType(FetchType.class));
-			writeJoinColumnsAnnotation(out, ref, true,
-					!ref.isInPrimaryId(), !ref.isInPrimaryId());
+			writeJoinColumnsAnnotation(out, ref, true, !ref.isInPrimaryId(),
+					!ref.isInPrimaryId());
 		}
 		writeField(out, ref);
 	}
 
 	private void writeReferenceMembersOneManyToOne(PrintStream out,
 			ClassInfo info, Set<String> validationMethods, MyReferenceMember ref) {
-		writeValidationNotNull(out, ref.getFieldName(),
-				validationMethods);
+		writeValidationNotNull(out, ref.getFieldName(), validationMethods);
 		out.format("    @%s(targetEntity=%s.class)\n",
 				info.addType(ManyToOne.class),
 				info.addType(ref.getFullClassName()));
-		writeJoinColumnsAnnotation(out, ref, false,
-				!ref.isInPrimaryId(), !ref.isInPrimaryId());
+		writeJoinColumnsAnnotation(out, ref, false, !ref.isInPrimaryId(),
+				!ref.isInPrimaryId());
 		writeField(out, ref);
 	}
 
@@ -856,8 +849,8 @@ public class ClassWriter {
 		out.format("    @%s(targetEntity=%s.class,fetch=%s.LAZY)\n",
 				info.addType(ManyToOne.class), ref.getFullClassName(),
 				info.addType(FetchType.class));
-		writeJoinColumnsAnnotation(out, ref, false,
-				!ref.isInPrimaryId(), !ref.isInPrimaryId());
+		writeJoinColumnsAnnotation(out, ref, false, !ref.isInPrimaryId(),
+				!ref.isInPrimaryId());
 		writeField(out, ref);
 	}
 
@@ -870,8 +863,7 @@ public class ClassWriter {
 		out.format(
 				"    @%s(mappedBy=\"%s\",cascade={%3$s.MERGE,%3$s.REFRESH,%3$s.REMOVE},fetch=%4$s.LAZY,targetEntity=%5$s.class)\n",
 				info.addType(OneToMany.class), ref.getMappedBy(),
-				info.addType(CascadeType.class),
-				info.addType(FetchType.class),
+				info.addType(CascadeType.class), info.addType(FetchType.class),
 				info.addType(ref.getFullClassName()));
 		writeMultipleField(out, ref);
 	}
@@ -882,10 +874,9 @@ public class ClassWriter {
 				"    @%s(targetEntity=%s.class,cascade=%s.ALL,fetch=%s.LAZY)\n",
 				info.addType(OneToOne.class),
 				info.addType(ref.getFullClassName()),
-				info.addType(CascadeType.class),
-				info.addType(FetchType.class));
-		writeJoinColumnsAnnotation(out, ref, false,
-				!ref.isInPrimaryId(), !ref.isInPrimaryId());
+				info.addType(CascadeType.class), info.addType(FetchType.class));
+		writeJoinColumnsAnnotation(out, ref, false, !ref.isInPrimaryId(),
+				!ref.isInPrimaryId());
 		writeField(out, ref);
 	}
 
@@ -899,8 +890,8 @@ public class ClassWriter {
 					info.addType(CascadeType.class),
 					info.addType(FetchType.class));
 
-			writeJoinColumnsAnnotation(out, ref, true,
-					!ref.isInPrimaryId(), !ref.isInPrimaryId());
+			writeJoinColumnsAnnotation(out, ref, true, !ref.isInPrimaryId(),
+					!ref.isInPrimaryId());
 			writeField(out, ref);
 		} else {
 			out.format(
@@ -916,10 +907,8 @@ public class ClassWriter {
 			Set<String> validationMethods, MyReferenceMember ref) {
 		// make an arbitrary deterministic decision about which side is
 		// annotated in which way
-		if (info.getJavaClassSimpleName().compareTo(
-				ref.getSimpleClassName()) < 0) {
-			writeValidationNotNull(out, ref.getFieldName(),
-					validationMethods);
+		if (info.getJavaClassSimpleName().compareTo(ref.getSimpleClassName()) < 0) {
+			writeValidationNotNull(out, ref.getFieldName(), validationMethods);
 			out.format(
 					"    @%s(mappedBy=\"%s\",fetch=%s.LAZY,targetEntity=%s.class)\n",
 					info.addType(OneToOne.class), ref.getMappedBy(),
@@ -1243,13 +1232,13 @@ public class ClassWriter {
 				info.addType(ref.getFullClassName()),
 				info.addType(CascadeType.class), info.addType(FetchType.class));
 		out.format("    @%s(name=\"%s\",schema=\"%s\",\n", info
-				.addType(JoinTable.class), ref.getManyToMany().getJoinTable(),
-				ref.getManyToMany().getJoinTableSchema());
+				.addType(JoinTable.class), ref.getJoinTable().getJoinTable(),
+				ref.getJoinTable().getJoinTableSchema());
 
 		out.format("            joinColumns={\n");
 		{
 			boolean first = true;
-			for (MyJoinColumn jc : ref.getManyToMany().getJoinColumns()) {
+			for (MyJoinColumn jc : ref.getJoinTable().getJoinColumns()) {
 				if (!first)
 					out.format(",\n");
 				out.format(
@@ -1264,7 +1253,7 @@ public class ClassWriter {
 		out.format("            inverseJoinColumns={\n");
 		{
 			boolean first = true;
-			for (MyJoinColumn jc : ref.getManyToMany().getInverseJoinColumns()) {
+			for (MyJoinColumn jc : ref.getJoinTable().getInverseJoinColumns()) {
 				if (!first)
 					out.format(",\n");
 				out.format(

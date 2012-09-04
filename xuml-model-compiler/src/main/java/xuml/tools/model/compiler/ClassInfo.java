@@ -61,7 +61,7 @@ import xuml.tools.model.compiler.info.MyFind;
 import xuml.tools.model.compiler.info.MyIdAttribute;
 import xuml.tools.model.compiler.info.MyIndependentAttribute;
 import xuml.tools.model.compiler.info.MyJoinColumn;
-import xuml.tools.model.compiler.info.MyManyToMany;
+import xuml.tools.model.compiler.info.MyJoinTable;
 import xuml.tools.model.compiler.info.MyParameter;
 import xuml.tools.model.compiler.info.MyReferenceMember;
 import xuml.tools.model.compiler.info.MySpecializations;
@@ -675,7 +675,7 @@ public class ClassInfo {
 		return new MyReferenceMember(g.getSuperclass(),
 				infoOther.getClassFullName(), Mult.ZERO_ONE, Mult.ONE,
 				"generalizes", "specializes", fieldName, joins, thisFieldName,
-				(MyManyToMany) null, false, g.getRnum().toString());
+				(MyJoinTable) null, false, g.getRnum().toString());
 	}
 
 	private MyJoinColumn createJoinColumn(Generalization g, MyIdAttribute member) {
@@ -696,7 +696,7 @@ public class ClassInfo {
 		return new MyReferenceMember(spec.getName(),
 				infoOther.getClassFullName(), Mult.ONE, Mult.ZERO_ONE,
 				"specializes", "generalizes", fieldName, null, thisFieldName,
-				(MyManyToMany) null, false, g.getRnum().toString());
+				(MyJoinTable) null, false, g.getRnum().toString());
 	}
 
 	private List<MyReferenceMember> createMyReferenceMembers(Association a,
@@ -815,7 +815,7 @@ public class ClassInfo {
 				cls.getName(), a.getRnum());
 		boolean inPrimaryId = inPrimaryId(a.getRnum());
 
-		MyManyToMany manyToMany = createManyToMany(a, cls, infoOther, pThis,
+		MyJoinTable manyToMany = createManyToMany(a, cls, infoOther, pThis,
 				pThat);
 
 		return new MyReferenceMember(pThat.getViewedClass(),
@@ -837,7 +837,7 @@ public class ClassInfo {
 		return joins;
 	}
 
-	private MyManyToMany createManyToMany(BinaryAssociation a, Class cls,
+	private MyJoinTable createManyToMany(BinaryAssociation a, Class cls,
 			ClassInfo infoOther, AsymmetricPerspective pThis,
 			AsymmetricPerspective pThat) {
 		if (!pThis.isOnePerspective() && !pThat.isOnePerspective()) {
@@ -886,7 +886,7 @@ public class ClassInfo {
 				}
 			}
 
-			MyManyToMany mm = new MyManyToMany(nameManager.toTableName(
+			MyJoinTable mm = new MyJoinTable(nameManager.toTableName(
 					getSchema(), joinClass), getSchema(), joinColumns,
 					inverseJoinColumns);
 			return mm;

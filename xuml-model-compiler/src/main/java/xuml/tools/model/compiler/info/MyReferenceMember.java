@@ -2,7 +2,6 @@ package xuml.tools.model.compiler.info;
 
 import java.util.List;
 
-
 public class MyReferenceMember {
 	private final String simpleClassName;
 	private final String fullClassName;
@@ -17,14 +16,14 @@ public class MyReferenceMember {
 	 * Gets used for mappedBy field in a OneToMany annotation for example.
 	 */
 	private final String mappedBy;
-	private final MyManyToMany manyToMany;
+	private final MyJoinTable joinTable;
 	private final String rnum;
 
 	public MyReferenceMember(String simpleClassName, String fullClassName,
 			Mult thisMult, Mult thatMult, String thisVerbClause,
 			String thatVerbClause, String fieldName,
 			List<MyJoinColumn> joinColumns, String mappedBy,
-			MyManyToMany manyToMany, boolean inPrimaryId, String rnum) {
+			MyJoinTable joinTable, boolean inPrimaryId, String rnum) {
 		this.simpleClassName = simpleClassName;
 		this.fullClassName = fullClassName;
 		this.thisMult = thisMult;
@@ -34,7 +33,7 @@ public class MyReferenceMember {
 		this.fieldName = fieldName;
 		this.joinColumns = joinColumns;
 		this.mappedBy = mappedBy;
-		this.manyToMany = manyToMany;
+		this.joinTable = joinTable;
 		this.inPrimaryId = inPrimaryId;
 		this.rnum = rnum;
 	}
@@ -79,8 +78,8 @@ public class MyReferenceMember {
 		return thatVerbClause;
 	}
 
-	public MyManyToMany getManyToMany() {
-		return manyToMany;
+	public MyJoinTable getJoinTable() {
+		return joinTable;
 	}
 
 	@Override
@@ -106,8 +105,8 @@ public class MyReferenceMember {
 		builder.append(inPrimaryId);
 		builder.append(", thisFieldName=");
 		builder.append(mappedBy);
-		builder.append(", manyToMany=");
-		builder.append(manyToMany);
+		builder.append(", joinTable=");
+		builder.append(joinTable);
 		builder.append("]");
 		return builder.toString();
 	}
