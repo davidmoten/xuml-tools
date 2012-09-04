@@ -123,10 +123,20 @@ public class ClassInfo {
 		return packageName;
 	}
 
+	/**
+	 * Returns the class description.
+	 * 
+	 * @return
+	 */
 	String getClassDescription() {
 		return classDescription;
 	}
 
+	/**
+	 * Returns the list of groups of unique column names for the class.
+	 * 
+	 * @return
+	 */
 	List<List<String>> getUniqueConstraintColumnNames() {
 		HashMultimap<BigInteger, String> map = getIdentifierAttributeNames();
 		List<List<String>> list = newArrayList();
@@ -150,6 +160,12 @@ public class ClassInfo {
 		return cls.getName();
 	}
 
+	/**
+	 * Returns the Attributes from this class involved in a each identifier as a
+	 * Map.
+	 * 
+	 * @return
+	 */
 	private HashMultimap<BigInteger, String> getIdentifierAttributeNames() {
 		HashMultimap<BigInteger, Attribute> map = getIdentifierAttributes();
 		HashMultimap<BigInteger, String> m = create();

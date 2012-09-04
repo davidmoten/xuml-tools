@@ -746,158 +746,33 @@ public class ClassWriter {
 					+ " " + ref.getThatVerbClause() + " " + ref.getThatMult()
 					+ " " + ref.getSimpleClassName(), "    ");
 			if (isRelationship(ref, Mult.ONE, Mult.ONE)) {
-				// make an arbitrary deterministic decision about which side is
-				// annotated in which way
-				if (info.getJavaClassSimpleName().compareTo(
-						ref.getSimpleClassName()) < 0) {
-					writeValidationNotNull(out, ref.getFieldName(),
-							validationMethods);
-					out.format(
-							"    @%s(mappedBy=\"%s\",fetch=%s.LAZY,targetEntity=%s.class)\n",
-							info.addType(OneToOne.class), ref.getMappedBy(),
-							info.addType(FetchType.class),
-							info.addType(ref.getFullClassName()));
-					writeField(out, ref);
-				} else {
-					out.format(
-							"    @%s(targetEntity=%s.class,cascade=%s.ALL,fetch=%s.LAZY)\n",
-							info.addType(OneToOne.class),
-							info.addType(ref.getFullClassName()),
-							info.addType(CascadeType.class),
-							info.addType(FetchType.class));
-
-					writeJoinColumnsAnnotation(out, ref, false,
-							!ref.isInPrimaryId(), !ref.isInPrimaryId());
-					writeField(out, ref);
-				}
+				writeReferenceMembersOneToOne(out, info, validationMethods, ref);
 			} else if (isRelationship(ref, Mult.ONE, Mult.ZERO_ONE)) {
-				if (isUnary(ref, info)) {
-					out.format(
-							"    @%s(targetEntity=%s.class,cascade=%s.ALL,fetch=%s.LAZY)\n",
-							info.addType(OneToOne.class),
-							info.addType(ref.getFullClassName()),
-							info.addType(CascadeType.class),
-							info.addType(FetchType.class));
-
-					writeJoinColumnsAnnotation(out, ref, true,
-							!ref.isInPrimaryId(), !ref.isInPrimaryId());
-					writeField(out, ref);
-				} else {
-					out.format(
-							"    @%s(mappedBy=\"%s\",fetch=%s.LAZY,targetEntity=%s.class)\n",
-							info.addType(OneToOne.class), ref.getMappedBy(),
-							info.addType(FetchType.class),
-							info.addType(ref.getFullClassName()));
-					writeField(out, ref);
-				}
+				writeReferenceMembersOneToZeroOne(out, info, ref);
 			} else if (isRelationship(ref, Mult.ZERO_ONE, Mult.ONE)) {
-				out.format(
-						"    @%s(targetEntity=%s.class,cascade=%s.ALL,fetch=%s.LAZY)\n",
-						info.addType(OneToOne.class),
-						info.addType(ref.getFullClassName()),
-						info.addType(CascadeType.class),
-						info.addType(FetchType.class));
-				writeJoinColumnsAnnotation(out, ref, false,
-						!ref.isInPrimaryId(), !ref.isInPrimaryId());
-				writeField(out, ref);
+				writeReferenceMembersZeroOneToOne(out, info, ref);
 			} else if (isRelationship(ref, Mult.ONE, Mult.MANY)) {
-				// ONE_TO_MANY and ONE_TO_ONE_MANY have PERSIST excluded from
-				// CascadeType so can do ONE_MANY to ONE_MANY via association
-				// class without persistence exceptions due to circular
-				// dependencies.
-				out.format(
-						"    @%s(mappedBy=\"%s\",cascade={%3$s.MERGE,%3$s.REFRESH,%3$s.REMOVE},fetch=%4$s.LAZY,targetEntity=%5$s.class)\n",
-						info.addType(OneToMany.class), ref.getMappedBy(),
-						info.addType(CascadeType.class),
-						info.addType(FetchType.class),
-						info.addType(ref.getFullClassName()));
-				writeMultipleField(out, ref);
+				writeReferenceMembersOneToMany(out, info, ref);
 			} else if (isRelationship(ref, Mult.MANY, Mult.ONE)) {
-				out.format("    @%s(targetEntity=%s.class,fetch=%s.LAZY)\n",
-						info.addType(ManyToOne.class), ref.getFullClassName(),
-						info.addType(FetchType.class));
-				writeJoinColumnsAnnotation(out, ref, false,
-						!ref.isInPrimaryId(), !ref.isInPrimaryId());
-				writeField(out, ref);
+				writeReferenceMembersManyToOne(out, info, ref);
 			} else if (isRelationship(ref, Mult.ONE, Mult.ONE_MANY)) {
-				writeValidationNotEmpty(out, ref.getFieldName(),
-						validationMethods);
-				// ONE_TO_MANY and ONE_TO_ONE_MANY have PERSIST excluded from
-				// CascadeType so can do ONE_MANY to ONE_MANY via association
-				// class without persistence exceptions due to circular
-				// dependencies.
-				out.format(
-						"    @%s(mappedBy=\"%s\",cascade={%3$s.MERGE,%3$s.REFRESH,%3$s.REMOVE},fetch=%4$s.LAZY,targetEntity=%5$s.class)\n",
-						info.addType(OneToMany.class), ref.getMappedBy(),
-						info.addType(CascadeType.class),
-						info.addType(FetchType.class),
-						info.addType(ref.getFullClassName()));
-				writeMultipleField(out, ref);
+				writeReferenceMembersOneToOneMany(out, info, validationMethods,
+						ref);
 			} else if (isRelationship(ref, Mult.ONE_MANY, Mult.ONE)) {
-				writeValidationNotNull(out, ref.getFieldName(),
-						validationMethods);
-				out.format("    @%s(targetEntity=%s.class)\n",
-						info.addType(ManyToOne.class),
-						info.addType(ref.getFullClassName()));
-				writeJoinColumnsAnnotation(out, ref, false,
-						!ref.isInPrimaryId(), !ref.isInPrimaryId());
-				writeField(out, ref);
+				writeReferenceMembersOneManyToOne(out, info, validationMethods,
+						ref);
 			} else if (isRelationship(ref, Mult.ZERO_ONE, Mult.ZERO_ONE)) {
-				if (info.getJavaClassSimpleName().compareTo(
-						ref.getSimpleClassName()) < 0) {
-					// primary
-					out.format("    //primary side of relationship\n");
-					out.format(
-							"    @%s(mappedBy=\"%s\",fetch=%s.LAZY,targetEntity=%s.class)\n",
-							info.addType(OneToOne.class), ref.getMappedBy(),
-							info.addType(FetchType.class),
-							info.addType(ref.getFullClassName()));
-				} else {
-					// secondary
-					out.format("    //secondary side of relationship\n");
-					out.format(
-							"    @%s(targetEntity=%s.class,fetch=%s.LAZY)\n",
-							info.addType(OneToOne.class),
-							info.addType(ref.getFullClassName()),
-							info.addType(FetchType.class));
-					writeJoinColumnsAnnotation(out, ref, true,
-							!ref.isInPrimaryId(), !ref.isInPrimaryId());
-				}
-				writeField(out, ref);
+				writeReferenceMembersZeroOneToZeroOne(out, info, ref);
 			} else if (isRelationship(ref, Mult.ZERO_ONE, Mult.MANY)) {
-				out.format(
-						"    @%s(mappedBy=\"%s\",cascade=%s.ALL,fetch=%s.LAZY,targetEntity=%s.class)\n",
-						info.addType(OneToMany.class), ref.getMappedBy(),
-						info.addType(CascadeType.class),
-						info.addType(FetchType.class),
-						info.addType(ref.getFullClassName()));
-				writeMultipleField(out, ref);
+				writeReferenceMembersZeroOneToMany(out, info, ref);
 			} else if (isRelationship(ref, Mult.MANY, Mult.ZERO_ONE)) {
-				out.format("    @%s(targetEntity=%s.class,fetch=%s.LAZY)\n",
-						info.addType(ManyToOne.class),
-						info.addType(ref.getFullClassName()),
-						info.addType(FetchType.class));
-				writeJoinColumnsAnnotation(out, ref, true,
-						!ref.isInPrimaryId(), !ref.isInPrimaryId());
-				writeField(out, ref);
+				writeReferenceMembersManyToZeroOne(out, info, ref);
 			} else if (isRelationship(ref, Mult.ZERO_ONE, Mult.ONE_MANY)) {
 				writeValidationNotEmpty(out, ref.getFieldName(),
 						validationMethods);
-				out.format(
-						"    @%s(mappedBy=\"%s\",cascade=%s.ALL,fetch=%s.LAZY,targetEntity=%s.class)\n",
-						info.addType(OneToMany.class), ref.getMappedBy(),
-						info.addType(CascadeType.class),
-						info.addType(FetchType.class),
-						info.addType(ref.getFullClassName()));
-				writeMultipleField(out, ref);
+				writeReferenceMembersZeroOneToMany(out, info, ref);
 			} else if (isRelationship(ref, Mult.ONE_MANY, Mult.ZERO_ONE)) {
-				out.format("    @%s(targetEntity=%s.class,fetch=%s.LAZY)\n",
-						info.addType(ManyToOne.class),
-						info.addType(ref.getFullClassName()),
-						info.addType(FetchType.class));
-				writeJoinColumnsAnnotation(out, ref, true,
-						!ref.isInPrimaryId(), !ref.isInPrimaryId());
-				writeField(out, ref);
+				writeReferenceMembersManyToZeroOne(out, info, ref);
 			} else if (isRelationship(ref, Mult.MANY, Mult.MANY)) {
 				writeManyToMany(out, info, ref);
 			} else if (isRelationship(ref, Mult.ONE_MANY, Mult.ONE_MANY)) {
@@ -907,6 +782,152 @@ public class ClassWriter {
 			} else if (isRelationship(ref, Mult.MANY, Mult.ONE_MANY)) {
 				writeManyToManyPrimarySide(out, info, ref);
 			}
+		}
+	}
+
+	private void writeReferenceMembersOneToOneMany(PrintStream out,
+			ClassInfo info, Set<String> validationMethods, MyReferenceMember ref) {
+		writeValidationNotEmpty(out, ref.getFieldName(),
+				validationMethods);
+		writeReferenceMembersOneToMany(out, info, ref);
+	}
+
+	private void writeReferenceMembersManyToZeroOne(PrintStream out,
+			ClassInfo info, MyReferenceMember ref) {
+		out.format("    @%s(targetEntity=%s.class,fetch=%s.LAZY)\n",
+				info.addType(ManyToOne.class),
+				info.addType(ref.getFullClassName()),
+				info.addType(FetchType.class));
+		writeJoinColumnsAnnotation(out, ref, true,
+				!ref.isInPrimaryId(), !ref.isInPrimaryId());
+		writeField(out, ref);
+	}
+
+	private void writeReferenceMembersZeroOneToMany(PrintStream out,
+			ClassInfo info, MyReferenceMember ref) {
+		out.format(
+				"    @%s(mappedBy=\"%s\",cascade=%s.ALL,fetch=%s.LAZY,targetEntity=%s.class)\n",
+				info.addType(OneToMany.class), ref.getMappedBy(),
+				info.addType(CascadeType.class),
+				info.addType(FetchType.class),
+				info.addType(ref.getFullClassName()));
+		writeMultipleField(out, ref);
+	}
+
+	private void writeReferenceMembersZeroOneToZeroOne(PrintStream out,
+			ClassInfo info, MyReferenceMember ref) {
+		if (info.getJavaClassSimpleName().compareTo(
+				ref.getSimpleClassName()) < 0) {
+			// primary
+			out.format("    //primary side of relationship\n");
+			out.format(
+					"    @%s(mappedBy=\"%s\",fetch=%s.LAZY,targetEntity=%s.class)\n",
+					info.addType(OneToOne.class), ref.getMappedBy(),
+					info.addType(FetchType.class),
+					info.addType(ref.getFullClassName()));
+		} else {
+			// secondary
+			out.format("    //secondary side of relationship\n");
+			out.format(
+					"    @%s(targetEntity=%s.class,fetch=%s.LAZY)\n",
+					info.addType(OneToOne.class),
+					info.addType(ref.getFullClassName()),
+					info.addType(FetchType.class));
+			writeJoinColumnsAnnotation(out, ref, true,
+					!ref.isInPrimaryId(), !ref.isInPrimaryId());
+		}
+		writeField(out, ref);
+	}
+
+	private void writeReferenceMembersOneManyToOne(PrintStream out,
+			ClassInfo info, Set<String> validationMethods, MyReferenceMember ref) {
+		writeValidationNotNull(out, ref.getFieldName(),
+				validationMethods);
+		out.format("    @%s(targetEntity=%s.class)\n",
+				info.addType(ManyToOne.class),
+				info.addType(ref.getFullClassName()));
+		writeJoinColumnsAnnotation(out, ref, false,
+				!ref.isInPrimaryId(), !ref.isInPrimaryId());
+		writeField(out, ref);
+	}
+
+	private void writeReferenceMembersManyToOne(PrintStream out,
+			ClassInfo info, MyReferenceMember ref) {
+		out.format("    @%s(targetEntity=%s.class,fetch=%s.LAZY)\n",
+				info.addType(ManyToOne.class), ref.getFullClassName(),
+				info.addType(FetchType.class));
+		writeJoinColumnsAnnotation(out, ref, false,
+				!ref.isInPrimaryId(), !ref.isInPrimaryId());
+		writeField(out, ref);
+	}
+
+	private void writeReferenceMembersOneToMany(PrintStream out,
+			ClassInfo info, MyReferenceMember ref) {
+		// ONE_TO_MANY and ONE_TO_ONE_MANY have PERSIST excluded from
+		// CascadeType so can do ONE_MANY to ONE_MANY via association
+		// class without persistence exceptions due to circular
+		// dependencies.
+		out.format(
+				"    @%s(mappedBy=\"%s\",cascade={%3$s.MERGE,%3$s.REFRESH,%3$s.REMOVE},fetch=%4$s.LAZY,targetEntity=%5$s.class)\n",
+				info.addType(OneToMany.class), ref.getMappedBy(),
+				info.addType(CascadeType.class),
+				info.addType(FetchType.class),
+				info.addType(ref.getFullClassName()));
+		writeMultipleField(out, ref);
+	}
+
+	private void writeReferenceMembersZeroOneToOne(PrintStream out,
+			ClassInfo info, MyReferenceMember ref) {
+		out.format(
+				"    @%s(targetEntity=%s.class,cascade=%s.ALL,fetch=%s.LAZY)\n",
+				info.addType(OneToOne.class),
+				info.addType(ref.getFullClassName()),
+				info.addType(CascadeType.class),
+				info.addType(FetchType.class));
+		writeJoinColumnsAnnotation(out, ref, false,
+				!ref.isInPrimaryId(), !ref.isInPrimaryId());
+		writeField(out, ref);
+	}
+
+	private void writeReferenceMembersOneToZeroOne(PrintStream out,
+			ClassInfo info, MyReferenceMember ref) {
+		if (isUnary(ref, info)) {
+			out.format(
+					"    @%s(targetEntity=%s.class,cascade=%s.ALL,fetch=%s.LAZY)\n",
+					info.addType(OneToOne.class),
+					info.addType(ref.getFullClassName()),
+					info.addType(CascadeType.class),
+					info.addType(FetchType.class));
+
+			writeJoinColumnsAnnotation(out, ref, true,
+					!ref.isInPrimaryId(), !ref.isInPrimaryId());
+			writeField(out, ref);
+		} else {
+			out.format(
+					"    @%s(mappedBy=\"%s\",fetch=%s.LAZY,targetEntity=%s.class)\n",
+					info.addType(OneToOne.class), ref.getMappedBy(),
+					info.addType(FetchType.class),
+					info.addType(ref.getFullClassName()));
+			writeField(out, ref);
+		}
+	}
+
+	private void writeReferenceMembersOneToOne(PrintStream out, ClassInfo info,
+			Set<String> validationMethods, MyReferenceMember ref) {
+		// make an arbitrary deterministic decision about which side is
+		// annotated in which way
+		if (info.getJavaClassSimpleName().compareTo(
+				ref.getSimpleClassName()) < 0) {
+			writeValidationNotNull(out, ref.getFieldName(),
+					validationMethods);
+			out.format(
+					"    @%s(mappedBy=\"%s\",fetch=%s.LAZY,targetEntity=%s.class)\n",
+					info.addType(OneToOne.class), ref.getMappedBy(),
+					info.addType(FetchType.class),
+					info.addType(ref.getFullClassName()));
+			writeField(out, ref);
+		} else {
+			writeReferenceMembersZeroOneToOne(out, info, ref);
 		}
 	}
 
