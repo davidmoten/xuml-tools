@@ -603,7 +603,7 @@ public class ClassInfo {
 			if (ass.get() instanceof BinaryAssociation) {
 				addReferenceMembers(list, ass);
 			}
-			// TODO handle unary association classesm
+			// TODO handle unary association classes
 		}
 		return list;
 	}
@@ -743,7 +743,39 @@ public class ClassInfo {
 				getClassFullName(), toMult(p), fromMult, p.getPhrase(), p
 						.getPhrase() + " Inverse", fieldName1, joins,
 				fieldName2, null, false, a.getRnum().toString()));
+
+		if (a.getAssociationClass() != null) {
+			// TODO get this working
+			// MyReferenceMember ref =
+			// createImplicitReferenceMemberToAssociationClass(
+			// a, cls);
+			// list.add(ref);
+		}
 		return list;
+	}
+
+	private MyReferenceMember createImplicitReferenceMemberToAssociationClass(
+			UnaryAssociation a, Class cls) {
+		BinaryAssociation a2 = new BinaryAssociation();
+
+		ActivePerspective active = new ActivePerspective();
+		active.setPhrase(a.getSymmetricPerspective().getPhrase());
+		active.setOnePerspective(true);
+		active.setConditional(false);
+		active.setViewedClass(cls.getName());
+		a2.setActivePerspective(active);
+
+		PassivePerspective passive = new PassivePerspective();
+		passive.setConditional(a.getSymmetricPerspective().isConditional());
+		passive.setOnePerspective(a.getSymmetricPerspective()
+				.isOnePerspective());
+		passive.setPhrase(a.getSymmetricPerspective().getPhrase() + " Inverse");
+		passive.setViewedClass(a.getAssociationClass());
+		a2.setPassivePerspective(passive);
+		a2.setRnum(a.getRnum());
+		MyReferenceMember ref = createMyReferenceMemberForDirectAssociation(a2,
+				cls, active, passive);
+		return ref;
 	}
 
 	private List<MyReferenceMember> createMyReferenceMembers(
