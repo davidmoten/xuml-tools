@@ -125,7 +125,7 @@ The java model compiler includes the following features (<img src="../../raw/mas
  * Prefix <img src="../../raw/master/src/docs/tick.png">
  * Suffix <img src="../../raw/master/src/docs/tick.png">
  * ValidationPattern <img src="../../raw/master/src/docs/tick.png">
- * DefaultValue
+ * DefaultValue  <img src="../../raw/master/src/docs/tick.png">
 * Database tests
  * Derby <img src="../../raw/master/src/docs/tick.png">
  * H2 <img src="../../raw/master/src/docs/tick.png">
