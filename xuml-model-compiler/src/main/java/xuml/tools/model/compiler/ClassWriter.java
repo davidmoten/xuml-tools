@@ -5,6 +5,7 @@ import java.io.PrintStream;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -582,13 +583,29 @@ public class ClassWriter {
 				writeFieldAnnotation(out, member.getColumnName(), false,
 						"        ", member.getType(), false, false);
 			}
-			out.format("%sprivate %s %s;\n\n", "        ",
-					info.addType(member.getType().getType()),
-					member.getFieldName());
+			writeField(out, info, member.getType(), member.getFieldName(),
+					"        ");
+
 			writeAttributeValidationMethod(out, member.getFieldName(),
 					member.getType(), info, validationMethods, true, member
 							.getExtensions().isGenerated());
 		}
+	}
+
+	private void writeField(PrintStream out, ClassInfo info,
+			MyTypeDefinition type, String fieldName, String indent) {
+		String defaultValue = type.getDefaultValue();
+		if (defaultValue == null)
+			out.format("%sprivate %s %s;\n\n", indent,
+					info.addType(type.getType()), fieldName);
+		else if (type.getType().getBase().equals(Date.class.getName()))
+			out.format("%sprivate %s %s = new %s(%s);\n\n", indent,
+					info.addType(type.getType()), fieldName,
+					info.addType(type.getType()), defaultValue);
+		else
+			out.format("%sprivate %s %s = new %s(\"%s\");\n\n", indent,
+					info.addType(type.getType()), fieldName,
+					info.addType(type.getType()), defaultValue);
 	}
 
 	private void writeEmbeddedIdConstructor(PrintStream out, ClassInfo info) {
@@ -1693,8 +1710,7 @@ public class ClassWriter {
 		writeGeneratedAnnotation(out, extensions.isGenerated(), indent);
 		writeFieldAnnotation(out, columnName, isNullable, indent, type, true,
 				true);
-		out.format("%sprivate %s %s;\n\n", indent,
-				info.addType(type.getType()), fieldName);
+		writeField(out, info, type, fieldName, indent);
 	}
 
 	private void writeGeneratedAnnotation(PrintStream out, boolean generated,

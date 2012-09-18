@@ -1,5 +1,7 @@
 package xuml.tools.jaxb.compiler.test;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Date;
 
 import javax.persistence.EntityManager;
@@ -24,6 +26,32 @@ public class AllTypesTest {
 	public static void shutdown() {
 		Context.close();
 	}
+
+	@Test
+	public void testDefaultValueForIntegerIsSet() {
+		A a = new A();
+		assertEquals(1, a.getSix().intValue());
+	}
+
+	@Test
+	public void testDefaultValueForDateIsSet() {
+		A a = new A();
+		assertEquals(0, a.getFive().getTime());
+	}
+
+	@Test
+	public void testDefaultValueForBooleanIsSet() {
+		A a = new A();
+		assertEquals(Boolean.FALSE, a.getOne());
+	}
+
+	@Test
+	public void testDefaultValueForStringIdIsSet() {
+		A a = new A();
+		assertEquals("", a.getId());
+	}
+
+	// TODO test default values for embedded ids
 
 	@Test
 	public void testTypesAreGeneratedAsExpectedForEachMember() {

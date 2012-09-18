@@ -371,7 +371,6 @@ public class ClassInfo {
 	}
 
 	private MyIdAttribute createMyIdAttribute(NativeAttribute a) {
-
 		return new MyIdAttribute(a.getName(), getFieldName(a.getName()),
 				Util.toColumnName(a.getName()), getTypeDefinition(a.getType()),
 				getAttributeExtensions(a));
