@@ -1,12 +1,13 @@
 xuml-tools 
 ==========
-
-[Executable UML](http://en.wikipedia.org/wiki/Executable_UML) tools based on the [miUML](http://www.miuml.org) [metamodel](https://docs.google.com/spreadsheet/ccc?key=0AtejhCC8R03tdERpSzJFdTRVWkFMYnN2MlZzbG5YYnc#gid=1) (thanks to Leon Starr!).
+[Executable UML](http://en.wikipedia.org/wiki/Executable_UML) tools based on the [miUML](http://www.miuml.org) [metamodel](https://docs.google.com/spreadsheet/ccc?key=0AtejhCC8R03tdERpSzJFdTRVWkFMYnN2MlZzbG5YYnc#gid=1) (thanks to Leon Starr!). 
 
 * miUML metamodel XML schema
 * Java model compiler (JSE/JEE)
 * Javascript class diagram viewer
 * Javascript state diagram viewer
+
+The primary inspiration for this project is  [*Executable UML - A Foundation for Model Driven Architecture*](http://www.executableumlbook.com/) by Mellor &amp; Balcer.
 
 This project is **in active development** and has not reached alpha release status yet (will be soon methinks).
 
