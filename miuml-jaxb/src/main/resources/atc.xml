@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Domains xmlns="http://www.miuml.org/metamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.miuml.org/metamodel miuml-metamodel.xsd  http://org.github/xuml-tools/miuml-metamodel-extensions xuml-tools-miuml-metamodel-extensions.xsd"
+	xmlns:xt="http://org.github/xuml-tools/miuml-metamodel-extensions">
+
+	<!-- as per https://github.com/miuml/air-traffic-control -->
+
+	<DomainBuildSpecification Name="Base"
+		DomainNameIsDefaultSubsystemName="true" DefaultSubsystemName="Subsystem"
+		DefaultSubsystemRange="100" DefaultIdName="Id" DefaultIdType="arbitraryId" />
+
+	<IntegerType Name="arbitraryId" Units="None" DefaultValue="1"
+		UpperLimit="99999999999" LowerLimit="1" />
+
+	<SymbolicType Name="Employee ID" MaxLength="1" MinLength="64"
+		Prefix="" Suffix="" ValidationPattern=".*" DefaultValue="" />
+	<SymbolicType Name="Name" MaxLength="1" MinLength="256"
+		Prefix="" Suffix="" ValidationPattern=".*" DefaultValue="" />
+	<IntegerType Name="Duration" Units="Epoch millis"
+		DefaultValue="0" UpperLimit="99999999999" LowerLimit="0" />
+	<IntegerType Name="Experience level" Units="level"
+		DefaultValue="0" UpperLimit="10" LowerLimit="0" />
+	<IntegerType Name="Date" Units="Epoch millis" DefaultValue="0"
+		UpperLimit="99999999999" LowerLimit="0" />
+	<SymbolicType Name="Czone Name" MaxLength="1" MinLength="256"
+		Prefix="" Suffix="" ValidationPattern=".*" DefaultValue="" />
+	<IntegerType Name="Aircraft quantity" Units="None"
+		DefaultValue="0" UpperLimit="99999999999" LowerLimit="0" />
+	<IntegerType Name="Station number" Units="None"
+		DefaultValue="0" UpperLimit="99999999999" LowerLimit="0" />
+	<RealType Name="Aircraft maximum capacity" Precision="10"
+		Units="kilograms" LowerLimit="0" UpperLimit="999999999999"
+		DefaultValue="0" />
+
+	<ModeledDomain Name="ATC">
+		<Subsystem Name="ATC" Floor="1" Ceiling="10">
+			<Class Name="Air Traffic Controller">
+				<IndependentAttribute Name="ID" Type="Employee ID">
+					<Identifier Number="1" />
+				</IndependentAttribute>
+				<IndependentAttribute Name="Name" Type="Name" />
+				<IndependentAttribute Name="Rating" Type="Experience level" />
+			</Class>
+
+			<Class Name="Off Duty Controller">
+				<IndependentAttribute Name="Last shift ended"
+					Type="Date" />
+			</Class>
+
+			<Class Name="On Duty Controller">
+				<IndependentAttribute Name="Time logged in"
+					Type="Date" />
+				<ReferentialAttribute Name="Station">
+					<ToOneReference Attribute="Number" Relationship="3" />
+				</ReferentialAttribute>
+			</Class>
+
+			<Class Name="Shift Specification">
+				<IndependentAttribute Name="Name" Type="Name">
+					<Identifier Number="1" />
+				</IndependentAttribute>
+				<IndependentAttribute Name="Min break" Type="Duration" />
+				<IndependentAttribute Name="Max shift" Type="Duration" />
+			</Class>
+
+			<Class Name="Control Zone">
+				<IndependentAttribute Name="Name" Type="Czone name">
+					<Identifier Number="1" />
+				</IndependentAttribute>
+				<IndependentAttribute Name="Traffic" Type="Aircraft quantity" />
+				<ReferentialAttribute Name="Controller">
+					<ToOneReference Attribute="ID" Relationship="2" />
+				</ReferentialAttribute>
+			</Class>
+
+			<Class Name="Duty Station">
+				<IndependentAttribute Name="Number" Type="Station number">
+					<Identifier Number="1" />
+				</IndependentAttribute>
+				<IndependentAttribute Name="Location" Type="Name" />
+				<IndependentAttribute Name="Capacity"
+					Type="Aircraft maximum capacity" />
+			</Class>
+
+			<Generalization Superclass="Air Traffic Controller"
+				Rnum="1">
+				<SpecializedClass Name="Off Duty Controller" />
+				<SpecializedClass Name="On Duty Controller" />
+			</Generalization>
+
+			<BinaryAssociation Rnum="1">
+				<ActivePerspective OnePerspective="false"
+					Conditional="true" ViewedClass="Control Zone" Phrase="is directing traffic within" />
+				<PassivePerspective OnePerspective="true"
+					Conditional="false" ViewedClass="On Duty Controller" Phrase="has traffic directed by" />
+			</BinaryAssociation>
+
+			<BinaryAssociation Rnum="2">
+				<ActivePerspective OnePerspective="true"
+					Conditional="false" ViewedClass="Duty Station" Phrase="is logged into" />
+				<PassivePerspective OnePerspective="true"
+					Conditional="true" ViewedClass="On Duty Controller" Phrase="is being used by" />
+			</BinaryAssociation>
+		</Subsystem>
+	</ModeledDomain>
+</Domains>

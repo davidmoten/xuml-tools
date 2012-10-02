@@ -2,8 +2,6 @@ package xuml.tools.miuml.metamodel.jaxb;
 
 import org.junit.Test;
 
-import xuml.tools.miuml.metamodel.jaxb.Marshaller;
-
 /**
  * Tests the {@link Marshaller}.
  * 
@@ -20,4 +18,14 @@ public class MarshallerTest {
 		Marshaller m = new Marshaller();
 		m.unmarshal(MarshallerTest.class.getResourceAsStream("/samples.xml"));
 	}
+
+	/**
+	 * Tests unmarshall of /samples.xml on the classpath.
+	 */
+	@Test
+	public void testUnmarshalOfAtcXml() {
+		Marshaller m = new Marshaller();
+		m.unmarshal(MarshallerTest.class.getResourceAsStream("/atc.xml"));
+	}
+
 }

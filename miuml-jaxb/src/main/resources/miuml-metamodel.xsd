@@ -1255,7 +1255,7 @@
 	<!-- Utility complex types -->
 
 	<complexType name="Named">
-		<attribute name="Name" type="t:Name" />
+		<attribute name="Name" type="t:Name" use="required"/>
 	</complexType>
 
 	<!-- Simple types -->

@@ -217,7 +217,7 @@ The current plan is to make the semantics of say BPAL 97 (Bridgepoint Action Lan
 	<tr><td>Cancel signal with delay</td><td><b>cancel</b> addSelection <b>from</b> customer <b>to</b> order</td><td>order.cancelSignal(addSelection);</td><td><img src="https://raw.github.com/davidmoten/xuml-tools/master/src/docs/tick.png"></td></tr>
 </table>
 
-The principle is to write java on-entry methods using the above abstractions without resorting to direct use of an *EntityManager*. The current *EntityManager* is always available via *Context.em()* but for simplicity and to maximize compile-time checking it is recommended to avoid using it. You might want to resort to using *Context.em()* for some performance tweak for example but try the *EntityManager*-free approach first.
+The principle is to write java on-entry methods using the above abstractions and without resorting to direct use of an *EntityManager*. The current *EntityManager* is always available via *Context.em()* but for simplicity and to maximize compile-time checking it is recommended to avoid using it. You might want to resort to using *Context.em()* for some performance tweak for example but try the *EntityManager*-free approach first.
 
 Web Class Diagram Viewer
 ------------------------
