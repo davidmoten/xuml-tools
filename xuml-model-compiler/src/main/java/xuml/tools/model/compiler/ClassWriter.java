@@ -277,9 +277,12 @@ public class ClassWriter {
 	private String getIdClassName(ClassInfo info) {
 		String idClassName;
 		if (!hasEmbeddedId()) {
-			if (info.getPrimaryIdAttributeMembers().size() == 0)
-				throw new RuntimeException("Class does not have identifier: "
-						+ info.getJavaClassSimpleName());
+			if (info.getPrimaryIdAttributeMembers().size() == 0) {
+				throw new RuntimeException(
+						"Class does not have identifier, inherited or otherwise: "
+								+ info.getJavaClassSimpleName());
+			}
+
 			idClassName = info.addType(info.getPrimaryIdAttributeMembers()
 					.get(0).getType().getType());
 		} else

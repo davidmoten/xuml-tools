@@ -314,6 +314,20 @@
 							<packageName>one_many_to_one_many_association</packageName>
 						</configuration>
 					</execution>
+					<!-- 
+					<execution>
+						<id>atc</id>
+						<goals>
+							<goal>generate-jpa</goal>
+						</goals>
+						<configuration>
+							<domainsXml>/atc.xml</domainsXml>
+							<domain>ATC</domain>
+							<schema>ATC</schema>
+							<packageName>atc</packageName>
+						</configuration>
+					</execution>
+					 -->
 				</executions>
 			</plugin>
 			<!-- xuml-tools-maven-plugin does add this directory as source but eclipse 

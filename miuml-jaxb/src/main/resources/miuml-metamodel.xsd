@@ -602,7 +602,17 @@
 			</annotation>
 		</attribute>
 		<attribute name="Conditional" type="boolean" use="required" />
+		<attribute name="Multiplicity" type="t:Multiplicity" use="optional"/>
 	</complexType>
+
+	<simpleType name="Multiplicity">
+		<restriction base="string">
+			<enumeration value="ZERO_ONE" />
+			<enumeration value="ONE" />
+			<enumeration value="ONE_MANY" />
+			<enumeration value="MANY" />
+		</restriction>
+	</simpleType>
 
 	<element name="SymmetricPerspective" substitutionGroup="t:Perspective"
 		type="t:SymmetricPerspective" abstract="true" />
@@ -693,7 +703,8 @@
 	<complexType name="AssociativeReference">
 		<complexContent>
 			<annotation>
-				<documentation>R120,R152. TReference and PReference via R153 have been
+				<documentation>R120,R152. TReference and PReference via R153 have
+					been
 					collapsed into AssociativeReference. Differentiation is via the
 					Class attribute.
 				</documentation>
@@ -1140,10 +1151,8 @@
 		<annotation>
 			<documentation>
 				A large portion of the Polymorphism Subsystem has been
-				collapsed by
-				the relationship of Event to Event Signature. The
-				collapsed portion
-				serves validation purposes only.
+				collapsed by the relationship of Event to Event Signature. The
+				collapsed portion serves validation purposes only.
 			</documentation>
 		</annotation>
 		<sequence>
@@ -1255,7 +1264,7 @@
 	<!-- Utility complex types -->
 
 	<complexType name="Named">
-		<attribute name="Name" type="t:Name" use="required"/>
+		<attribute name="Name" type="t:Name" use="required" />
 	</complexType>
 
 	<!-- Simple types -->

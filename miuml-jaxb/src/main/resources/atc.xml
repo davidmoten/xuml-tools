@@ -22,7 +22,7 @@
 		DefaultValue="0" UpperLimit="10" LowerLimit="0" />
 	<IntegerType Name="Date" Units="Epoch millis" DefaultValue="0"
 		UpperLimit="99999999999" LowerLimit="0" />
-	<SymbolicType Name="Czone Name" MaxLength="1" MinLength="256"
+	<SymbolicType Name="Czone name" MaxLength="1" MinLength="256"
 		Prefix="" Suffix="" ValidationPattern=".*" DefaultValue="" />
 	<IntegerType Name="Aircraft quantity" Units="None"
 		DefaultValue="0" UpperLimit="99999999999" LowerLimit="0" />
@@ -38,10 +38,18 @@
 				<IndependentAttribute Name="ID" Type="Employee ID">
 					<Identifier Number="1" />
 				</IndependentAttribute>
-				
+
 				<IndependentAttribute Name="Name" Type="Name" />
-				
+
 				<IndependentAttribute Name="Rating" Type="Experience level" />
+
+				<ReferentialAttribute Name="Off Duty Controller">
+					<SpecializationReference Attribute="ID" Relationship="1"/>
+				</ReferentialAttribute>
+				
+				<ReferentialAttribute Name="On Duty Controller">
+					<SpecializationReference Attribute="ID" Relationship="1"/>
+				</ReferentialAttribute>
 
 				<Lifecycle>
 					<State Name="Off Duty" />
@@ -57,17 +65,29 @@
 						</EventSignature>
 					</LocalEffectiveSignalingEvent>
 					<LocalEffectiveSignalingEvent Name="Cannot go on duty"
-						ID="2" />
+						ID="2">
+						<EventSignature />
+					</LocalEffectiveSignalingEvent>
 					<LocalEffectiveSignalingEvent Name="Off duty"
-						ID="3" />
+						ID="3">
+						<EventSignature />
+					</LocalEffectiveSignalingEvent>
 					<LocalEffectiveSignalingEvent Name="Log out"
-						ID="4" />
+						ID="4">
+						<EventSignature />
+					</LocalEffectiveSignalingEvent>
 					<LocalEffectiveSignalingEvent Name="Ready for a break"
-						ID="5" />
+						ID="5">
+						<EventSignature />
+					</LocalEffectiveSignalingEvent>
 					<LocalEffectiveSignalingEvent Name="Must hand off zones"
-						ID="6" />
+						ID="6">
+						<EventSignature />
+					</LocalEffectiveSignalingEvent>
 					<LocalEffectiveSignalingEvent Name="Logged in"
-						ID="7" />
+						ID="7">
+						<EventSignature />
+					</LocalEffectiveSignalingEvent>
 					<LocalEffectiveSignalingEvent Name="Log in"
 						ID="8">
 						<EventSignature>
@@ -79,11 +99,21 @@
 			</Class>
 
 			<Class Name="Off Duty Controller">
+				<ReferentialAttribute Name="ID">
+					<Identifier Number="1" />
+					<GeneralizationReference Attribute="ID"
+						Relationship="1" />
+				</ReferentialAttribute>
 				<IndependentAttribute Name="Last shift ended"
 					Type="Date" />
 			</Class>
 
 			<Class Name="On Duty Controller">
+				<ReferentialAttribute Name="ID">
+					<Identifier Number="1" />
+					<GeneralizationReference Attribute="ID"
+						Relationship="1" />
+				</ReferentialAttribute>
 				<IndependentAttribute Name="Time logged in"
 					Type="Date" />
 				<ReferentialAttribute Name="Station">
@@ -124,14 +154,14 @@
 				<SpecializedClass Name="On Duty Controller" />
 			</Generalization>
 
-			<BinaryAssociation Rnum="1">
+			<BinaryAssociation Rnum="2">
 				<ActivePerspective OnePerspective="false"
 					Conditional="true" ViewedClass="Control Zone" Phrase="is directing traffic within" />
 				<PassivePerspective OnePerspective="true"
-					Conditional="false" ViewedClass="On Duty Controller" Phrase="has traffic directed by" />
+					Conditional="false" ViewedClass="Off Duty Controller" Phrase="has traffic directed by" />
 			</BinaryAssociation>
 
-			<BinaryAssociation Rnum="2">
+			<BinaryAssociation Rnum="3">
 				<ActivePerspective OnePerspective="true"
 					Conditional="false" ViewedClass="Duty Station" Phrase="is logged into" />
 				<PassivePerspective OnePerspective="true"

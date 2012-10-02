@@ -121,15 +121,21 @@ public class CodeGeneratorJavaTest {
 		generateClassesForDomain("one-many-to-many-association-class");
 	}
 
+	// @Test
+	public void testCodeGenerationForAirTrafficControllerSample()
+			throws FileNotFoundException {
+		generateClassesForDomain("ATC", "atc", "ATC", "/atc.xml");
+	}
+
 	private void generateClassesForDomain(String domainName) {
 		String underscored = domainName.replaceAll("-", "_").toLowerCase();
 		generateClassesForDomain(domainName, underscored, underscored);
 	}
 
 	private void generateClassesForDomain(String domainName,
-			String domainPackageName, String schema) {
+			String domainPackageName, String schema, String xmlPath) {
 		xuml.tools.miuml.metamodel.jaxb.Domains domains = new Marshaller()
-				.unmarshal(getClass().getResourceAsStream("/samples.xml"));
+				.unmarshal(getClass().getResourceAsStream(xmlPath));
 		File resources = new File("target/generated-resources");
 		if (!resources.exists())
 			resources.mkdirs();
@@ -141,5 +147,12 @@ public class CodeGeneratorJavaTest {
 				entitySourceDirectory, resourcesDirectory,
 				implementationPackageName, implementationSourceDirectory, true,
 				true).generate();
+
+	}
+
+	private void generateClassesForDomain(String domainName,
+			String domainPackageName, String schema) {
+		generateClassesForDomain(domainName, domainPackageName, schema,
+				"/samples.xml");
 	}
 }
