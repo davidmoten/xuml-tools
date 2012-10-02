@@ -38,8 +38,44 @@
 				<IndependentAttribute Name="ID" Type="Employee ID">
 					<Identifier Number="1" />
 				</IndependentAttribute>
+				
 				<IndependentAttribute Name="Name" Type="Name" />
+				
 				<IndependentAttribute Name="Rating" Type="Experience level" />
+
+				<Lifecycle>
+					<State Name="Off Duty" />
+					<State Name="On Duty" />
+					<State Name="Verifying Adequate Break" />
+					<State Name="Logging Out" />
+					<State Name="Verifying Full Handoff" />
+					<State Name="Logging In" />
+					<LocalEffectiveSignalingEvent Name="Ready for duty"
+						ID="1">
+						<EventSignature>
+							<StateModelParameter Name="Station ID" Type="Station number" />
+						</EventSignature>
+					</LocalEffectiveSignalingEvent>
+					<LocalEffectiveSignalingEvent Name="Cannot go on duty"
+						ID="2" />
+					<LocalEffectiveSignalingEvent Name="Off duty"
+						ID="3" />
+					<LocalEffectiveSignalingEvent Name="Log out"
+						ID="4" />
+					<LocalEffectiveSignalingEvent Name="Ready for a break"
+						ID="5" />
+					<LocalEffectiveSignalingEvent Name="Must hand off zones"
+						ID="6" />
+					<LocalEffectiveSignalingEvent Name="Logged in"
+						ID="7" />
+					<LocalEffectiveSignalingEvent Name="Log in"
+						ID="8">
+						<EventSignature>
+							<StateModelParameter Name="Station ID" Type="Station number" />
+						</EventSignature>
+					</LocalEffectiveSignalingEvent>
+				</Lifecycle>
+
 			</Class>
 
 			<Class Name="Off Duty Controller">
@@ -101,6 +137,8 @@
 				<PassivePerspective OnePerspective="true"
 					Conditional="true" ViewedClass="On Duty Controller" Phrase="is being used by" />
 			</BinaryAssociation>
+
 		</Subsystem>
+
 	</ModeledDomain>
 </Domains>
