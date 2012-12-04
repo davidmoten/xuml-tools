@@ -67,7 +67,7 @@ Alternatively, look at the maven plugin below that you would insert into your po
 </build>
 ```
 
-The module [**xuml-model-compiler-test**](https://raw.github.com/davidmoten/xuml-tools/tree/master/xuml-model-compiler-test) tests all association types and demonstrates usage. In particular the test class [AbcTest.java](https://raw.github.com/davidmoten/xuml-tools/blob/master/xuml-model-compiler-test/src/test/java/xuml/tools/jaxb/compiler/test/AbcTest.java) demonstrates normal system lifecycle.
+The module [**xuml-model-compiler-test**](https://raw.github.com/davidmoten/xuml-tools/tree/master/xuml-model-compiler-test) tests all association types and demonstrates usage. In particular the test class [AbcTest.java](https://raw.github.com/davidmoten/xuml-tools/master/xuml-model-compiler-test/src/test/java/xuml/tools/jaxb/compiler/test/AbcTest.java) demonstrates normal system lifecycle.
 
 Model schema
 ------------
