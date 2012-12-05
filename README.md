@@ -67,11 +67,11 @@ Alternatively, look at the maven plugin below that you would insert into your po
 </build>
 ```
 
-The module [**xuml-model-compiler-test**](https://raw.github.com/davidmoten/xuml-tools/tree/master/xuml-model-compiler-test) tests all association types and demonstrates usage. In particular the test class [AbcTest.java](https://github.com/davidmoten/xuml-tools/blob/master/xuml-model-compiler-test/src/test/java/xuml/tools/jaxb/compiler/test/AbcTest.java) demonstrates normal system lifecycle.
+The module [**xuml-model-compiler-test**](https://github.com/davidmoten/xuml-tools/tree/master/xuml-model-compiler-test) tests all association types and demonstrates usage. In particular the test class [AbcTest.java](https://github.com/davidmoten/xuml-tools/blob/master/xuml-model-compiler-test/src/test/java/xuml/tools/jaxb/compiler/test/AbcTest.java) demonstrates normal system lifecycle.
 
 Model schema
 ------------
-Models are defined in xml that is compliant to the miUML xuml-tools [schema](https://raw.github.com/davidmoten/xuml-tools/blob/master/miuml-jaxb/src/main/resources/miuml-metamodel.xsd). A sample of xml compliant with the schema is [samples.xml](https://raw.github.com/davidmoten/xuml-tools/blob/master/miuml-jaxb/src/main/resources/samples.xml).
+Models are defined in xml that is compliant to the miUML xuml-tools [schema](https://github.com/davidmoten/xuml-tools/blob/master/miuml-jaxb/src/main/resources/miuml-metamodel.xsd). A sample of xml compliant with the schema is [samples.xml](https://github.com/davidmoten/xuml-tools/blob/master/miuml-jaxb/src/main/resources/samples.xml).
 
 Java model compiler
 -------------------
@@ -175,18 +175,18 @@ In terms of the role transactions play in relation to signals:
 1. If and only if the transaction succeeds the queue of *Signal to other* is processed (the signals are sent).
 
 ### Exception handling ###
-The system should be developed and tested with the aim of no uncaught exceptions being thrown. However, unexpected exceptions need to be dealt with properly when they occur. For this purpose the developer may implement a [SignalProcessorListener](https://raw.github.com/davidmoten/xuml-tools/blob/master/xuml-model-compiler-runtime/src/main/java/xuml/tools/model/compiler/runtime/SignalProcessorListener.java) to perform retries, log/notify errors, or even halt processing on one or all entities.
+The system should be developed and tested with the aim of no uncaught exceptions being thrown. However, unexpected exceptions need to be dealt with properly when they occur. For this purpose the developer may implement a [SignalProcessorListener](https://github.com/davidmoten/xuml-tools/blob/master/xuml-model-compiler-runtime/src/main/java/xuml/tools/model/compiler/runtime/SignalProcessorListener.java) to perform retries, log/notify errors, or even halt processing on one or all entities.
 
-An example of setting up a [SignalProcessorListenerFactory](https://raw.github.com/davidmoten/xuml-tools/blob/master/xuml-model-compiler-runtime/src/main/java/xuml/tools/model/compiler/runtime/SignalProcessorListenerFactory.java) and assigning it to the current Context is in [AbcTest.java](https://raw.github.com/davidmoten/xuml-tools/blob/master/xuml-model-compiler-test/src/test/java/xuml/tools/jaxb/compiler/test/AbcTest.java).
+An example of setting up a [SignalProcessorListenerFactory](https://github.com/davidmoten/xuml-tools/blob/master/xuml-model-compiler-runtime/src/main/java/xuml/tools/model/compiler/runtime/SignalProcessorListenerFactory.java) and assigning it to the current Context is in [AbcTest.java](https://github.com/davidmoten/xuml-tools/blob/master/xuml-model-compiler-test/src/test/java/xuml/tools/jaxb/compiler/test/AbcTest.java).
 
 More examples:
 
 <table>
   <tr><th>Purpose</th><th>Class</th></tr>
-  <tr><td>Log failures</td><td><a href="https://raw.github.com/davidmoten/xuml-tools/blob/master/xuml-model-compiler-runtime/src/main/java/xuml/tools/model/compiler/runtime/SignalProcessorListenerUtilLogging.java">SignalProcessorListenerUtilLogging.java</a></td></tr>
-  <tr><td>Retry on failure with 5 min delay</td><td><a href="https://raw.github.com/davidmoten/xuml-tools/blob/master/xuml-model-compiler-runtime/src/test/java/xuml/tools/model/compiler/runtime/SignalProcessorListenerRetryOnFailure.java">SignalProcessorListenerRetryOnFailure.java</a></td></tr>
-  <tr><td>Stop all signal processing on failure</td><td><a href="https://raw.github.com/davidmoten/xuml-tools/blob/master/xuml-model-compiler-runtime/src/test/java/xuml/tools/model/compiler/runtime/SignalProcessorListenerStopsAllSignalProcessingOnFailure.java">SignalProcessorListenerStopsAllSignalProcessingOnFailure.java</a></td></tr>
-  <tr><td>Stop signal processing on single entity on failure</td><td><a href="https://raw.github.com/davidmoten/xuml-tools/blob/master/xuml-model-compiler-runtime/src/test/java/xuml/tools/model/compiler/runtime/SignalProcessorListenerStopsSignalProcessingSingleEntityOnFailure.java">SignalProcessorListenerStopsSignalProcessingSingleEntityOnFailure.java</a></td></tr>
+  <tr><td>Log failures</td><td><a href="https://github.com/davidmoten/xuml-tools/blob/master/xuml-model-compiler-runtime/src/main/java/xuml/tools/model/compiler/runtime/SignalProcessorListenerUtilLogging.java">SignalProcessorListenerUtilLogging.java</a></td></tr>
+  <tr><td>Retry on failure with 5 min delay</td><td><a href="https://github.com/davidmoten/xuml-tools/blob/master/xuml-model-compiler-runtime/src/test/java/xuml/tools/model/compiler/runtime/SignalProcessorListenerRetryOnFailure.java">SignalProcessorListenerRetryOnFailure.java</a></td></tr>
+  <tr><td>Stop all signal processing on failure</td><td><a href="https://github.com/davidmoten/xuml-tools/blob/master/xuml-model-compiler-runtime/src/test/java/xuml/tools/model/compiler/runtime/SignalProcessorListenerStopsAllSignalProcessingOnFailure.java">SignalProcessorListenerStopsAllSignalProcessingOnFailure.java</a></td></tr>
+  <tr><td>Stop signal processing on single entity on failure</td><td><a href="https://github.com/davidmoten/xuml-tools/blob/master/xuml-model-compiler-runtime/src/test/java/xuml/tools/model/compiler/runtime/SignalProcessorListenerStopsSignalProcessingSingleEntityOnFailure.java">SignalProcessorListenerStopsSignalProcessingSingleEntityOnFailure.java</a></td></tr>
 </table>
 
 ### Action Language ###
