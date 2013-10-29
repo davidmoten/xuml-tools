@@ -83,6 +83,7 @@ public class ClassWriter {
 
 	private static final String BEHAVIOUR_COMMENT = "All actions like onEntry actions and defined\noperations are performed by this Behaviour class.";
 	private static final String STATE_COMMENT = "For internal use only by the state machine but is persisted by the jpa provider.";
+	private static final String MEMBER_MODIFIERS = "private volatile";
 	public static boolean useJpaJoinedStrategyForSpecialization = false;
 	private final ClassInfo info;
 
@@ -393,7 +394,7 @@ public class ClassWriter {
 		if (!hasEmbeddedId()) {
 			writeSimpleIdMember(out, info);
 		} else {
-			writeEmbeddedIdField(out, info);
+			writeEmbeddedIdMember(out, info);
 
 			writeEmbeddedIdDeclaration(out, info);
 
@@ -566,10 +567,10 @@ public class ClassWriter {
 		}
 	}
 
-	private void writeEmbeddedIdField(PrintStream out, ClassInfo info) {
+	private void writeEmbeddedIdMember(PrintStream out, ClassInfo info) {
 		jd(out, "Id field.", "    ");
 		out.format("    @%s\n", info.addType(EmbeddedId.class));
-		out.format("    private %s %s;\n\n",
+		out.format("    %s %s %s;\n\n", MEMBER_MODIFIERS,
 				info.getEmbeddedIdSimpleClassName(),
 				info.getEmbeddedIdAttributeName());
 	}
@@ -599,15 +600,15 @@ public class ClassWriter {
 			MyTypeDefinition type, String fieldName, String indent) {
 		String defaultValue = type.getDefaultValue();
 		if (defaultValue == null)
-			out.format("%sprivate %s %s;\n\n", indent,
+			out.format("%s%s %s %s;\n\n", indent, MEMBER_MODIFIERS,
 					info.addType(type.getType()), fieldName);
 		else if (type.getType().getBase().equals(Date.class.getName()))
-			out.format("%sprivate %s %s = new %s(%s);\n\n", indent,
-					info.addType(type.getType()), fieldName,
+			out.format("%s%s %s %s = new %s(%s);\n\n", indent,
+					MEMBER_MODIFIERS, info.addType(type.getType()), fieldName,
 					info.addType(type.getType()), defaultValue);
 		else
-			out.format("%sprivate %s %s = new %s(\"%s\");\n\n", indent,
-					info.addType(type.getType()), fieldName,
+			out.format("%s%s %s %s = new %s(\"%s\");\n\n", indent,
+					MEMBER_MODIFIERS, info.addType(type.getType()), fieldName,
 					info.addType(type.getType()), defaultValue);
 	}
 
@@ -754,7 +755,7 @@ public class ClassWriter {
 			jd(out, STATE_COMMENT, "    ");
 			out.format("    @%s(name=\"state\",nullable=false)\n",
 					info.addType(Column.class));
-			out.format("    private String state;\n\n");
+			out.format("    %s String state;\n\n", MEMBER_MODIFIERS);
 		}
 	}
 
