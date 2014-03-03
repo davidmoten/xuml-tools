@@ -9,7 +9,7 @@ xuml-tools
 
 The primary inspiration for this project is  [*Executable UML - A Foundation for Model Driven Architecture*](http://www.executableumlbook.com/) by Mellor &amp; Balcer.
 
-This project is **in active development** and has not reached alpha release status yet (will be soon methinks).
+Status: *alpha*
 
 <img src="https://raw.github.com/davidmoten/xuml-tools/master/xuml-diagrams/src/docs/class-diagram.png">
 
