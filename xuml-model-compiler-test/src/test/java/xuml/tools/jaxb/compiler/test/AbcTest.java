@@ -287,19 +287,4 @@ public class AbcTest {
 		};
 	}
 
-	/**
-	 * Tests that an exception is thrown if the {@link BehaviourFactory} has not
-	 * been set for a class with behaviour before attempting to instantiate an
-	 * instance of it.
-	 */
-	@Test(expected = NullPointerException.class)
-	public void testBehaviourNotSetForAThrowsException() {
-		A.BehaviourFactory f = A.getBehaviourFactory();
-		try {
-			A.setBehaviourFactory(null);
-			new A();
-		} finally {
-			A.setBehaviourFactory(f);
-		}
-	}
 }

@@ -230,7 +230,7 @@ public class ClassWriter {
 		} else
 			extension = "";
 
-		out.format("public class %s%s implements %s<%1$s> {\n\n",
+		out.format("public final class %s%s implements %s<%1$s> {\n\n",
 				info.getJavaClassSimpleName(), extension,
 				info.addType(xuml.tools.model.compiler.runtime.Entity.class));
 	}
@@ -261,8 +261,6 @@ public class ClassWriter {
 			String behaviourTypeName = "Behaviour";
 
 			writeBehaviourFields(out, info, factoryTypeName, behaviourTypeName);
-
-			writeConstructorUsingBehaviour(out, info, behaviourTypeName);
 
 			writeBehaviourFactoryGetterAndSetter(out, factoryTypeName);
 		}
