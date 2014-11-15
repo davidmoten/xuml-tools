@@ -193,7 +193,7 @@ public class ClassInfo {
 		for (Extension ext : a.getExtension()) {
 			for (Object any : ext.getAny()) {
 				Object e = getJaxbElementValue(any);
-				if (e != null && e instanceof Documentation) {
+				if (e instanceof Documentation) {
 					Documentation doco = (Documentation) e;
 					documentationMimeType = doco.getMimeType();
 					documentationContent = doco.getContent();
