@@ -26,7 +26,7 @@ Requirements:
 * JDK 1.6 or later (for build, runtime)
 * maven 3.0.3 or later (for build)
 
-Until the project has matured enough to release artifacts to Maven Central repository this is how to locally install the artifacts from source:
+This is how to locally install the artifacts from source:
 
     git clone https://github.com/davidmoten/xuml-tools.git
     cd xuml-tools
