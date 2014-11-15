@@ -243,4 +243,10 @@
 			</plugins>
 		</pluginManagement>
 	</build>
+    <distributionManagement>
+       <site>
+		   <id>site</id>
+			<url>${site.url}</url>
+	   </site>
+    </distributionManagement>
 </project>
