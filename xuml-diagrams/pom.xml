@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<artifactId>xuml-tools</artifactId>
-		<groupId>org.github.davidmoten</groupId>
+		<groupId>com.github.davidmoten</groupId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>xuml-diagrams</artifactId>
