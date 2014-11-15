@@ -17,7 +17,7 @@ Status: *alpha*
 
 Continuous integration with Jenkins for this project is [here](https://xuml-tools.ci.cloudbees.com/). <a href="https://xuml-tools.ci.cloudbees.com/"><img  src="http://web-static-cloudfront.s3.amazonaws.com/images/badges/BuiltOnDEV.png"/></a>
 
-Maven site is [here](https://xuml-tools.ci.cloudbees.com/job/xuml-tools_site/site/). Includes [Javadocs](https://xuml-tools.ci.cloudbees.com/job/xuml-tools_site/site/apidocs/index.html), Cobertura test coverage, FindBugs, CPD, PMD, JavaNCSS, Checkstyle and other reports.
+Maven site is [here](http://davidmoten.github.io/xuml-tools/) including [javadocs](http://davidmoten.github.io/xuml-tools/site/apidocs/index.html).
 
 Getting started
 ---------------
