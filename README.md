@@ -136,9 +136,9 @@ B.setBehaviourFactory(factoryB);
 At this point, you can create an instance of A and fling events at it and the state transitions and database interaction will all happen automatically and asynchronously.
 
 ```java
-A a1 = Context.create(A.class, new A.Events.Create("value1.1",
+A a = Context.create(A.class, new A.Events.Create("value1.1",
 				"value2.1", "1234"));
-a1.signal(new A.Events.SomethingDone(11));
+a.signal(new A.Events.SomethingDone(11));
 
 ```
 ### Close stuff
