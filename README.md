@@ -133,7 +133,7 @@ B.setBehaviourFactory(factoryB);
 ```
 
 #### Process signals
-At this point, you can create an instance of A and fling events at it and everything will happen automagically aynchronously.
+At this point, you can create an instance of A and fling events at it and the state transitions and database interaction will all happen automatically and asynchronously.
 
 ```java
 A a1 = Context.create(A.class, new A.Events.Create("value1.1",
