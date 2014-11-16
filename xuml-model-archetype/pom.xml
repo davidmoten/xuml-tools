@@ -59,7 +59,7 @@
 			</build>
 		</profile>
 		<profile>
-			<id>release</id>
+			<id>sonatype-oss-release</id>
 		</profile>
 	</profiles>
 </project>
