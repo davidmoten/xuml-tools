@@ -40,7 +40,7 @@ Use the maven archetype to create a project in interactive mode:
     mvn archetype:generate \
     -DarchetypeGroupId=org.github.davidmoten \
     -DarchetypeArtifactId=xuml-model-archetype \
-    -DarchetypeVersion=0.0.1-SNAPSHOT
+    -DarchetypeVersion=0.1-SNAPSHOTT
 
 The generated project should build cleanly with *mvn clean install*. The build runs a simple unit test on the generated JPA classes using a temporary in-memory derby database. The JPA classes are generated from *src/main/resources/domain.xml* and the tests are in *src/test/java*.
 
@@ -54,7 +54,7 @@ This is the fragment you would insert into your pom.xml:
 		<plugin>
 			<groupId>org.github.davidmoten</groupId>
 			<artifactId>xuml-tools-maven-plugin</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>0.1-SNAPSHOTT</version>
 			<executions>
 				<execution>
 					<id>generate-jpa</id>
