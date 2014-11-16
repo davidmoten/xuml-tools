@@ -44,8 +44,9 @@ public class BookstoreTest {
 		return new Order.BehaviourFactory() {
 
 			@Override
-			public Behaviour create(Order entity) {
-				// TODO Auto-generated method stub
+			public Behaviour create(Order self) {
+				// TOOD create a Behaviour implementation when have some tests
+				// for it
 				return null;
 			}
 
