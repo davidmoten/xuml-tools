@@ -8,7 +8,7 @@
 	<artifactId>xuml-model-archetype</artifactId>
 	<name>${project.artifactId}</name>
 	<properties>
-		<xuml.tools.version>${project.version}</xuml.tools.version>
+		<xuml.tools.version>${project.parent.version}</xuml.tools.version>
 	</properties>
 	<profiles>
 		<profile>
@@ -48,7 +48,7 @@
 								<archetypeArtifactId>${project.artifactId}</archetypeArtifactId>
 								<archetypeGroupId>${project.groupId}</archetypeGroupId>
 								<archetypeRepository>local</archetypeRepository>
-								<archetypeVersion>${project.version}</archetypeVersion>
+								<archetypeVersion>${project.parent.version}</archetypeVersion>
 								<goals>verify</goals>
 								<interactiveMode>false</interactiveMode>
 							</properties>
