@@ -87,9 +87,9 @@ public class BehaviourImplementationWriter {
 		out.format("    private final %s self;\n\n",
 				info.addType(info.getClassFullName()));
 
-		out.format("    public %s(%s entity) {\n", simpleClassName,
+		out.format("    public %s(%s self) {\n", simpleClassName,
 				types.addType(info.getClassFullName()));
-		out.format("        this.self = entity;\n");
+		out.format("        this.self = self;\n");
 		out.format("    }\n\n");
 	}
 
