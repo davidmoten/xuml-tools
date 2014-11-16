@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.davidmoten</groupId>
 	<artifactId>xuml-tools</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.1</version>
 	<name>${project.artifactId}</name>
 	<packaging>pom</packaging>
 	<description>A collection of tools for Executable UML in the style of Mellor and Balcer and miUML.org</description>
@@ -29,7 +29,8 @@
         <connection>scm:git:git@github.com:davidmoten/xuml-tools.git</connection>
         <developerConnection>scm:git:git@github.com:davidmoten/xuml-tools.git</developerConnection>
         <url>scm:git:git@github.com:davidmoten/xuml-tools.git</url>
-    </scm>
+      <tag>0.1</tag>
+  </scm>
 	<developers>
 		<developer>
 			<id>dave</id>
@@ -238,7 +239,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore/>
+										<ignore />
 									</action>
 								</pluginExecution>
 								<pluginExecution>
@@ -257,7 +258,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore></ignore>
+										<ignore />
 									</action>
 								</pluginExecution>
 							</pluginExecutions>
