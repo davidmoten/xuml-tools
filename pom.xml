@@ -7,7 +7,7 @@
 	<name>${project.artifactId}</name>
 	<packaging>pom</packaging>
 	<description>A collection of tools for Executable UML in the style of Mellor and Balcer and miUML.org</description>
-	<url>https://xuml-tools.ci.cloudbees.com/job/xuml-tools_site/site/index.html</url>
+	<url>https://github.com/davidmoten/xuml-tools</url>
 	<licenses>
 		<license>
 			<name>The Apache Software License, Version 2.0</name>
@@ -25,6 +25,11 @@
 		<url>https://github.com/davidmoten/xuml-tools/issues</url>
 	</issueManagement>
 	<inceptionYear>2012</inceptionYear>
+	<scm>
+        <connection>scm:git:git@github.com:davidmoten/xuml-tools.git</connection>
+        <developerConnection>scm:git:git@github.com:davidmoten/xuml-tools.git</developerConnection>
+        <url>scm:git:git@github.com:davidmoten/xuml-tools.git</url>
+    </scm>
 	<developers>
 		<developer>
 			<id>dave</id>
