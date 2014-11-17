@@ -10,7 +10,8 @@
 	<name>${artifactId}</name>
 
 	<properties>
-		<xuml.tools.version>0.0.1-SNAPSHOT</xuml.tools.version>
+        <!-- TODO archetype should set this version -->
+		<xuml.tools.version>0.1-SNAPSHOT</xuml.tools.version>
 	</properties>
 
 	<dependencies>
@@ -52,7 +53,7 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>org.github.davidmoten</groupId>
+				<groupId>com.github.davidmoten</groupId>
 				<artifactId>xuml-tools-maven-plugin</artifactId>
 				<version>${xuml.tools.version}</version>
 				<executions>
@@ -94,39 +95,42 @@
 					</execution>
 				</executions>
 			</plugin>
-			<pluginManagement>
-				<plugins>
-				    <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-				    <plugin>
-				        <groupId>org.eclipse.m2e</groupId>
-				        <artifactId>lifecycle-mapping</artifactId>
-				        <version>1.0.0</version>
-				        <configuration>
-				            <lifecycleMappingMetadata>
-				                <pluginExecutions>
-				                    <pluginExecution>
-				                        <pluginExecutionFilter>
-				                            <groupId>org.github.davidmoten</groupId>
-				                            <artifactId>
-				                                xuml-tools-maven-plugin
-				                            </artifactId>
-				                            <versionRange>
-				                                [0.0.1-SNAPSHOT,)
-				                            </versionRange>
-				                            <goals>
-				                                <goal>generate-jpa</goal>
-				                            </goals>
-				                        </pluginExecutionFilter>
-				                        <action>
-				                            <ignore></ignore>
-				                        </action>
-				                    </pluginExecution>
-				                </pluginExecutions>
-				            </lifecycleMappingMetadata>
-				        </configuration>
-				    </plugin>
-				</plugins>
-			</pluginManagement>
 		</plugins>
+		<pluginManagement>
+			<plugins>
+			    <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+			    <plugin>
+			        <groupId>org.eclipse.m2e</groupId>
+			        <artifactId>lifecycle-mapping</artifactId>
+			        <version>1.0.0</version>
+			        <configuration>
+			            <lifecycleMappingMetadata>
+			                <pluginExecutions>
+			                    <pluginExecution>
+			                        <pluginExecutionFilter>
+			                            <groupId>com.github.davidmoten</groupId>
+			                            <artifactId>
+			                                xuml-tools-maven-plugin
+			                            </artifactId>
+			                            <versionRange>
+			                                [${xuml.tools.version},)
+			                            </versionRange>
+			                            <goals>
+			                                <goal>generate-jpa</goal>
+			                            </goals>
+			                        </pluginExecutionFilter>
+			                       <action>
+	                                  <execute>
+                                          <runOnIncremental>false</runOnIncremental>
+                                          <runOnConfiguration>true</runOnConfiguration>
+                                      </execute>
+	                            </action>
+			                    </pluginExecution>
+			                </pluginExecutions>
+			            </lifecycleMappingMetadata>
+			        </configuration>
+			    </plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 </project>
