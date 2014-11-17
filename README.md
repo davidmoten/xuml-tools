@@ -65,7 +65,7 @@ Next generate classes from the example ```shop/src/main/resources/domains.xml```
 
 You can then import the project as a Maven Project into Eclipse IDE for example and you will see this structure:
 
-<img src="https://raw.github.com/davidmoten/xuml-tools/master/xuml-diagrams/src/docs/shop.png">
+<img src="https://raw.github.com/davidmoten/xuml-tools/master/src/docs/shop.png">
 
 ```domains.xml``` can have multiple domains defined in it and the domain(s) you generate from are specified in the *xuml-tools-maven-plugin* in *shop/pom.xml*.
 
