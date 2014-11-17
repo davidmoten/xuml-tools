@@ -44,6 +44,66 @@ Use the maven archetype to create a project in interactive mode:
 
 The generated project should build cleanly with *mvn clean install*. The build runs a simple unit test on the generated JPA classes using a temporary in-memory derby database. The JPA classes are generated from *src/main/resources/domain.xml* and the tests are in *src/test/java*.
 
+#### Example
+Lets create a project org.shopping:shopping:1.0-SNAPSHOT using the archetype:
+
+    mvn archetype:generate \
+    -DarchetypeGroupId=com.github.davidmoten \
+    -DarchetypeArtifactId=xuml-model-archetype \
+    -DarchetypeVersion=0.1-SNAPSHOT \
+    -DgroupId=org.shopping \
+    -DartifactId=shop \
+    -Dversion=1.0-SNAPSHOT
+
+```
+$ mvn archetype:generate -DarchetypeGroupId=com.github.davidmoten -DarchetypeArtifactId=xuml-model-archetype -DarchetypeVersion=0.1-SNAPSHOT -DgroupId=org.shopping -DartifactId=shop -Dversion=1.0-SNAPSHOT -DinteractiveMode=false -o
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] Using the builder org.apache.maven.lifecycle.internal.builder.singlethreaded.SingleThreadedBuilder with a thread count of 1
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building Maven Stub Project (No POM) 1
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] >>> maven-archetype-plugin:2.0:generate (default-cli) @ standalone-pom >>>
+[INFO] 
+[INFO] <<< maven-archetype-plugin:2.0:generate (default-cli) @ standalone-pom <<<
+[INFO] 
+[INFO] --- maven-archetype-plugin:2.0:generate (default-cli) @ standalone-pom ---
+[INFO] Generating project in Batch mode
+[WARNING] Archetype not found in any catalog. Falling back to central repository (http://repo1.maven.org/maven2).
+[WARNING] Use -DarchetypeRepository=<your repository> if archetype's repository is elsewhere.
+[INFO] ----------------------------------------------------------------------------
+[INFO] Using following parameters for creating project from Old (1.x) Archetype: xuml-model-archetype:0.1-SNAPSHOT
+[INFO] ----------------------------------------------------------------------------
+[INFO] Parameter: groupId, Value: org.shopping
+[INFO] Parameter: packageName, Value: org.shopping
+[INFO] Parameter: package, Value: org.shopping
+[INFO] Parameter: artifactId, Value: shop
+[INFO] Parameter: basedir, Value: /home/dave/Development/ide/eclipse/workspace-4.4
+[INFO] Parameter: version, Value: 1.0-SNAPSHOT
+[INFO] ********************* End of debug info from resources from generated POM ***********************
+[INFO] project created from Old (1.x) Archetype in dir: /home/dave/Development/ide/eclipse/workspace-4.4/shop
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 10.159 s
+[INFO] Finished at: 2014-11-17T18:40:43+10:00
+[INFO] Final Memory: 14M/104M
+[INFO] ------------------------------------------------------------------------
+```
+
+This creates a *shop* directory in the current directory with a Maven Java project. 
+
+Next generate classes from the example ```src/main/resources/domains.xml``` in the project:
+
+    cd shop
+    mvn install
+
+You can then import the project as a Maven Project into Eclipse IDE for example and you will see this structure:
+
+
+
 ### Create a project manually
 
 This is the fragment you would insert into your pom.xml:
