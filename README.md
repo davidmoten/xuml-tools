@@ -45,7 +45,7 @@ Use the maven archetype to create a project in interactive mode:
 The generated project should build cleanly with *mvn clean install*. The build runs a simple unit test on the generated JPA classes using a temporary in-memory derby database. The JPA classes are generated from *src/main/resources/domain.xml* and the tests are in *src/test/java*.
 
 #### Example
-Lets create a project org.shopping:shopping:1.0-SNAPSHOT using the archetype:
+Lets create a project *org.shopping:shopping:1.0-SNAPSHOT* using the archetype:
 
     mvn archetype:generate \
     -DarchetypeGroupId=com.github.davidmoten \
