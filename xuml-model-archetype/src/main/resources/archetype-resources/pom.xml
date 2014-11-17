@@ -43,7 +43,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>${compiler.plugin.version}</version>
+				<version>3.2</version>
 				<configuration>
 					<verbose>true</verbose>
 					<fork>true</fork>
@@ -78,7 +78,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
-				<version>1.7</version>
+				<version>1.9.1</version>
 				<executions>
 					<execution>
 						<id>add-source</id>
