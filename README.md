@@ -95,13 +95,12 @@ $ mvn archetype:generate -DarchetypeGroupId=com.github.davidmoten -DarchetypeArt
 
 This creates a *shop* directory in the current directory with a Maven Java project. 
 
-Next generate classes from the example ```src/main/resources/domains.xml``` in the project:
+Next generate classes from the example ```src/main/resources/domains.xml``` in the project, compile and run tests:
 
     cd shop
-    mvn install
+    mvn test
 
 You can then import the project as a Maven Project into Eclipse IDE for example and you will see this structure:
-
 
 
 ### Create a project manually
