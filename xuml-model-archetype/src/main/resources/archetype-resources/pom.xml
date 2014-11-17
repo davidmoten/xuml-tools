@@ -16,12 +16,12 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.github.davidmoten</groupId>
+			<groupId>com.github.davidmoten</groupId>
 			<artifactId>xuml-model-compiler-runtime</artifactId>
 			<version>${xuml.tools.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.github.davidmoten</groupId>
+			<groupId>com.github.davidmoten</groupId>
 			<artifactId>hibernate</artifactId>
 			<version>${xuml.tools.version}</version>
 			<type>pom</type>
