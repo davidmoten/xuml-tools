@@ -45,7 +45,7 @@ Use the maven archetype to create a project in interactive mode:
 The generated project should build cleanly with *mvn clean install*. The build runs a simple unit test on the generated JPA classes using a temporary in-memory derby database. The JPA classes are generated from *src/main/resources/domain.xml* and the tests are in *src/test/java*.
 
 #### Example
-Let's create a project *org.shopping:shopping:1.0-SNAPSHOT* using the archetype:
+Let's create a project *shop* using the archetype:
 
     mvn archetype:generate \
     -DarchetypeGroupId=com.github.davidmoten \
@@ -67,7 +67,9 @@ You can then import the project as a Maven Project into Eclipse IDE for example 
 
 <img src="https://raw.github.com/davidmoten/xuml-tools/master/src/docs/shop.png">
 
-```domains.xml``` can have multiple domains defined in it and the domain(s) you generate from are specified in the *xuml-tools-maven-plugin* in *shop/pom.xml*.
+*domains.xml* can have multiple domains defined in it and the domain(s) you generate from are specified in the *xuml-tools-maven-plugin* in *shop/pom.xml*.
+
+The classes in *target/generated-sources* have been generated from the definitions in *domains.xml*.
 
 ### Create a project manually
 
