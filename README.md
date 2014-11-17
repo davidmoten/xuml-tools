@@ -38,7 +38,7 @@ Use the maven archetype to create a project in interactive mode:
 	
     cd <YOUR_WORKSPACE>
     mvn archetype:generate \
-    -DarchetypeGroupId=org.github.davidmoten \
+    -DarchetypeGroupId=com.github.davidmoten \
     -DarchetypeArtifactId=xuml-model-archetype \
     -DarchetypeVersion=0.1-SNAPSHOT
 
