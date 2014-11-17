@@ -36,9 +36,13 @@ public class AppTest {
 
 		// pass the EntityManagerFactory to the generated xuml Context
 		Context.setEntityManagerFactory(emf);
-
+		
 		// set the behaviour factory for the class A
 		// A.setBehaviourFactory(createBehaviourFactory());
+		
+		// send any signals not processed from last shutdown
+		Context.sendSignalsInQueue();
+
 	}
 	
 	@Test
