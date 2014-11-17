@@ -1,3 +1,5 @@
+package ${package};
+
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
