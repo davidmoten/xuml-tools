@@ -15,8 +15,6 @@ Status: *alpha*
 
 <img src="https://raw.github.com/davidmoten/xuml-tools/master/xuml-diagrams/src/docs/class-diagram.png">
 
-Continuous integration with Jenkins for this project is [here](https://xuml-tools.ci.cloudbees.com/). <a href="https://xuml-tools.ci.cloudbees.com/"><img  src="http://web-static-cloudfront.s3.amazonaws.com/images/badges/BuiltOnDEV.png"/></a>
-
 Maven site is [here](http://davidmoten.github.io/xuml-tools/) including [javadocs](http://davidmoten.github.io/xuml-tools/site/apidocs/index.html).
 
 Getting started
