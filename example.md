@@ -66,7 +66,7 @@ Where do we start?
 Create a project using the archetype:
 
 
-The first step is to transfer what we know about the classes, attributes, states and transitions of the Order Tracker subsystem to the *domains.xml* based on the miUML schema.
+The first step is to transfer what we know about the classes, attributes, relationships, states and transitions of the Order Tracker subsystem to the *domains.xml* based on the miUML schema.
 
 
 
