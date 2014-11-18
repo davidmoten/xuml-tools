@@ -83,7 +83,7 @@ The classes in *target/generated-sources* have been generated from the definitio
 This is the suggested workflow:
 
 * amend domains.xml
-* mvn clean process-resources
+* mvn clean test
 * add tests and behaviour to the models as required, TDD is good here.
 * repeat
 
@@ -366,7 +366,7 @@ Or run locally using Google App Engine (takes much longer to startup). Note: use
     
 Note that gae:unpack need only be run once to download the sdk.
 
-Then open [http://localhost:8080]() in a browser.
+Then open [http://localhost:8080](http://localhost:8080) in a browser.
 
 Web State Diagram Viewer
 ------------------------
