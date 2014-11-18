@@ -43,6 +43,7 @@ Use the maven archetype to create a project in interactive mode:
     -DarchetypeVersion=0.1-SNAPSHOT
 
 Then
+
     cd <NEW_PROJECT>
     mvn test
 
