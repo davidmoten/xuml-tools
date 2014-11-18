@@ -19,6 +19,7 @@ The idea for this subsystem is that an order (like say an online purchase) is:
 The entities involved are 
 
 **Order** - orderId, description, fromAddress, toAddress, destinationEmail, senderEmail, lastDepotId, maxAttempts, comment
+
 **Depot** - depotId, name, lat, long
 
 The states for *Order* are:
