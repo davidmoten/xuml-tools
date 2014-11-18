@@ -1429,7 +1429,7 @@ public class ClassWriter {
 		out.format("    }\n\n");
 
 		jd(out,
-				"Asychronously queues the given signal against this entity for processing\nafter the delay specified. Duration cannot be null.",
+				"Asychronously queues the given signal against this entity for processing\nafter the delay specified. Delay cannot be null.",
 				"    ");
 		out.format("    @%s\n", info.addType(Override.class));
 		out.format("    public %s signal(%s<%s> event, %s delay) {\n",
@@ -1445,7 +1445,7 @@ public class ClassWriter {
 		out.format("    }\n\n");
 
 		jd(out,
-				"Asychronously queues the given signal against this entity for processing\nat the epoch time in ms specified. Duration cannot be null.",
+				"Asychronously queues the given signal against this entity for processing\nat the epoch time in ms specified. Delay cannot be null.",
 				"    ");
 		out.format("    @%s\n", info.addType(Override.class));
 		out.format("    public %s signal(%s<%s> event, long time) {\n",

@@ -183,6 +183,14 @@ public class AbcTest {
 		em.close();
 
 	}
+	
+	@Test(expected=NullPointerException.class)
+	public void testSignalCannotBePassedANullDelay() {
+		
+		A a = Context.create(A.class, new A.Events.Create("value1.5",
+				"value2.5", "12345"));
+		a.signal(new A.Events.SomethingDone(12),null);
+	}
 
 	/**
 	 * Behaviour for an A entity.
