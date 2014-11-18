@@ -75,8 +75,8 @@ public class CodeGeneratorJava {
 		Lookups lookups = new Lookups(domains, md);
 		for (Class cls : getClasses(md)) {
 			createEntityJavaSource(cls, entitySourceDirectory, lookups);
-			createImplementationJavaSource(cls, implementationSourceDirectory,
-					lookups);
+//			createImplementationJavaSource(cls, implementationSourceDirectory,
+//					lookups);
 		}
 		if (generatePersistenceXml)
 			createPersistenceXml(domain, new File(resourcesDirectory,
