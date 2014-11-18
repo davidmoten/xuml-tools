@@ -18,8 +18,8 @@ The idea for this subsystem is that an order (like say an online purchase) is:
 
 The entities involved are 
 
-Order - orderId, description, fromAddress, toAddress, destinationEmail, senderEmail, lastDepotId, maxAttempts, comment
-Depot - depotId, name, lat, long
+**Order** - orderId, description, fromAddress, toAddress, destinationEmail, senderEmail, lastDepotId, maxAttempts, comment
+**Depot** - depotId, name, lat, long
 
 The states for *Order* are:
 
@@ -36,7 +36,7 @@ The states for *Order* are:
 The transitions are:
 
 * *Preparing* -> *Ready for dispatch* : *send*
-* *Ready for dispatch* -> *In transit* :"picked up*
+* *Ready for dispatch* -> *In transit* :*picked up*
 * *In transit* -> *Ready for delivery* : *at final depot*
 * *Ready for delivery* -> *Delivering* : *delivering*
 
