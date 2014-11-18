@@ -80,6 +80,16 @@ You can then import the project as a Maven Project into Eclipse IDE for example 
 
 The classes in *target/generated-sources* have been generated from the definitions in *domains.xml*.
 
+This is the suggested workflow:
+
+* amend domains.xml
+* mvn clean test
+* fix compile errors
+* run tests
+* write code to make tests pass
+* add tests
+* etc...
+
 ### Create a project manually
 
 This is the fragment you would insert into your pom.xml:
