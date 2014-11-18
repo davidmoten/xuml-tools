@@ -5,8 +5,8 @@ import java.util.Stack;
 
 import javax.persistence.EntityManager;
 
+import scala.concurrent.duration.Duration;
 import xuml.tools.model.compiler.runtime.message.Signal;
-import akka.util.Duration;
 
 import com.google.common.collect.Lists;
 

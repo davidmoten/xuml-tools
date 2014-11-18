@@ -73,6 +73,6 @@ public class RootActor extends UntypedActor {
 	}
 
 	private ActorRef createActor() {
-		return getContext().actorOf(new Props(EntityActor.class));
+		return getContext().actorOf(Props.create(EntityActor.class));
 	}
 }

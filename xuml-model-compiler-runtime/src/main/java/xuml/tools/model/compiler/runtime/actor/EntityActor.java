@@ -46,7 +46,7 @@ public class EntityActor extends UntypedActor {
 		if (closed) {
 			// if this actor is marked as closed then bounce all signal messages
 			// back to sender
-			getSender().tell(signal);
+			getSender().tell(signal, getSelf());
 		} else if (emf != null) {
 			// otherwise perform the event on the entity after it has been
 			// refreshed within the scope of the current entity manager
@@ -89,7 +89,7 @@ public class EntityActor extends UntypedActor {
 					em.close();
 				listener.failure(signal, e, this);
 			} finally {
-				getSender().tell(new CloseEntityActor(signal.getEntity()));
+				getSender().tell(new CloseEntityActor(signal.getEntity()),getSelf());
 			}
 		}
 	}

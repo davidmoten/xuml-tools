@@ -61,6 +61,9 @@
 		<gae.plugin.version>0.9.4</gae.plugin.version>
 		<junit.version>4.10</junit.version>
 
+		<akka.actor.artifactId>akka-actor_2.11</akka.actor.artifactId>
+		<akka.actor.version>2.3.7</akka.actor.version>
+
         <cobertura.version>2.6</cobertura.version>
         <checkstyle.version>2.13</checkstyle.version>
         <findbugs.version>3.0.0</findbugs.version>

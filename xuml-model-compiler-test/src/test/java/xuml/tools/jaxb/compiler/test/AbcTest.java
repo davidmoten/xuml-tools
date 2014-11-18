@@ -16,6 +16,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import scala.concurrent.duration.Duration;
 import xuml.tools.model.compiler.runtime.SignalProcessorListener;
 import xuml.tools.model.compiler.runtime.SignalProcessorListenerFactory;
 import xuml.tools.model.compiler.runtime.actor.EntityActor;
@@ -28,7 +29,6 @@ import abc.A.Events.StateSignature_DoneSomething;
 import abc.Context;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
-import akka.util.Duration;
 
 public class AbcTest {
 

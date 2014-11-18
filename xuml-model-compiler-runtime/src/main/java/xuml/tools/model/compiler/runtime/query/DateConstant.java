@@ -2,8 +2,8 @@ package xuml.tools.model.compiler.runtime.query;
 
 import java.util.Date;
 
+import scala.concurrent.duration.Duration;
 import xuml.tools.model.compiler.runtime.Entity;
-import akka.util.Duration;
 
 public class DateConstant<T extends Entity<T>> extends DateExpression<T> {
 

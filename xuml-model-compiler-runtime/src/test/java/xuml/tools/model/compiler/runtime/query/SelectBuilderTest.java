@@ -7,10 +7,10 @@ import java.io.Serializable;
 
 import org.junit.Test;
 
+import scala.concurrent.duration.Duration;
 import xuml.tools.model.compiler.runtime.Entity;
 import xuml.tools.model.compiler.runtime.EntityHelper;
 import xuml.tools.model.compiler.runtime.Event;
-import akka.util.Duration;
 
 public class SelectBuilderTest {
 

@@ -44,6 +44,7 @@ import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang.StringEscapeUtils;
 
+import scala.concurrent.duration.Duration;
 import xuml.tools.model.compiler.info.Mult;
 import xuml.tools.model.compiler.info.MyAttributeExtensions;
 import xuml.tools.model.compiler.info.MyEvent;
@@ -71,7 +72,6 @@ import xuml.tools.model.compiler.runtime.query.Field;
 import xuml.tools.model.compiler.runtime.query.NumericExpressionField;
 import xuml.tools.model.compiler.runtime.query.SelectBuilder;
 import xuml.tools.model.compiler.runtime.query.StringExpressionField;
-import akka.util.Duration;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;

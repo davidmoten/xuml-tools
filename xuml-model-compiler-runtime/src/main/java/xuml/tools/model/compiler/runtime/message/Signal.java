@@ -1,8 +1,9 @@
 package xuml.tools.model.compiler.runtime.message;
 
+import scala.concurrent.duration.Duration;
+import scala.concurrent.duration.FiniteDuration;
 import xuml.tools.model.compiler.runtime.Entity;
 import xuml.tools.model.compiler.runtime.Event;
-import akka.util.Duration;
 
 public class Signal<T> {
 
@@ -11,11 +12,11 @@ public class Signal<T> {
 	private final long id;
 	// epoch time ms to process signal
 	private final Long timeMs;
-	private final Duration repeatInterval;
+	private final FiniteDuration repeatInterval;
 	private final String fromEntityUniqueId;
 
 	public Signal(String fromEntityUniqueId, Entity<T> entity, Event<T> event,
-			long id, Long timeMs, Duration repeatInterval) {
+			long id, Long timeMs, FiniteDuration repeatInterval) {
 		this.fromEntityUniqueId = fromEntityUniqueId;
 		this.entity = entity;
 		this.event = event;
@@ -30,7 +31,7 @@ public class Signal<T> {
 	}
 
 	public Signal(String fromEntityUniqueId, Entity<T> entity, Event<T> event,
-			long id, Duration delay, Duration repeatInterval) {
+			long id, Duration delay, FiniteDuration repeatInterval) {
 		this(fromEntityUniqueId, entity, event, id, getTime(delay),
 				repeatInterval);
 	}
@@ -51,7 +52,7 @@ public class Signal<T> {
 		return id;
 	}
 
-	public Duration getRepeatInterval() {
+	public FiniteDuration getRepeatInterval() {
 		return repeatInterval;
 	}
 

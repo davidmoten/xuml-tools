@@ -2,7 +2,7 @@ package xuml.tools.model.compiler.runtime;
 
 import java.io.Serializable;
 
-import akka.util.Duration;
+import scala.concurrent.duration.Duration;
 
 public interface Entity<T> {
 

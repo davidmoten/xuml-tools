@@ -7,6 +7,9 @@ import java.util.concurrent.TimeUnit;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
+import scala.concurrent.ExecutionContext;
+import scala.concurrent.duration.Duration;
+import scala.concurrent.duration.FiniteDuration;
 import xuml.tools.model.compiler.runtime.actor.RootActor;
 import xuml.tools.model.compiler.runtime.message.EntityCommit;
 import xuml.tools.model.compiler.runtime.message.Signal;
@@ -14,7 +17,6 @@ import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Cancellable;
 import akka.actor.Props;
-import akka.util.Duration;
 
 import com.google.common.collect.Maps;
 
@@ -28,15 +30,15 @@ public class Signaller {
 	};
 	private final ActorSystem actorSystem = ActorSystem.create();
 	private final ActorRef root = actorSystem.actorOf(
-			new Props(RootActor.class), "root");
+			Props.create(RootActor.class), "root");
 	private final EntityManagerFactory emf;
 
 	public Signaller(EntityManagerFactory emf,
 			SignalProcessorListenerFactory listenerFactory) {
 		this.emf = emf;
-		root.tell(emf);
+		root.tell(emf,root);
 		if (listenerFactory != null)
-			root.tell(listenerFactory);
+			root.tell(listenerFactory,root);
 	}
 
 	public EntityManagerFactory getEntityManagerFactory() {
@@ -77,7 +79,7 @@ public class Signaller {
 	}
 
 	public <T extends Entity<T>> void signal(String fromEntityUniqueId,
-			Entity<T> entity, Event<T> event, Long time, Duration repeatInterval) {
+			Entity<T> entity, Event<T> event, Long time, FiniteDuration repeatInterval) {
 		signal(fromEntityUniqueId, entity, event, getDelay(time),
 				repeatInterval);
 	}
@@ -92,7 +94,7 @@ public class Signaller {
 
 	public <T extends Entity<T>> void signal(String fromEntityUniqueId,
 			Entity<T> entity, Event<T> event, Duration delay,
-			Duration repeatInterval) {
+			FiniteDuration repeatInterval) {
 		long time;
 		long now = System.currentTimeMillis();
 		if (delay == null)
@@ -185,7 +187,7 @@ public class Signaller {
 			long delayMs = (signal.getTime() == null ? now : signal.getTime())
 					- now;
 			if (delayMs <= 0)
-				root.tell(signal);
+				root.tell(signal,root);
 			else {
 				// There can be at most one delayed signal of a given event
 				// signature outstanding for each sender-receiver instance pair
@@ -197,19 +199,20 @@ public class Signaller {
 									.signatureKey());
 
 					Cancellable cancellable;
+					ExecutionContext executionContext = actorSystem.dispatcher();
 					if (signal.getRepeatInterval() == null)
 						cancellable = actorSystem.scheduler()
 								.scheduleOnce(
 										Duration.create(delayMs,
 												TimeUnit.MILLISECONDS), root,
-										signal);
+										signal,executionContext,root);
 					else
 						cancellable = actorSystem.scheduler()
 								.schedule(
 										Duration.create(delayMs,
 												TimeUnit.MILLISECONDS),
 										signal.getRepeatInterval(), root,
-										signal);
+										signal,executionContext,root);
 					scheduleCancellers.put(key, cancellable);
 				}
 			}
@@ -293,7 +296,7 @@ public class Signaller {
 	}
 
 	public <T, R> void signalCommit(Entity<T> entity) {
-		root.tell(new EntityCommit<T>(entity));
+		root.tell(new EntityCommit<T>(entity),root);
 	}
 
 	public Info getInfo() {

@@ -4,10 +4,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import xuml.tools.model.compiler.runtime.SignalProcessorListener;
+import scala.concurrent.duration.Duration;
 import xuml.tools.model.compiler.runtime.actor.EntityActor;
 import xuml.tools.model.compiler.runtime.message.Signal;
-import akka.util.Duration;
 
 public class SignalProcessorListenerRetryOnFailure implements SignalProcessorListener {
 
