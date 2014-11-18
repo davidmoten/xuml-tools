@@ -75,7 +75,8 @@ mvn archetype:generate \
 -Dversion=0.1-SNAPSHOT \
 -DinteractiveMode=false
 ```
-The first step is to transfer what we know about the classes, attributes, relationships, states and transitions of the Order Tracker subsystem to the *domains.xml* based on the miUML schema.
+The next step is to transfer what we know about the classes, attributes, relationships, states and transitions of the Order Tracker subsystem to the *src/main/resources/domains.xml* file based on the miUML schema.
+
 
 
 
