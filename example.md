@@ -18,7 +18,7 @@ The idea for this subsystem is that an order (like say an online purchase) is:
 
 The entities involved are 
 
-**Order** - orderId, description, fromAddress, toAddress, destinationEmail, senderEmail, lastDepotId, nextDepotId, maxAttempts, comment
+**Order** - orderId, description, fromAddress, toAddress, destinationEmail, senderEmail, lastDepotId, nextDepotId, maxAttempts, attempts, comment
 
 **Depot** - depotId, name, lat, long
 
@@ -31,6 +31,7 @@ The states for *Order* are:
 * *Ready For delivery*
 * *Delivering*
 * *Delivered*
+* *Awaiting next delivery attempt*
 * *Held for pickup*
 * *Could not deliver*
 * *Return to sender*
@@ -40,20 +41,23 @@ The transitions are:
 * *Preparing* -> *Ready for dispatch* : *send*
 * *Ready for dispatch* -> *Courier assigned* : *assign*
 * *Courier assigned* -> *In transit* :*picked up*
+* *In transit* -> *In transit* : *transit leg*
 * *In transit* -> *Ready for delivery* : *at final depot*
 * *Ready for delivery* -> *Delivering* : *delivering*
 * *Delivering* -> *Delivered* : *delivered*
-* *Delivering* -> *Ready for delivery* : *deliveryFailed* (delay 12 hours)
+* *Delivering* -> *Awaiting next delivery attempt* : *deliveryFailed* 
+* *Awaiting next delivery attempt* -> *Ready for delivery* : *deliverAgain* (delay till next day)
 * *Ready for delivery* -> *Held for pickup* : *no more attempts*
 * *Held for pickup* -> *Delivered* : *delivered*
 * *Delivering* -> *Could not deliver* : *could not deliver*
 * *Held for pickup* -> *Return to sender* : *returnToSender* (delay 14 days)
 
-An *Ordering system* would interact with the *Order Tracker* by creating an *Order* and then signalling *Order* instances with events using the *Order Traffic* Rest API.
+API interactions
+------------------
+The following interactions might occur with the API.
 
-The *Ordering system* might schedule deliveries from each depot each day by asking the *Order Tracker* system for all orders in state *Ready for delivery* at the depot.
-
-The *Ordering system* might also schedule pickups from senders by requesting all orders in state *Ready for dispatch* to then assign to a courier.
-
-A *
+* An *Ordering system* would interact with the *Order Tracker* by creating an *Order* and then signalling *Order* instances with events using the *Order Traffic* Rest API.
+* The *Ordering system* might schedule deliveries from each depot each day by asking the *Order Tracker* system for all orders in state *Ready for delivery* at the depot.
+* The *Ordering system* might also schedule pickups from senders by requesting all orders in state *Ready for dispatch* to then assign to a courier.
+* A recipient might want to know the current location of an order.
 
