@@ -60,6 +60,7 @@
 		<gae.version>1.7.0</gae.version>
 		<gae.plugin.version>0.9.4</gae.plugin.version>
 		<junit.version>4.10</junit.version>
+		<guava.version>18.0</guava.version>
 
         <cobertura.version>2.6</cobertura.version>
         <checkstyle.version>2.13</checkstyle.version>
