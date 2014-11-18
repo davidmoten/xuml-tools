@@ -83,12 +83,9 @@ The classes in *target/generated-sources* have been generated from the definitio
 This is the suggested workflow:
 
 * amend domains.xml
-* mvn clean test
-* fix compile errors
-* run tests
-* write code to make tests pass
-* add tests
-* etc...
+* mvn clean process-resources
+* add tests and behaviour to the models as required, TDD is good here.
+* repeat
 
 ### Create a project manually
 
