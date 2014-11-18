@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Domains xmlns="http://www.miuml.org/metamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.miuml.org/metamodel https://raw.github.com/davidmoten/xuml-tools/master/miuml-jaxb/src/main/resources/miuml-metamodel.xsd  http://org.github/xuml-tools/miuml-metamodel-extensions https://raw.github.com/davidmoten/xuml-tools/master/miuml-jaxb/src/main/resources/xuml-tools-miuml-metamodel-extensions.xsd"
+    xmlns:xt="http://org.github/xuml-tools/miuml-metamodel-extensions">
+
+    <ModeledDomain Name="Ordering">
+
+        <SymbolicType Name="OrderID" Prefix="" Suffix="" ValidationPattern=".*"
+            DefaultValue="" MinLength="1" MaxLength="2048" />
+
+        <Subsystem Name="OrderTracker" Floor="1" Ceiling="20">
+
+            <Class Name="Order" Cnum="1" Element="1" Alias="Order">
+
+                <IndependentAttribute Name="Order ID" Type="OrderID">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+
+            </Class>
+
+        </Subsystem>
+
+    </ModeledDomain>
+
+</Domains>
