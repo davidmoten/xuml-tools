@@ -73,6 +73,7 @@ import xuml.tools.model.compiler.runtime.query.NumericExpressionField;
 import xuml.tools.model.compiler.runtime.query.SelectBuilder;
 import xuml.tools.model.compiler.runtime.query.StringExpressionField;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
@@ -1192,7 +1193,7 @@ public class ClassWriter {
 				out.format("            public String toString() {\n");
 				out.format(
 						"                return %s.toStringHelper(this.getClass())\n",
-						info.addType(Objects.class));
+						info.addType(MoreObjects.class));
 				for (MyParameter p : event.getParameters()) {
 					out.format("                    .add(\"%s\", %s)\n",
 							p.getFieldName(), p.getFieldName());
@@ -1438,7 +1439,8 @@ public class ClassWriter {
 		if (info.hasBehaviour())
 			// TODO not right, should be sending object uniqueId as from, get
 			// from ThreadLocal
-			out.format("        helper().signal(event, %s.of(delay));\n", info.addType(Optional.class));
+			out.format("        helper().signal(event, %s.of(delay));\n",
+					info.addType(Optional.class));
 		else
 			out.format("        //no behaviour for this class\n");
 		out.format("        return this;\n");
