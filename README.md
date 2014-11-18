@@ -42,8 +42,16 @@ Use the maven archetype to create a project in interactive mode:
     -DarchetypeArtifactId=xuml-model-archetype \
     -DarchetypeVersion=0.1-SNAPSHOT
 
-The generated project should build cleanly with *mvn clean install*. The build runs a simple unit test on the generated JPA classes using a temporary in-memory derby database. The JPA classes are generated from *src/main/resources/domain.xml* and the tests are in *src/test/java*.
+Then
+    cd <NEW_PROJECT>
+    mvn test
 
+The above command
+* generates classes from *src/main/resources/domain.xml*
+* runs unit tests against an embedded in-memory Derby database
+
+For more detail see the worked example below.
+   
 #### Example
 Let's create a project *shop* using the archetype:
 
