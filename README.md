@@ -184,7 +184,7 @@ A a = Context.create(A.class, new A.Events.Create("value1.1",
 a.signal(new A.Events.SomethingDone(11));
 
 ```
-### Close stuff
+### Shutdown
 On application shutdown, close things properly:
 ```java
 // shutdown the actor system
