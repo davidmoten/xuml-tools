@@ -10,7 +10,6 @@
 	<name>${artifactId}</name>
 
 	<properties>
-        <!-- TODO archetype should set this version -->
 		<xuml.tools.version>0.1-SNAPSHOT</xuml.tools.version>
 	</properties>
 
@@ -113,7 +112,7 @@
 			                                xuml-tools-maven-plugin
 			                            </artifactId>
 			                            <versionRange>
-			                                [${xuml.tools.version},)
+			                                [0.1-SNAPSHOT,)
 			                            </versionRange>
 			                            <goals>
 			                                <goal>generate-jpa</goal>
