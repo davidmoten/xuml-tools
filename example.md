@@ -1,7 +1,7 @@
 Implementing an Order Tracker using xuml-tools
 ===============================================
 
-The increasing popularity of microservices is a perfect opportunity to make the most of Executable UML with discrete systems with their own relational database for persistence and perhaps a service offering e.g. REST to allow a bridge between a subsystems and others.
+The increasing popularity of microservices is a perfect opportunity to make the most of Executable UML in small self-contained systems with their own relational database for persistence and perhaps a service offering e.g. REST to allow a bridge to other subsystems.
 
 Let's implement an Order Tracker subsystem with a REST API using *xuml-tools*.
 
