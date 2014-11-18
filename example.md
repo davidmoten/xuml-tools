@@ -65,7 +65,16 @@ Where do we start?
 -------------------
 Create a project using the archetype:
 
-
+```bash
+mvn archetype:generate \
+-DarchetypeGroupId=com.github.davidmoten \
+-DarchetypeArtifactId=xuml-model-archetype \
+-DarchetypeVersion=0.1-SNAPSHOT \
+-DgroupId=my.stuff \
+-DartifactId=order.tracker \
+-Dversion=0.1-SNAPSHOT \
+-DinteractiveMode=false
+```
 The first step is to transfer what we know about the classes, attributes, relationships, states and transitions of the Order Tracker subsystem to the *domains.xml* based on the miUML schema.
 
 
