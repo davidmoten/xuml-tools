@@ -21,8 +21,8 @@
 		</dependency>
 		<dependency>
 			<groupId>com.typesafe.akka</groupId>
-			<artifactId>${akka.actor.artifactId}</artifactId>
-			<version>${akka.actor.version}</version>
+			<artifactId>akka-actor_2.11</artifactId>
+			<version>2.3.7</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
