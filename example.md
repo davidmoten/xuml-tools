@@ -61,3 +61,12 @@ The following interactions might occur with the API.
 * The *Ordering system* might also schedule pickups from senders by requesting all orders in state *Ready for dispatch* to then assign to a courier.
 * A recipient might want to know the current location of an order.
 
+Where do we start?
+-------------------
+Create a project using the archetype:
+
+
+The first step is to transfer what we know about the classes, attributes, states and transitions of the Order Tracker subsystem to the *domains.xml* based on the miUML schema.
+
+
+
