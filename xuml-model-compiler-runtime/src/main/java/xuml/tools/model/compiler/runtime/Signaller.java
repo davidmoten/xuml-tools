@@ -18,6 +18,8 @@ import akka.actor.ActorSystem;
 import akka.actor.Cancellable;
 import akka.actor.Props;
 
+import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 
 public class Signaller {
@@ -74,13 +76,13 @@ public class Signaller {
 	}
 
 	public <T extends Entity<T>> void signal(String fromEntityUniqueId,
-			Entity<T> entity, Event<T> event, Duration delay) {
-		signal(fromEntityUniqueId, entity, event, delay, null);
+			Entity<T> entity, Event<T> event, Optional<Duration> delay) {
+		signal(fromEntityUniqueId, entity, event, delay, Optional.<FiniteDuration>absent());
 	}
 
 	public <T extends Entity<T>> void signal(String fromEntityUniqueId,
-			Entity<T> entity, Event<T> event, Long time, FiniteDuration repeatInterval) {
-		signal(fromEntityUniqueId, entity, event, getDelay(time),
+			Entity<T> entity, Event<T> event, Long time, Optional<FiniteDuration> repeatInterval) {
+		signal(fromEntityUniqueId, entity, event, Optional.of(getDelay(time)),
 				repeatInterval);
 	}
 
@@ -93,22 +95,27 @@ public class Signaller {
 	}
 
 	public <T extends Entity<T>> void signal(String fromEntityUniqueId,
-			Entity<T> entity, Event<T> event, Duration delay,
-			FiniteDuration repeatInterval) {
+			Entity<T> entity, Event<T> event, Optional<Duration> delay,
+			Optional<FiniteDuration> repeatInterval) {
+		Preconditions.checkNotNull(delay);
+		Preconditions.checkNotNull(repeatInterval);
 		long time;
 		long now = System.currentTimeMillis();
-		if (delay == null)
+		if (!delay.isPresent())
 			time = now;
 		else
-			time = now + delay.toMillis();
-		Long repeatIntervalMs = repeatInterval == null ? null : repeatInterval
-				.toMillis();
+			time = now + delay.get().toMillis();
+		Optional<Long> repeatIntervalMs;
+		if (repeatInterval.isPresent())
+			repeatIntervalMs = Optional.of(repeatInterval.get().toMillis());
+		else 
+			repeatIntervalMs = Optional.absent();
 
 		@SuppressWarnings("unchecked")
 		long id = persistSignal(fromEntityUniqueId, entity.getId(),
 				(Class<T>) entity.getClass(), event, time, repeatIntervalMs);
 		Signal<T> signal = new Signal<T>(fromEntityUniqueId, entity, event, id,
-				delay, repeatInterval);
+				time, repeatInterval);
 		signal(signal);
 	}
 
@@ -200,7 +207,7 @@ public class Signaller {
 
 					Cancellable cancellable;
 					ExecutionContext executionContext = actorSystem.dispatcher();
-					if (signal.getRepeatInterval() == null)
+					if (!signal.getRepeatInterval().isPresent())
 						cancellable = actorSystem.scheduler()
 								.scheduleOnce(
 										Duration.create(delayMs,
@@ -211,7 +218,7 @@ public class Signaller {
 								.schedule(
 										Duration.create(delayMs,
 												TimeUnit.MILLISECONDS),
-										signal.getRepeatInterval(), root,
+										signal.getRepeatInterval().get(), root,
 										signal,executionContext,root);
 					scheduleCancellers.put(key, cancellable);
 				}
@@ -277,7 +284,7 @@ public class Signaller {
 
 	public <T extends Entity<T>> long persistSignal(String fromEntityUniqueId,
 			Object id, Class<T> cls, Event<T> event, long time,
-			Long repeatIntervalMs) {
+			Optional<Long> repeatIntervalMs) {
 		byte[] idBytes = Util.toBytes(id);
 		byte[] eventBytes = Util.toBytes(event);
 		QueuedSignal signal = new QueuedSignal(idBytes, cls.getName(), event

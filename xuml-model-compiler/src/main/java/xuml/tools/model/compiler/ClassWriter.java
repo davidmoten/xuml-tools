@@ -74,6 +74,7 @@ import xuml.tools.model.compiler.runtime.query.SelectBuilder;
 import xuml.tools.model.compiler.runtime.query.StringExpressionField;
 
 import com.google.common.base.Objects;
+import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -1428,7 +1429,7 @@ public class ClassWriter {
 		out.format("    }\n\n");
 
 		jd(out,
-				"Asychronously queues the given signal against this entity for processing\nafter the delay specified. If duration is null then the signal will be sent immediately.",
+				"Asychronously queues the given signal against this entity for processing\nafter the delay specified. Duration cannot be null.",
 				"    ");
 		out.format("    @%s\n", info.addType(Override.class));
 		out.format("    public %s signal(%s<%s> event, %s delay) {\n",
@@ -1437,14 +1438,14 @@ public class ClassWriter {
 		if (info.hasBehaviour())
 			// TODO not right, should be sending object uniqueId as from, get
 			// from ThreadLocal
-			out.format("        helper().signal(event, delay);\n");
+			out.format("        helper().signal(event, %s.of(delay));\n", info.addType(Optional.class));
 		else
 			out.format("        //no behaviour for this class\n");
 		out.format("        return this;\n");
 		out.format("    }\n\n");
 
 		jd(out,
-				"Asychronously queues the given signal against this entity for processing\nat the epoch time in ms specified. If duration is null then the signal will be sent immediately.",
+				"Asychronously queues the given signal against this entity for processing\nat the epoch time in ms specified. Duration cannot be null.",
 				"    ");
 		out.format("    @%s\n", info.addType(Override.class));
 		out.format("    public %s signal(%s<%s> event, long time) {\n",

@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import scala.concurrent.duration.Duration;
 import xuml.tools.model.compiler.runtime.message.Signal;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 
 /**
@@ -37,10 +38,10 @@ public class EntityHelper {
 	}
 
 	public <T extends Entity<T>> void signal(Event<T> event) {
-		signal(event, null);
+		signal(event, Optional.<Duration>absent());
 	}
 
-	public <T extends Entity<T>> void signal(Event<T> event, Duration delay) {
+	public <T extends Entity<T>> void signal(Event<T> event, Optional<Duration> delay) {
 		Info info = signaller.getInfo();
 		// do an object equals because RootActor will guarantee that only one
 		// instance is being used to refer to a database entity at any given

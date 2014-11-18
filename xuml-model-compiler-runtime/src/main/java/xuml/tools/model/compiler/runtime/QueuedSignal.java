@@ -12,6 +12,9 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
+
 @Entity
 @Table(name = "xuml_queued_signal")
 public class QueuedSignal {
@@ -22,14 +25,15 @@ public class QueuedSignal {
 
 	public QueuedSignal(byte[] idContent, String entityClassName,
 			String eventClassName, byte[] eventContent, long time,
-			Long repeatIntervalMs, String fromEntityUniqueId) {
+			Optional<Long> repeatIntervalMs, String fromEntityUniqueId) {
+		Preconditions.checkNotNull(repeatIntervalMs);
 		this.idContent = idContent;
 		this.entityClassName = entityClassName;
 		this.eventClassName = eventClassName;
 		this.eventContent = eventContent;
 		this.fromEntityUniqueId = fromEntityUniqueId;
 		this.time = new Date(time);
-		this.repeatIntervalMs = repeatIntervalMs;
+		this.repeatIntervalMs = repeatIntervalMs.orNull();
 	}
 
 	// TODO add new fields, numFailures, timeFirstFailure, timeLastFailure

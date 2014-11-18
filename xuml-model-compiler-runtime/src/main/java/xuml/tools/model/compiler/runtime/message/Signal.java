@@ -5,6 +5,8 @@ import scala.concurrent.duration.FiniteDuration;
 import xuml.tools.model.compiler.runtime.Entity;
 import xuml.tools.model.compiler.runtime.Event;
 
+import com.google.common.base.Optional;
+
 public class Signal<T> {
 
 	private final Entity<T> entity;
@@ -12,11 +14,11 @@ public class Signal<T> {
 	private final long id;
 	// epoch time ms to process signal
 	private final Long timeMs;
-	private final FiniteDuration repeatInterval;
+	private final Optional<FiniteDuration> repeatInterval;
 	private final String fromEntityUniqueId;
 
 	public Signal(String fromEntityUniqueId, Entity<T> entity, Event<T> event,
-			long id, Long timeMs, FiniteDuration repeatInterval) {
+			long id, Long timeMs, Optional<FiniteDuration> repeatInterval) {
 		this.fromEntityUniqueId = fromEntityUniqueId;
 		this.entity = entity;
 		this.event = event;
@@ -33,7 +35,7 @@ public class Signal<T> {
 	public Signal(String fromEntityUniqueId, Entity<T> entity, Event<T> event,
 			long id, Duration delay, FiniteDuration repeatInterval) {
 		this(fromEntityUniqueId, entity, event, id, getTime(delay),
-				repeatInterval);
+				Optional.of(repeatInterval));
 	}
 
 	private static Long getTime(Duration delay) {
@@ -52,7 +54,7 @@ public class Signal<T> {
 		return id;
 	}
 
-	public FiniteDuration getRepeatInterval() {
+	public Optional<FiniteDuration> getRepeatInterval() {
 		return repeatInterval;
 	}
 

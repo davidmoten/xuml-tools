@@ -1,11 +1,11 @@
 package xuml.tools.model.compiler.info;
 
-import static com.google.common.collect.Lists.newArrayList;
-
 import java.util.List;
 
 import xuml.tools.miuml.metamodel.jaxb.EventSignature;
 import xuml.tools.miuml.metamodel.jaxb.StateSignature;
+
+import com.google.common.base.Preconditions;
 
 public class MyEvent {
 	private final String name;
@@ -22,15 +22,13 @@ public class MyEvent {
 	public MyEvent(String name, String simpleClassName,
 			List<MyParameter> parameters, String stateName,
 			String stateSignatureInterfaceSimpleName, boolean creates) {
+		Preconditions.checkNotNull(parameters);
 		this.name = name;
 		this.simpleClassName = simpleClassName;
 		this.stateName = stateName;
 		this.stateSignatureInterfaceSimpleName = stateSignatureInterfaceSimpleName;
 		this.creates = creates;
-		if (parameters == null)
-			this.parameters = newArrayList();
-		else
-			this.parameters = parameters;
+		this.parameters = parameters;
 	}
 
 	public String getName() {

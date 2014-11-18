@@ -30,6 +30,8 @@ import abc.Context;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
 
+import com.google.common.base.Optional;
+
 public class AbcTest {
 
 	/**
@@ -167,7 +169,7 @@ public class AbcTest {
 		// test the reloading of a persisted signal to a1
 		Context.persistSignal("fromSomeId", a.getId(), A.class,
 				new A.Events.SomethingDone(14), System.currentTimeMillis(),
-				null);
+				Optional.<Long>absent());
 		assertEquals(1, Context.sendSignalsInQueue());
 		// wait a bit for all signals to be processed
 		Thread.sleep(2000);

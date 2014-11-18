@@ -23,6 +23,7 @@ import xuml.tools.model.compiler.runtime.Event;
 import xuml.tools.model.compiler.runtime.SignalProcessorListenerFactory;
 import xuml.tools.model.compiler.runtime.Signaller;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 
 /**
@@ -159,8 +160,8 @@ public class CodeGeneratorJava {
 		out.format("        return signaller.sendSignalsInQueue();\n");
 		out.format("    }\n\n");
 		out.format(
-				"    public static <T extends %s<T>> long persistSignal(String fromEntityUniqueId, Object id, Class<T> cls, %s<T> event, long time, Long repeatIntervalMs) {\n",
-				types.addType(Entity.class), types.addType(Event.class));
+				"    public static <T extends %s<T>> long persistSignal(String fromEntityUniqueId, Object id, Class<T> cls, %s<T> event, long time, %s<Long> repeatIntervalMs) {\n",
+				types.addType(Entity.class), types.addType(Event.class), types.addType(Optional.class));
 		out.format("        return signaller.persistSignal(fromEntityUniqueId, id,cls,event,time,repeatIntervalMs);\n");
 		out.format("    }\n\n");
 		out.format("    public static void stop() {\n");
