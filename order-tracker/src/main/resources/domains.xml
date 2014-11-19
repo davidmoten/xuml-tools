@@ -54,6 +54,7 @@
                     <State Name="Ready for delivery" />
                     <State Name="Delivering" />
                     <State Name="Delivered" />
+                    <State Name="Delivery failed" />
                     <State Name="Awaiting next delivery attempt" />
                     <State Name="Held for pickup" />
                     <State Name="Could not deliver" />
@@ -92,14 +93,19 @@
                         Name="Picked Up" ID="4">
                         <EventSignature />
                     </LocalEffectiveSignalingEvent>
-
                     <LocalEffectiveSignalingEvent
-                        Name="Leg complete" ID="5">
-                        <EventSignature />
+                        Name="Arrived depot" ID="5">
+                        <EventSignature>
+                            <StateModelParameter Name="Depot ID"
+                                Type="DepotID" />
+                        </EventSignature>
                     </LocalEffectiveSignalingEvent>
                     <LocalEffectiveSignalingEvent
                         Name="Arrived final depot" ID="6">
-                        <EventSignature />
+                        <EventSignature>
+                            <StateModelParameter Name="Depot ID"
+                                Type="DepotID" />
+                        </EventSignature>
                     </LocalEffectiveSignalingEvent>
                     <LocalEffectiveSignalingEvent
                         Name="Delivering" ID="7">
@@ -129,11 +135,49 @@
                         Name="Return to sender" ID="13">
                         <EventSignature />
                     </LocalEffectiveSignalingEvent>
+                    <LocalEffectiveSignalingEvent
+                        Name="Delivered by pickup" ID="14">
+                        <EventSignature />
+                    </LocalEffectiveSignalingEvent>
 
                     <Transition State="Preparing" Destination="Ready for dispatch"
                         EventID="2" />
-                    <Transition State="Ready for dispatch" Destination="Courier assigned"
-                        EventID="3" />
+                    <Transition State="Ready for dispatch"
+                        Destination="Courier assigned" EventID="3" />
+
+                    <Transition State="Courier assigned" Destination="In transit"
+                        EventID="4" />
+
+                    <Transition State="In transit" Destination="In transit"
+                        EventID="5" />
+
+                    <Transition State="In transit" Destination="Ready for delivery"
+                        EventID="6" />
+
+                    <Transition State="Ready for delivery"
+                        Destination="Delivering" EventID="7" />
+
+                    <Transition State="Delivering" Destination="Delivered"
+                        EventID="8" />
+
+                    <Transition State="Delivering" Destination="Held for pickup"
+                        EventID="9" />
+
+                    <Transition State="Delivering" Destination="Held for pickup"
+                        EventID="12" />
+
+                    <Transition State="Delivery failed" Destination="Ready for delivery"
+                        EventID="10" />
+
+                    <Transition State="Delivery failed" Destination="Held for pickup"
+                        EventID="11" />
+
+                    <Transition State="Held for pickup" Destination="Delivered"
+                        EventID="14" />
+
+                    <Transition State="Held for pickup" Destination="Return to sender"
+                        EventID="13" />
+
                 </Lifecycle>
 
             </Class>
