@@ -63,6 +63,8 @@ The following interactions might occur with the API.
 
 Where do we start?
 -------------------
+
+### Create a project
 Create a project using the archetype:
 
 ```bash
@@ -76,6 +78,7 @@ mvn archetype:generate \
 -DinteractiveMode=false
 ```
 
+### Specify the model
 The next step is to transfer what we know about the classes, attributes, relationships, states and transitions of the Order Tracker subsystem to the *src/main/resources/domains.xml* file based on the miUML schema.
 
 Let's start small and add the *Order* class:
@@ -102,6 +105,8 @@ Let's start small and add the *Order* class:
 ```
 
 If you use a featured xml editor like the Eclipse XML Editor (installed with the Web Tools Platform (WTP)) then you get auto-complete and validation as you type. Just by using xml and xsd we get an editor without having to write one ourselves (albeit without pretty pictures!).
+
+### Customize the project
 
 Edit pom.xml and set the configuration of *xuml-tools-maven-plugin* so it has these corrections:
 
@@ -134,7 +139,11 @@ Then this should succeed:
 
     mvn clean test
 
+### Complete the model
+
 Now fill in the details of *domain.xml* and the result will be something like [this](order-tracker/src/main/resources/domains.xml).
+
+### View the class diagram
 
 When *domains.xml* is loaded into the Class Diagram Viewer we get:
 
