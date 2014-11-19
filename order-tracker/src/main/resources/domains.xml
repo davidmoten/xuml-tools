@@ -17,7 +17,7 @@
             ValidationPattern=".*" DefaultValue="" MinLength="1" MaxLength="2048" />
         <SymbolicType Name="DepotID" Prefix="" Suffix=""
             ValidationPattern=".*" DefaultValue="" MinLength="1" MaxLength="2048" />
-        <SymbolicType Name="String255" Prefix="" Suffix=""
+        <SymbolicType Name="DepotName" Prefix="" Suffix=""
             ValidationPattern=".*" DefaultValue="" MinLength="1" MaxLength="255" />
         <IntegerType Name="Attempts" Units="none" DefaultValue="0"
             UpperLimit="1000" LowerLimit="0" />
@@ -142,7 +142,7 @@
                 <IndependentAttribute Name="Depot ID" Type="DepotID">
                     <Identifier Number="1" />
                 </IndependentAttribute>
-                <IndependentAttribute Name="Name" Type="String255" />
+                <IndependentAttribute Name="Name" Type="DepotName" />
                 <IndependentAttribute Name="Latitude" Type="Latitude" />
                 <IndependentAttribute Name="Longitude"
                     Type="Longitude" />
