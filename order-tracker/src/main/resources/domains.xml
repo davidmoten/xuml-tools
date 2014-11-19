@@ -45,6 +45,97 @@
                 <ReferentialAttribute Name="Last depot">
                     <ToOneReference Relationship="1" Attribute="Depot ID" />
                 </ReferentialAttribute>
+
+                <Lifecycle>
+                    <State Name="Preparing" />
+                    <State Name="Ready for dispatch" />
+                    <State Name="Courier assigned" />
+                    <State Name="In transit" />
+                    <State Name="Ready for delivery" />
+                    <State Name="Delivering" />
+                    <State Name="Delivered" />
+                    <State Name="Awaiting next delivery attempt" />
+                    <State Name="Held for pickup" />
+                    <State Name="Could not deliver" />
+                    <State Name="Return to sender" />
+
+                    <CreationEvent Name="Create" ID="1" State="Preparing">
+                        <EventSignature>
+                            <StateModelParameter Name="Order ID"
+                                Type="OrderID" />
+                            <StateModelParameter Name="Description"
+                                Type="String" />
+                            <StateModelParameter Name="From Address"
+                                Type="String" />
+                            <StateModelParameter Name="To Address"
+                                Type="String" />
+                            <StateModelParameter Name="Destination email"
+                                Type="Email" />
+                            <StateModelParameter Name="Sender email"
+                                Type="Email" />
+                            <StateModelParameter Name="Max attempts"
+                                Type="Attempts" />
+                            <StateModelParameter Name="Comment"
+                                Type="String" />
+                        </EventSignature>
+                    </CreationEvent>
+
+                    <LocalEffectiveSignalingEvent
+                        Name="Send" ID="2">
+                        <EventSignature />
+                    </LocalEffectiveSignalingEvent>
+                    <LocalEffectiveSignalingEvent
+                        Name="Assign" ID="3">
+                        <EventSignature />
+                    </LocalEffectiveSignalingEvent>
+                    <LocalEffectiveSignalingEvent
+                        Name="Picked Up" ID="4">
+                        <EventSignature />
+                    </LocalEffectiveSignalingEvent>
+
+                    <LocalEffectiveSignalingEvent
+                        Name="Leg complete" ID="5">
+                        <EventSignature />
+                    </LocalEffectiveSignalingEvent>
+                    <LocalEffectiveSignalingEvent
+                        Name="Arrived final depot" ID="6">
+                        <EventSignature />
+                    </LocalEffectiveSignalingEvent>
+                    <LocalEffectiveSignalingEvent
+                        Name="Delivering" ID="7">
+                        <EventSignature />
+                    </LocalEffectiveSignalingEvent>
+                    <LocalEffectiveSignalingEvent
+                        Name="Delivered" ID="8">
+                        <EventSignature />
+                    </LocalEffectiveSignalingEvent>
+                    <LocalEffectiveSignalingEvent
+                        Name="Delivery failed" ID="9">
+                        <EventSignature />
+                    </LocalEffectiveSignalingEvent>
+                    <LocalEffectiveSignalingEvent
+                        Name="Deliver again" ID="10">
+                        <EventSignature />
+                    </LocalEffectiveSignalingEvent>
+                    <LocalEffectiveSignalingEvent
+                        Name="No more attempts" ID="11">
+                        <EventSignature />
+                    </LocalEffectiveSignalingEvent>
+                    <LocalEffectiveSignalingEvent
+                        Name="Could not deliver" ID="12">
+                        <EventSignature />
+                    </LocalEffectiveSignalingEvent>
+                    <LocalEffectiveSignalingEvent
+                        Name="Return to sender" ID="13">
+                        <EventSignature />
+                    </LocalEffectiveSignalingEvent>
+
+                    <Transition State="Preparing" Destination="Ready for dispatch"
+                        EventID="2" />
+                    <Transition State="Ready for dispatch" Destination="Courier assigned"
+                        EventID="3" />
+                </Lifecycle>
+
             </Class>
 
             <Class Name="Depot" Alias="Order">
