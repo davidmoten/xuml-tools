@@ -62,7 +62,7 @@
 							<goal>generate-jpa</goal>
 						</goals>
 						<configuration>
-							<domainsXml>${basedir}/src/main/resources/domains.xml</domainsXml>
+							<domainsXml>src/main/resources/domains.xml</domainsXml>
 							<domain>test-domain</domain>
 							<schema>test_domain</schema>
 							<packageName>test</packageName>

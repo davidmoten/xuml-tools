@@ -61,7 +61,7 @@
 							<goal>generate-jpa</goal>
 						</goals>
 						<configuration>
-							<domainsXml>${basedir}/src/main/resources/domains.xml</domainsXml>
+							<domainsXml>src/main/resources/domains.xml</domainsXml>
 							<domain>Ordering</domain>
 							<schema>ordertracker</schema>
 							<packageName>ordertracker</packageName>

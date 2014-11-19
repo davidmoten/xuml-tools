@@ -203,9 +203,15 @@ public class GenerateJpaMojo extends AbstractMojo {
 		InputStream is = getClass().getResourceAsStream(domainsXml);
 		if (is == null)
 			try {
-				getLog().info("domains xml file not found on classpath: "+ domainsXml);
+				getLog().info(
+						"domains xml file not found on classpath: "
+								+ domainsXml);
 				File file = new File(domainsXml);
-				getLog().info("loading domains xml from file system: " + file.getCanonicalPath());
+				if (!file.exists())
+					file = new File(project.getBasedir(), domainsXml);
+				getLog().info(
+						"loading domains xml from file system: "
+								+ file.getCanonicalPath());
 				is = new FileInputStream(file);
 			} catch (IOException e) {
 				throw new MojoExecutionException(e.getMessage(), e);
