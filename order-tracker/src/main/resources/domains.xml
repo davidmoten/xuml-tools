@@ -3,23 +3,68 @@
     xsi:schemaLocation="http://www.miuml.org/metamodel https://raw.github.com/davidmoten/xuml-tools/master/miuml-jaxb/src/main/resources/miuml-metamodel.xsd  http://org.github/xuml-tools/miuml-metamodel-extensions https://raw.github.com/davidmoten/xuml-tools/master/miuml-jaxb/src/main/resources/xuml-tools-miuml-metamodel-extensions.xsd"
     xmlns:xt="http://org.github/xuml-tools/miuml-metamodel-extensions">
 
-    <ModeledDomain Name="Ordering">
+    <SymbolicType Name="String" MinLength="1" MaxLength="4096"
+        Prefix="" Suffix="" ValidationPattern=".*" DefaultValue="" />
+    <SymbolicType Name="Email" MinLength="1" MaxLength="512"
+        Prefix="" Suffix="" ValidationPattern=".*" DefaultValue="" />
+    <RealType Name="Latitude" Precision="20" LowerLimit="-90"
+        UpperLimit="90" DefaultValue="0" Units="degrees" />
+    <RealType Name="Longitude" Precision="20" LowerLimit="-180"
+        UpperLimit="180" DefaultValue="0" Units="degrees" />
 
-        <SymbolicType Name="OrderID" Prefix="" Suffix="" ValidationPattern=".*"
-            DefaultValue="" MinLength="1" MaxLength="2048" />
+    <ModeledDomain Name="Ordering">
+        <SymbolicType Name="OrderID" Prefix="" Suffix=""
+            ValidationPattern=".*" DefaultValue="" MinLength="1" MaxLength="2048" />
+        <SymbolicType Name="DepotID" Prefix="" Suffix=""
+            ValidationPattern=".*" DefaultValue="" MinLength="1" MaxLength="2048" />
+        <SymbolicType Name="String255" Prefix="" Suffix=""
+            ValidationPattern=".*" DefaultValue="" MinLength="1" MaxLength="255" />
+        <IntegerType Name="Attempts" Units="none" DefaultValue="0"
+            UpperLimit="1000" LowerLimit="0" />
 
         <Subsystem Name="OrderTracker" Floor="1" Ceiling="20">
 
-            <Class Name="Order" Cnum="1" Element="1" Alias="Order">
-
+            <Class Name="Order" Alias="Order">
                 <IndependentAttribute Name="Order ID" Type="OrderID">
                     <Identifier Number="1" />
                 </IndependentAttribute>
-
+                <IndependentAttribute Name="Description"
+                    Type="String" />
+                <IndependentAttribute Name="From Address"
+                    Type="String" />
+                <IndependentAttribute Name="To Address"
+                    Type="String" />
+                <IndependentAttribute Name="Destination email"
+                    Type="Email" />
+                <IndependentAttribute Name="Sender email"
+                    Type="Email" />
+                <IndependentAttribute Name="Max attempts"
+                    Type="Attempts" />
+                <IndependentAttribute Name="Attempts" Type="Attempts" />
+                <IndependentAttribute Name="Comment" Type="String" />
+                <ReferentialAttribute Name="Last depot">
+                    <ToOneReference Relationship="1" Attribute="Depot ID" />
+                </ReferentialAttribute>
             </Class>
 
-        </Subsystem>
+            <Class Name="Depot" Alias="Order">
+                <IndependentAttribute Name="Depot ID" Type="DepotID">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="Name" Type="String255" />
+                <IndependentAttribute Name="latitude" Type="Latitude" />
+                <IndependentAttribute Name="longitude"
+                    Type="Longitude" />
+            </Class>
 
+            <BinaryAssociation Rnum="1">
+                <ActivePerspective Phrase="was last depot of"
+                    ViewedClass="Order" OnePerspective="false" Conditional="true" />
+                <PassivePerspective Phrase="was last at"
+                    ViewedClass="Depot" OnePerspective="true" Conditional="true" />
+            </BinaryAssociation>
+
+        </Subsystem>
     </ModeledDomain>
 
 </Domains>
