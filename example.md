@@ -75,7 +75,52 @@ mvn archetype:generate \
 -Dversion=0.1-SNAPSHOT \
 -DinteractiveMode=false
 ```
+
 The next step is to transfer what we know about the classes, attributes, relationships, states and transitions of the Order Tracker subsystem to the *src/main/resources/domains.xml* file based on the miUML schema.
+
+Let's start small and add the *Order* class:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<Domains xmlns="http://www.miuml.org/metamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.miuml.org/metamodel https://raw.github.com/davidmoten/xuml-tools/master/miuml-jaxb/src/main/resources/miuml-metamodel.xsd  http://org.github/xuml-tools/miuml-metamodel-extensions https://raw.github.com/davidmoten/xuml-tools/master/miuml-jaxb/src/main/resources/xuml-tools-miuml-metamodel-extensions.xsd"
+    xmlns:xt="http://org.github/xuml-tools/miuml-metamodel-extensions">
+
+    <ModeledDomain Name="Ordering">
+        <SymbolicType Name="OrderID" Prefix="" Suffix="" ValidationPattern=".*"
+            DefaultValue="" MinLength="1" MaxLength="2048" />
+        <Subsystem Name="OrderTracker" Floor="1" Ceiling="20">
+            <Class Name="Order" Cnum="1" Element="1" Alias="Order">
+                <IndependentAttribute Name="Order ID" Type="OrderID">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+            </Class>
+        </Subsystem>
+    </ModeledDomain>
+
+</Domains>
+```
+
+Edit pom.xml and set the configuration of *xuml-tools-maven-plugin* so it has these corrections:
+
+```xml
+<domain>Ordering</domain>
+<schema>ordertracker</schema>
+<packageName>ordertracker</packageName>
+```
+
+Also edit *src/test/resources/META-INF/persistence.xml* and ensure the class generated from *Order* is listed:
+
+```xml
+...
+<persistence-unit name="testPersistenceUnit">
+	<class>ordertracker.Order</class>
+	<class>xuml.tools.model.compiler.runtime.QueuedSignal</class>
+	<exclude-unlisted-classes>true</exclude-unlisted-classes>
+	...
+```
+
+
 
 
 
