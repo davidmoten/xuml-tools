@@ -128,7 +128,7 @@ Run
 
 You should get a couple of compile errors. 
 
-Edit *src/main/java/com/github/davidmoten/App.java* and fix the import of *Context* so that it comes from the package *ordertracker*.
+Edit *src/main/java/my/stuff/App.java* and fix the import of *Context* so that it comes from the package *ordertracker*.
 
 Then this should succeed:
 
