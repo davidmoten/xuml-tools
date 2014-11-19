@@ -40,7 +40,7 @@ The transitions are:
 
 * *Preparing* -> *Ready for dispatch* : **Send**
 * *Ready for dispatch* -> *Courier assigned* : **Assign**
-* *Courier assigned* -> *In transit* :**Picked up**
+* *Courier assigned* -> *In transit* : **Picked up**
 * *In transit* -> *In transit* : **Arrived depot**
 * *In transit* -> *Ready for delivery* : **Arrived final depot**
 * *Ready for delivery* -> *Delivering* : **Delivering**
