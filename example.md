@@ -134,6 +134,12 @@ Then this should succeed:
 
     mvn clean test
 
+Now fill in the details of *domain.xml* and the result will be something like [this](order-tracker/src/main/resources/domains.xml).
+
+When *domains.xml* is loaded into the Class Diagram Viewer we get:
+
+<img src="https://raw.github.com/davidmoten/xuml-tools/master/xuml-diagrams/src/docs/class-diagram-order-tracker.png">
+
 
 
 
