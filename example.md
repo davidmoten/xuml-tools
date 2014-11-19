@@ -138,7 +138,7 @@ Now fill in the details of *domain.xml* and the result will be something like [t
 
 When *domains.xml* is loaded into the Class Diagram Viewer we get:
 
-<img src="https://raw.github.com/davidmoten/xuml-tools/master/xuml-diagrams/src/docs/class-diagram-order-tracker.png">
+<img src="https://raw.github.com/davidmoten/xuml-tools/master/src/docs/class-diagram-order-tracker.png">
 
 
 
