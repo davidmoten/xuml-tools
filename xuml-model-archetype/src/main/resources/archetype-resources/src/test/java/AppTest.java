@@ -1,9 +1,6 @@
 package ${package};
 
 import xuml.tools.util.database.DerbyUtil;
-import test.A;
-import test.B;
-import test.Context;
 
 import org.junit.AfterClass;
 import org.junit.Assert;
