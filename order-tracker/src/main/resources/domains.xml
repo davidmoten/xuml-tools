@@ -90,7 +90,7 @@
                         <EventSignature />
                     </LocalEffectiveSignalingEvent>
                     <LocalEffectiveSignalingEvent
-                        Name="Picked Up" ID="4">
+                        Name="Picked up" ID="4">
                         <EventSignature />
                     </LocalEffectiveSignalingEvent>
                     <LocalEffectiveSignalingEvent
