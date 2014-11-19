@@ -78,6 +78,7 @@
 		<m3.site.version>3.4</m3.site.version>
 		<changelog.version>2.2</changelog.version>
 		<coverage.reports.dir>${project.build.directory}/target/coverage-reports</coverage.reports.dir>
+		<xuml.tools.version>${project.version}</xuml.tools.version>
 	</properties>
 
 	<modules>
@@ -90,6 +91,7 @@
 		<module>miuml-jaxb</module>
 		<module>xuml-tools-maven-plugin</module>
 		<module>xuml-model-archetype</module>
+		<module>order-tracker</module>
   	</modules>	
 	<profiles>
 		<profile>

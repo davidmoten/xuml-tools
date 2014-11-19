@@ -7,9 +7,6 @@
 	</parent>
 	<artifactId>xuml-model-archetype</artifactId>
 	<name>${project.artifactId}</name>
-	<properties>
-		<xuml.tools.version>${project.parent.version}</xuml.tools.version>
-	</properties>
 	<profiles>
 		<profile>
 			<id>default</id>

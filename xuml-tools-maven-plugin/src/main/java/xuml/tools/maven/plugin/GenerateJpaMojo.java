@@ -203,8 +203,11 @@ public class GenerateJpaMojo extends AbstractMojo {
 		InputStream is = getClass().getResourceAsStream(domainsXml);
 		if (is == null)
 			try {
-				is = new FileInputStream(domainsXml);
-			} catch (FileNotFoundException e) {
+				getLog().info("domains xml file not found on classpath: "+ domainsXml);
+				File file = new File(domainsXml);
+				getLog().info("loading domains xml from file system: " + file.getCanonicalPath());
+				is = new FileInputStream(file);
+			} catch (IOException e) {
 				throw new MojoExecutionException(e.getMessage(), e);
 			}
 		xuml.tools.miuml.metamodel.jaxb.Domains domains = new Marshaller()

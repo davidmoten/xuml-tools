@@ -2,27 +2,26 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.github.davidmoten</groupId>
+	<parent>
+		<artifactId>xuml-tools</artifactId>
+		<groupId>com.github.davidmoten</groupId>
+		<version>0.1-SNAPSHOT</version>
+	</parent>
 	<artifactId>order-tracker</artifactId>
-	<version>0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>order-tracker</name>
-
-	<properties>
-		<xuml.tools.version>0.1-SNAPSHOT</xuml.tools.version>
-	</properties>
+	<name>${artifactId}</name>
 
 	<dependencies>
 		<dependency>
 			<groupId>com.github.davidmoten</groupId>
 			<artifactId>xuml-model-compiler-runtime</artifactId>
-			<version>${xuml.tools.version}</version>
+			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.davidmoten</groupId>
 			<artifactId>hibernate</artifactId>
-			<version>${xuml.tools.version}</version>
+			<version>${project.parent.version}</version>
 			<type>pom</type>
 		</dependency>
 		<dependency>
@@ -54,7 +53,7 @@
 			<plugin>
 				<groupId>com.github.davidmoten</groupId>
 				<artifactId>xuml-tools-maven-plugin</artifactId>
-				<version>${xuml.tools.version}</version>
+				<version>${project.parent.version}</version>
 				<executions>
 					<execution>
 						<id>generate-jpa</id>
@@ -62,7 +61,7 @@
 							<goal>generate-jpa</goal>
 						</goals>
 						<configuration>
-							<domainsXml>src/main/resources/domains.xml</domainsXml>
+							<domainsXml>${basedir}/src/main/resources/domains.xml</domainsXml>
 							<domain>Ordering</domain>
 							<schema>ordertracker</schema>
 							<packageName>ordertracker</packageName>
