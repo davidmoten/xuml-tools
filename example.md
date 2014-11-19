@@ -81,7 +81,7 @@ mvn archetype:generate \
 ### Specify the model
 The next step is to transfer what we know about the classes, attributes, relationships, states and transitions of the Order Tracker subsystem to the *src/main/resources/domains.xml* file based on the miUML schema.
 
-Let's start small and add the *Order* class:
+Let's start small and add the *Order* class with its identifier attribute and nothing else:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -93,7 +93,7 @@ Let's start small and add the *Order* class:
         <SymbolicType Name="OrderID" Prefix="" Suffix="" ValidationPattern=".*"
             DefaultValue="" MinLength="1" MaxLength="2048" />
         <Subsystem Name="OrderTracker" Floor="1" Ceiling="20">
-            <Class Name="Order" Cnum="1" Element="1" Alias="Order">
+            <Class Name="Order">
                 <IndependentAttribute Name="Order ID" Type="OrderID">
                     <Identifier Number="1" />
                 </IndependentAttribute>

@@ -24,7 +24,7 @@
 
         <Subsystem Name="OrderTracker" Floor="1" Ceiling="20">
 
-            <Class Name="Order" Alias="Order">
+            <Class Name="Order" >
                 <IndependentAttribute Name="Order ID" Type="OrderID">
                     <Identifier Number="1" />
                 </IndependentAttribute>
@@ -182,7 +182,7 @@
 
             </Class>
 
-            <Class Name="Depot" Alias="Order">
+            <Class Name="Depot">
                 <IndependentAttribute Name="Depot ID" Type="DepotID">
                     <Identifier Number="1" />
                 </IndependentAttribute>
