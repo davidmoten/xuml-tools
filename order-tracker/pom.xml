@@ -10,7 +10,7 @@
 	<artifactId>order-tracker</artifactId>
 	<packaging>jar</packaging>
 
-	<name>${artifactId}</name>
+	<name>${project.artifactId}</name>
 
 	<dependencies>
 		<dependency>
