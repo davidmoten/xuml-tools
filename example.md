@@ -38,19 +38,19 @@ The states for *Order* are:
 
 The transitions are:
 
-* *Preparing* -> *Ready for dispatch* : *send*
-* *Ready for dispatch* -> *Courier assigned* : *assign*
-* *Courier assigned* -> *In transit* :*picked up*
-* *In transit* -> *In transit* : *transit leg*
-* *In transit* -> *Ready for delivery* : *at final depot*
-* *Ready for delivery* -> *Delivering* : *delivering*
-* *Delivering* -> *Delivered* : *delivered*
-* *Delivering* -> *Awaiting next delivery attempt* : *deliveryFailed* 
-* *Awaiting next delivery attempt* -> *Ready for delivery* : *deliverAgain* (delay till next day)
-* *Ready for delivery* -> *Held for pickup* : *no more attempts*
-* *Held for pickup* -> *Delivered* : *delivered*
-* *Delivering* -> *Could not deliver* : *could not deliver*
-* *Held for pickup* -> *Return to sender* : *returnToSender* (delay 14 days)
+* *Preparing* -> *Ready for dispatch* : **Send**
+* *Ready for dispatch* -> *Courier assigned* : **Assign**
+* *Courier assigned* -> *In transit* :**Picked up**
+* *In transit* -> *In transit* : **Arrived depot**
+* *In transit* -> *Ready for delivery* : **Arrived final depot**
+* *Ready for delivery* -> *Delivering* : **Delivering**
+* *Delivering* -> *Delivered* : **Delivered**
+* *Delivering* -> *Awaiting next delivery attempt* : **Delivery failed** 
+* *Awaiting next delivery attempt* -> *Ready for delivery* : **Deliver again** (delay till next day)
+* *Ready for delivery* -> *Held for pickup* : **No more attempts**
+* *Held for pickup* -> *Delivered* : **Delivered by pickup**
+* *Delivering* -> *Could not deliver* : **Could not deliver**
+* *Held for pickup* -> *Return to sender* : **Return to sender** (delay 14 days)
 
 API interactions
 ------------------
