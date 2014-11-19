@@ -52,13 +52,13 @@
                     <Identifier Number="1" />
                 </IndependentAttribute>
                 <IndependentAttribute Name="Name" Type="String255" />
-                <IndependentAttribute Name="latitude" Type="Latitude" />
-                <IndependentAttribute Name="longitude"
+                <IndependentAttribute Name="Latitude" Type="Latitude" />
+                <IndependentAttribute Name="Longitude"
                     Type="Longitude" />
             </Class>
 
             <BinaryAssociation Rnum="1">
-                <ActivePerspective Phrase="was last depot of"
+                <ActivePerspective Phrase="is last location of"
                     ViewedClass="Order" OnePerspective="false" Conditional="true" />
                 <PassivePerspective Phrase="was last at"
                     ViewedClass="Depot" OnePerspective="true" Conditional="true" />
