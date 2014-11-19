@@ -101,6 +101,8 @@ Let's start small and add the *Order* class:
 </Domains>
 ```
 
+If you use a featured xml editor like the Eclipse XML Editor (installed with the Web Tools Platform (WTP)) then you get auto-complete and validation as you type. Just by using xml and xsd we get an editor without having to write one ourselves (albeit without pretty pictures!).
+
 Edit pom.xml and set the configuration of *xuml-tools-maven-plugin* so it has these corrections:
 
 ```xml
