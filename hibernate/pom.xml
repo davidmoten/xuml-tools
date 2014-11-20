@@ -10,7 +10,7 @@
 	<name>${project.artifactId}</name>
 	<description>Runtime dependencies for Hibernate JPA implementation</description>
 	<properties>
-		<hibernate.version>3.6.0.Beta2</hibernate.version>
+		<hibernate.version>4.3.7.Final</hibernate.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -35,7 +35,7 @@
 		<!-- use this instead -->
 		<dependency>
 			<groupId>org.hibernate.javax.persistence</groupId>
-			<artifactId>hibernate-jpa-2.0-api</artifactId>
+			<artifactId>hibernate-jpa-2.1-api</artifactId>
 			<version>1.0.0.Final</version>
 		</dependency>
 
