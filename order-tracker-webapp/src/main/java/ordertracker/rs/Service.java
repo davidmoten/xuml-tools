@@ -1,5 +1,8 @@
 package ordertracker.rs;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -115,7 +118,25 @@ public class Service {
 	@Produces("application/json")
 	public Response getOrdersReadyForDelivery(
 			@PathParam("depotId") String depotId) {
+		// ensure depot exists
 		Depot depot = Depot.find(depotId);
+		List<Order> list = new ArrayList<Order>();
+		List<Order> orders = Order.select(
+				Order.Attribute.status.eq(Order.State.READY_FOR_DELIVERY
+						.toString())).many();
+		for (Order order : orders)
+			if (order.getDepot_R1() != null
+					&& order.getDepot_R1().getId() == depot.getId())
+				list.add(order);
 		return Response.ok("{}", MediaType.APPLICATION_JSON).build();
 	}
+
+	@GET
+	@Path("/order/{orderId}/status")
+	@Produces("text/plain")
+	public Response getOrderStatus(@PathParam("orderId") String orderId) {
+		Order order = Order.find(orderId);
+		return Response.ok(order.getStatus(), MediaType.TEXT_PLAIN).build();
+	}
+
 }
