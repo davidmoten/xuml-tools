@@ -1143,7 +1143,11 @@ public class ClassInfo {
 	}
 
 	private MyTypeDefinition getTypeDefinition(EnumeratedType t) {
-		return null;
+		// TODO do something type safe using generated enum because we can
+		return new MyTypeDefinition(t.getName(), MyType.STRING, new Type(
+				String.class), null, null, null, null, t.getDefaultValue()
+				.toString(), null, BigInteger.ONE, BigInteger.valueOf(4096L),
+				"", "", ".*");
 	}
 
 	private MyTypeDefinition getTypeDefinition(BooleanType t) {
