@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 import org.apache.commons.io.IOUtils;
 
 import xuml.tools.miuml.metamodel.jaxb.Domains;
@@ -23,6 +22,19 @@ public class ClassDiagramServlet extends HttpServlet {
 		String id = req.getParameter("id");
 		String xml = Context.instance().getDatastore()
 				.get("diagram", id + "-model", "model");
+		createClassDiagram(req, resp, xml);
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		String xml = req.getParameter("xml");
+		System.out.println(xml);
+		createClassDiagram(req, resp, xml);
+	}
+
+	private void createClassDiagram(HttpServletRequest req,
+			HttpServletResponse resp, String xml) throws IOException {
 		Domains domains = new Marshaller()
 				.unmarshal(IOUtils.toInputStream(xml));
 		String domainString = req.getParameter("domain");
@@ -37,4 +49,5 @@ public class ClassDiagramServlet extends HttpServlet {
 		resp.setContentType("text/html");
 		IOUtils.copy(IOUtils.toInputStream(html), resp.getOutputStream());
 	}
+
 }

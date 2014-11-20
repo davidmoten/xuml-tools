@@ -21,7 +21,8 @@ body {font-family: Tahoma, Geneva, sans-serif;font-size:100%;}
 #options {float:right; padding-right:2em; color:#0000EE;}
 #edit {float:right; padding-right:2em; color:#0000EE;}
 #home {float:right; padding-right:2em; color:#0000EE;}
-#title {position:absolute; top:5px;left:1em; width:40em;font-size:120%;}
+#load {float:right; padding-right:2em; color:#0000EE}
+#title {position:absolute; top:5px;left:1em; width:40em;font-size:120%; z-index:-1}
 #options-editor {display:none;}
 .operation {position:relative;padding-left:1.1em;left:-5px;top:2px;
 	background-image: url(images/cog.png); 

@@ -752,6 +752,49 @@ function createHome() {
 
 }
 
+$.extend(
+		{
+		    redirectPost: function(location, args)
+		    {
+		        var form = '';
+		        $.each( args, function( key, value ) {
+		            form += '<input type="hidden" name="'+key+'" value="'+value+'">';
+		        });
+		        $('<form action="'+location+'" method="POST">'+form+'</form>').appendTo('body').submit();
+		    }
+});
+
+var entityMap = {
+	    "&": "&amp;",
+	    "<": "&lt;",
+	    ">": "&gt;",
+	    '"': '&quot;',
+	    "'": '&#39;',
+	    "/": '&#x2F;'
+	  };
+
+  function escapeAttribute(string) {
+    return String(string).replace(/"/g, '&quot;').replace(/'/g,"&#39;").replace(/\n/g,"&#10;").replace(/\r/g,"&#13;");
+  }
+
+function createLoad() {
+	$("body")
+	    .prepend("<input type='file' id='load' class='load noprint'></input>");
+	$("#load").change(function(evt) {
+	    var file = evt.target.files[0];
+	    console.log(file);
+	    var reader = new FileReader();
+	    
+	    reader.onload = function(e) {
+	    	var text = escapeAttribute(reader.result);
+	    	console.log(text);
+	    	$.redirectPost("cd?", {xml:text});
+	    };
+	    
+	    reader.readAsText(file);
+    });
+}
+
 function createOptions() {
 	$("body")
 			.prepend(
@@ -843,6 +886,7 @@ function makeTouchable() {
 
 function setup() {
 	createDivs();
+	createLoad();
 	createHome();
 	createOptions();
 	createSave();
