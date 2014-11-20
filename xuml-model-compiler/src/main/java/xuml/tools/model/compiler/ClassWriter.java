@@ -316,7 +316,7 @@ public class ClassWriter {
 			String factoryTypeName, String behaviourTypeName) {
 		jd(out, "If behaviour is not explicitly specified then the\n"
 				+ "behaviour factory is used to create behaviour.", "    ");
-		out.format("    private static %s _behaviourFactory;\n\n",
+		out.format("    private static volatile %s _behaviourFactory;\n\n",
 				factoryTypeName);
 
 		jd(out, BEHAVIOUR_COMMENT, "    ");

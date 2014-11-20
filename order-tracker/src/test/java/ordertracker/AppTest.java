@@ -1,4 +1,6 @@
-package com.github.davidmoten;
+package ordertracker;
+
+import ordertracker.App;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;

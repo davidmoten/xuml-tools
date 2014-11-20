@@ -1,4 +1,4 @@
-package com.github.davidmoten;
+package ordertracker;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -6,6 +6,7 @@ import javax.persistence.Persistence;
 import org.apache.log4j.Logger;
 
 import ordertracker.Context;
+import xuml.tools.util.database.DerbyUtil;
 
 
 public class App {
@@ -16,6 +17,8 @@ public class App {
 		
 		log.info("starting up");
 		
+		DerbyUtil.disableDerbyLog();
+		
 		// create the entity manager factory
 		EntityManagerFactory emf = Persistence
 				.createEntityManagerFactory("testPersistenceUnit");
@@ -25,8 +28,8 @@ public class App {
 		
 		// setup behaviour factories and assign them to Context here
 		
-		// set the behaviour factory for the class A
-		// A.setBehaviourFactory(createBehaviourFactory());
+		// set the behaviour factory for Order
+		Order.setBehaviourFactory(OrderBehaviour.createFactory());
 		
 		// send any signals not processed from last shutdown
 		Context.sendSignalsInQueue();
@@ -40,7 +43,7 @@ public class App {
 
 		// close the entity manager factory if desired
 		Context.close();
-
+		
 	}
 	
 }

@@ -41,6 +41,13 @@
 			<artifactId>order-tracker</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
+        
+        <dependency>
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derby</artifactId>
+            <version>10.8.2.2</version>
+        </dependency>
+
 	</dependencies>
 	<build>
 		<plugins>

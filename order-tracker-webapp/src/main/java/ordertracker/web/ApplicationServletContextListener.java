@@ -3,9 +3,9 @@ package ordertracker.web;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import org.apache.log4j.Logger;
+import ordertracker.App;
 
-import com.github.davidmoten.App;
+import org.apache.log4j.Logger;
 
 public class ApplicationServletContextListener implements
 		ServletContextListener {
