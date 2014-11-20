@@ -6,7 +6,7 @@
 	<display-name>${project.artifactId} ${project.version}</display-name>
     
     <listener>
-          <listener-class>ordertracker.web.ApplicationServletContextListener</listener-class>
+          <listener-class>ordertracker.web.ContextListener</listener-class>
     </listener>
     
 	<servlet>

@@ -7,12 +7,11 @@ import ordertracker.App;
 
 import org.apache.log4j.Logger;
 
-public class ApplicationServletContextListener implements
+public class ContextListener implements
 		ServletContextListener {
 	
-	
 	private static Logger log = Logger
-			.getLogger(ApplicationServletContextListener.class);
+			.getLogger(ContextListener.class);
 
 	@Override
 	public void contextInitialized(ServletContextEvent event) {
