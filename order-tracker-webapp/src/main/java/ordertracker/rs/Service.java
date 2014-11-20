@@ -1,10 +1,10 @@
 package ordertracker.rs;
 
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 import ordertracker.Context;
@@ -23,13 +23,13 @@ public class Service {
 	@PUT
 	@Path("/order/{orderId}/create")
 	public Response createOrder(@PathParam("orderId") String orderId,
-			@QueryParam("description") String description,
-			@QueryParam("fromAddress") String fromAddress,
-			@QueryParam("toAddress") String toAddress,
-			@QueryParam("destinationEmail") String destinationEmail,
-			@QueryParam("senderEmail") String senderEmail,
-			@QueryParam("maxAttempts") Integer maxAttempts,
-			@QueryParam("comment") String comment) {
+			@FormParam("description") String description,
+			@FormParam("fromAddress") String fromAddress,
+			@FormParam("toAddress") String toAddress,
+			@FormParam("destinationEmail") String destinationEmail,
+			@FormParam("senderEmail") String senderEmail,
+			@FormParam("maxAttempts") Integer maxAttempts,
+			@FormParam("comment") String comment) {
 		Context.create(Order.class, new Order.Events.Create(orderId,
 				description, fromAddress, toAddress, destinationEmail,
 				senderEmail, maxAttempts, comment));
