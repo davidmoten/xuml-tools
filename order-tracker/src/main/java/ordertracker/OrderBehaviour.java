@@ -82,7 +82,7 @@ public class OrderBehaviour implements Order.Behaviour {
 	public void onEntryHeldForPickup(DeliveryFailed event) {
 		// return to sender after 14 days if customer does not pickup
 		self.signal(new Order.Events.ReturnToSender(),
-				Duration.create(14, TimeUnit.DAYS));
+				Duration.create(14, TimeUnit.SECONDS));
 	}
 
 	@Override
@@ -91,7 +91,7 @@ public class OrderBehaviour implements Order.Behaviour {
 			self.signal(new Order.Events.NoMoreAttempts());
 		else
 			self.signal(new Order.Events.DeliverAgain(),
-					Duration.create(12, TimeUnit.HOURS));
+					Duration.create(12, TimeUnit.SECONDS));
 	}
 
 	@Override

@@ -76,5 +76,29 @@ public class Service {
 		order.signal(new Order.Events.Delivering());
 		return Response.status(200).entity("delivering").build();
 	}
-
+	
+	@PUT
+	@Path("/order/{orderId}/delivered")
+	public Response delivered(@PathParam("orderId") String orderId) {
+		Order order = Order.find(orderId);
+		order.signal(new Order.Events.Delivered());
+		return Response.status(200).entity("delivered").build();
+	}
+	
+	@PUT
+	@Path("/order/{orderId}/deliveryFailed")
+	public Response deliveryFailed(@PathParam("orderId") String orderId) {
+		Order order = Order.find(orderId);
+		order.signal(new Order.Events.DeliveryFailed());
+		return Response.status(200).entity("delivery failed").build();
+	}
+	
+	@PUT
+	@Path("/order/{orderId}/deliveryAgain")
+	public Response deliverAgain(@PathParam("orderId") String orderId) {
+		Order order = Order.find(orderId);
+		order.signal(new Order.Events.DeliverAgain());
+		return Response.status(200).entity("marked for delivery again").build();
+	}
+	
 }
