@@ -2,8 +2,6 @@ package ordertracker;
 
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
-
 import ordertracker.Order.Behaviour;
 import ordertracker.Order.Events.ArrivedDepot;
 import ordertracker.Order.Events.ArrivedFinalDepot;
@@ -22,8 +20,6 @@ import ordertracker.Order.Events.Send;
 import scala.concurrent.duration.Duration;
 
 public class OrderBehaviour implements Order.Behaviour {
-
-	private static Logger log = Logger.getLogger(OrderBehaviour.class);
 
 	private Order self;
 
@@ -100,30 +96,29 @@ public class OrderBehaviour implements Order.Behaviour {
 
 	@Override
 	public void onEntryReadyForDelivery(DeliverAgain event) {
-		//do nothing
+		// do nothing
 	}
 
 	@Override
 	public void onEntryHeldForPickup(NoMoreAttempts event) {
-		//do nothing
+		// do nothing
 	}
 
 	@Override
 	public void onEntryHeldForPickup(CouldNotDeliver event) {
-		// TODO Auto-generated method stub
-
+		// return to sender after 14 days if customer does not pickup
+		self.signal(new Order.Events.ReturnToSender(),
+				Duration.create(14, TimeUnit.DAYS));
 	}
 
 	@Override
 	public void onEntryReturnToSender(ReturnToSender event) {
-		// TODO Auto-generated method stub
-
+		// at this point we might create another order for the return leg
 	}
 
 	@Override
 	public void onEntryDelivered(DeliveredByPickup event) {
-		// TODO Auto-generated method stub
-
+		// do nothing
 	}
 
 	static Order.BehaviourFactory createFactory() {
