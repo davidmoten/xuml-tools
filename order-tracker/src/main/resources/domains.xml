@@ -1,208 +1,212 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Domains xmlns="http://www.miuml.org/metamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.miuml.org/metamodel https://raw.github.com/davidmoten/xuml-tools/master/miuml-jaxb/src/main/resources/miuml-metamodel.xsd  http://org.github/xuml-tools/miuml-metamodel-extensions https://raw.github.com/davidmoten/xuml-tools/master/miuml-jaxb/src/main/resources/xuml-tools-miuml-metamodel-extensions.xsd"
-    xmlns:xt="http://org.github/xuml-tools/miuml-metamodel-extensions">
+	xsi:schemaLocation="http://www.miuml.org/metamodel https://raw.github.com/davidmoten/xuml-tools/master/miuml-jaxb/src/main/resources/miuml-metamodel.xsd  http://org.github/xuml-tools/miuml-metamodel-extensions https://raw.github.com/davidmoten/xuml-tools/master/miuml-jaxb/src/main/resources/xuml-tools-miuml-metamodel-extensions.xsd"
+	xmlns:xt="http://org.github/xuml-tools/miuml-metamodel-extensions">
 
-    <SymbolicType Name="String" MinLength="1" MaxLength="4096"
-        Prefix="" Suffix="" ValidationPattern=".*" DefaultValue="" />
-    <SymbolicType Name="Email" MinLength="1" MaxLength="512"
-        Prefix="" Suffix="" ValidationPattern=".*" DefaultValue="" />
-    <RealType Name="Latitude" Precision="20" LowerLimit="-90"
-        UpperLimit="90" DefaultValue="0" Units="degrees" />
-    <RealType Name="Longitude" Precision="20" LowerLimit="-180"
-        UpperLimit="180" DefaultValue="0" Units="degrees" />
+	<SymbolicType Name="String" MinLength="1" MaxLength="4096"
+		Prefix="" Suffix="" ValidationPattern=".*" DefaultValue="" />
+	<SymbolicType Name="Email" MinLength="1" MaxLength="512"
+		Prefix="" Suffix="" ValidationPattern=".*" DefaultValue="" />
+	<RealType Name="Latitude" Precision="20" LowerLimit="-90"
+		UpperLimit="90" DefaultValue="0" Units="degrees" />
+	<RealType Name="Longitude" Precision="20" LowerLimit="-180"
+		UpperLimit="180" DefaultValue="0" Units="degrees" />
 
-    <ModeledDomain Name="Ordering">
-        <SymbolicType Name="OrderID" Prefix="" Suffix=""
-            ValidationPattern=".*" DefaultValue="" MinLength="1" MaxLength="2048" />
-        <SymbolicType Name="DepotID" Prefix="" Suffix=""
-            ValidationPattern=".*" DefaultValue="" MinLength="1" MaxLength="2048" />
-        <SymbolicType Name="DepotName" Prefix="" Suffix=""
-            ValidationPattern=".*" DefaultValue="" MinLength="1" MaxLength="255" />
-        <IntegerType Name="Attempts" Units="none" DefaultValue="0"
-            UpperLimit="1000" LowerLimit="0" />
+	<ModeledDomain Name="Ordering">
+		<SymbolicType Name="OrderID" Prefix="" Suffix=""
+			ValidationPattern=".*" DefaultValue="" MinLength="1" MaxLength="2048" />
+		<SymbolicType Name="DepotID" Prefix="" Suffix=""
+			ValidationPattern=".*" DefaultValue="" MinLength="1" MaxLength="2048" />
+		<SymbolicType Name="DepotName" Prefix="" Suffix=""
+			ValidationPattern=".*" DefaultValue="" MinLength="1" MaxLength="255" />
+		<IntegerType Name="Attempts" Units="none" DefaultValue="0"
+			UpperLimit="1000" LowerLimit="0" />
+		<EnumeratedType Name="OrderStatus">
+			<DefaultValue>Preparing</DefaultValue>
+			<Value>Preparing</Value>
+			<Value>Ready for dispatch</Value>
+			<Value>Courier assigned</Value>
+			<Value>In transit</Value>
+			<Value>Ready for delivery</Value>
+			<Value>Delivering</Value>
+			<Value>Delivered</Value>
+			<Value>Deliver failed</Value>
+			<Value>Awaiting next delivery attempt</Value>
+			<Value>Held for pickup</Value>
+			<Value>Could not deliver</Value>
+			<Value>Return to sender</Value>
+		</EnumeratedType>
 
-        <Subsystem Name="OrderTracker" Floor="1" Ceiling="20">
+		<Subsystem Name="OrderTracker" Floor="1" Ceiling="20">
 
-            <Class Name="Order">
-                <IndependentAttribute Name="Order ID" Type="OrderID">
-                    <Identifier Number="1" />
-                </IndependentAttribute>
-                <IndependentAttribute Name="Description"
-                    Type="String" />
-                <IndependentAttribute Name="From Address"
-                    Type="String" />
-                <IndependentAttribute Name="To Address"
-                    Type="String" />
-                <IndependentAttribute Name="Destination email"
-                    Type="Email" />
-                <IndependentAttribute Name="Sender email"
-                    Type="Email" />
-                <IndependentAttribute Name="Max attempts"
-                    Type="Attempts" />
-                <IndependentAttribute Name="Attempts" Type="Attempts" />
-                <IndependentAttribute Name="Comment" Type="String" />
-                <ReferentialAttribute Name="Last depot">
-                    <ToOneReference Relationship="1" Attribute="Depot ID" />
-                </ReferentialAttribute>
+			<Class Name="Order">
+				<IndependentAttribute Name="Order ID" Type="OrderID">
+					<Identifier Number="1" />
+				</IndependentAttribute>
+				<IndependentAttribute Name="Description" Type="String" />
+				<IndependentAttribute Name="From Address" Type="String" />
+				<IndependentAttribute Name="To Address" Type="String" />
+				<IndependentAttribute Name="Destination email"
+					Type="Email" />
+				<IndependentAttribute Name="Sender email" Type="Email" />
+				<IndependentAttribute Name="Max attempts" Type="Attempts" />
+				<IndependentAttribute Name="Attempts" Type="Attempts" />
+				<IndependentAttribute Name="Comment" Type="String" />
+				<IndependentAttribute Name="Status" Type="OrderStatus" />
+				<ReferentialAttribute Name="Last depot">
+					<ToOneReference Relationship="1" Attribute="Depot ID" />
+				</ReferentialAttribute>
 
-                <Lifecycle>
-                    <State Name="Preparing" />
-                    <State Name="Ready for dispatch" />
-                    <State Name="Courier assigned" />
-                    <State Name="In transit" />
-                    <State Name="Ready for delivery" />
-                    <State Name="Delivering" />
-                    <State Name="Delivered" />
-                    <State Name="Delivery failed" />
-                    <State Name="Awaiting next delivery attempt" />
-                    <State Name="Held for pickup" />
-                    <State Name="Could not deliver" />
-                    <State Name="Return to sender" />
+				<Lifecycle>
+					<State Name="Preparing" />
+					<State Name="Ready for dispatch" />
+					<State Name="Courier assigned" />
+					<State Name="In transit" />
+					<State Name="Ready for delivery" />
+					<State Name="Delivering" />
+					<State Name="Delivered" />
+					<State Name="Delivery failed" />
+					<State Name="Awaiting next delivery attempt" />
+					<State Name="Held for pickup" />
+					<State Name="Could not deliver" />
+					<State Name="Return to sender" />
 
-                    <CreationEvent Name="Create" ID="1" State="Preparing">
-                        <EventSignature>
-                            <StateModelParameter Name="Order ID"
-                                Type="OrderID" />
-                            <StateModelParameter Name="Description"
-                                Type="String" />
-                            <StateModelParameter Name="From Address"
-                                Type="String" />
-                            <StateModelParameter Name="To Address"
-                                Type="String" />
-                            <StateModelParameter Name="Destination email"
-                                Type="Email" />
-                            <StateModelParameter Name="Sender email"
-                                Type="Email" />
-                            <StateModelParameter Name="Max attempts"
-                                Type="Attempts" />
-                            <StateModelParameter Name="Comment"
-                                Type="String" />
-                        </EventSignature>
-                    </CreationEvent>
+					<CreationEvent Name="Create" ID="1" State="Preparing">
+						<EventSignature>
+							<StateModelParameter Name="Order ID" Type="OrderID" />
+							<StateModelParameter Name="Description" Type="String" />
+							<StateModelParameter Name="From Address"
+								Type="String" />
+							<StateModelParameter Name="To Address" Type="String" />
+							<StateModelParameter Name="Destination email"
+								Type="Email" />
+							<StateModelParameter Name="Sender email"
+								Type="Email" />
+							<StateModelParameter Name="Max attempts"
+								Type="Attempts" />
+							<StateModelParameter Name="Comment" Type="String" />
+						</EventSignature>
+					</CreationEvent>
 
-                    <LocalEffectiveSignalingEvent
-                        Name="Send" ID="2">
-                        <EventSignature />
-                    </LocalEffectiveSignalingEvent>
-                    <LocalEffectiveSignalingEvent
-                        Name="Assign" ID="3">
-                        <EventSignature />
-                    </LocalEffectiveSignalingEvent>
-                    <LocalEffectiveSignalingEvent
-                        Name="Picked up" ID="4">
-                        <EventSignature />
-                    </LocalEffectiveSignalingEvent>
-                    <LocalEffectiveSignalingEvent
-                        Name="Arrived depot" ID="5">
-                        <EventSignature>
-                            <StateModelParameter Name="Depot ID"
-                                Type="DepotID" />
-                        </EventSignature>
-                    </LocalEffectiveSignalingEvent>
-                    <LocalEffectiveSignalingEvent
-                        Name="Arrived final depot" ID="6">
-                        <EventSignature>
-                            <StateModelParameter Name="Depot ID"
-                                Type="DepotID" />
-                        </EventSignature>
-                    </LocalEffectiveSignalingEvent>
-                    <LocalEffectiveSignalingEvent
-                        Name="Delivering" ID="7">
-                        <EventSignature />
-                    </LocalEffectiveSignalingEvent>
-                    <LocalEffectiveSignalingEvent
-                        Name="Delivered" ID="8">
-                        <EventSignature />
-                    </LocalEffectiveSignalingEvent>
-                    <LocalEffectiveSignalingEvent
-                        Name="Delivery failed" ID="9">
-                        <EventSignature />
-                    </LocalEffectiveSignalingEvent>
-                    <LocalEffectiveSignalingEvent
-                        Name="Deliver again" ID="10">
-                        <EventSignature />
-                    </LocalEffectiveSignalingEvent>
-                    <LocalEffectiveSignalingEvent
-                        Name="No more attempts" ID="11">
-                        <EventSignature />
-                    </LocalEffectiveSignalingEvent>
-                    <LocalEffectiveSignalingEvent
-                        Name="Could not deliver" ID="12">
-                        <EventSignature />
-                    </LocalEffectiveSignalingEvent>
-                    <LocalEffectiveSignalingEvent
-                        Name="Return to sender" ID="13">
-                        <EventSignature />
-                    </LocalEffectiveSignalingEvent>
-                    <LocalEffectiveSignalingEvent
-                        Name="Delivered by pickup" ID="14">
-                        <EventSignature />
-                    </LocalEffectiveSignalingEvent>
+					<LocalEffectiveSignalingEvent Name="Send"
+						ID="2">
+						<EventSignature />
+					</LocalEffectiveSignalingEvent>
+					<LocalEffectiveSignalingEvent Name="Assign"
+						ID="3">
+						<EventSignature />
+					</LocalEffectiveSignalingEvent>
+					<LocalEffectiveSignalingEvent Name="Picked up"
+						ID="4">
+						<EventSignature />
+					</LocalEffectiveSignalingEvent>
+					<LocalEffectiveSignalingEvent Name="Arrived depot"
+						ID="5">
+						<EventSignature>
+							<StateModelParameter Name="Depot ID" Type="DepotID" />
+						</EventSignature>
+					</LocalEffectiveSignalingEvent>
+					<LocalEffectiveSignalingEvent Name="Arrived final depot"
+						ID="6">
+						<EventSignature>
+							<StateModelParameter Name="Depot ID" Type="DepotID" />
+						</EventSignature>
+					</LocalEffectiveSignalingEvent>
+					<LocalEffectiveSignalingEvent Name="Delivering"
+						ID="7">
+						<EventSignature />
+					</LocalEffectiveSignalingEvent>
+					<LocalEffectiveSignalingEvent Name="Delivered"
+						ID="8">
+						<EventSignature />
+					</LocalEffectiveSignalingEvent>
+					<LocalEffectiveSignalingEvent Name="Delivery failed"
+						ID="9">
+						<EventSignature />
+					</LocalEffectiveSignalingEvent>
+					<LocalEffectiveSignalingEvent Name="Deliver again"
+						ID="10">
+						<EventSignature />
+					</LocalEffectiveSignalingEvent>
+					<LocalEffectiveSignalingEvent Name="No more attempts"
+						ID="11">
+						<EventSignature />
+					</LocalEffectiveSignalingEvent>
+					<LocalEffectiveSignalingEvent Name="Could not deliver"
+						ID="12">
+						<EventSignature />
+					</LocalEffectiveSignalingEvent>
+					<LocalEffectiveSignalingEvent Name="Return to sender"
+						ID="13">
+						<EventSignature />
+					</LocalEffectiveSignalingEvent>
+					<LocalEffectiveSignalingEvent Name="Delivered by pickup"
+						ID="14">
+						<EventSignature />
+					</LocalEffectiveSignalingEvent>
 
-                    <Transition State="Preparing" Destination="Ready for dispatch"
-                        EventID="2" />
-                    <Transition State="Ready for dispatch"
-                        Destination="Courier assigned" EventID="3" />
+					<Transition State="Preparing" Destination="Ready for dispatch"
+						EventID="2" />
+					<Transition State="Ready for dispatch" Destination="Courier assigned"
+						EventID="3" />
 
-                    <Transition State="Courier assigned" Destination="In transit"
-                        EventID="4" />
+					<Transition State="Courier assigned" Destination="In transit"
+						EventID="4" />
 
-                    <Transition State="In transit" Destination="In transit"
-                        EventID="5" />
+					<Transition State="In transit" Destination="In transit"
+						EventID="5" />
 
-                    <Transition State="In transit" Destination="Ready for delivery"
-                        EventID="6" />
+					<Transition State="In transit" Destination="Ready for delivery"
+						EventID="6" />
 
-                    <Transition State="Ready for delivery"
-                        Destination="Delivering" EventID="7" />
+					<Transition State="Ready for delivery" Destination="Delivering"
+						EventID="7" />
 
-                    <Transition State="Delivering" Destination="Delivered"
-                        EventID="8" />
+					<Transition State="Delivering" Destination="Delivered"
+						EventID="8" />
 
-                    <Transition State="Delivering" Destination="Held for pickup"
-                        EventID="9" />
+					<Transition State="Delivering" Destination="Held for pickup"
+						EventID="9" />
 
-                    <Transition State="Delivering" Destination="Held for pickup"
-                        EventID="12" />
+					<Transition State="Delivering" Destination="Held for pickup"
+						EventID="12" />
 
-                    <Transition State="Delivering" Destination="Delivery failed"
-                        EventID="9" />
+					<Transition State="Delivering" Destination="Delivery failed"
+						EventID="9" />
 
-                    <Transition State="Delivery failed" Destination="Ready for delivery"
-                        EventID="10" />
+					<Transition State="Delivery failed" Destination="Ready for delivery"
+						EventID="10" />
 
-                    <Transition State="Delivery failed" Destination="Held for pickup"
-                        EventID="11" />
+					<Transition State="Delivery failed" Destination="Held for pickup"
+						EventID="11" />
 
-                    <Transition State="Held for pickup" Destination="Delivered"
-                        EventID="14" />
+					<Transition State="Held for pickup" Destination="Delivered"
+						EventID="14" />
 
-                    <Transition State="Held for pickup" Destination="Return to sender"
-                        EventID="13" />
+					<Transition State="Held for pickup" Destination="Return to sender"
+						EventID="13" />
 
-                </Lifecycle>
+				</Lifecycle>
 
-            </Class>
+			</Class>
 
-            <Class Name="Depot">
-                <IndependentAttribute Name="Depot ID" Type="DepotID">
-                    <Identifier Number="1" />
-                </IndependentAttribute>
-                <IndependentAttribute Name="Name" Type="DepotName" />
-                <IndependentAttribute Name="Latitude" Type="Latitude" />
-                <IndependentAttribute Name="Longitude"
-                    Type="Longitude" />
-            </Class>
+			<Class Name="Depot">
+				<IndependentAttribute Name="Depot ID" Type="DepotID">
+					<Identifier Number="1" />
+				</IndependentAttribute>
+				<IndependentAttribute Name="Name" Type="DepotName" />
+				<IndependentAttribute Name="Latitude" Type="Latitude" />
+				<IndependentAttribute Name="Longitude" Type="Longitude" />
+			</Class>
 
-            <BinaryAssociation Rnum="1">
-                <ActivePerspective Phrase="is last location of"
-                    ViewedClass="Order" OnePerspective="false" Conditional="true" />
-                <PassivePerspective Phrase="was last at"
-                    ViewedClass="Depot" OnePerspective="true" Conditional="true" />
-            </BinaryAssociation>
+			<BinaryAssociation Rnum="1">
+				<ActivePerspective Phrase="is last location of"
+					ViewedClass="Order" OnePerspective="false" Conditional="true" />
+				<PassivePerspective Phrase="was last at"
+					ViewedClass="Depot" OnePerspective="true" Conditional="true" />
+			</BinaryAssociation>
 
-        </Subsystem>
-    </ModeledDomain>
+		</Subsystem>
+	</ModeledDomain>
 
 </Domains>
