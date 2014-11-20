@@ -1,5 +1,7 @@
 package ordertracker;
 
+import java.util.concurrent.TimeUnit;
+
 import ordertracker.Order.Behaviour;
 import ordertracker.Order.Events.ArrivedDepot;
 import ordertracker.Order.Events.ArrivedFinalDepot;
@@ -15,6 +17,7 @@ import ordertracker.Order.Events.NoMoreAttempts;
 import ordertracker.Order.Events.PickedUp;
 import ordertracker.Order.Events.ReturnToSender;
 import ordertracker.Order.Events.Send;
+import scala.concurrent.duration.Duration;
 
 public class OrderBehaviour implements Order.Behaviour {
 
@@ -23,7 +26,7 @@ public class OrderBehaviour implements Order.Behaviour {
 	private OrderBehaviour(Order self) {
 		this.self = self;
 	}
-	
+
 	@Override
 	public void onEntryPreparing(Create event) {
 		self.setAttempts(0);
@@ -39,80 +42,77 @@ public class OrderBehaviour implements Order.Behaviour {
 
 	@Override
 	public void onEntryReadyForDispatch(Send event) {
-		// TODO Auto-generated method stub
-		
+		// do nothing
 	}
 
 	@Override
 	public void onEntryCourierAssigned(Assign event) {
-		// TODO Auto-generated method stub
-		
+		// do nothing
 	}
 
 	@Override
 	public void onEntryInTransit(PickedUp event) {
-		// TODO Auto-generated method stub
-		
+		// do nothing
 	}
 
 	@Override
 	public void onEntryInTransit(ArrivedDepot event) {
-		// TODO Auto-generated method stub
-		
+		Depot depot = Depot.find(event.getDepotID());
+		self.setDepot_R1(depot);
 	}
 
 	@Override
 	public void onEntryReadyForDelivery(ArrivedFinalDepot event) {
-		// TODO Auto-generated method stub
-		
+		Depot depot = Depot.find(event.getDepotID());
+		self.setDepot_R1(depot);
 	}
 
 	@Override
 	public void onEntryDelivering(Delivering event) {
-		// TODO Auto-generated method stub
-		
+		// do nothing
 	}
 
 	@Override
 	public void onEntryDelivered(Delivered event) {
-		// TODO Auto-generated method stub
-		
+		// send email to destination email and sender email notifying of
+		// successful delivery
 	}
 
 	@Override
 	public void onEntryHeldForPickup(DeliveryFailed event) {
-		// TODO Auto-generated method stub
-		
+		//return to sender after 14 days if customer does not pickup
+		self.signal(new Order.Events.ReturnToSender(),
+				Duration.create(14, TimeUnit.DAYS));
 	}
 
 	@Override
 	public void onEntryReadyForDelivery(DeliverAgain event) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void onEntryHeldForPickup(NoMoreAttempts event) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void onEntryHeldForPickup(CouldNotDeliver event) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void onEntryReturnToSender(ReturnToSender event) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void onEntryDelivered(DeliveredByPickup event) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	static Order.BehaviourFactory createFactory() {
