@@ -145,6 +145,13 @@ Now fill in the details of *domain.xml* and the result will be something like [t
 
 ### View the class diagram
 
+```bash
+cd xuml-diagrams
+mvn jetty:run
+```
+
+Go to [http://localhost:8080](http://localhost:8080) and click on **Choose file**. Select your domains.xml file and the first domain in the file will be loaded into the Class Diagram Viewer. Drag classes around till it looks nice.
+
 When *domains.xml* is loaded into the Class Diagram Viewer we get:
 
 <img src="https://raw.github.com/davidmoten/xuml-tools/master/src/docs/class-diagram-order-tracker.png">
