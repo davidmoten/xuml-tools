@@ -2,6 +2,8 @@ package ordertracker;
 
 import java.util.concurrent.TimeUnit;
 
+import org.apache.log4j.Logger;
+
 import ordertracker.Order.Behaviour;
 import ordertracker.Order.Events.ArrivedDepot;
 import ordertracker.Order.Events.ArrivedFinalDepot;
@@ -20,6 +22,8 @@ import ordertracker.Order.Events.Send;
 import scala.concurrent.duration.Duration;
 
 public class OrderBehaviour implements Order.Behaviour {
+
+	private static Logger log = Logger.getLogger(OrderBehaviour.class);
 
 	private Order self;
 
@@ -69,7 +73,7 @@ public class OrderBehaviour implements Order.Behaviour {
 
 	@Override
 	public void onEntryDelivering(Delivering event) {
-		// do nothing
+		self.setAttempts(self.getAttempts() + 1);
 	}
 
 	@Override
@@ -80,21 +84,28 @@ public class OrderBehaviour implements Order.Behaviour {
 
 	@Override
 	public void onEntryHeldForPickup(DeliveryFailed event) {
-		//return to sender after 14 days if customer does not pickup
+		// return to sender after 14 days if customer does not pickup
 		self.signal(new Order.Events.ReturnToSender(),
 				Duration.create(14, TimeUnit.DAYS));
 	}
 
 	@Override
-	public void onEntryReadyForDelivery(DeliverAgain event) {
-		// TODO Auto-generated method stub
+	public void onEntryDeliveryFailed(DeliveryFailed event) {
+		if (self.getAttempts() >= self.getMaxAttempts())
+			self.signal(new Order.Events.NoMoreAttempts());
+		else
+			self.signal(new Order.Events.DeliverAgain(),
+					Duration.create(12, TimeUnit.HOURS));
+	}
 
+	@Override
+	public void onEntryReadyForDelivery(DeliverAgain event) {
+		//do nothing
 	}
 
 	@Override
 	public void onEntryHeldForPickup(NoMoreAttempts event) {
-		// TODO Auto-generated method stub
-
+		//do nothing
 	}
 
 	@Override
@@ -124,4 +135,5 @@ public class OrderBehaviour implements Order.Behaviour {
 			}
 		};
 	}
+
 }

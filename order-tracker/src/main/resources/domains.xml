@@ -24,7 +24,7 @@
 
         <Subsystem Name="OrderTracker" Floor="1" Ceiling="20">
 
-            <Class Name="Order" >
+            <Class Name="Order">
                 <IndependentAttribute Name="Order ID" Type="OrderID">
                     <Identifier Number="1" />
                 </IndependentAttribute>
@@ -165,6 +165,9 @@
 
                     <Transition State="Delivering" Destination="Held for pickup"
                         EventID="12" />
+
+                    <Transition State="Delivering" Destination="Delivery failed"
+                        EventID="9" />
 
                     <Transition State="Delivery failed" Destination="Ready for delivery"
                         EventID="10" />
