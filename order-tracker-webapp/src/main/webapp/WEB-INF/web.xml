@@ -4,7 +4,11 @@
     version="3.0">
 
 	<display-name>${project.artifactId} ${project.version}</display-name>
-		 	
+    
+    <listener>
+          <listener-class>ordertracker.web.ApplicationServletContextListener</listener-class>
+    </listener>
+    
 	<servlet>
 		<servlet-name>jersey-serlvet</servlet-name>
 		<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>

@@ -28,7 +28,7 @@ public class Service {
 			@QueryParam("toAddress") String toAddress,
 			@QueryParam("destinationEmail") String destinationEmail,
 			@QueryParam("senderEmail") String senderEmail,
-			@QueryParam("maxAttempts") int maxAttempts,
+			@QueryParam("maxAttempts") Integer maxAttempts,
 			@QueryParam("comment") String comment) {
 		Context.create(Order.class, new Order.Events.Create(orderId,
 				description, fromAddress, toAddress, destinationEmail,

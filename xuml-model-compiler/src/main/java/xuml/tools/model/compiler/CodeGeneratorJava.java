@@ -154,7 +154,7 @@ public class CodeGeneratorJava {
 
 		TypeRegister types = new TypeRegister();
 		out.format("public class Context {\n\n");
-		out.format("    private static %s signaller;\n\n",
+		out.format("    private static volatile %s signaller;\n\n",
 				types.addType(Signaller.class));
 		out.format("    public static int sendSignalsInQueue() {\n");
 		out.format("        return signaller.sendSignalsInQueue();\n");

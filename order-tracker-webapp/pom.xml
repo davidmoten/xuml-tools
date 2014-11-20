@@ -41,7 +41,6 @@
 			<artifactId>order-tracker</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
-
 	</dependencies>
 	<build>
 		<plugins>
