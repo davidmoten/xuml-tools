@@ -26,8 +26,6 @@ public class App {
 		// pass the EntityManagerFactory to the generated xuml Context
 		Context.setEntityManagerFactory(emf);
 		
-		// setup behaviour factories and assign them to Context here
-		
 		// set the behaviour factory for Order
 		Order.setBehaviourFactory(OrderBehaviour.createFactory());
 		

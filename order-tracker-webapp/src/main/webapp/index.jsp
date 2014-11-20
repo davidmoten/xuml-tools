@@ -20,7 +20,7 @@ function callUrl(url, method) {
 <h2>Order tracker</h2>
 <ul>
 	<li>Try this <a href="rest/bangara">link</a></li>
-	<li><a href="#" onclick="callUrl('rest/order/123/create?description=an order','PUT');">Create an order</a></li>
+	<li><a href="#" onclick="callUrl('rest/order/123/create?description=an order&fromAddress=12 Something St, Canberra&toAddress=144 Bank St, Dickson&comment=created','PUT');">Create an order</a></li>
 </ul>
 
 <p>Time now is <%= new java.util.Date() %></p>

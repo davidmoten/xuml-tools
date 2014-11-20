@@ -26,8 +26,15 @@ public class OrderBehaviour implements Order.Behaviour {
 	
 	@Override
 	public void onEntryPreparing(Create event) {
-		// TODO Auto-generated method stub
-		
+		self.setAttempts(0);
+		self.setComment(event.getComment());
+		self.setDescription(event.getDescription());
+		self.setDestinationEmail(event.getDestinationEmail());
+		self.setFromAddress(event.getFromAddress());
+		self.setId(event.getOrderID());
+		self.setMaxAttempts(event.getMaxAttempts());
+		self.setSenderEmail(event.getSenderEmail());
+		self.setToAddress(event.getToAddress());
 	}
 
 	@Override
