@@ -7,11 +7,17 @@ function callUrl(url, method) {
   client.open(method, url, false);
   client.setRequestHeader("Content-Type", "text/plain");
   client.send();
+  var msg;
   if (client.status == 200)
-    alert("The request succeeded!\n\nThe response representation was:\n\n" + client.responseText)
+    msg = client.responseText;
   else
-    alert("The request did not succeed!\n\nThe response status was: " + client.status + " " + client.statusText + ".");
+    msg = "Request failed. status=" + client.status + " " + client.statusText;
+  document.getElementById("message").innerHTML=msg; 
 } 
+
+function signal(name) {
+	callUrl("rest/order/123/" + name,'PUT');
+}
 
 </script>
 </head>
@@ -21,10 +27,15 @@ function callUrl(url, method) {
 <ul>
 	<li>Try this <a href="rest/bangara">link</a></li>
 	<li><a href="#" onclick="callUrl('rest/order/123/create?description=an order&fromAddress=12 Something St, Canberra&toAddress=144 Bank St, Dickson&comment=created&destinationEmail=recipient@goog.com&senderEmail=online.company@goog.com&maxAttempts=3','POST');">Create an order</a></li>
-	<li><a href="#" onclick="callUrl('rest/order/123/send','PUT')">Send the order</a></li>
-	<li><a href="#" onclick="callUrl('rest/order/123/assign','PUT')">Assign to a courier</a></li>
-	<li><a href="#" onclick="callUrl('rest/order/123/pickedUp','PUT')">Order picked up by courier</a></li>
+	<li><a href="#" onclick="signal('send');">Send the order</a></li>
+	<li><a href="#" onclick="signal('assign');">Assign to a courier</a></li>
+	<li><a href="#" onclick="signal('pickedUp');">Order picked up by courier</a></li>
+	<li><a href="#" onclick="signal('arrivedDepot');">Arrived depot</a></li>
+	<li><a href="#" onclick="signal('arrivedFinalDepot');">Arrived final depot</a></li>
+	<li><a href="#" onclick="signal('delivering');">Delivering</a></li>
 </ul>
+
+<p><div id="message"/></p>
 
 
 <p>Time now is <%= new java.util.Date() %></p>

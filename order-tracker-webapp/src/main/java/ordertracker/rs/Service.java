@@ -1,6 +1,5 @@
 package ordertracker.rs;
 
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -13,13 +12,6 @@ import ordertracker.Order;
 
 @Path("/")
 public class Service {
-
-	@GET
-	@Path("/{param}")
-	public Response getMsg(@PathParam("param") String msg) {
-		String output = "The parameter is : " + msg;
-		return Response.status(200).entity(output).build();
-	}
 
 	@POST
 	@Path("/order/{orderId}/create")
@@ -59,6 +51,30 @@ public class Service {
 		Order order = Order.find(orderId);
 		order.signal(new Order.Events.PickedUp());
 		return Response.status(200).entity("order picked up by a courier").build();
+	}
+	
+	@PUT
+	@Path("/order/{orderId}/arrivedDepot")
+	public Response arrivedDepot(@PathParam("orderId") String orderId, String depotId) {
+		Order order = Order.find(orderId);
+		order.signal(new Order.Events.ArrivedDepot(depotId));
+		return Response.status(200).entity("arrived depot "+ depotId).build();
+	}
+	
+	@PUT
+	@Path("/order/{orderId}/arrivedFinalDepot")
+	public Response arrivedFinalDepot(@PathParam("orderId") String orderId, @QueryParam("depotId") String depotId) {
+		Order order = Order.find(orderId);
+		order.signal(new Order.Events.ArrivedFinalDepot(depotId));
+		return Response.status(200).entity("arrived final depot "+ depotId).build();
+	}
+	
+	@PUT
+	@Path("/order/{orderId}/delivering")
+	public Response delivering(@PathParam("orderId") String orderId) {
+		Order order = Order.find(orderId);
+		order.signal(new Order.Events.Delivering());
+		return Response.status(200).entity("delivering").build();
 	}
 
 }
