@@ -118,7 +118,6 @@ public class Service {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getOrdersReadyForDelivery(
 			@PathParam("depotId") String depotId) {
-		// ensure depot exists
 		Depot depot = Depot.find(depotId);
 		List<Order> list = new ArrayList<Order>();
 		for (Order order : depot.getOrder_R1())
