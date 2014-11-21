@@ -83,13 +83,6 @@ public class OrderBehaviour implements Order.Behaviour {
 
 	}
 
-	@Override
-	public void onEntryHeldForPickup(DeliveryFailed event) {
-		self.setStatus(Order.State.HELD_FOR_PICKUP.toString());
-		// return to sender after 14 days if customer does not pickup
-		self.signal(new Order.Events.ReturnToSender(),
-				Duration.create(14, TimeUnit.SECONDS));
-	}
 
 	@Override
 	public void onEntryDeliveryFailed(DeliveryFailed event) {
@@ -97,18 +90,21 @@ public class OrderBehaviour implements Order.Behaviour {
 		if (self.getAttempts() >= self.getMaxAttempts())
 			self.signal(new Order.Events.NoMoreAttempts());
 		else
-			self.signal(new Order.Events.DeliverAgain(),
-					Duration.create(12, TimeUnit.SECONDS));
+			self.signal(new Order.Events.DeliverAgain());
 	}
 
 	@Override
-	public void onEntryReadyForDelivery(DeliverAgain event) {
-		self.setStatus(Order.State.READY_FOR_DELIVERY.toString());
+	public void onEntryAwaitingNextDeliveryAttempt(DeliverAgain event) {
+		self.signal(new Order.Events.DeliverAgain(),
+				Duration.create(12, TimeUnit.SECONDS));
 	}
-
+	
 	@Override
 	public void onEntryHeldForPickup(NoMoreAttempts event) {
 		self.setStatus(Order.State.HELD_FOR_PICKUP.toString());
+		// return to sender after 14 days if customer does not pickup
+		self.signal(new Order.Events.ReturnToSender(),
+				Duration.create(14, TimeUnit.SECONDS));
 	}
 
 	@Override

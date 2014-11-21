@@ -165,7 +165,7 @@
 					<Transition State="Delivering" Destination="Delivered"
 						EventID="8" />
 
-					<Transition State="Delivering" Destination="Held for pickup"
+					<Transition State="Delivering" Destination="Delivery failed"
 						EventID="9" />
 
 					<Transition State="Delivering" Destination="Held for pickup"
@@ -174,7 +174,7 @@
 					<Transition State="Delivering" Destination="Delivery failed"
 						EventID="9" />
 
-					<Transition State="Delivery failed" Destination="Ready for delivery"
+					<Transition State="Delivery failed" Destination="Awaiting next delivery attempt"
 						EventID="10" />
 
 					<Transition State="Delivery failed" Destination="Held for pickup"

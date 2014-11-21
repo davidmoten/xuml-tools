@@ -33,7 +33,7 @@ public class Service {
 		Context.create(Order.class, new Order.Events.Create(orderId,
 				description, fromAddress, toAddress, destinationEmail,
 				senderEmail, maxAttempts, comment));
-		return Response.status(200).entity("order created").build();
+		return Response.ok("order created").build();
 	}
 
 	@PUT
@@ -41,7 +41,7 @@ public class Service {
 	public Response sendOrder(@PathParam("orderId") String orderId) {
 		Order order = Order.find(orderId);
 		order.signal(new Order.Events.Send());
-		return Response.status(200).entity("order sent").build();
+		return Response.ok("order sent").build();
 	}
 
 	@PUT
@@ -49,7 +49,7 @@ public class Service {
 	public Response assignToCourier(@PathParam("orderId") String orderId) {
 		Order order = Order.find(orderId);
 		order.signal(new Order.Events.Assign());
-		return Response.status(200).entity("order assigned to a courier")
+		return Response.ok("order assigned to a courier")
 				.build();
 	}
 
@@ -58,7 +58,7 @@ public class Service {
 	public Response pickedUpByCourier(@PathParam("orderId") String orderId) {
 		Order order = Order.find(orderId);
 		order.signal(new Order.Events.PickedUp());
-		return Response.status(200).entity("order picked up by a courier")
+		return Response.ok("order picked up by a courier")
 				.build();
 	}
 
@@ -68,7 +68,7 @@ public class Service {
 			String depotId) {
 		Order order = Order.find(orderId);
 		order.signal(new Order.Events.ArrivedDepot(depotId));
-		return Response.status(200).entity("arrived depot " + depotId).build();
+		return Response.ok("arrived depot " + depotId).build();
 	}
 
 	@PUT
@@ -77,7 +77,7 @@ public class Service {
 			@QueryParam("depotId") String depotId) {
 		Order order = Order.find(orderId);
 		order.signal(new Order.Events.ArrivedFinalDepot(depotId));
-		return Response.status(200).entity("arrived final depot " + depotId)
+		return Response.ok("arrived final depot " + depotId)
 				.build();
 	}
 
@@ -86,7 +86,7 @@ public class Service {
 	public Response delivering(@PathParam("orderId") String orderId) {
 		Order order = Order.find(orderId);
 		order.signal(new Order.Events.Delivering());
-		return Response.status(200).entity("delivering").build();
+		return Response.ok("delivering").build();
 	}
 
 	@PUT
@@ -94,7 +94,7 @@ public class Service {
 	public Response delivered(@PathParam("orderId") String orderId) {
 		Order order = Order.find(orderId);
 		order.signal(new Order.Events.Delivered());
-		return Response.status(200).entity("delivered").build();
+		return Response.ok("delivered").build();
 	}
 
 	@PUT
@@ -102,7 +102,7 @@ public class Service {
 	public Response deliveryFailed(@PathParam("orderId") String orderId) {
 		Order order = Order.find(orderId);
 		order.signal(new Order.Events.DeliveryFailed());
-		return Response.status(200).entity("delivery failed").build();
+		return Response.ok("delivery failed").build();
 	}
 
 	@PUT
@@ -110,7 +110,7 @@ public class Service {
 	public Response deliverAgain(@PathParam("orderId") String orderId) {
 		Order order = Order.find(orderId);
 		order.signal(new Order.Events.DeliverAgain());
-		return Response.status(200).entity("marked for delivery again").build();
+		return Response.ok("marked for delivery again").build();
 	}
 
 	@GET
