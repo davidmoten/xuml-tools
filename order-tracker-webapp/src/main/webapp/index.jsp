@@ -25,7 +25,6 @@ function signal(name) {
 
 <h2>Order tracker</h2>
 <ul>
-	<li>Try this <a href="rest/bangara">link</a></li>
 	<li><a href="#" onclick="callUrl('rest/order/123/create?description=an order&fromAddress=12 Something St, Canberra&toAddress=144 Bank St, Dickson&comment=created&destinationEmail=recipient@goog.com&senderEmail=online.company@goog.com&maxAttempts=3','POST');">Create an order</a></li>
 	<li><a href="#" onclick="signal('send');">Send the order</a></li>
 	<li><a href="#" onclick="signal('assign');">Assign to a courier</a></li>
