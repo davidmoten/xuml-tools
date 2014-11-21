@@ -115,20 +115,19 @@ public class Service {
 
 	@GET
 	@Path("/depot/{depotId}/ordersReadyForDelivery")
-	@Produces("application/json")
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response getOrdersReadyForDelivery(
 			@PathParam("depotId") String depotId) {
 		// ensure depot exists
 		Depot depot = Depot.find(depotId);
 		List<Order> list = new ArrayList<Order>();
-		List<Order> orders = Order.select(
-				Order.Attribute.status.eq(Order.State.READY_FOR_DELIVERY
-						.toString())).many();
-		for (Order order : orders)
-			if (order.getDepot_R1() != null
-					&& order.getDepot_R1().getId() == depot.getId())
+		for (Order order : depot.getOrder_R1())
+			if (Order.State.READY_FOR_DELIVERY.toString().equals(
+					order.getStatus()))
 				list.add(order);
-		return Response.ok("{}", MediaType.APPLICATION_JSON).build();
+
+		return Response.ok("{ \"count\" : \"" + list.size() + "\"}",
+				MediaType.APPLICATION_JSON).build();
 	}
 
 	@GET

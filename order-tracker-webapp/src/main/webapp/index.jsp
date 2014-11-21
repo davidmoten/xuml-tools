@@ -33,6 +33,11 @@ function signal(name) {
 	<li><a href="#" onclick="signal('arrivedDepot');">Arrived depot</a></li>
 	<li><a href="#" onclick="signal('arrivedFinalDepot');">Arrived final depot</a></li>
 	<li><a href="#" onclick="signal('delivering');">Delivering</a></li>
+	<li><a href="#" onclick="signal('delivered');">Delivered</a></li>
+	<li><a href="#" onclick="signal('deliveryFailed');">Delivery failed</a></li>
+	<li><a href="#" onclick="signal('deliveryAgain');">Deliver again</a></li>
+	<li><a href="rest/depot/1/ordersReadyForDelivery">Orders for delivery at depot 1</a></li>
+	<li><a href="rest/order/123/status">Status of order 123</a></li>
 </ul>
 
 <p><div id="message"/></p>
