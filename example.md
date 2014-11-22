@@ -18,7 +18,7 @@ The idea for this subsystem is that an order (like say an online purchase) is:
 
 The entities involved are 
 
-**Order** - orderId, description, fromAddress, toAddress, destinationEmail, senderEmail, lastDepotId, nextDepotId, maxAttempts, attempts, comment
+**Order** - orderId, description, fromAddress, toAddress, destinationEmail, senderEmail, lastDepotId, maxAttempts, attempts, comment
 
 **Depot** - depotId, name, lat, long
 
@@ -150,7 +150,7 @@ cd xuml-diagrams
 mvn jetty:run
 ```
 
-Go to [http://localhost:8080](http://localhost:8080) and click on **Choose file**. Select your domains.xml file and the first domain in the file will be loaded into the Class Diagram Viewer. Drag classes around till it looks nice.
+Go to [http://localhost:8080/cd?id=1](http://localhost:8080/cd?id=1) and click on **Choose file**. Select your domains.xml file and the first domain in the file will be loaded into the Class Diagram Viewer. Drag classes around till it looks nice.
 
 When *domains.xml* is loaded into the Class Diagram Viewer we get:
 

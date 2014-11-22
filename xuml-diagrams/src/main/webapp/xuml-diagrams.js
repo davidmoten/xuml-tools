@@ -887,11 +887,11 @@ function makeTouchable() {
 function setup() {
 	createDivs();
 	createLoad();
-	createHome();
-	createOptions();
-	createSave();
-	createRestore();
-	createEdit();
+	//createHome();
+	//createOptions();
+	//createSave();
+	//createRestore();
+	//createEdit();
 	createTitle();
 	makeDraggable();
 	makeTouchable();

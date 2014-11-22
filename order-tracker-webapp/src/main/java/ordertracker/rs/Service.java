@@ -49,8 +49,7 @@ public class Service {
 	public Response assignToCourier(@PathParam("orderId") String orderId) {
 		Order order = Order.find(orderId);
 		order.signal(new Order.Events.Assign());
-		return Response.ok("order assigned to a courier")
-				.build();
+		return Response.ok("order assigned to a courier").build();
 	}
 
 	@PUT
@@ -58,8 +57,7 @@ public class Service {
 	public Response pickedUpByCourier(@PathParam("orderId") String orderId) {
 		Order order = Order.find(orderId);
 		order.signal(new Order.Events.PickedUp());
-		return Response.ok("order picked up by a courier")
-				.build();
+		return Response.ok("order picked up by a courier").build();
 	}
 
 	@PUT
@@ -77,8 +75,7 @@ public class Service {
 			@QueryParam("depotId") String depotId) {
 		Order order = Order.find(orderId);
 		order.signal(new Order.Events.ArrivedFinalDepot(depotId));
-		return Response.ok("arrived final depot " + depotId)
-				.build();
+		return Response.ok("arrived final depot " + depotId).build();
 	}
 
 	@PUT
@@ -134,7 +131,7 @@ public class Service {
 	@Produces("text/plain")
 	public Response getOrderStatus(@PathParam("orderId") String orderId) {
 		Order order = Order.find(orderId);
-		return Response.ok(order.getStatus(), MediaType.TEXT_PLAIN).build();
+		return Response.ok(order.getState(), MediaType.TEXT_PLAIN).build();
 	}
 
 }

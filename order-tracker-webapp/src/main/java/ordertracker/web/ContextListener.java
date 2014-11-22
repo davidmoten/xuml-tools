@@ -7,15 +7,16 @@ import ordertracker.App;
 
 import org.apache.log4j.Logger;
 
-public class ContextListener implements
-		ServletContextListener {
-	
-	private static Logger log = Logger
-			.getLogger(ContextListener.class);
+import xuml.tools.util.database.DerbyUtil;
+
+public class ContextListener implements ServletContextListener {
+
+	private static Logger log = Logger.getLogger(ContextListener.class);
 
 	@Override
 	public void contextInitialized(ServletContextEvent event) {
 		try {
+			DerbyUtil.disableDerbyLog();
 			App.startup();
 		} catch (RuntimeException e) {
 			log.error(e.getMessage(), e);
