@@ -781,6 +781,20 @@ String.prototype.endsWith = function(suffix) {
     return this.indexOf(suffix, this.length - suffix.length) !== -1;
 };
 
+function download(content, filename, contentType) {
+    if(!contentType) contentType = 'application/octet-stream';
+    var a = document.createElement('a');
+    var blob = new Blob([content], {'type':contentType});
+    a.href = window.URL.createObjectURL(blob);
+    a.download = filename;
+    a.click();
+}
+
+/**
+ * Loads either one file ending in .xml which is the domains.xml file or two files 
+ * one being the .xml file and the other being the .view file with the json
+ * presentation information (positions of classes on the screen).
+ */
 function createLoad() {
 	$("body")
 	    .prepend("<input type='file' id='load' class='load noprint' multiple></input>");
@@ -808,7 +822,8 @@ function createLoad() {
 		    	if (viewFile!=null) {
 		    	    var reader2 = new FileReader();
 		    	    reader2.onload = function(e2) {
-		    	        var viewText = reader2.result;	
+		    	        var viewText = reader2.result;
+		    	        console.log(viewText);
 		    	        $.redirectPost("cd?", {xml:text},{view:viewText});
 		    	    }
 		    	    reader2.readAsText(view);
