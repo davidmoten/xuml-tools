@@ -787,25 +787,34 @@ function createLoad() {
 	$("#load").change(function(evt) {
 		
 	    var file = evt.target.files[0];
-	    var view;
+	    var viewFile;
 	    if (evt.target.files.length>1) {
-	        view = evt.target.files[1];
+	        viewFile = evt.target.files[1];
 	    }
 	    else {
-	      	view = null; 
+	      	viewFile = null; 
 	    }
 	        	
 	    if (!file.name.endsWith(".xml")) {
-	    	var temp = file; file = view; view = temp;
+	    	var temp = file; file = viewFile; viewFile = temp;
 	    }
-	    if (file.name.endsWith(".xml") && (view ==null || view.endWith(".view"))) {
-		    console.log(file);
+	    if (file.name.endsWith(".xml") && (viewFile ==null || viewFile.name.endsWith(".view"))) {
+		    console.log("file="+file);
+		    console.log("view="+viewFile);
 		    var reader = new FileReader();
-		    
 		    reader.onload = function(e) {
 		    	var text = escapeAttribute(reader.result);
 		    	console.log(text);
-		    	$.redirectPost("cd?", {xml:text});
+		    	if (viewFile!=null) {
+		    	    var reader2 = new FileReader();
+		    	    reader2.onload = function(e2) {
+		    	        var viewText = reader2.result;	
+		    	        $.redirectPost("cd?", {xml:text},{view:viewText});
+		    	    }
+		    	    reader2.readAsText(view);
+		    	} else {
+		    	    $.redirectPost("cd?", {xml:text},{view:""});
+		    	}
 		    };
 		    
 		    reader.readAsText(file);
