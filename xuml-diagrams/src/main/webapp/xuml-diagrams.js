@@ -797,7 +797,7 @@ function download(content, filename, contentType) {
  */
 function createLoad() {
 	$("body")
-	    .prepend("<input type='file' id='load' class='load noprint' multiple></input>");
+	    .prepend("<div id='load-container'><input type='file' id='load' class='load noprint' multiple></input></div>");
 	$("#load").change(function(evt) {
 		
 	    var file = evt.target.files[0];

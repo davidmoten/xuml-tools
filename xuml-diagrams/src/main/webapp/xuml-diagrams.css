@@ -17,7 +17,13 @@ body {font-family: Tahoma, Geneva, sans-serif;font-size:100%;}
 .multiplicity2 {position:absolute; left:100px;top:100px;transparent;font-size:80%;}
 .cls {background:#F6F4D4; box-shadow: 5px 5px 5px #888;border:thin solid grey;}
 #title {position:absolute; top:5px;left:1em; width:40em;font-size:120%; z-index:-1}
-#load {float:right; padding-right:2em; color:#0000EE}
+#load {
+    filter: alpha(opacity=0);opacity: 0;
+}
+#load-container {
+	background: url(images/open.png) no-repeat;
+    position:absolute; right:0px;width:32px;top:5px;height:32px; color:#0000EE
+}
 #options-editor {display:none;}
 .operation {position:relative;padding-left:1.1em;left:-5px;top:2px;
 	background-image: url(images/cog.png); 
@@ -27,3 +33,4 @@ body {font-family: Tahoma, Geneva, sans-serif;font-size:100%;}
 	background-image: url(images/event.png);
 	background-repeat: no-repeat;
 	background-position: left top;}
+
