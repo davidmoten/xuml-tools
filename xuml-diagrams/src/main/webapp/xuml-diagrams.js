@@ -776,22 +776,40 @@ var entityMap = {
   function escapeAttribute(string) {
     return String(string).replace(/"/g, '&quot;').replace(/'/g,"&#39;").replace(/\n/g,"&#10;").replace(/\r/g,"&#13;");
   }
+  
+String.prototype.endsWith = function(suffix) {
+    return this.indexOf(suffix, this.length - suffix.length) !== -1;
+};
 
 function createLoad() {
 	$("body")
-	    .prepend("<input type='file' id='load' class='load noprint'></input>");
+	    .prepend("<input type='file' id='load' class='load noprint' multiple></input>");
 	$("#load").change(function(evt) {
+		
 	    var file = evt.target.files[0];
-	    console.log(file);
-	    var reader = new FileReader();
-	    
-	    reader.onload = function(e) {
-	    	var text = escapeAttribute(reader.result);
-	    	console.log(text);
-	    	$.redirectPost("cd?", {xml:text});
-	    };
-	    
-	    reader.readAsText(file);
+	    var view;
+	    if (evt.target.files.length>1) {
+	        view = evt.target.files[1];
+	    }
+	    else {
+	      	view = null; 
+	    }
+	        	
+	    if (!file.name.endsWith(".xml")) {
+	    	var temp = file; file = view; view = temp;
+	    }
+	    if (file.name.endsWith(".xml") && (view ==null || view.endWith(".view"))) {
+		    console.log(file);
+		    var reader = new FileReader();
+		    
+		    reader.onload = function(e) {
+		    	var text = escapeAttribute(reader.result);
+		    	console.log(text);
+		    	$.redirectPost("cd?", {xml:text});
+		    };
+		    
+		    reader.readAsText(file);
+	    }
     });
 }
 
