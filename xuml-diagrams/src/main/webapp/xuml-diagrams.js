@@ -797,7 +797,7 @@ function download(content, filename, contentType) {
  */
 function createLoad() {
 	$("body")
-	    .prepend("<div id='load-container'><input type='file' id='load' class='load noprint' multiple></input></div>");
+	    .prepend("<div id='load-container' class='load noprint'><input type='file' id='load' multiple></input></div>");
 	$("#load").change(function(evt) {
 		
 	    var file = evt.target.files[0];
@@ -835,6 +835,14 @@ function createLoad() {
 		    reader.readAsText(file);
 	    }
     });
+}
+
+function createSave2() {
+	$("body")
+	    .prepend("<div id='save' class='noprint'></div>");
+	$("#save").click(function(e) {
+		
+	});
 }
 
 function createOptions() {
@@ -929,6 +937,7 @@ function makeTouchable() {
 function setup() {
 	createDivs();
 	createLoad();
+	createSave2();
 	//createHome();
 	//createOptions();
 	//createSave();

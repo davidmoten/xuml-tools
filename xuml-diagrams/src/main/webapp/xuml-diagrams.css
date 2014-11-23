@@ -22,7 +22,11 @@ body {font-family: Tahoma, Geneva, sans-serif;font-size:100%;}
 }
 #load-container {
 	background: url(images/open.png) no-repeat;
-    position:absolute; right:0px;width:32px;top:5px;height:32px; color:#0000EE
+    position:absolute; right:42px;width:32px;top:5px;height:32px;
+}
+#save {
+	background: url(images/save.png) no-repeat;
+    position:absolute; right:5px;width:32px;top:5px;height:32px;
 }
 #options-editor {display:none;}
 .operation {position:relative;padding-left:1.1em;left:-5px;top:2px;
