@@ -781,15 +781,6 @@ String.prototype.endsWith = function(suffix) {
     return this.indexOf(suffix, this.length - suffix.length) !== -1;
 };
 
-function download(content, filename, contentType) {
-    if(!contentType) contentType = 'application/octet-stream';
-    var a = document.createElement('a');
-    var blob = new Blob([content], {'type':contentType});
-    a.href = window.URL.createObjectURL(blob);
-    a.download = filename;
-    a.click();
-}
-
 /**
  * Loads either one file ending in .xml which is the domains.xml file or two files 
  * one being the .xml file and the other being the .view file with the json
@@ -837,11 +828,22 @@ function createLoad() {
     });
 }
 
+function download(content, filename, contentType) {
+    if(!contentType) contentType = 'application/octet-stream';
+    var a = document.createElement('a');
+    var blob = new Blob([content], {'type':contentType});
+    a.href = window.URL.createObjectURL(blob);
+    a.download = filename;
+    a.click();
+}
+
+
 function createSave2() {
 	$("body")
 	    .prepend("<div id='save' class='noprint'></div>");
 	$("#save").click(function(e) {
-		
+		var presentation = buildPresentationJson();
+		download(presentation, "domains.view");
 	});
 }
 
