@@ -11,7 +11,9 @@ xuml-tools
 
 The primary inspiration for this project is  [*Executable UML - A Foundation for Model Driven Architecture*](http://www.executableumlbook.com/) by Mellor &amp; Balcer.
 
-Status: *alpha*
+*24 November 2014*: active on this at the moment and documenting, so setting at *pre-alpha* till Jan 2015.
+
+Status: *pre-alpha*
 
 <img src="https://raw.github.com/davidmoten/xuml-tools/master/xuml-diagrams/src/docs/class-diagram.png">
 
@@ -30,26 +32,6 @@ This is how to build the artifacts from source:
     cd xuml-tools
     mvn clean install
 
-### Create a project using the xuml-model archetype
-
-Use the maven archetype to create a project in interactive mode:
-	
-    cd <YOUR_WORKSPACE>
-    mvn archetype:generate \
-    -DarchetypeGroupId=com.github.davidmoten \
-    -DarchetypeArtifactId=xuml-model-archetype \
-    -DarchetypeVersion=0.1-SNAPSHOT
-
-Then
-
-    cd <NEW_PROJECT>
-    mvn test
-
-The above command
-* generates classes from *src/main/resources/domain.xml*
-* runs unit tests against an embedded in-memory Derby database
-
-  
 ### Worked example
 
 See the example of [creating an Order Tracking system with a REST API](example.md).

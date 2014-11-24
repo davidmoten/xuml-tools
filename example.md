@@ -156,18 +156,20 @@ When *domains.xml* is loaded into the Class Diagram Viewer we get:
 
 <img src="https://raw.github.com/davidmoten/xuml-tools/master/src/docs/class-diagram-order-tracker.png">
 
-### Add behaviour
+### Add behaviour using Java
 The next step with Executable UML is detailing the actions that occur when a state transition occurs.
 
-Ideally we would use a dedicated action language (like BPAL97) and an editor that supports it to create the actions. However, this is hard work from a tooling perspective and limits adoption by companies with a strong language bias. 
+Ideally we would use a dedicated action language (like [BPAL97](http://ooatool.com/docs/BPAL97.pdf)) and an editor that supports it to create the actions. However, this is hard work from a tooling perspective and limits adoption by companies that are don't want to fork off into separate platforms and languages. If you don't mind using Java (or another jvm language) then *xuml-tools* offers the terrific advantages of Executable UML if you can accept having Java as a runtime dependency.
+
+A plus for allowing java as the action language is that we have a very natural interaction with the database via JPA. No sql is written in the actions (although you can if you really want to). Test databases with fully instantiated schemas are created automatically by the JPA provider if desired just by adding an option to *persistence.xml*.
 
 We are going to use java for the action language but it is recommended that the conventions of BPAL97 are adhered to, albeit with different syntax. For a java programmer this is a very convenient and comfortable place to be.
 
 Because *Order* has a state machine we need to specify the actions for *Order*. Implement the class *OrderBehaviour* in the project *order-tracking* like [this](order-tracker/src/main/java/ordertracker/OrderBehaviour.java). 
+
+Note that the [*OrderBehaviour*](order-tracker/src/main/java/ordertracker/OrderBehaviour.java) class also contains a static ```createFactory``` method which is used at startup (see [App.java](order-tracker/src/main/java/ordertracker/App.java)). 
  
-For example, to implement the rule that an item is returned to sender after being held for pickupt for 14 days:
-
-
+For example, to implement the rule that an item is returned to sender after being held for pickup for 14 days:
 
 ```java
 package ordertracker;
@@ -205,4 +207,29 @@ public class OrderBehaviour implements Order.Behaviour {
 
 }
 ``` 
+
+### Create the REST API
+The project [*xuml-tools/order-tracker-webapp*](order-tracker-webapp) is an example that wraps *order-tracker* with a web-service, in particular a REST API using the [Jersey](https://jersey.java.net/) implementation of [JAX-RS](http://en.wikipedia.org/wiki/Java_API_for_RESTful_Web_Services). 
+
+The guts of the service definition is in [Service.java](order-tracker-webapp/src/main/java/ordertracker/rs/Service.java). Check it out!
+
+Here's a fragment that provides a REST method for the signal **Assign to courier**:
+
+```java
+@PUT
+@Path("/order/{orderId}/assign")
+public Response assignToCourier(@PathParam("orderId") String orderId) {
+	Order order = Order.find(orderId);
+	order.signal(new Order.Events.Assign());
+	return Response.ok("order assigned to a courier").build();
+}
+```
+
+### Try the REST API out against an in-memory database:
+
+```bash
+cd order-tracker-webapp
+mvn jetty:run
+```
+and go to [http://localhost:8080](http://localhost:8080).
 
