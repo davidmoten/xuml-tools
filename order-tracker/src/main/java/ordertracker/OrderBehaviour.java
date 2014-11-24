@@ -91,14 +91,15 @@ public class OrderBehaviour implements Order.Behaviour {
 
 	@Override
 	public void onEntryHeldForPickup(NoMoreAttempts event) {
-		// return to sender after 14 days if customer does not pickup
-		self.signal(new Order.Events.ReturnToSender(),
-				Duration.create(14, TimeUnit.SECONDS));
+		returnToSenderIfNotPickedUp();
 	}
 
 	@Override
 	public void onEntryHeldForPickup(CouldNotDeliver event) {
-		// return to sender after 14 days if customer does not pickup
+		returnToSenderIfNotPickedUp();
+	}
+
+	private void returnToSenderIfNotPickedUp() {
 		self.signal(new Order.Events.ReturnToSender(),
 				Duration.create(14, TimeUnit.DAYS));
 	}

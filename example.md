@@ -157,7 +157,17 @@ When *domains.xml* is loaded into the Class Diagram Viewer we get:
 <img src="https://raw.github.com/davidmoten/xuml-tools/master/src/docs/class-diagram-order-tracker.png">
 
 ### Add behaviour
-Add the ```OrderBehaviour``` to the *order-tracker* project under *src/main/java* class:
+The next step with Executable UML is detailing the actions that occur when a state transition occurs.
+
+Ideally we would use a dedicated action language (like BPAL97) and an editor that supports it to create the actions. However, this is hard work from a tooling perspective and limits adoption by companies with a strong language bias. 
+
+We are going to use java for the action language but it is recommended that the conventions of BPAL97 are adhered to, albeit with different syntax. For a java programmer this is a very convenient and comfortable place to be.
+
+Because *Order* has a state machine we need to specify the actions for *Order*. Implement the class *OrderBehaviour* in the project *order-tracking* like [this](order-tracker/src/main/java/ordertracker/OrderBehaviour.java). 
+ 
+For example, to implement the rule that an item is returned to sender after being held for pickupt for 14 days:
+
+
 
 ```java
 package ordertracker;
@@ -165,124 +175,33 @@ package ordertracker;
 import java.util.concurrent.TimeUnit;
 
 import ordertracker.Order.Behaviour;
-import ordertracker.Order.Events.ArrivedDepot;
-import ordertracker.Order.Events.ArrivedFinalDepot;
-import ordertracker.Order.Events.Assign;
 import ordertracker.Order.Events.CouldNotDeliver;
-import ordertracker.Order.Events.Create;
-import ordertracker.Order.Events.DeliverAgain;
-import ordertracker.Order.Events.Delivered;
-import ordertracker.Order.Events.DeliveredByPickup;
-import ordertracker.Order.Events.Delivering;
-import ordertracker.Order.Events.DeliveryFailed;
 import ordertracker.Order.Events.NoMoreAttempts;
-import ordertracker.Order.Events.PickedUp;
 import ordertracker.Order.Events.ReturnToSender;
-import ordertracker.Order.Events.Send;
 import scala.concurrent.duration.Duration;
 
 public class OrderBehaviour implements Order.Behaviour {
 
 	private final Order self;
 
-	private OrderBehaviour(Order self) {
-		this.self = self;
-	}
-
-	@Override
-	public void onEntryPreparing(Create event) {
-		self.setAttempts(0);
-		self.setComment(event.getComment());
-		self.setDescription(event.getDescription());
-		self.setDestinationEmail(event.getDestinationEmail());
-		self.setFromAddress(event.getFromAddress());
-		self.setId(event.getOrderID());
-		self.setMaxAttempts(event.getMaxAttempts());
-		self.setSenderEmail(event.getSenderEmail());
-		self.setToAddress(event.getToAddress());
-	}
-
-	@Override
-	public void onEntryReadyForDispatch(Send event) {
-	}
-
-	@Override
-	public void onEntryCourierAssigned(Assign event) {
-	}
-
-	@Override
-	public void onEntryInTransit(PickedUp event) {
-	}
-
-	@Override
-	public void onEntryInTransit(ArrivedDepot event) {
-		Depot depot = Depot.find(event.getDepotID());
-		self.setDepot_R1(depot);
-	}
-
-	@Override
-	public void onEntryReadyForDelivery(ArrivedFinalDepot event) {
-		Depot depot = Depot.find(event.getDepotID());
-		self.setDepot_R1(depot);
-	}
-
-	@Override
-	public void onEntryDelivering(Delivering event) {
-		self.setAttempts(self.getAttempts() + 1);
-	}
-
-	@Override
-	public void onEntryDelivered(Delivered event) {
-		// send email to destination email and sender email notifying of
-		// successful delivery
-	}
-
-	@Override
-	public void onEntryDeliveryFailed(DeliveryFailed event) {
-		if (self.getAttempts() >= self.getMaxAttempts())
-			self.signal(new Order.Events.NoMoreAttempts());
-		else
-			self.signal(new Order.Events.DeliverAgain());
-	}
-
-	@Override
-	public void onEntryAwaitingNextDeliveryAttempt(DeliverAgain event) {
-		self.signal(new Order.Events.DeliverAgain(),
-				Duration.create(12, TimeUnit.SECONDS));
-	}
+	...	
 
 	@Override
 	public void onEntryHeldForPickup(NoMoreAttempts event) {
-		// return to sender after 14 days if customer does not pickup
-		self.signal(new Order.Events.ReturnToSender(),
-				Duration.create(14, TimeUnit.SECONDS));
+       returnToSenderIfNotPickedUp();
 	}
 
 	@Override
 	public void onEntryHeldForPickup(CouldNotDeliver event) {
-		// return to sender after 14 days if customer does not pickup
+	    returnToSenderIfNotPickedUp();
+	}
+	
+	private void returnToSenderIfNotPickedUp() {
 		self.signal(new Order.Events.ReturnToSender(),
 				Duration.create(14, TimeUnit.DAYS));
 	}
 
-	@Override
-	public void onEntryReturnToSender(ReturnToSender event) {
-		// at this point we might create another order for the return leg
-	}
-
-	@Override
-	public void onEntryDelivered(DeliveredByPickup event) {
-	}
-
-	static Order.BehaviourFactory createFactory() {
-		return new Order.BehaviourFactory() {
-
-			@Override
-			public Behaviour create(Order entity) {
-				return new OrderBehaviour(entity);
-			}
-		};
-	}
+	...
 
 }
 ``` 
