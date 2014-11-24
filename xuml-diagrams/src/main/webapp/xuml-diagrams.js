@@ -813,9 +813,12 @@ function createLoad() {
 		    	if (viewFile!=null) {
 		    	    var reader2 = new FileReader();
 		    	    reader2.onload = function(e2) {
-		    	        var viewText = reader2.result;
+		    	        var viewText = escapeAttribute(reader2.result);
 		    	        console.log(viewText);
-		    	        $.redirectPost("cd?", {xml:text, view:viewText});
+		    	        var params = {};
+		    	        params.xml = text;
+		    	        params.view = viewText;
+		    	        $.redirectPost("cd?", params);
 		    	    }
 		    	    reader2.readAsText(viewFile);
 		    	} else {
@@ -945,7 +948,7 @@ function setup(viewJson) {
 	//createSave();
 	//createRestore();
 	//createEdit();
-	restoreFromJSON(viewJson);
+	restoreFromObject(viewJson);
 	createTitle();
 	makeDraggable();
 	makeTouchable();
