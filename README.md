@@ -32,26 +32,6 @@ This is how to build the artifacts from source:
     cd xuml-tools
     mvn clean install
 
-### Create a project using the xuml-model archetype
-
-Use the maven archetype to create a project in interactive mode:
-	
-    cd <YOUR_WORKSPACE>
-    mvn archetype:generate \
-    -DarchetypeGroupId=com.github.davidmoten \
-    -DarchetypeArtifactId=xuml-model-archetype \
-    -DarchetypeVersion=0.1-SNAPSHOT
-
-Then
-
-    cd <NEW_PROJECT>
-    mvn test
-
-The above command
-* generates classes from *src/main/resources/domain.xml*
-* runs unit tests against an embedded in-memory Derby database
-
-  
 ### Worked example
 
 See the example of [creating an Order Tracking system with a REST API](example.md).
