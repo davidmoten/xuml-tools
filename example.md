@@ -156,10 +156,12 @@ When *domains.xml* is loaded into the Class Diagram Viewer we get:
 
 <img src="https://raw.github.com/davidmoten/xuml-tools/master/src/docs/class-diagram-order-tracker.png">
 
-### Add behaviour
+### Add behaviour using Java
 The next step with Executable UML is detailing the actions that occur when a state transition occurs.
 
-Ideally we would use a dedicated action language (like BPAL97) and an editor that supports it to create the actions. However, this is hard work from a tooling perspective and limits adoption by companies with a strong language bias. 
+Ideally we would use a dedicated action language (like BPAL97) and an editor that supports it to create the actions. However, this is hard work from a tooling perspective and limits adoption by companies that are don't want to fork off into separate platforms and languages. If you don't mind using Java (or another jvm language) then *xuml-tools* offers the terrific advantages of Executable UML without the platform independence.
+
+A plus for allowing java as the action language is that we have a very natural interaction with the database via JPA. No sql is written in the actions (although you can if you really want to). Test databases with fully instantiated schemas are created automatically by the JPA provider if desired just by adding an option to *persistence.xml*.
 
 We are going to use java for the action language but it is recommended that the conventions of BPAL97 are adhered to, albeit with different syntax. For a java programmer this is a very convenient and comfortable place to be.
 
