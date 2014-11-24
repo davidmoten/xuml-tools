@@ -163,9 +163,9 @@ Ideally we would use a dedicated action language (like BPAL97) and an editor tha
 
 We are going to use java for the action language but it is recommended that the conventions of BPAL97 are adhered to, albeit with different syntax. For a java programmer this is a very convenient and comfortable place to be.
 
-Because *Order* has a state machine we need to specify the actions for *Order*. Implement the class *OrderBehaviour* in the project *order-tracking* like [this](order-tracker/src/main/java/ordertracker/OrderBehaviour.java). 
+Because *Order* has a state machine we need to specify the actions for *Order*. Implement the class *OrderBehaviour* in the project *order-tracking* like [this](order-tracker/src/main/java/ordertracker/OrderBehaviour.java). Note that the [*OrderBehaviour*](order-tracker/src/main/java/ordertracker/OrderBehaviour.java) class also contains a static ```createFactory``` method and is used at startup (see [App.java](order-tracker/src/main/java/ordertracker/App.java)). 
  
-For example, to implement the rule that an item is returned to sender after being held for pickupt for 14 days:
+For example, to implement the rule that an item is returned to sender after being held for pickup for 14 days:
 
 
 
