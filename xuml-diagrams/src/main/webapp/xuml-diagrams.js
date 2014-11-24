@@ -815,11 +815,11 @@ function createLoad() {
 		    	    reader2.onload = function(e2) {
 		    	        var viewText = reader2.result;
 		    	        console.log(viewText);
-		    	        $.redirectPost("cd?", {xml:text},{view:viewText});
+		    	        $.redirectPost("cd?", {xml:text, view:viewText});
 		    	    }
 		    	    reader2.readAsText(viewFile);
 		    	} else {
-		    	    $.redirectPost("cd?", {xml:text},{view:""});
+		    	    $.redirectPost("cd?", {xml:text, view:""});
 		    	}
 		    };
 		    
@@ -936,7 +936,7 @@ function makeTouchable() {
 	document.addEventListener("touchcancel", touchHandler, true); 
 }
 
-function setup() {
+function setup(viewJson) {
 	createDivs();
 	createLoad();
 	createSave2();
@@ -945,6 +945,7 @@ function setup() {
 	//createSave();
 	//createRestore();
 	//createEdit();
+	restoreFromJSON(viewJson);
 	createTitle();
 	makeDraggable();
 	makeTouchable();

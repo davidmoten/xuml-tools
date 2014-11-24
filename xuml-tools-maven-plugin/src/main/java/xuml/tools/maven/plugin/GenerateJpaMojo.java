@@ -18,7 +18,6 @@ package xuml.tools.maven.plugin;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,6 +36,8 @@ import xuml.tools.miuml.metamodel.jaxb.Marshaller;
 import xuml.tools.miuml.metamodel.jaxb.ModeledDomain;
 import xuml.tools.miuml.metamodel.jaxb.Subsystem;
 import xuml.tools.model.compiler.CodeGeneratorJava;
+
+import com.google.common.base.Optional;
 
 /**
  * Generates JPA classes from a miUML schema specified domain.
@@ -187,7 +188,7 @@ public class GenerateJpaMojo extends AbstractMojo {
 				for (@SuppressWarnings("unused")
 				Subsystem ss : md.getSubsystem()) {
 					String s = new ClassDiagramGenerator().generate(domains,
-							domainIndex, ssIndex);
+							domainIndex, ssIndex, Optional.<String> absent());
 					String name = md.getName().replaceAll(" ", "_") + "_"
 							+ ssIndex + ".html";
 					writeToFile(resourcesDirectory, name, s);

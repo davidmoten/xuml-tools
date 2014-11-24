@@ -30,17 +30,21 @@ import xuml.tools.miuml.metamodel.jaxb.Subsystem;
 import xuml.tools.miuml.metamodel.jaxb.SubsystemElement;
 import xuml.tools.miuml.metamodel.jaxb.UnaryAssociation;
 
+import com.google.common.base.Optional;
+
 public class ClassDiagramGenerator {
 
-	public String generate(Domains domains, String domainName) {
-		return placeInTemplate(generateDivs(domains, domainName));
-	}
+	// public String generate(Domains domains, String domainName,
+	// Optional<String> viewJson) {
+	// return placeInTemplate(generateDivs(domains, domainName), viewJson);
+	// }
 
-	private String placeInTemplate(String divs) {
+	private String placeInTemplate(String divs, Optional<String> viewJson) {
 		try {
 			String template = IOUtils.toString(ClassDiagramGenerator.class
 					.getResourceAsStream("/class-diagram-template.html"));
-			return template.replace("${xuml.divs}", divs);
+			return template.replace("${xuml.divs}", divs).replace(
+					"${view.json}", viewJson.or("{}"));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -72,16 +76,18 @@ public class ClassDiagramGenerator {
 	}
 
 	public String generate(Domains domains, String domainName,
-			String subsystemName) {
-		return placeInTemplate(generateDivs(getSubsystem(domains, domainName,
-				subsystemName)));
+			String subsystemName, Optional<String> viewJson) {
+		return placeInTemplate(
+				generateDivs(getSubsystem(domains, domainName, subsystemName)),
+				viewJson);
 	}
 
-	public String generate(Domains domains, int domainIndex, int ssIndex) {
+	public String generate(Domains domains, int domainIndex, int ssIndex,
+			Optional<String> viewJson) {
 		ModeledDomain md = ((ModeledDomain) domains.getDomain()
 				.get(domainIndex).getValue());
 		Subsystem ss = md.getSubsystem().get(ssIndex);
-		return generate(domains, md.getName(), ss.getName());
+		return generate(domains, md.getName(), ss.getName(), viewJson);
 	}
 
 	private String generateDivs(Subsystem subsystem) {

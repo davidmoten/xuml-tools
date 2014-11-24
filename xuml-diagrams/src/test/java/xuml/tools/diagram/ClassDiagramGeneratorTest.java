@@ -6,17 +6,17 @@ import java.io.IOException;
 
 import javax.xml.bind.JAXBElement;
 
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
-import xuml.tools.diagram.ClassDiagramGenerator;
 import xuml.tools.miuml.metamodel.jaxb.Domain;
 import xuml.tools.miuml.metamodel.jaxb.Domains;
 import xuml.tools.miuml.metamodel.jaxb.Marshaller;
 import xuml.tools.miuml.metamodel.jaxb.ModeledDomain;
 import xuml.tools.miuml.metamodel.jaxb.Subsystem;
+
+import com.google.common.base.Optional;
 
 public class ClassDiagramGeneratorTest {
 
@@ -50,7 +50,8 @@ public class ClassDiagramGeneratorTest {
 		System.out.println("generating domain " + domainName + " to "
 				+ filename);
 		ClassDiagramGenerator g = new ClassDiagramGenerator();
-		String s = g.generate(domains, domainName, subsystemName);
+		String s = g.generate(domains, domainName, subsystemName,
+				Optional.<String> absent());
 		System.out.println(s);
 		try {
 			FileOutputStream fos = new FileOutputStream(filename);
