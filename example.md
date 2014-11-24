@@ -224,3 +224,12 @@ public Response assignToCourier(@PathParam("orderId") String orderId) {
 	return Response.ok("order assigned to a courier").build();
 }
 ```
+
+### Try the REST API out against an in-memory database:
+
+```bash
+cd order-tracker-webapp
+mvn jetty:run
+```
+and go to http://localhost:8080.
+
