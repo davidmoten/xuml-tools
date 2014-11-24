@@ -819,7 +819,7 @@ function createLoad() {
 		    	    }
 		    	    reader2.readAsText(viewFile);
 		    	} else {
-		    	    $.redirectPost("cd?", {xml:text, view:""});
+		    	    $.redirectPost("cd?", {xml:text, view: ""});
 		    	}
 		    };
 		    

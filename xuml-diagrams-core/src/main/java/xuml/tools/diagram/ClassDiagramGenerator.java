@@ -84,6 +84,7 @@ public class ClassDiagramGenerator {
 
 	public String generate(Domains domains, int domainIndex, int ssIndex,
 			Optional<String> viewJson) {
+		System.out.println("viewJson=" + viewJson);
 		ModeledDomain md = ((ModeledDomain) domains.getDomain()
 				.get(domainIndex).getValue());
 		Subsystem ss = md.getSubsystem().get(ssIndex);
