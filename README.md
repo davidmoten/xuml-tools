@@ -188,27 +188,14 @@ The principle is to write java on-entry methods using the above abstractions and
 
 Web Class Diagram Viewer
 ------------------------
-The following examples are based on storing the domain xml and the associated presentation settings on the server. To be investigated is the http://www.diagram.ly approach (see this [interview](http://doeswhat.com/2011/04/11/interview-with-david-benson-diagramly/)) where all user data is stored on the client machine and the application does no account management. Might be worth pursuing.
-
-These pre-alpha demos are available:
-
-* [CloudBees](http://xuml-diagrams.xuml-tools.cloudbees.net/) using in-memory datastore
-* [Google App Engine](http://xuml-tools.appspot.com) using Big Table datastore
-
-Run it locally using Jetty and in-memory datastore (for saving diagram positions):
+Run it locally using Jetty. 
 
     cd xuml-tools/xuml-diagrams
     mvn clean jetty:run
 
-Or run locally using Google App Engine (takes much longer to startup). Note: uses in-memory datastore at the moment.
+Then open [http://localhost:8080/cd](http://localhost:8080/cd) in a browser.
 
-    cd xuml-tools/xuml-diagrams
-    mvn gae:unpack 
-    mvn clean gae:run
-    
-Note that gae:unpack need only be run once to download the sdk.
-
-Then open [http://localhost:8080](http://localhost:8080) in a browser.
+Click on the open file button and upload both *domains.xml* and *domains.view* (if you have one) in the one selection. Drag items around till they look nice. Hit save button to download the new positions to *domains.view* (If you use chrome you might want to disable auto-download to a folder: **Settings** - **Show advanced settings** - **Downloads** - tick **Ask where to save each file before downloading**.
 
 Web State Diagram Viewer
 ------------------------
