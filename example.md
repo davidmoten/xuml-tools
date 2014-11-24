@@ -231,5 +231,5 @@ public Response assignToCourier(@PathParam("orderId") String orderId) {
 cd order-tracker-webapp
 mvn jetty:run
 ```
-and go to http://localhost:8080.
+and go to [http://localhost:8080](http://localhost:8080).
 
