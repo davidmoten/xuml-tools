@@ -209,4 +209,4 @@ public class OrderBehaviour implements Order.Behaviour {
 ### Create the REST API
 The project [*xuml-tools/order-tracker-webapp*](order-tracker-webapp) is an example that wraps *order-tracker* with a web-service, in particular a REST API using the [Jersey](https://jersey.java.net/) implementation of [JAX-RS](http://en.wikipedia.org/wiki/Java_API_for_RESTful_Web_Services). 
 
-The guts of the service definition is in [Service.java](order-tracker-webapp/src/main/java/ordertracker/web/Service.java). Check it out!
+The guts of the service definition is in [Service.java](order-tracker-webapp/src/main/java/ordertracker/rs/Service.java). Check it out!
