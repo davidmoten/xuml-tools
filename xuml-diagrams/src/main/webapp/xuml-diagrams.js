@@ -817,7 +817,7 @@ function createLoad() {
 		    	        console.log(viewText);
 		    	        $.redirectPost("cd?", {xml:text},{view:viewText});
 		    	    }
-		    	    reader2.readAsText(view);
+		    	    reader2.readAsText(viewFile);
 		    	} else {
 		    	    $.redirectPost("cd?", {xml:text},{view:""});
 		    	}
