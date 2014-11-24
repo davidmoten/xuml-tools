@@ -212,3 +212,15 @@ public class OrderBehaviour implements Order.Behaviour {
 The project [*xuml-tools/order-tracker-webapp*](order-tracker-webapp) is an example that wraps *order-tracker* with a web-service, in particular a REST API using the [Jersey](https://jersey.java.net/) implementation of [JAX-RS](http://en.wikipedia.org/wiki/Java_API_for_RESTful_Web_Services). 
 
 The guts of the service definition is in [Service.java](order-tracker-webapp/src/main/java/ordertracker/rs/Service.java). Check it out!
+
+Here's a fragment that provides a REST method for the signal **Assign to courier**:
+
+```java
+@PUT
+@Path("/order/{orderId}/assign")
+public Response assignToCourier(@PathParam("orderId") String orderId) {
+	Order order = Order.find(orderId);
+	order.signal(new Order.Events.Assign());
+	return Response.ok("order assigned to a courier").build();
+}
+```
