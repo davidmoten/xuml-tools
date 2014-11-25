@@ -59,6 +59,12 @@
 			<artifactId>jetty-continuation</artifactId>
 			<version>8.1.16.v20140903</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>io.reactivex</groupId>
+			<artifactId>rxjava</artifactId>
+			<version>1.0.0</version>
+		</dependency>
 
 	</dependencies>
 	<build>

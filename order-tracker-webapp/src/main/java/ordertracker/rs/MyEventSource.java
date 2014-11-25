@@ -4,7 +4,13 @@ import java.io.IOException;
 
 import org.eclipse.jetty.servlets.EventSource;
 
+import rx.Observable;
+import rx.subjects.PublishSubject;
+
 public class MyEventSource implements EventSource {
+
+	private static PublishSubject<String> subject = PublishSubject.create();
+	private static Observable<String> shared = subject.share();
 
 	private Emitter emitter;
 
