@@ -2,7 +2,6 @@ package ordertracker;
 
 import java.util.concurrent.TimeUnit;
 
-import ordertracker.Order.Behaviour;
 import ordertracker.Order.Events.ArrivedDepot;
 import ordertracker.Order.Events.ArrivedFinalDepot;
 import ordertracker.Order.Events.Assign;
@@ -111,16 +110,6 @@ public class OrderBehaviour implements Order.Behaviour {
 
 	@Override
 	public void onEntryDelivered(DeliveredByPickup event) {
-	}
-
-	static Order.BehaviourFactory createFactory() {
-		return new Order.BehaviourFactory() {
-
-			@Override
-			public Behaviour create(Order entity) {
-				return new OrderBehaviour(entity);
-			}
-		};
 	}
 
 }

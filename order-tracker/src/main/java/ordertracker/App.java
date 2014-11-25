@@ -21,7 +21,8 @@ public class App {
 		Context.setEntityManagerFactory(emf);
 
 		// set the behaviour factory for Order
-		Order.setBehaviourFactory(OrderBehaviour.createFactory());
+		Order.setBehaviourFactory(OrderBehaviour.class);
+		Depot.setBehaviourFactory(DepotBehaviour.class);
 
 		// send any signals not processed from last shutdown
 		Context.sendSignalsInQueue();

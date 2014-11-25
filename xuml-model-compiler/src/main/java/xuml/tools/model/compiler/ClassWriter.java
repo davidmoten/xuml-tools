@@ -3,6 +3,7 @@ package xuml.tools.model.compiler;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Date;
@@ -124,6 +125,7 @@ public class ClassWriter {
 		writeToStringMethod(out, info);
 		writeBehaviourInterface(out, info);
 		writeBehaviourFactoryInterface(out, info);
+		writeBehaviourFactoryCreator(out, info);
 		writeStaticFinderMethods(out, info);
 
 		writeQueryMethods(out, info);
@@ -348,6 +350,17 @@ public class ClassWriter {
 		out.format("    public static void setBehaviourFactory(%s factory){\n",
 				factoryTypeName);
 		out.format("        _behaviourFactory = factory;\n");
+		out.format("    }\n\n");
+
+		jd(out,
+				"Sets the BehaviourFactory for all instances of\n"
+						+ "this class using the given Behaviour class as the base. It will only be used when Behaviour\n"
+						+ "is not explicitly provided in the constructor.",
+				"    ");
+		out.format(
+				"    public static void setBehaviourFactory(%s<? extends Behaviour> cls){\n",
+				info.addType(Class.class));
+		out.format("        _behaviourFactory = createBehaviourFactory(cls);\n");
 		out.format("    }\n\n");
 
 		jd(out, "Returns the singleton BehaviourFactory for this.", "    ");
@@ -1696,6 +1709,43 @@ public class ClassWriter {
 		out.format("    public static interface BehaviourFactory {\n\n");
 		out.format("        Behaviour create(%s entity);\n\n",
 				info.getJavaClassSimpleName());
+		out.format("    }\n\n");
+	}
+
+	private void writeBehaviourFactoryCreator(PrintStream out, ClassInfo info) {
+		if (info.getEvents().size() == 0)
+			return;
+		jd(out,
+				"Returns a BehaviourFactory on the assumption that the given class\nhas a single constructor with one parameter of type "
+						+ info.getJavaClassSimpleName() + ".", "    ");
+		out.format("    public static BehaviourFactory createBehaviourFactory(final Class<? extends Behaviour> cls) {\n");
+		out.format("        return new BehaviourFactory() {\n");
+		out.format("            @%s\n", info.addType(Override.class));
+		out.format("            public Behaviour create(%s entity) {\n",
+				info.getJavaClassSimpleName());
+		out.format("                if (cls.getConstructors().length != 1)\n");
+		out.format("                     throw new RuntimeException(\n");
+		out.format("                              \"expected only one constructor in the BehaviourFactory\");\n");
+		out.format("                try {\n");
+		out.format("                    return (Behaviour) cls.getConstructors()[0].newInstance(entity);\n");
+		out.format("                } catch (%s e) {\n",
+				info.addType(InstantiationException.class));
+		out.format("                    throw new RuntimeException(e);\n");
+		out.format("                } catch (%s e) {\n",
+				info.addType(IllegalAccessException.class));
+		out.format("                    throw new RuntimeException(e);\n");
+		out.format("                } catch (%s e) {\n",
+				info.addType(IllegalArgumentException.class));
+		out.format("                    throw new RuntimeException(e);\n");
+		out.format("                } catch (%s e) {\n",
+				info.addType(InvocationTargetException.class));
+		out.format("                    throw new RuntimeException(e);\n");
+		out.format("                } catch (%s e) {\n",
+				info.addType(SecurityException.class));
+		out.format("                    throw new RuntimeException(e);\n");
+		out.format("                }\n");
+		out.format("            }\n");
+		out.format("        };\n");
 		out.format("    }\n\n");
 	}
 

@@ -194,6 +194,18 @@
 				<IndependentAttribute Name="Name" Type="DepotName" />
 				<IndependentAttribute Name="Latitude" Type="Latitude" />
 				<IndependentAttribute Name="Longitude" Type="Longitude" />
+				<Lifecycle>
+					<State Name="Created" />
+
+					<CreationEvent Name="Create" ID="1" State="Created">
+						<EventSignature>
+							<StateModelParameter Name="Depot ID" Type="DepotID" />
+							<StateModelParameter Name="Name" Type="DepotName" />
+							<StateModelParameter Name="Latitudet" Type="Latitude" />
+							<StateModelParameter Name="Longitude" Type="Longitude" />
+						</EventSignature>
+					</CreationEvent>
+				</Lifecycle>
 			</Class>
 
 			<BinaryAssociation Rnum="1">
