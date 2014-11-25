@@ -11,6 +11,7 @@ public class MyEventSourceServlet extends EventSourceServlet {
 
 	@Override
 	protected EventSource newEventSource(HttpServletRequest req) {
+		System.out.println("newEventSource called");
 		return new MyEventSource();
 	}
 

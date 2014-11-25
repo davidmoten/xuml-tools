@@ -19,6 +19,11 @@ function signal(name) {
 	callUrl("rest/order/123/" + name,'PUT');
 }
 
+var eventSource = new EventSource("/sse");
+eventSource.onmessage = function(event) {
+    window.console.info("Server-Sent Event: " + event.data);
+};
+
 </script>
 </head>
 <body>
