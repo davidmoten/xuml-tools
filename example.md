@@ -163,7 +163,7 @@ Ideally we would use a dedicated action language (like [BPAL97](http://ooatool.c
 
 A plus for allowing java as the action language is that we have a very natural interaction with the database via JPA. No sql is written in the actions (although you can if you really want to). Test databases with fully instantiated schemas are created automatically by the JPA provider if desired just by adding an option to *persistence.xml*.
 
-We are going to use java for the action language but it is recommended that the conventions of BPAL97 are adhered to, albeit with different syntax. For a java programmer this is a very convenient and comfortable place to be.
+We are going to use java for the action language but it is recommended that the semantics of BPAL97 are adhered to, albeit with different syntax. For a java programmer this is a very convenient and comfortable place to be.
 
 Because *Order* has a state machine we need to specify the actions for *Order*. Implement the class *OrderBehaviour* in the project *order-tracking* like [this](order-tracker/src/main/java/ordertracker/OrderBehaviour.java). 
 
