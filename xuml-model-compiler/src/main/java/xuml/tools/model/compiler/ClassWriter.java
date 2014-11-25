@@ -1725,7 +1725,7 @@ public class ClassWriter {
 				info.getJavaClassSimpleName());
 		out.format("                if (cls.getConstructors().length != 1)\n");
 		out.format("                     throw new RuntimeException(\n");
-		out.format("                              \"expected only one constructor in the BehaviourFactory\");\n");
+		out.format("                              \"expected only one constructor in the Behaviour implementation\");\n");
 		out.format("                try {\n");
 		out.format("                    return (Behaviour) cls.getConstructors()[0].newInstance(entity);\n");
 		out.format("                } catch (%s e) {\n",

@@ -71,7 +71,6 @@ public class ClassDiagramGenerator {
 
 	public String generate(Domains domains, int domainIndex, int ssIndex,
 			Optional<String> viewJson) {
-		System.out.println("viewJson=" + viewJson);
 		if (domains.getDomain().isEmpty())
 			return placeInTemplate("", Optional.<String> absent());
 		ModeledDomain md = ((ModeledDomain) domains.getDomain()

@@ -22,7 +22,7 @@ public class OrderBehaviour implements Order.Behaviour {
 
 	private final Order self;
 
-	private OrderBehaviour(Order self) {
+	OrderBehaviour(Order self) {
 		this.self = self;
 	}
 
