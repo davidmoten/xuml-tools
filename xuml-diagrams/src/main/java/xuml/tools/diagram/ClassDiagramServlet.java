@@ -21,23 +21,24 @@ public class ClassDiagramServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		String id = req.getParameter("id");
-		String xml = Context.instance().getDatastore()
-				.get("diagram", id + "-model", "model");
-		Optional<String> viewJson = Optional.fromNullable(req
-				.getParameter("view"));
-		createClassDiagram(req, resp, xml, viewJson);
+		doPost(req, resp);
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		String xml = req.getParameter("xml");
+		Optional<String> xml = Optional.fromNullable(req.getParameter("xml"));
+		if (!xml.isPresent())
+			xml = Optional
+					.of("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n"
+							+ "<Domains xmlns=\"http://www.miuml.org/metamodel\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
+							+ "	xsi:schemaLocation=\"http://www.miuml.org/metamodel https://raw.github.com/davidmoten/xuml-tools/master/miuml-jaxb/src/main/resources/miuml-metamodel.xsd  http://org.github/xuml-tools/miuml-metamodel-extensions https://raw.github.com/davidmoten/xuml-tools/master/miuml-jaxb/src/main/resources/xuml-tools-miuml-metamodel-extensions.xsd\"\n"
+							+ "	xmlns:xt=\"http://org.github/xuml-tools/miuml-metamodel-extensions\">\n</Domains>");
 		Optional<String> viewJson = Optional.fromNullable(req
 				.getParameter("view"));
 		System.out.println(xml);
 		System.out.println(viewJson);
-		createClassDiagram(req, resp, xml, viewJson);
+		createClassDiagram(req, resp, xml.get(), viewJson);
 	}
 
 	private void createClassDiagram(HttpServletRequest req,

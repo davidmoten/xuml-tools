@@ -1,5 +1,8 @@
 package xuml.tools.diagram;
 
+import static com.google.common.base.Optional.absent;
+import static com.google.common.base.Optional.of;
+
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -34,11 +37,6 @@ import com.google.common.base.Optional;
 
 public class ClassDiagramGenerator {
 
-	// public String generate(Domains domains, String domainName,
-	// Optional<String> viewJson) {
-	// return placeInTemplate(generateDivs(domains, domainName), viewJson);
-	// }
-
 	private String placeInTemplate(String divs, Optional<String> viewJson) {
 		try {
 			String template = IOUtils.toString(ClassDiagramGenerator.class
@@ -50,29 +48,18 @@ public class ClassDiagramGenerator {
 		}
 	}
 
-	private String generateDivs(Domains domains, String domainName) {
-		for (JAXBElement<? extends Domain> domain : domains.getDomain()) {
-			if (domain.getValue() instanceof ModeledDomain
-					&& domain.getValue().getName().equals(domainName)) {
-				ModeledDomain md = (ModeledDomain) domain.getValue();
-				return generateDivs(md.getSubsystem().get(0));
-			}
-		}
-		return "";
-	}
-
-	private Subsystem getSubsystem(Domains domains, String domainName,
-			String subsystemName) {
+	private Optional<Subsystem> getSubsystem(Domains domains,
+			String domainName, String subsystemName) {
 		for (JAXBElement<? extends Domain> domain : domains.getDomain()) {
 			if (domain.getValue() instanceof ModeledDomain
 					&& domain.getValue().getName().equals(domainName)) {
 				ModeledDomain md = (ModeledDomain) domain.getValue();
 				for (Subsystem ss : md.getSubsystem())
 					if (ss.getName().equals(subsystemName))
-						return ss;
+						return of(ss);
 			}
 		}
-		return null;
+		return absent();
 	}
 
 	public String generate(Domains domains, String domainName,
@@ -85,15 +72,22 @@ public class ClassDiagramGenerator {
 	public String generate(Domains domains, int domainIndex, int ssIndex,
 			Optional<String> viewJson) {
 		System.out.println("viewJson=" + viewJson);
+		if (domains.getDomain().isEmpty())
+			return placeInTemplate("", Optional.<String> absent());
 		ModeledDomain md = ((ModeledDomain) domains.getDomain()
 				.get(domainIndex).getValue());
+		if (md.getSubsystem().isEmpty())
+			return placeInTemplate("", Optional.<String> absent());
 		Subsystem ss = md.getSubsystem().get(ssIndex);
 		return generate(domains, md.getName(), ss.getName(), viewJson);
 	}
 
-	private String generateDivs(Subsystem subsystem) {
+	private String generateDivs(Optional<Subsystem> subsystem) {
+		if (!subsystem.isPresent())
+			return "";
+
 		StringBuilder s = new StringBuilder();
-		for (JAXBElement<? extends SubsystemElement> element : subsystem
+		for (JAXBElement<? extends SubsystemElement> element : subsystem.get()
 				.getSubsystemElement())
 			if (element.getValue() instanceof xuml.tools.miuml.metamodel.jaxb.Class)
 				generateClass(s,
@@ -102,9 +96,11 @@ public class ClassDiagramGenerator {
 			else if (element.getValue() instanceof Relationship) {
 				Relationship r = (Relationship) element.getValue();
 				if (r instanceof BinaryAssociation)
-					generateAssociation(s, (BinaryAssociation) r, subsystem);
+					generateAssociation(s, (BinaryAssociation) r,
+							subsystem.get());
 				else if (r instanceof UnaryAssociation)
-					generateAssociation(s, (UnaryAssociation) r, subsystem);
+					generateAssociation(s, (UnaryAssociation) r,
+							subsystem.get());
 				else if (r instanceof Generalization)
 					generateGeneralization(s, (Generalization) r);
 			}
