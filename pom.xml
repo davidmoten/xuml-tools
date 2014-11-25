@@ -93,6 +93,7 @@
 		<module>xuml-tools-maven-plugin</module>
 		<module>xuml-model-archetype</module>
 		<module>order-tracker</module>
+		<module>order-tracker-webapp</module>
   	</modules>	
 	<profiles>
 		<profile>

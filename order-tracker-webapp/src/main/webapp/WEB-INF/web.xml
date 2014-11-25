@@ -1,29 +1,38 @@
-<web-app xmlns="http://java.sun.com/xml/ns/javaee"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
-    version="3.0">
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	version="3.0">
 
 	<display-name>${project.artifactId} ${project.version}</display-name>
-    
-    <listener>
-          <listener-class>ordertracker.web.ContextListener</listener-class>
-    </listener>
-    
+
+	<listener>
+		<listener-class>ordertracker.web.ContextListener</listener-class>
+	</listener>
+
 	<servlet>
 		<servlet-name>jersey-serlvet</servlet-name>
 		<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
 		<init-param>
-		     <param-name>jersey.config.server.provider.packages</param-name>
-		     <param-value>ordertracker.rs</param-value>
+			<param-name>jersey.config.server.provider.packages</param-name>
+			<param-value>ordertracker.rs</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
- 
+
+	<servlet>
+		<servlet-name>EventSource</servlet-name>
+		<servlet-class>ordertracker.rs.MyEventSourceServlet</servlet-class>
+		 <async-supported>true</async-supported>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>EventSource</servlet-name>
+		<url-pattern>/sse</url-pattern>
+	</servlet-mapping>
+
 	<servlet-mapping>
 		<servlet-name>jersey-serlvet</servlet-name>
 		<url-pattern>/rest/*</url-pattern>
 	</servlet-mapping>
-	
+
 	<welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>
 		<welcome-file>index.html</welcome-file>

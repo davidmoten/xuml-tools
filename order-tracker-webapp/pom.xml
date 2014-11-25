@@ -35,18 +35,30 @@
 			<artifactId>jersey-container-servlet-core</artifactId>
 			<version>${jersey.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.github.davidmoten</groupId>
 			<artifactId>order-tracker</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
-        
-        <dependency>
-            <groupId>org.apache.derby</groupId>
-            <artifactId>derby</artifactId>
-            <version>${derby.version}</version>
-        </dependency>
+
+		<dependency>
+			<groupId>org.apache.derby</groupId>
+			<artifactId>derby</artifactId>
+			<version>${derby.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-eventsource-servlet</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-continuation</artifactId>
+			<version>8.1.16.v20140903</version>
+		</dependency>
 
 	</dependencies>
 	<build>
