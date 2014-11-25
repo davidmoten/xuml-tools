@@ -167,8 +167,6 @@ We are going to use java for the action language but it is recommended that the 
 
 Because *Order* has a state machine we need to specify the actions for *Order*. Implement the class *OrderBehaviour* in the project *order-tracking* like [this](order-tracker/src/main/java/ordertracker/OrderBehaviour.java). 
 
-Note that the [*OrderBehaviour*](order-tracker/src/main/java/ordertracker/OrderBehaviour.java) class also contains a static ```createFactory``` method which is used at startup (see [App.java](order-tracker/src/main/java/ordertracker/App.java)). 
- 
 For example, to implement the rule that an item is returned to sender after being held for pickup for 14 days:
 
 ```java
@@ -207,6 +205,12 @@ public class OrderBehaviour implements Order.Behaviour {
 
 }
 ``` 
+
+On startup we need to specify that the above class is used to implement behaviour for the ```Order``` class with this command:
+
+```java
+Order.setBehaviourFactory(OrderBehaviour.class);
+```
 
 ### Create the REST API
 The project [*xuml-tools/order-tracker-webapp*](order-tracker-webapp) is an example that wraps *order-tracker* with a web-service, in particular a REST API using the [Jersey](https://jersey.java.net/) implementation of [JAX-RS](http://en.wikipedia.org/wiki/Java_API_for_RESTful_Web_Services). 
