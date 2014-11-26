@@ -7,6 +7,7 @@
 	<persistence-unit name="testPersistenceUnit">
 		<class>ordertracker.Order</class>
         <class>ordertracker.Depot</class>
+        <class>ordertracker.SystemEvent</class>
 		<class>xuml.tools.model.compiler.runtime.QueuedSignal</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<properties>

@@ -16,6 +16,7 @@ import ordertracker.Order.Events.NoMoreAttempts;
 import ordertracker.Order.Events.PickedUp;
 import ordertracker.Order.Events.ReturnToSender;
 import ordertracker.Order.Events.Send;
+import ordertracker.Order.State;
 import scala.concurrent.duration.Duration;
 
 public class OrderBehaviour implements Order.Behaviour {
@@ -37,41 +38,49 @@ public class OrderBehaviour implements Order.Behaviour {
 		self.setMaxAttempts(event.getMaxAttempts());
 		self.setSenderEmail(event.getSenderEmail());
 		self.setToAddress(event.getToAddress());
+		event(Order.State.PREPARING);
 	}
 
 	@Override
 	public void onEntryReadyForDispatch(Send event) {
+		event(Order.State.READY_FOR_DISPATCH);
 	}
 
 	@Override
 	public void onEntryCourierAssigned(Assign event) {
+		event(Order.State.COURIER_ASSIGNED);
 	}
 
 	@Override
 	public void onEntryInTransit(PickedUp event) {
+		event(Order.State.IN_TRANSIT);
 	}
 
 	@Override
 	public void onEntryInTransit(ArrivedDepot event) {
 		Depot depot = Depot.find(event.getDepotID());
 		self.setDepot_R1(depot);
+		event(Order.State.IN_TRANSIT);
 	}
 
 	@Override
 	public void onEntryReadyForDelivery(ArrivedFinalDepot event) {
 		Depot depot = Depot.find(event.getDepotID());
 		self.setDepot_R1(depot);
+		event(Order.State.READY_FOR_DELIVERY);
 	}
 
 	@Override
 	public void onEntryDelivering(Delivering event) {
 		self.setAttempts(self.getAttempts() + 1);
+		event(Order.State.DELIVERING);
 	}
 
 	@Override
 	public void onEntryDelivered(Delivered event) {
 		// send email to destination email and sender email notifying of
 		// successful delivery
+		event(Order.State.DELIVERED);
 	}
 
 	@Override
@@ -80,12 +89,14 @@ public class OrderBehaviour implements Order.Behaviour {
 			self.signal(new Order.Events.NoMoreAttempts());
 		else
 			self.signal(new Order.Events.DeliverAgain());
+		event(Order.State.DELIVERY_FAILED);
 	}
 
 	@Override
 	public void onEntryAwaitingNextDeliveryAttempt(DeliverAgain event) {
 		self.signal(new Order.Events.DeliverAgain(),
 				Duration.create(12, TimeUnit.SECONDS));
+		event(Order.State.AWAITING_NEXT_DELIVERY_ATTEMPT);
 	}
 
 	@Override
@@ -101,15 +112,23 @@ public class OrderBehaviour implements Order.Behaviour {
 	private void returnToSenderIfNotPickedUp() {
 		self.signal(new Order.Events.ReturnToSender(),
 				Duration.create(14, TimeUnit.DAYS));
+		event(Order.State.HELD_FOR_PICKUP);
 	}
 
 	@Override
 	public void onEntryReturnToSender(ReturnToSender event) {
 		// at this point we might create another order for the return leg
+		event(Order.State.RETURN_TO_SENDER);
 	}
 
 	@Override
 	public void onEntryDelivered(DeliveredByPickup event) {
+		event(Order.State.DELIVERED);
 	}
 
+	private void event(State state) {
+		//send the state to the singleton event entity
+		SystemEvent.find("1").signal(new SystemEvent.Events.NewEvent(state.toString()));		
+	}
+	
 }

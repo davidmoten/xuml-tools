@@ -23,9 +23,13 @@ public class App {
 		// set the behaviour factory for Order
 		Order.setBehaviourFactory(OrderBehaviour.class);
 		Depot.setBehaviourFactory(DepotBehaviour.class);
-
+		SystemEvent.setBehaviourFactory(SystemEventBehaviour.class);
+		
 		// send any signals not processed from last shutdown
 		Context.sendSignalsInQueue();
+		
+		//create the singleton event entity
+		Context.create(SystemEvent.class,new SystemEvent.Events.Create("1"));
 
 		log.info("started up");
 	}
