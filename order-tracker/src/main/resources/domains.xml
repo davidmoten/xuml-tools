@@ -232,7 +232,6 @@
                 </IndependentAttribute>
                 <Lifecycle>
                     <State Name="Created" />
-
                     <CreationEvent Name="Create" ID="1" State="Created">
                         <EventSignature>
                             <StateModelParameter Name="Event ID"
