@@ -134,4 +134,41 @@ public class Service {
 		return Response.ok(order.getState(), MediaType.TEXT_PLAIN).build();
 	}
 
+//	@GET
+//	@Path("/sse")
+//	@Produces(SseFeature.SERVER_SENT_EVENTS)
+//	public EventOutput getEvents() {
+//		System.out.println("starting to get server-side events");
+//		final EventOutput eventOutput = new EventOutput();
+//		EventService.instance().events()
+//				.subscribe(new Subscriber<String>() {
+//
+//					@Override
+//					public void onCompleted() {
+//						// do nothing
+//					}
+//
+//					@Override
+//					public void onError(Throwable e) {
+//						e.printStackTrace();
+//					}
+//
+//					@Override
+//					public void onNext(String data) {
+//						try {
+//							OutboundEvent event = new OutboundEvent.Builder()
+//									.data(String.class, data).build();
+//							eventOutput.write(event);
+//							System.out.println("sent message " + data);
+//						} catch (IOException e) {
+//							onError(e);
+//						} finally {
+//							unsubscribe();
+//						}
+//
+//					}
+//				});
+//		return eventOutput;
+//	}
+
 }

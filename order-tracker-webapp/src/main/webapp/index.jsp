@@ -21,7 +21,7 @@ function signal(name) {
 }
   
 (function() {
-  var eventSource = new EventSource("/sse");
+  var eventSource = new EventSource("sse");
   eventSource.onmessage = function(event) {
       document.getElementById("message").innerHTML=event.data;
   };
