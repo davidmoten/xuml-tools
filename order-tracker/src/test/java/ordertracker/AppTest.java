@@ -67,7 +67,7 @@ public class AppTest {
 
 					@Override
 					public void onError(Throwable e) {
-
+						throw new RuntimeException(e);
 					}
 
 					@Override
@@ -91,11 +91,6 @@ public class AppTest {
 		order.signal(new Order.Events.Delivered());
 		latch.await();
 		assertEquals(expectedStates, states);
-	}
-
-	private void checkState(State state) throws InterruptedException {
-		while (!state.toString().equals(Order.find("2").getState()))
-			TimeUnit.MILLISECONDS.sleep(100);
 	}
 
 	@AfterClass

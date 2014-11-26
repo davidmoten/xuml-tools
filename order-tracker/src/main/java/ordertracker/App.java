@@ -1,11 +1,11 @@
 package ordertracker;
 
+import java.sql.Driver;
+
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 import org.apache.log4j.Logger;
-
-import xuml.tools.model.compiler.runtime.SignalProcessorListenerUtilLogging;
 
 public class App {
 

@@ -5,19 +5,19 @@
 	version="1.0">
 
 	<persistence-unit name="testPersistenceUnit">
-		<class>ordertracker.Order</class>
+        <class>ordertracker.Order</class>
         <class>ordertracker.Depot</class>
         <class>ordertracker.SystemEvent</class>
-		<class>xuml.tools.model.compiler.runtime.QueuedSignal</class>
-		<exclude-unlisted-classes>true</exclude-unlisted-classes>
-		<properties>
-			<property name="hibernate.dialect" value="org.hibernate.dialect.DerbyDialect" />
-			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
-			<property name="hibernate.connection.driver_class" value="org.apache.derby.jdbc.EmbeddedDriver" />
-			<property name="hibernate.connection.url" value="jdbc:derby:memory:test-db;create=true" />
-			<property name="hibernate.connection.pool_size" value="5" />
-			<property name="hibernate.show_sql" value="true" />
-			<property name="hibernate.format_sql" value="true" />
-		</properties>
-	</persistence-unit>
+        <class>xuml.tools.model.compiler.runtime.QueuedSignal</class>
+        <exclude-unlisted-classes>true</exclude-unlisted-classes>
+        <properties>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />
+            <property name="hibernate.hbm2ddl.auto" value="create-drop" />
+            <property name="hibernate.connection.driver_class" value="org.h2.Driver" />
+            <property name="hibernate.connection.url" value="jdbc:h2:mem:test-db;DB_CLOSE_DELAY=-1;INIT=CREATE SCHEMA IF NOT EXISTS ORDERTRACKER" />
+            <property name="hibernate.connection.pool_size" value="5" />
+            <property name="hibernate.show_sql" value="true" />
+            <property name="hibernate.format_sql" value="true" />
+        </properties>
+    </persistence-unit>
 </persistence>

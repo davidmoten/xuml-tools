@@ -62,6 +62,7 @@
 		<junit.version>4.10</junit.version>
 		<guava.version>18.0</guava.version>
 		<derby.version>10.11.1.1</derby.version>
+		<h2.version>1.4.182</h2.version>
 
         <cobertura.version>2.6</cobertura.version>
         <checkstyle.version>2.13</checkstyle.version>
