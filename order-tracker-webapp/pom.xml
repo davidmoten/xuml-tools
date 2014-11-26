@@ -58,14 +58,8 @@
             <artifactId>jetty-continuation</artifactId>
             <version>${jetty.plugin.version}</version>
         </dependency>
-    <!-- 
-        <dependency>
-            <groupId>org.glassfish.jersey.media</groupId>
-            <artifactId>jersey-media-sse</artifactId>
-            <version>${jersey.version}</version>
-        </dependency>
-        
-         -->
+        <!-- <dependency> <groupId>org.glassfish.jersey.media</groupId> <artifactId>jersey-media-sse</artifactId> 
+            <version>${jersey.version}</version> </dependency> -->
     </dependencies>
     <build>
         <plugins>

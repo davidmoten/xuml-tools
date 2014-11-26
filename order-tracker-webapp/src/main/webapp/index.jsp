@@ -49,8 +49,5 @@ function signal(name) {
 
 <p><div id="message"/></p>
 
-
-<p>Time now is <%= new java.util.Date() %></p>
-
 </body>
 </html>
