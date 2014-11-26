@@ -17,8 +17,9 @@ public class MyEventSource implements EventSource {
 	public void onOpen(final Emitter emitter) throws IOException {
 		subscription = EventService.instance().events().subscribe(new Action1<String>() {
 
+			//method needs to be synchronized because emitter does not appear to be thread safe
 			@Override
-			public void call(String data) {
+			public synchronized void call(String data) {
 				try {
 					emitter.data(data);
 				} catch (IOException e) {
