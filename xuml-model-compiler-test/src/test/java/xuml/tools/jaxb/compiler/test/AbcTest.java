@@ -131,7 +131,7 @@ public class AbcTest {
 		Context.setEntityManagerFactory(emf);
 
 		// set the behaviour factory for the class A
-		A.setBehaviourFactory(createBehaviourFactoryForA());
+		A.setBehaviourFactory(ABehaviour.class);
 	}
 
 	/**
@@ -198,11 +198,11 @@ public class AbcTest {
 	 * @author dxm
 	 * 
 	 */
-	private static class ABehaviour implements A.Behaviour {
+	public static class ABehaviour implements A.Behaviour {
 
 		private final A self;
 
-		ABehaviour(A self) {
+		public ABehaviour(A self) {
 			this.self = self;
 		}
 
@@ -233,20 +233,6 @@ public class AbcTest {
 			System.out.println("list size = " + list.size());
 		}
 
-	}
-
-	/**
-	 * Returns a {@link BehaviourFactory} for A.
-	 * 
-	 * @return
-	 */
-	private static BehaviourFactory createBehaviourFactoryForA() {
-		return new A.BehaviourFactory() {
-			@Override
-			public A.Behaviour create(final A entity) {
-				return new ABehaviour(entity);
-			}
-		};
 	}
 
 	private static SignalProcessorListenerFactory createSignalProcessorListenerFactory() {
