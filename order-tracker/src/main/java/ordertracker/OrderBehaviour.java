@@ -59,6 +59,9 @@ public class OrderBehaviour implements Order.Behaviour {
 	@Override
 	public void onEntryInTransit(ArrivedDepot event) {
 		Depot depot = Depot.find(event.getDepotID());
+		if (depot == null)
+			throw new RuntimeException("depot does not exist: "
+					+ event.getDepotID());
 		self.setDepot_R1(depot);
 		event(Order.State.IN_TRANSIT);
 	}
@@ -127,8 +130,9 @@ public class OrderBehaviour implements Order.Behaviour {
 	}
 
 	private void event(State state) {
-		//send the state to the singleton event entity
-		SystemEvent.find("1").signal(new SystemEvent.Events.NewEvent(state.toString()));		
+		// send the state to the singleton event entity
+		SystemEvent.find("1").signal(
+				new SystemEvent.Events.NewEvent(state.toString()));
 	}
-	
+
 }

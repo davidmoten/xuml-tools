@@ -5,6 +5,8 @@ import javax.persistence.Persistence;
 
 import org.apache.log4j.Logger;
 
+import xuml.tools.model.compiler.runtime.SignalProcessorListenerUtilLogging;
+
 public class App {
 
 	private static Logger log = Logger.getLogger(App.class);
@@ -16,7 +18,7 @@ public class App {
 		// create the entity manager factory
 		EntityManagerFactory emf = Persistence
 				.createEntityManagerFactory("testPersistenceUnit");
-
+		
 		// pass the EntityManagerFactory to the generated xuml Context
 		Context.setEntityManagerFactory(emf);
 
@@ -30,6 +32,7 @@ public class App {
 		
 		//create the singleton event entity
 		Context.create(SystemEvent.class,new SystemEvent.Events.Create("1"));
+		Context.create(Depot.class, new Depot.Events.Create("1", "Gundagai", -35.0, 142.0));
 
 		log.info("started up");
 	}

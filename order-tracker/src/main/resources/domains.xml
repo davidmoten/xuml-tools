@@ -162,39 +162,28 @@
                         EventID="2" />
                     <Transition State="Ready for dispatch"
                         Destination="Courier assigned" EventID="3" />
-
                     <Transition State="Courier assigned" Destination="In transit"
                         EventID="4" />
-
                     <Transition State="In transit" Destination="In transit"
                         EventID="5" />
-
                     <Transition State="In transit" Destination="Ready for delivery"
                         EventID="6" />
-
                     <Transition State="Ready for delivery"
                         Destination="Delivering" EventID="7" />
-
                     <Transition State="Delivering" Destination="Delivered"
                         EventID="8" />
-
                     <Transition State="Delivering" Destination="Delivery failed"
                         EventID="9" />
-
-                    <Transition State="Delivering" Destination="Held for pickup"
-                        EventID="12" />
-
                     <Transition State="Delivery failed"
                         Destination="Awaiting next delivery attempt" EventID="10" />
-
                     <Transition State="Delivery failed" Destination="Held for pickup"
                         EventID="11" />
-
-                    <Transition State="Held for pickup" Destination="Delivered"
-                        EventID="14" />
-
+                    <Transition State="Delivering" Destination="Held for pickup"
+                        EventID="12" />
                     <Transition State="Held for pickup" Destination="Return to sender"
                         EventID="13" />
+                    <Transition State="Held for pickup" Destination="Delivered"
+                        EventID="14" />
 
                 </Lifecycle>
 

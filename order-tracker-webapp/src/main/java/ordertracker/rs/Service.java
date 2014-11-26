@@ -63,7 +63,7 @@ public class Service {
 	@PUT
 	@Path("/order/{orderId}/arrivedDepot")
 	public Response arrivedDepot(@PathParam("orderId") String orderId,
-			String depotId) {
+			@QueryParam("depotId") String depotId) {
 		Order order = Order.find(orderId);
 		order.signal(new Order.Events.ArrivedDepot(depotId));
 		return Response.ok("arrived depot " + depotId).build();
