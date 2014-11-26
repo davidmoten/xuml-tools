@@ -5,6 +5,8 @@ import static org.junit.Assert.assertEquals;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import javax.persistence.EntityManager;
+
 import ordertracker.Order.State;
 
 import org.junit.AfterClass;
@@ -16,31 +18,37 @@ import rx.schedulers.Schedulers;
 import xuml.tools.util.database.DerbyUtil;
 
 public class AppTest {
-	
-	
+
 	@BeforeClass
 	public static void setup() {
 		DerbyUtil.disableDerbyLog();
 		App.startup();
 	}
-	
+
 	@Test
 	public void testEventService() throws InterruptedException {
-		//TODO move this test to xuml-model-compiler-test
+		// TODO move this test to xuml-model-compiler-test
 		final CountDownLatch latch = new CountDownLatch(1);
-		EventService.instance().events().subscribeOn(Schedulers.newThread()).subscribe(new Action1<String>() {
-			@Override
-			public void call(String event) {
-				latch.countDown();
-			}});
-		Context.create(Order.class, new Order.Events.Create("1", "test order", "canberra", "sydney", "fred@yahoo.com", "joey@gmail.com", 3, "created"));
-		latch.await(5000,TimeUnit.MILLISECONDS);
+		EventService.instance().events().subscribeOn(Schedulers.newThread())
+				.subscribe(new Action1<String>() {
+					@Override
+					public void call(String event) {
+						latch.countDown();
+					}
+				});
+		Context.create(Order.class, new Order.Events.Create("1", "test order",
+				"canberra", "sydney", "fred@yahoo.com", "joey@gmail.com", 3,
+				"created"));
+		latch.await(5000, TimeUnit.MILLISECONDS);
 	}
-	
-	@Test
+
+	@Test(timeout = 10000)
 	public void testDeliverySequence() throws InterruptedException {
-		Order order = Context.create(Order.class, new Order.Events.Create("2", "test order", "canberra", "sydney", "fred@yahoo.com", "joey@gmail.com", 3, "created"));
-		Context.create(Depot.class, new Depot.Events.Create("2", "bungendore", -35.0, 142.0));
+		Order order = Context.create(Order.class, new Order.Events.Create("2",
+				"test order", "canberra", "sydney", "fred@yahoo.com",
+				"joey@gmail.com", 3, "created"));
+		Context.create(Depot.class, new Depot.Events.Create("2", "Bungendore",
+				-35.0, 142.0));
 		checkState(Order.State.PREPARING);
 		order.signal(new Order.Events.Send());
 		checkState(Order.State.READY_FOR_DISPATCH);
@@ -50,12 +58,12 @@ public class AppTest {
 		checkState(Order.State.IN_TRANSIT);
 		order.signal(new Order.Events.ArrivedDepot("2"));
 		checkState(Order.State.IN_TRANSIT);
-		
+		TimeUnit.MILLISECONDS.sleep(500);
 	}
 
 	private void checkState(State state) throws InterruptedException {
-		TimeUnit.MILLISECONDS.sleep(100);
-		assertEquals(state.toString(), Order.find("2").getState());
+		while (!state.toString().equals(Order.find("2").getState()))
+			TimeUnit.MILLISECONDS.sleep(100);
 	}
 
 	@AfterClass
@@ -63,5 +71,4 @@ public class AppTest {
 		App.shutdown();
 	}
 
-	
 }
