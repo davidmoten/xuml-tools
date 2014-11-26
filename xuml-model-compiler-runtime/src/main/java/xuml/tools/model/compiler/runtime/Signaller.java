@@ -67,6 +67,9 @@ public class Signaller {
 			em.persist(t);
 			em.getTransaction().commit();
 			em.close();
+			// only after successful commit do we send the signals to other
+			// entities made during onEntry procedure.
+			t.helper().sendQueuedSignals();
 			return t;
 		} catch (InstantiationException e) {
 			throw new RuntimeException(e);
@@ -82,16 +85,16 @@ public class Signaller {
 
 	public <T extends Entity<T>> void signal(String fromEntityUniqueId,
 			Entity<T> entity, Event<T> event, Long time, Optional<FiniteDuration> repeatInterval) {
-		signal(fromEntityUniqueId, entity, event, Optional.of(getDelay(time)),
+		signal(fromEntityUniqueId, entity, event, getDelay(time),
 				repeatInterval);
 	}
 
-	private Duration getDelay(Long time) {
+	private Optional<Duration> getDelay(Long time) {
 		long now = System.currentTimeMillis();
 		if (time == null || time <= now)
-			return null;
+			return Optional.absent();
 		else
-			return Duration.create(time - now, TimeUnit.MILLISECONDS);
+			return Optional.<Duration>of(Duration.create(time - now, TimeUnit.MILLISECONDS));
 	}
 
 	public <T extends Entity<T>> void signal(String fromEntityUniqueId,

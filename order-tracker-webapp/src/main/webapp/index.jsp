@@ -1,7 +1,6 @@
 <html>
 <head>
 <script type="text/javascript"> 
-
 function callUrl(url, method) {
   var client = new XMLHttpRequest();
   client.open(method, url, false);
@@ -12,18 +11,20 @@ function callUrl(url, method) {
     msg = client.responseText;
   else
     msg = "Request failed. status=" + client.status + " " + client.statusText;
-  document.getElementById("message").innerHTML=msg; 
+  //document.getElementById("message").innerHTML=msg; 
 } 
 
 function signal(name) {
 	callUrl("rest/order/123/" + name,'PUT');
 }
-
-var eventSource = new EventSource("/sse");
-eventSource.onmessage = function(event) {
-    window.console.info("Server-Sent Event: " + event.data);
-};
-
+  
+(function() {
+  var eventSource = new EventSource("/sse");
+  eventSource.onmessage = function(event) {
+      document.getElementById("message").innerHTML=event.data;
+  };
+  
+})();
 </script>
 </head>
 <body>
