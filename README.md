@@ -195,7 +195,7 @@ Run it locally using Jetty.
 
 Then open [http://localhost:8080/cd](http://localhost:8080/cd) in a browser.
 
-Click on the open file button and upload both *domains.xml* and *domains.view* (if you have one) in the one selection. Drag items around till they look nice. Hit save button to download the new positions to *domains.view* (If you use chrome you might want to disable auto-download to a folder: **Settings** - **Show advanced settings** - **Downloads** - tick **Ask where to save each file before downloading**.
+Click on the open file button and upload both *domains.xml* and *domains.view* (if you have one) in the one selection. Drag items around till they look nice. Hit save button to download the new positions to *domains.view* (If you use chrome you might want to disable auto-download to a folder: **Settings** - **Show advanced settings** - **Downloads** - tick **Ask where to save each file before downloading**).
 
 Web State Diagram Viewer
 ------------------------
