@@ -141,7 +141,7 @@ Then this should succeed:
 
 ### Complete the model
 
-Now fill in the details of *domain.xml* and the result will be something like [this](order-tracker/src/main/resources/domains.xml).
+Now fill in the details of [*domains.xml*](order-tracker/src/main/resources/domains.xml).
 
 ### View the class diagram
 
@@ -150,7 +150,7 @@ cd xuml-diagrams
 mvn jetty:run
 ```
 
-Go to [http://localhost:8080/cd?id=1](http://localhost:8080/cd?id=1) and click on **Choose file**. Select your domains.xml file and the first domain in the file will be loaded into the Class Diagram Viewer. Drag classes around till it looks nice.
+Go to [http://localhost:8080/cd?id=1](http://localhost:8080/cd?id=1) and click on **Choose file**. Select your *domains.xml* file and the first domain in the file will be loaded into the Class Diagram Viewer. Drag classes around till it looks nice.
 
 When *domains.xml* is loaded into the Class Diagram Viewer we get:
 
@@ -236,4 +236,8 @@ cd order-tracker-webapp
 mvn jetty:run
 ```
 and go to [http://localhost:8080](http://localhost:8080).
+
+Click first on the link *Create an order* and then follow the sequence as you like. 
+
+As transitions of state occur the page uses [HTML5 Server-sent events](http://en.wikipedia.org/wiki/Server-sent_events) to notify the page of the current state in a div at the bottom.
 
