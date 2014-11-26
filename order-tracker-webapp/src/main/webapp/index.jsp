@@ -3,15 +3,17 @@
 <script type="text/javascript"> 
 function callUrl(url, method) {
   var client = new XMLHttpRequest();
-  client.open(method, url, false);
+  client.open(method, url, true);
   client.setRequestHeader("Content-Type", "text/plain");
+  client.onreadystatechange = function() {
+      var msg;
+      if (client.status == 200)
+        msg = client.responseText;
+      else
+        msg = "Request failed. status=" + client.status + " " + client.statusText;
+      //document.getElementById("message").innerHTML=msg;
+  }
   client.send();
-  var msg;
-  if (client.status == 200)
-    msg = client.responseText;
-  else
-    msg = "Request failed. status=" + client.status + " " + client.statusText;
-  //document.getElementById("message").innerHTML=msg; 
 } 
 
 function signal(name) {

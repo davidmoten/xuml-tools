@@ -22,6 +22,7 @@ public class MyEventSource implements EventSource {
 			public synchronized void call(String data) {
 				try {
 					emitter.data(data);
+					System.out.println("sent message " + data);
 				} catch (IOException e) {
 					throw new RuntimeException(e);
 				}
