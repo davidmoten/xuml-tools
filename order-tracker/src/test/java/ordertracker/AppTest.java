@@ -47,9 +47,18 @@ public class AppTest {
 	@Test(timeout = 10000)
 	public void testDeliverySequence() throws InterruptedException {
 		final List<String> states = new ArrayList<>();
+		List<String> expectedStates = Arrays.asList(
+				Order.State.PREPARING.toString(),
+				Order.State.READY_FOR_DISPATCH.toString(),
+				Order.State.COURIER_ASSIGNED.toString(),
+				Order.State.IN_TRANSIT.toString(),
+				Order.State.IN_TRANSIT.toString(),
+				Order.State.READY_FOR_DELIVERY.toString(),
+				Order.State.DELIVERING.toString(),
+				Order.State.DELIVERED.toString());
 		final CountDownLatch latch = new CountDownLatch(1);
-		EventService.instance().events().take(5).subscribeOn(Schedulers.io())
-				.subscribe(new Observer<String>() {
+		EventService.instance().events().take(expectedStates.size())
+				.subscribeOn(Schedulers.io()).subscribe(new Observer<String>() {
 
 					@Override
 					public void onCompleted() {
@@ -77,9 +86,11 @@ public class AppTest {
 		order.signal(new Order.Events.Assign());
 		order.signal(new Order.Events.PickedUp());
 		order.signal(new Order.Events.ArrivedDepot("2"));
+		order.signal(new Order.Events.ArrivedFinalDepot("2"));
+		order.signal(new Order.Events.Delivering());
+		order.signal(new Order.Events.Delivered());
 		latch.await();
-		assertEquals(Arrays.asList("PREPARING", "READY_FOR_DISPATCH",
-				"COURIER_ASSIGNED", "IN_TRANSIT", "IN_TRANSIT"), states);
+		assertEquals(expectedStates, states);
 	}
 
 	private void checkState(State state) throws InterruptedException {
