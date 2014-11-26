@@ -23,7 +23,6 @@ import xuml.tools.model.compiler.runtime.actor.EntityActor;
 import xuml.tools.model.compiler.runtime.message.Signal;
 import abc.A;
 import abc.A.AId;
-import abc.A.BehaviourFactory;
 import abc.A.Events.Create;
 import abc.A.Events.StateSignature_DoneSomething;
 import abc.Context;

@@ -38,9 +38,9 @@ public class Signaller {
 	public Signaller(EntityManagerFactory emf,
 			SignalProcessorListenerFactory listenerFactory) {
 		this.emf = emf;
-		root.tell(emf,root);
+		root.tell(emf, root);
 		if (listenerFactory != null)
-			root.tell(listenerFactory,root);
+			root.tell(listenerFactory, root);
 	}
 
 	public EntityManagerFactory getEntityManagerFactory() {
@@ -60,6 +60,8 @@ public class Signaller {
 	 */
 	public <T extends Entity<T>> T create(Class<T> cls, CreationEvent<T> event) {
 		try {
+			// TODO add before and after listener notifications for create event
+			// (see EntityActor for listener example for non-creation events
 			T t = cls.newInstance();
 			EntityManager em = emf.createEntityManager();
 			em.getTransaction().begin();
@@ -80,11 +82,13 @@ public class Signaller {
 
 	public <T extends Entity<T>> void signal(String fromEntityUniqueId,
 			Entity<T> entity, Event<T> event, Optional<Duration> delay) {
-		signal(fromEntityUniqueId, entity, event, delay, Optional.<FiniteDuration>absent());
+		signal(fromEntityUniqueId, entity, event, delay,
+				Optional.<FiniteDuration> absent());
 	}
 
 	public <T extends Entity<T>> void signal(String fromEntityUniqueId,
-			Entity<T> entity, Event<T> event, Long time, Optional<FiniteDuration> repeatInterval) {
+			Entity<T> entity, Event<T> event, Long time,
+			Optional<FiniteDuration> repeatInterval) {
 		signal(fromEntityUniqueId, entity, event, getDelay(time),
 				repeatInterval);
 	}
@@ -94,7 +98,8 @@ public class Signaller {
 		if (time == null || time <= now)
 			return Optional.absent();
 		else
-			return Optional.<Duration>of(Duration.create(time - now, TimeUnit.MILLISECONDS));
+			return Optional.<Duration> of(Duration.create(time - now,
+					TimeUnit.MILLISECONDS));
 	}
 
 	public <T extends Entity<T>> void signal(String fromEntityUniqueId,
@@ -111,7 +116,7 @@ public class Signaller {
 		Optional<Long> repeatIntervalMs;
 		if (repeatInterval.isPresent())
 			repeatIntervalMs = Optional.of(repeatInterval.get().toMillis());
-		else 
+		else
 			repeatIntervalMs = Optional.absent();
 
 		@SuppressWarnings("unchecked")
@@ -197,7 +202,7 @@ public class Signaller {
 			long delayMs = (signal.getTime() == null ? now : signal.getTime())
 					- now;
 			if (delayMs <= 0)
-				root.tell(signal,root);
+				root.tell(signal, root);
 			else {
 				// There can be at most one delayed signal of a given event
 				// signature outstanding for each sender-receiver instance pair
@@ -209,20 +214,21 @@ public class Signaller {
 									.signatureKey());
 
 					Cancellable cancellable;
-					ExecutionContext executionContext = actorSystem.dispatcher();
+					ExecutionContext executionContext = actorSystem
+							.dispatcher();
 					if (!signal.getRepeatInterval().isPresent())
 						cancellable = actorSystem.scheduler()
 								.scheduleOnce(
 										Duration.create(delayMs,
 												TimeUnit.MILLISECONDS), root,
-										signal,executionContext,root);
+										signal, executionContext, root);
 					else
 						cancellable = actorSystem.scheduler()
 								.schedule(
 										Duration.create(delayMs,
 												TimeUnit.MILLISECONDS),
 										signal.getRepeatInterval().get(), root,
-										signal,executionContext,root);
+										signal, executionContext, root);
 					scheduleCancellers.put(key, cancellable);
 				}
 			}
@@ -306,7 +312,7 @@ public class Signaller {
 	}
 
 	public <T, R> void signalCommit(Entity<T> entity) {
-		root.tell(new EntityCommit<T>(entity),root);
+		root.tell(new EntityCommit<T>(entity), root);
 	}
 
 	public Info getInfo() {
