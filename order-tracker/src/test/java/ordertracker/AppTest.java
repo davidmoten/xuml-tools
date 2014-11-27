@@ -41,7 +41,9 @@ public class AppTest {
 		latch.await(5000, TimeUnit.MILLISECONDS);
 	}
 
-	@Test(timeout = 10000)
+	// keep timeout quite large so that freebie CI servers don't fail when they
+	// are under load
+	@Test(timeout = 60000)
 	public void testDeliverySequence() throws InterruptedException {
 		final List<String> states = new ArrayList<>();
 		List<String> expectedStates = Arrays.asList(
