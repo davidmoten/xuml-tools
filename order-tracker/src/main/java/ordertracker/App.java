@@ -1,7 +1,5 @@
 package ordertracker;
 
-import java.sql.Driver;
-
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
@@ -18,7 +16,7 @@ public class App {
 		// create the entity manager factory
 		EntityManagerFactory emf = Persistence
 				.createEntityManagerFactory("testPersistenceUnit");
-		
+
 		// pass the EntityManagerFactory to the generated xuml Context
 		Context.setEntityManagerFactory(emf);
 
@@ -26,13 +24,14 @@ public class App {
 		Order.setBehaviourFactory(OrderBehaviour.class);
 		Depot.setBehaviourFactory(DepotBehaviour.class);
 		SystemEvent.setBehaviourFactory(SystemEventBehaviour.class);
-		
+
 		// send any signals not processed from last shutdown
 		Context.sendSignalsInQueue();
-		
-		//create the singleton event entity
-		Context.create(SystemEvent.class,new SystemEvent.Events.Create("1"));
-		Context.create(Depot.class, new Depot.Events.Create("1", "Gundagai", -35.0, 142.0));
+
+		// create the singleton event entity
+		SystemEvent.create(new SystemEvent.Events.Create("1"));
+		// create the example depot
+		Depot.create(new Depot.Events.Create("1", "Gundagai", -35.0, 142.0));
 
 		log.info("started up");
 	}

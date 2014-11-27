@@ -275,6 +275,8 @@ public class ClassWriter {
 
 		writeCreatorUsingId(out, info, idClassName);
 
+		writeCreatorUsingCreationEvent(out, info);
+
 	}
 
 	private String getIdClassName(ClassInfo info) {
@@ -310,6 +312,18 @@ public class ClassWriter {
 		out.format("    public static %s create(%s id) {\n",
 				info.getJavaClassSimpleName(), idClassName);
 		out.format("        return new %s(id);\n",
+				info.getJavaClassSimpleName());
+		out.format("    }\n\n");
+	}
+
+	private void writeCreatorUsingCreationEvent(PrintStream out, ClassInfo info) {
+		// static creator using Id
+		jd(out, "Static creator method using CreationEvent.", "    ");
+		out.format("    public static %s create(%s<%s> creationEvent) {\n",
+				info.getJavaClassSimpleName(),
+				info.addType(CreationEvent.class),
+				info.getJavaClassSimpleName());
+		out.format("        return Context.create(%s.class, creationEvent);\n",
 				info.getJavaClassSimpleName());
 		out.format("    }\n\n");
 	}

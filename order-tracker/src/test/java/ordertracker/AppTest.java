@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import ordertracker.Order.State;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -38,9 +36,8 @@ public class AppTest {
 						latch.countDown();
 					}
 				});
-		Context.create(Order.class, new Order.Events.Create("1", "test order",
-				"canberra", "sydney", "fred@yahoo.com", "joey@gmail.com", 3,
-				"created"));
+		Order.create(new Order.Events.Create("1", "test order", "canberra",
+				"sydney", "fred@yahoo.com", "joey@gmail.com", 3, "created"));
 		latch.await(5000, TimeUnit.MILLISECONDS);
 	}
 
@@ -76,12 +73,11 @@ public class AppTest {
 					}
 				});
 
-		Order order = Context.create(Order.class, new Order.Events.Create("2",
-				"test order", "canberra", "sydney", "fred@yahoo.com",
-				"joey@gmail.com", 3, "created"));
+		Order order = Order.create(new Order.Events.Create("2", "test order",
+				"canberra", "sydney", "fred@yahoo.com", "joey@gmail.com", 3,
+				"created"));
 
-		Context.create(Depot.class, new Depot.Events.Create("2", "Bungendore",
-				-35.0, 142.0));
+		Depot.create(new Depot.Events.Create("2", "Bungendore", -35.0, 142.0));
 		order.signal(new Order.Events.Send());
 		order.signal(new Order.Events.Assign());
 		order.signal(new Order.Events.PickedUp());

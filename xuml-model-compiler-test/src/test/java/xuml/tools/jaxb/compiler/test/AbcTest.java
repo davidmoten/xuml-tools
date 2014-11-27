@@ -53,16 +53,13 @@ public class AbcTest {
 		Context.sendSignalsInQueue();
 
 		// create some entities (this happens synchronously)
-		A a1 = Context.create(A.class, new A.Events.Create("value1.1",
-				"value2.1", "1234"));
+		A a1 = A.create(new A.Events.Create("value1.1", "value2.1", "1234"));
 		assertEquals("value1.1", a1.getId().getAOne());
-		A a2 = Context.create(A.class, new A.Events.Create("value1.2",
-				"value2.2", "1234"));
+		A a2 = A.create(new A.Events.Create("value1.2", "value2.2", "1234"));
 		// use Builder pattern for this one (all Events and Id classes have
 		// builders)
-		A a3 = Context.create(A.class,
-				A.Events.Create.builder().aOne("value1.3").aTwo("value2.3")
-						.accountNumber("1234").build());
+		A a3 = A.create(A.Events.Create.builder().aOne("value1.3")
+				.aTwo("value2.3").accountNumber("1234").build());
 
 		// send asynchronous signals to a1 and a2
 		a1.signal(new A.Events.SomethingDone(11));
@@ -155,8 +152,7 @@ public class AbcTest {
 	public void testEntitiesAndSignalsArePersisted()
 			throws InterruptedException {
 
-		A a = Context.create(A.class, new A.Events.Create("value1.4",
-				"value2.4", "1234"));
+		A a = A.create(new A.Events.Create("value1.4", "value2.4", "1234"));
 		// check that the entity was persisted
 		{
 			EntityManager em = Context.createEntityManager();
@@ -168,7 +164,7 @@ public class AbcTest {
 		// test the reloading of a persisted signal to a1
 		Context.persistSignal("fromSomeId", a.getId(), A.class,
 				new A.Events.SomethingDone(14), System.currentTimeMillis(),
-				Optional.<Long>absent());
+				Optional.<Long> absent());
 		assertEquals(1, Context.sendSignalsInQueue());
 		// wait a bit for all signals to be processed
 		Thread.sleep(2000);
@@ -182,13 +178,12 @@ public class AbcTest {
 		em.close();
 
 	}
-	
-	@Test(expected=NullPointerException.class)
+
+	@Test(expected = NullPointerException.class)
 	public void testSignalCannotBePassedANullDelay() {
-		
-		A a = Context.create(A.class, new A.Events.Create("value1.5",
-				"value2.5", "12345"));
-		a.signal(new A.Events.SomethingDone(12),null);
+
+		A a = A.create(new A.Events.Create("value1.5", "value2.5", "12345"));
+		a.signal(new A.Events.SomethingDone(12), null);
 	}
 
 	/**
