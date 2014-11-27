@@ -10,10 +10,12 @@ The Order Tracker
 The idea for this subsystem is that an order (like say an online purchase) is:
 
 * prepared for dispatching (the components of the order gathered up and packaged)
+* assigned to a courier
 * picked up by a courier
+* transited to intermediate depots
 * transited to the depot closest to the destination
 * delivery is attempted to a destination multiple times
-* once max delivery attempts have occurred the item is held at a nearby depot for the client to pick up
+* once max delivery attempts have occurred Or the delivery could not be made the item is held at a nearby depot for the client to pick up
 * the item would be held for a maximum period (say 14 days) before being returned to sender
 
 The entities involved are 
@@ -240,4 +242,3 @@ and go to [http://localhost:8080](http://localhost:8080).
 Click first on the link *Create an order* and then follow the sequence as you like. 
 
 As transitions of state occur the page uses [HTML5 Server-sent events](http://en.wikipedia.org/wiki/Server-sent_events) to notify the page of the current state in a div at the bottom.
-
