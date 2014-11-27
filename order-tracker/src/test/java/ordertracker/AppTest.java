@@ -43,7 +43,7 @@ public class AppTest {
 
 	// keep timeout quite large so that freebie CI servers don't fail when they
 	// are under load
-	@Test(timeout = 60000)
+	@Test(timeout = 600000)
 	public void testDeliverySequence() throws InterruptedException {
 		final List<String> states = new ArrayList<>();
 		List<String> expectedStates = Arrays.asList(
