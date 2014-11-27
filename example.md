@@ -15,24 +15,25 @@ The idea for this subsystem is that an order (like say an online purchase) is:
 * transited to intermediate depots
 * transited to the depot closest to the destination
 * delivery is attempted to a destination multiple times
-* once max delivery attempts have occurred Or the delivery could not be made the item is held at a nearby depot for the client to pick up
+* once max delivery attempts have occurred or the delivery could not be made the item is held at a nearby depot for the client to pick up
 * the item would be held for a maximum period (say 14 days) before being returned to sender
 
 The entities involved are 
 
-**Order** - orderId, description, fromAddress, toAddress, destinationEmail, senderEmail, lastDepotId, maxAttempts, attempts, comment
+**Order** - orderId, description, fromAddress, toAddress, destinationEmail, senderEmail, maxAttempts, attempts, comment
 
 **Depot** - depotId, name, lat, long
 
 The states for *Order* are:
 
 * *Preparing*
-* *Ready For dispatch*
+* *Ready for dispatch*
 * *Courier assigned*
 * *In transit*
-* *Ready For delivery*
+* *Ready for delivery*
 * *Delivering*
 * *Delivered*
+* *Delivery failed*
 * *Awaiting next delivery attempt*
 * *Held for pickup*
 * *Could not deliver*
