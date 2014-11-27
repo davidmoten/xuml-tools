@@ -240,6 +240,8 @@ mvn jetty:run
 ```
 and go to [http://localhost:8080](http://localhost:8080).
 
+<img src="https://raw.github.com/davidmoten/xuml-tools/master/src/docs/rest.png">
+
 Click first on the link *Create an order* and then follow the sequence as you like. 
 
 As transitions of state occur the page uses [HTML5 Server-sent events](http://en.wikipedia.org/wiki/Server-sent_events) to notify the page of the current state in a div at the bottom.
