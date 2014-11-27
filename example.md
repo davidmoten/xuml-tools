@@ -153,7 +153,7 @@ cd xuml-diagrams
 mvn jetty:run
 ```
 
-Go to [http://localhost:8080/cd](http://localhost:8080/cd?id=1) and click on **Choose file**. Select your *domains.xml* file and the first domain in the file will be loaded into the Class Diagram Viewer. Drag classes around till it looks nice.
+Go to [http://localhost:8080/cd](http://localhost:8080/cd) and click on **Choose file**. Select your *domains.xml* file and the first domain in the file will be loaded into the Class Diagram Viewer. Drag classes around till it looks nice.
 
 When *domains.xml* is loaded into the Class Diagram Viewer we get:
 
