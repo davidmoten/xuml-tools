@@ -135,4 +135,9 @@ public class OrderBehaviour implements Order.Behaviour {
 				new SystemEvent.Events.NewEvent(state.toString()));
 	}
 
+	@Override
+	public void onEntryReadyForDelivery(DeliverAgain event) {
+		event(Order.State.READY_FOR_DELIVERY);
+	}
+
 }
