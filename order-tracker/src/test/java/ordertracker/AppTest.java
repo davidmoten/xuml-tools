@@ -17,8 +17,6 @@ import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import xuml.tools.util.database.DerbyUtil;
 
-import com.google.common.collect.Lists;
-
 public class AppTest {
 
 	@BeforeClass
@@ -43,9 +41,7 @@ public class AppTest {
 		latch.await(5000, TimeUnit.MILLISECONDS);
 	}
 
-	// keep timeout quite large so that freebie CI servers don't fail when they
-	// are under load
-	// @Test(timeout = 600000)
+	@Test
 	public void testDeliverySequence() throws InterruptedException {
 		final List<String> states = new ArrayList<>();
 		List<String> expectedStates = Arrays.asList(
@@ -57,8 +53,9 @@ public class AppTest {
 				Order.State.READY_FOR_DELIVERY.toString(),
 				Order.State.DELIVERING.toString(),
 				Order.State.DELIVERED.toString());
-		final CountDownLatch latch = new CountDownLatch(1);
-		ArrayList<CountDownLatch> latches = Lists.newArrayList(latch);
+		final List<CountDownLatch> latches = new ArrayList<>();
+		for (String state : expectedStates)
+			latches.add(new CountDownLatch(1));
 		EventService.instance().events().take(expectedStates.size())
 				.subscribeOn(Schedulers.io())
 				.subscribe(createObserver(states, latches));
@@ -68,20 +65,27 @@ public class AppTest {
 				"created"));
 
 		Depot.create(new Depot.Events.Create("2", "Bungendore", -35.0, 142.0));
+		int count = 0;
+		checkLatch(latches, expectedStates, states, count++);
 		order.signal(new Order.Events.Send());
+		checkLatch(latches, expectedStates, states, count++);
 		order.signal(new Order.Events.Assign());
+		checkLatch(latches, expectedStates, states, count++);
 		order.signal(new Order.Events.PickedUp());
+		checkLatch(latches, expectedStates, states, count++);
 		order.signal(new Order.Events.ArrivedDepot("2"));
+		checkLatch(latches, expectedStates, states, count++);
 		order.signal(new Order.Events.ArrivedFinalDepot("2"));
+		checkLatch(latches, expectedStates, states, count++);
 		order.signal(new Order.Events.Delivering());
+		checkLatch(latches, expectedStates, states, count++);
 		order.signal(new Order.Events.Delivered());
-		latch.await();
-		assertEquals(expectedStates, states);
+		checkLatch(latches, expectedStates, states, count++);
 	}
 
 	// keep timeout quite large so that freebie CI servers don't fail when they
 	// are under load
-	@Test(timeout = 60000)
+	@Test
 	public void testDeliverySequenceWithRetries() throws InterruptedException {
 		final List<String> states = new ArrayList<>();
 		List<String> expectedStates = Arrays.asList(
@@ -115,31 +119,32 @@ public class AppTest {
 				"created"));
 
 		Depot.create(new Depot.Events.Create("3", "Bungendore", -35.0, 142.0));
-		checkLatch(latches, expectedStates, states, 0);
+		int count = 0;
+		checkLatch(latches, expectedStates, states, count++);
 		order.signal(new Order.Events.Send());
-		checkLatch(latches, expectedStates, states, 1);
+		checkLatch(latches, expectedStates, states, count++);
 		order.signal(new Order.Events.Assign());
-		checkLatch(latches, expectedStates, states, 2);
+		checkLatch(latches, expectedStates, states, count++);
 		order.signal(new Order.Events.PickedUp());
-		checkLatch(latches, expectedStates, states, 3);
+		checkLatch(latches, expectedStates, states, count++);
 		order.signal(new Order.Events.ArrivedDepot("3"));
-		checkLatch(latches, expectedStates, states, 4);
+		checkLatch(latches, expectedStates, states, count++);
 		order.signal(new Order.Events.ArrivedFinalDepot("3"));
-		checkLatch(latches, expectedStates, states, 5);
+		checkLatch(latches, expectedStates, states, count++);
 		order.signal(new Order.Events.Delivering());
-		checkLatch(latches, expectedStates, states, 6);
+		checkLatch(latches, expectedStates, states, count++);
 		order.signal(new Order.Events.DeliveryFailed());
-		checkLatch(latches, expectedStates, states, 7);
+		checkLatch(latches, expectedStates, states, count++);
 		order.signal(new Order.Events.DeliverAgain());
-		checkLatch(latches, expectedStates, states, 8);
+		checkLatch(latches, expectedStates, states, count++);
 		order.signal(new Order.Events.DeliveryFailed());
-		checkLatch(latches, expectedStates, states, 9);
+		checkLatch(latches, expectedStates, states, count++);
 		// order.signal(new Order.Events.DeliverAgain());
-		// checkLatch(latches, expectedStates, states, 10);
+		// checkLatch(latches, expectedStates, states, count++);
 		// order.signal(new Order.Events.DeliveryFailed());
-		// checkLatch(latches, expectedStates, states, 11);
+		// checkLatch(latches, expectedStates, states, count++);
 		// order.signal(new Order.Events.DeliveredByPickup());
-		// checkLatch(latches, expectedStates, states, 12);
+		// checkLatch(latches, expectedStates, states, count++);
 	}
 
 	private static void checkLatch(List<CountDownLatch> latches,
@@ -147,7 +152,7 @@ public class AppTest {
 			throws InterruptedException {
 		System.out.println("waiting for latch " + index + " to detect state "
 				+ expectedStates.get(index + 1));
-		latches.get(index).await();
+		latches.get(index).await(30000, TimeUnit.MILLISECONDS);
 		System.out.println("latch obtained for " + index);
 		assertEquals(expectedStates.subList(0, index + 1), states);
 	}

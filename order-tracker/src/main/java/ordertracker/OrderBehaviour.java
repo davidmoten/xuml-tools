@@ -98,7 +98,7 @@ public class OrderBehaviour implements Order.Behaviour {
 	@Override
 	public void onEntryAwaitingNextDeliveryAttempt(DeliverAgain event) {
 		self.signal(new Order.Events.DeliverAgain(),
-				Duration.create(12, TimeUnit.SECONDS));
+				Duration.create(12, TimeUnit.HOURS));
 		event(Order.State.AWAITING_NEXT_DELIVERY_ATTEMPT);
 	}
 
