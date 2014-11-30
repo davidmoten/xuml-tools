@@ -60,11 +60,10 @@ public class AppTest {
 				.subscribeOn(Schedulers.io())
 				.subscribe(createObserver(states, latches));
 
+		Depot.create(new Depot.Events.Create("2", "Bungendore", -35.0, 142.0));
 		Order order = Order.create(new Order.Events.Create("2", "test order",
 				"canberra", "sydney", "fred@yahoo.com", "joey@gmail.com", 3,
 				"created"));
-
-		Depot.create(new Depot.Events.Create("2", "Bungendore", -35.0, 142.0));
 		int count = 0;
 		checkLatch(latches, expectedStates, states, count++);
 		order.signal(new Order.Events.Send());
@@ -137,8 +136,8 @@ public class AppTest {
 		checkLatch(latches, expectedStates, states, count++);
 		order.signal(new Order.Events.DeliverAgain());
 		checkLatch(latches, expectedStates, states, count++);
-		order.signal(new Order.Events.DeliveryFailed());
-		checkLatch(latches, expectedStates, states, count++);
+		// order.signal(new Order.Events.DeliveryFailed());
+		// checkLatch(latches, expectedStates, states, count++);
 		// order.signal(new Order.Events.DeliverAgain());
 		// checkLatch(latches, expectedStates, states, count++);
 		// order.signal(new Order.Events.DeliveryFailed());
@@ -151,7 +150,7 @@ public class AppTest {
 			List<String> expectedStates, List<String> states, int index)
 			throws InterruptedException {
 		System.out.println("waiting for latch " + index + " to detect state "
-				+ expectedStates.get(index + 1));
+				+ expectedStates.get(index));
 		latches.get(index).await(30000, TimeUnit.MILLISECONDS);
 		System.out.println("latch obtained for " + index);
 		assertEquals(expectedStates.subList(0, index + 1), states);
