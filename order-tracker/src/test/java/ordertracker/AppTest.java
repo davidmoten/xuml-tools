@@ -3,7 +3,6 @@ package ordertracker;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -44,11 +43,9 @@ public class AppTest {
     @Test
     public void testDeliverySequence() throws InterruptedException {
         final List<String> states = new ArrayList<>();
-        List<String> expectedStates = Arrays.asList(Order.State.PREPARING.toString(),
-                Order.State.READY_FOR_DISPATCH.toString(), Order.State.COURIER_ASSIGNED.toString(),
-                Order.State.IN_TRANSIT.toString(), Order.State.IN_TRANSIT.toString(),
-                Order.State.READY_FOR_DELIVERY.toString(), Order.State.DELIVERING.toString(),
-                Order.State.DELIVERED.toString());
+        List<String> expectedStates = toList(Order.State.PREPARING, Order.State.READY_FOR_DISPATCH,
+                Order.State.COURIER_ASSIGNED, Order.State.IN_TRANSIT, Order.State.IN_TRANSIT,
+                Order.State.READY_FOR_DELIVERY, Order.State.DELIVERING, Order.State.DELIVERED);
         final List<CountDownLatch> latches = new ArrayList<>();
         for (String state : expectedStates)
             latches.add(new CountDownLatch(1));
@@ -81,18 +78,14 @@ public class AppTest {
     @Test
     public void testDeliverySequenceWithRetries() throws InterruptedException {
         final List<String> states = new ArrayList<>();
-        List<String> expectedStates = Arrays.asList(Order.State.PREPARING.toString(),
-                Order.State.READY_FOR_DISPATCH.toString(), Order.State.COURIER_ASSIGNED.toString(),
-                Order.State.IN_TRANSIT.toString(), Order.State.IN_TRANSIT.toString(),
-                Order.State.READY_FOR_DELIVERY.toString(), Order.State.DELIVERING.toString(),
-                Order.State.DELIVERY_FAILED.toString(),
-                Order.State.AWAITING_NEXT_DELIVERY_ATTEMPT.toString(),
-                Order.State.READY_FOR_DELIVERY.toString(), Order.State.DELIVERING.toString(),
-                Order.State.DELIVERY_FAILED.toString(),
-                Order.State.AWAITING_NEXT_DELIVERY_ATTEMPT.toString(),
-                Order.State.READY_FOR_DELIVERY.toString(), Order.State.DELIVERING.toString(),
-                Order.State.DELIVERY_FAILED.toString(), Order.State.HELD_FOR_PICKUP.toString(),
-                Order.State.DELIVERED.toString());
+        List<String> expectedStates = toList(Order.State.PREPARING, Order.State.READY_FOR_DISPATCH,
+                Order.State.COURIER_ASSIGNED, Order.State.IN_TRANSIT, Order.State.IN_TRANSIT,
+                Order.State.READY_FOR_DELIVERY, Order.State.DELIVERING,
+                Order.State.DELIVERY_FAILED, Order.State.AWAITING_NEXT_DELIVERY_ATTEMPT,
+                Order.State.READY_FOR_DELIVERY, Order.State.DELIVERING,
+                Order.State.DELIVERY_FAILED, Order.State.AWAITING_NEXT_DELIVERY_ATTEMPT,
+                Order.State.READY_FOR_DELIVERY, Order.State.DELIVERING,
+                Order.State.DELIVERY_FAILED, Order.State.HELD_FOR_PICKUP, Order.State.DELIVERED);
         final List<CountDownLatch> latches = new ArrayList<>();
         for (String state : expectedStates)
             latches.add(new CountDownLatch(1));
@@ -129,6 +122,13 @@ public class AppTest {
         // checkLatch(latches, expectedStates, states, count++);
         // order.signal(new Order.Events.DeliveredByPickup());
         // checkLatch(latches, expectedStates, states, count++);
+    }
+
+    private static List<String> toList(Order.State... states) {
+        List<String> list = new ArrayList<String>();
+        for (Order.State state : states)
+            list.add(state.toString());
+        return list;
     }
 
     private static void checkLatch(List<CountDownLatch> latches, List<String> expectedStates,
