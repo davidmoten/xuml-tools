@@ -19,6 +19,8 @@ import ordertracker.Order.Events.Send;
 import ordertracker.Order.State;
 import scala.concurrent.duration.Duration;
 
+import com.google.common.base.Optional;
+
 public class OrderBehaviour implements Order.Behaviour {
 
     private final Order self;
@@ -58,20 +60,24 @@ public class OrderBehaviour implements Order.Behaviour {
 
     @Override
     public void onEntryInTransit(ArrivedDepot event) {
-        Depot depot = Depot.find(event.getDepotID());
-        if (depot == null)
+        Optional<Depot> depot = Depot.find(event.getDepotID());
+        if (!depot.isPresent())
             throw new RuntimeException("depot does not exist: " + event.getDepotID());
         else {
-            self.setDepot_R1(depot);
+            self.setDepot_R1(depot.get());
             event(Order.State.IN_TRANSIT);
         }
     }
 
     @Override
     public void onEntryReadyForDelivery(ArrivedFinalDepot event) {
-        Depot depot = Depot.find(event.getDepotID());
-        self.setDepot_R1(depot);
-        event(Order.State.READY_FOR_DELIVERY);
+        Optional<Depot> depot = Depot.find(event.getDepotID());
+        if (!depot.isPresent())
+            throw new RuntimeException("depot does not exist: " + event.getDepotID());
+        else {
+            self.setDepot_R1(depot.get());
+            event(Order.State.READY_FOR_DELIVERY);
+        }
     }
 
     @Override
@@ -130,7 +136,7 @@ public class OrderBehaviour implements Order.Behaviour {
 
     private void event(State state) {
         // send the state to the singleton event entity
-        SystemEvent.find("1").signal(new SystemEvent.Events.NewEvent(state.toString()));
+        SystemEvent.find("1").get().signal(new SystemEvent.Events.NewEvent(state.toString()));
     }
 
     @Override

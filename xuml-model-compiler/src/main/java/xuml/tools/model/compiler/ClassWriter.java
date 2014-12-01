@@ -1866,20 +1866,23 @@ public class ClassWriter {
 
 	private void writeStaticFinderMethods(PrintStream out, ClassInfo info) {
 
-		out.format("    public static %s find(%s id) {\n", info
-				.getJavaClassSimpleName(), info.addType(getIdType(info)
-				.getBase()), getIdType(info).getClass().getSimpleName());
+		out.format("    public static %s<%s> find(%s id) {\n", info
+				.addType(Optional.class), info.getJavaClassSimpleName(), info
+				.addType(getIdType(info).getBase()), getIdType(info).getClass()
+				.getSimpleName());
 		// TODO return the found thing using current entity manager
 		out.format("        if (Context.em()!=null) {\n");
-		out.format("            return Context.em().find(%s.class,id);\n",
-				info.getJavaClassSimpleName());
+		out.format(
+				"            return %s.fromNullable(Context.em().find(%s.class,id));\n",
+				info.addType(Optional.class), info.getJavaClassSimpleName());
 		out.format("        } else {\n");
 		out.format("            %s em = Context.createEntityManager();\n",
 				info.addType(EntityManager.class));
 		out.format("            try {\n");
 		out.format("                %s result = em.find(%s.class,id);\n",
 				info.getJavaClassSimpleName(), info.getJavaClassSimpleName());
-		out.format("                return result;\n");
+		out.format("                return %s.fromNullable(result);\n",
+				info.addType(Optional.class));
 		out.format("            } finally {\n");
 		out.format("                em.close();\n");
 		out.format("            }\n");
