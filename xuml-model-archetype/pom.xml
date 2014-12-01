@@ -49,6 +49,9 @@
 								<goals>verify</goals>
 								<interactiveMode>false</interactiveMode>
 							</properties>
+							<filterProperties>
+								<xuml.tools.version>${project.parent.version}</xuml.tools.version>
+							</filterProperties>
 							<streamLogs>true</streamLogs>
 						</configuration>
 					</plugin>
