@@ -3,7 +3,7 @@
 	<parent>
 		<artifactId>xuml-tools</artifactId>
 		<groupId>com.github.davidmoten</groupId>
-		<version>0.2.2-SNAPSHOT</version>
+		<version>0.3</version>
 	</parent>
 	<artifactId>gae</artifactId>
 	<name>${project.artifactId}</name>
