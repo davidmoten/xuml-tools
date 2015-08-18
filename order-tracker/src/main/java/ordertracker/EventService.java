@@ -7,7 +7,7 @@ public class EventService {
 
     private static EventService instance = new EventService();
 
-    private PublishSubject<String> subject = PublishSubject.create();
+    private final PublishSubject<String> subject = PublishSubject.create();
 
     public static EventService instance() {
         return instance;
@@ -18,7 +18,7 @@ public class EventService {
     }
 
     public Observable<String> events() {
-        return subject.asObservable();
+        return subject.serialize().asObservable();
     }
 
 }

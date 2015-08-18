@@ -12,7 +12,7 @@
 	<version>0.1-SNAPSHOT</version>
 	<name>${project.artifactId}</name>
 	<packaging>pom</packaging>
-	<description>A collection of tools for Executable UML in the style of Mellor and Balcer and miUML.org</description>
+	<description>A collection of tools for Executable UML in the style of Mellor and Balcer and miUML.org based on JPA and Akka</description>
 	<url>https://github.com/davidmoten/xuml-tools</url>
 	<licenses>
 		<license>
@@ -278,10 +278,4 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-    <distributionManagement>
-       <site>
-		   <id>site</id>
-			<url>${site.url}</url>
-	   </site>
-    </distributionManagement>
 </project>

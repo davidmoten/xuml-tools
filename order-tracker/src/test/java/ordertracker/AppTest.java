@@ -4,12 +4,15 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import rx.Observer;
 import rx.functions.Action1;
@@ -18,10 +21,17 @@ import xuml.tools.util.database.DerbyUtil;
 
 public class AppTest {
 
-    @BeforeClass
-    public static void setup() {
+    private static final Logger log = LoggerFactory.getLogger(AppTest.class);
+
+    @Before
+    public void setup() {
         DerbyUtil.disableDerbyLog();
         App.startup();
+    }
+
+    @After
+    public void shutdown() {
+        App.shutdown();
     }
 
     @Test
@@ -42,11 +52,11 @@ public class AppTest {
 
     @Test
     public void testDeliverySequence() throws InterruptedException {
-        final List<String> states = new ArrayList<>();
+        final List<String> states = new CopyOnWriteArrayList<>();
         List<String> expectedStates = toList(Order.State.PREPARING, Order.State.READY_FOR_DISPATCH,
                 Order.State.COURIER_ASSIGNED, Order.State.IN_TRANSIT, Order.State.IN_TRANSIT,
                 Order.State.READY_FOR_DELIVERY, Order.State.DELIVERING, Order.State.DELIVERED);
-        final List<CountDownLatch> latches = new ArrayList<>();
+        final List<CountDownLatch> latches = new CopyOnWriteArrayList<>();
         for (String state : expectedStates)
             latches.add(new CountDownLatch(1));
         EventService.instance().events().take(expectedStates.size()).subscribeOn(Schedulers.io())
@@ -77,15 +87,15 @@ public class AppTest {
     // are under load
     @Test
     public void testDeliverySequenceWithRetries() throws InterruptedException {
-        final List<String> states = new ArrayList<>();
+        final List<String> states = new CopyOnWriteArrayList<>();
         List<String> expectedStates = toList(Order.State.PREPARING, Order.State.READY_FOR_DISPATCH,
                 Order.State.COURIER_ASSIGNED, Order.State.IN_TRANSIT, Order.State.IN_TRANSIT,
-                Order.State.READY_FOR_DELIVERY, Order.State.DELIVERING,
-                Order.State.DELIVERY_FAILED, Order.State.AWAITING_NEXT_DELIVERY_ATTEMPT,
-                Order.State.READY_FOR_DELIVERY, Order.State.DELIVERING,
-                Order.State.DELIVERY_FAILED, Order.State.AWAITING_NEXT_DELIVERY_ATTEMPT,
-                Order.State.READY_FOR_DELIVERY, Order.State.DELIVERING,
-                Order.State.DELIVERY_FAILED, Order.State.HELD_FOR_PICKUP, Order.State.DELIVERED);
+                Order.State.READY_FOR_DELIVERY, Order.State.DELIVERING, Order.State.DELIVERY_FAILED,
+                Order.State.AWAITING_NEXT_DELIVERY_ATTEMPT, Order.State.READY_FOR_DELIVERY,
+                Order.State.DELIVERING, Order.State.DELIVERY_FAILED,
+                Order.State.AWAITING_NEXT_DELIVERY_ATTEMPT, Order.State.READY_FOR_DELIVERY,
+                Order.State.DELIVERING, Order.State.DELIVERY_FAILED, Order.State.HELD_FOR_PICKUP,
+                Order.State.DELIVERED);
         final List<CountDownLatch> latches = new ArrayList<>();
         for (String state : expectedStates)
             latches.add(new CountDownLatch(1));
@@ -133,8 +143,8 @@ public class AppTest {
 
     private static void checkLatch(List<CountDownLatch> latches, List<String> expectedStates,
             List<String> states, int index) throws InterruptedException {
-        System.out.println("waiting for latch " + index + " to detect state "
-                + expectedStates.get(index));
+        System.out.println(
+                "waiting for latch " + index + " to detect state " + expectedStates.get(index));
         latches.get(index).await(30000, TimeUnit.MILLISECONDS);
         System.out.println("latch obtained for " + index);
         assertEquals(expectedStates.subList(0, index + 1), states);
@@ -157,16 +167,12 @@ public class AppTest {
 
             @Override
             public void onNext(String state) {
+                log.info(Thread.currentThread().getName() + " - " + state);
                 states.add(state);
                 latches.get(count).countDown();
                 count++;
             }
         };
-    }
-
-    @AfterClass
-    public static void shutdown() {
-        App.shutdown();
     }
 
 }
