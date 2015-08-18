@@ -54,7 +54,7 @@
 		<compiler.plugin.version>3.3</compiler.plugin.version>
 		<maven.compiler.source>1.7</maven.compiler.source>
 		<maven.compiler.target>1.7</maven.compiler.target>
-		<gae.version>1.7.0</gae.version>
+		<gae.version>1.9.25</gae.version>
 		<gae.plugin.version>0.9.4</gae.plugin.version>
 		<junit.version>4.12</junit.version>
 		<guava.version>18.0</guava.version>
