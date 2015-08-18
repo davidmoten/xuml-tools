@@ -19,6 +19,13 @@ Status: *pre-alpha*
 
 Maven site is [here](http://davidmoten.github.io/xuml-tools/) including [javadocs](http://davidmoten.github.io/xuml-tools/site/apidocs/index.html).
 
+Technologies
+-------------
+Under the hood: 
+
+* JPA is used for persistence and action language
+* Akka is used for asynchronous signalling.
+
 Getting started
 ---------------
 Requirements:
