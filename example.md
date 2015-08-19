@@ -74,7 +74,7 @@ Create a project using the archetype:
 mvn archetype:generate \
 -DarchetypeGroupId=com.github.davidmoten \
 -DarchetypeArtifactId=xuml-model-archetype \
--DarchetypeVersion=0.1-SNAPSHOT \
+-DarchetypeVersion=0.3 \
 -DgroupId=my.stuff \
 -DartifactId=order.tracker \
 -Dversion=0.1-SNAPSHOT \
