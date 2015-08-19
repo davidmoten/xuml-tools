@@ -10,7 +10,7 @@
 	<name>${artifactId}</name>
 
 	<properties>
-		<xuml.tools.version>0.1-SNAPSHOT</xuml.tools.version>
+		<xuml.tools.version>0.3</xuml.tools.version>
 	</properties>
 
 	<dependencies>
@@ -34,7 +34,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.11</version>
+			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -43,7 +43,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.2</version>
+				<version>3.3</version>
 				<configuration>
 					<verbose>true</verbose>
 					<fork>true</fork>
