@@ -1,1136 +1,1090 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Domains xmlns="http://www.miuml.org/metamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.miuml.org/metamodel miuml-metamodel.xsd  http://org.github/xuml-tools/miuml-metamodel-extensions xuml-tools-miuml-metamodel-extensions.xsd"
-	xmlns:xt="http://org.github/xuml-tools/miuml-metamodel-extensions">
-
-	<DomainBuildSpecification Name="Base"
-		DomainNameIsDefaultSubsystemName="true" DefaultSubsystemName="Subsystem"
-		DefaultSubsystemRange="100" DefaultIdName="Id" DefaultIdType="arbitraryId" />
-
-	<SymbolicType Name="string" MinLength="1" MaxLength="4096"
-		Prefix="" Suffix="" ValidationPattern=".*" DefaultValue="" />
-	<IntegerType Name="integer" Units="none" DefaultValue="0"
-		UpperLimit="99999999999" LowerLimit="-9999999999999" />
-	<IntegerType Name="date" Units="epoch ms" DefaultValue="0"
-		UpperLimit="99999999999" LowerLimit="-9999999999999" />
-	<IntegerType Name="timestamp" Units="epoch ms"
-		DefaultValue="0" UpperLimit="99999999999" LowerLimit="-9999999999999" />
-	<IntegerType Name="time" Units="epoch ms" DefaultValue="0"
-		UpperLimit="99999999999" LowerLimit="-9999999999999" />
-	<IntegerType Name="arbitraryId" Units="None" DefaultValue="1"
-		UpperLimit="99999999999" LowerLimit="1" />
-	<BooleanType Name="boolean" DefaultValue="false" />
-	<RealType Name="real" UpperLimit="99999999999" LowerLimit="-9999999999999"
-		Precision="20" Units="none" DefaultValue="0" />
-
-	<IntegerType Name="Nominal" Units="None" DefaultValue="1"
-		UpperLimit="99999999999" LowerLimit="1" />
-	<IntegerType Name="Year" Units="year" DefaultValue="0"
-		UpperLimit="2100" LowerLimit="-5000" />
-	<RealType Name="Money" Precision="2" Units="Dollars"
-		LowerLimit="0" UpperLimit="999999999999" DefaultValue="0" />
-	<IntegerType Name="Count" Units="Instances" DefaultValue="0"
-		UpperLimit="999999999999" LowerLimit="0" />
-	<SymbolicType Name="Bank Card Approval Code" MinLength="1"
-		MaxLength="64" Prefix="" Suffix="" ValidationPattern=".*"
-		DefaultValue="" />
-	<SymbolicType Name="Bank Card Account Number" MinLength="1"
-		MaxLength="64" Prefix="" Suffix="" ValidationPattern=".*"
-		DefaultValue="" />
-	<SymbolicType Name="Month Year" MinLength="6" MaxLength="6"
-		Prefix="" Suffix="" ValidationPattern="[01][0-9][12][9012345][0-9]"
-		DefaultValue="" />
-
-	<ModeledDomain Name="Bookstore">
-
-		<!-- types local to the domain -->
-		<SymbolicType Name="ISBN Group Identifier" MinLength="5"
-			MaxLength="5" Prefix="" Suffix="" ValidationPattern="\d{5}"
-			DefaultValue="" />
-		<SymbolicType Name="ISBN Publisher Prefix" MinLength="2"
-			MaxLength="2" Prefix="" Suffix="" ValidationPattern="[^\s]{5}"
-			DefaultValue="" />
-		<SymbolicType Name="Universal Product Code" MinLength="1"
-			MaxLength="64" Prefix="" Suffix="" ValidationPattern=".*"
-			DefaultValue="" />
-		<SymbolicType Name="Website URL" MinLength="1" MaxLength="2000"
-			Prefix="" Suffix="" ValidationPattern=".*" DefaultValue="" />
-		<SymbolicType Name="Personal Name" MinLength="1"
-			MaxLength="512" Prefix="" Suffix="" ValidationPattern=".*"
-			DefaultValue="" />
-		<SymbolicType Name="Mailing Address" MinLength="1"
-			MaxLength="512" Prefix="" Suffix="" ValidationPattern=".*"
-			DefaultValue="" />
-		<SymbolicType Name="Internet Email Address" MinLength="1"
-			MaxLength="512" Prefix="" Suffix="" ValidationPattern=".*"
-			DefaultValue="" />
-		<SymbolicType Name="Telephone Number" MinLength="1"
-			MaxLength="256" Prefix="" Suffix="" ValidationPattern=".*"
-			DefaultValue="" />
-
-		<Subsystem Name="Product Specification" Alias="Product Specification"
-			Floor="11" Ceiling="20">
-
-			<Class Name="Product" Cnum="1" Element="1" Alias="Product">
-				<IndependentAttribute Name="Product ID"
-					Type="Universal Product Code">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<DerivedAttribute Name="Product Name" Formula="formula for product name"
-					Type="string" />
-				<IndependentAttribute Name="Copyright" Type="Year" />
-				<IndependentAttribute Name="Unit Price" Type="Money" />
-				<IndependentAttribute Name="Description" Type="string" />
-				<IndependentAttribute Name="Website" Type="Website URL" />
-				<ReferentialAttribute Name="Publisher code">
-					<ToOneReference Relationship="1" Attribute="Publisher code" />
-				</ReferentialAttribute>
-				<ReferentialAttribute Name="Publisher Group code">
-					<ToOneReference Relationship="1" Attribute="Group code" />
-				</ReferentialAttribute>
-				<ReferentialAttribute Name="Category ID">
-					<ToOneReference Relationship="15" Attribute="Category ID" />
-				</ReferentialAttribute>
-				<ReferentialAttribute Name="Stocked Product">
-					<SpecializationReference Relationship="12"
-						Attribute="Stocked Product ID" />
-				</ReferentialAttribute>
-				<ReferentialAttribute Name="Special Order Product">
-					<SpecializationReference Relationship="12"
-						Attribute="Special Order Product ID" />
-				</ReferentialAttribute>
-			</Class>
-
-			<Class Name="Special Order Product" Alias="Special Order Product">
-				<IndependentAttribute Name="Special Order Product ID"
-					Type="arbitraryId">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<IndependentAttribute Name="Special Order Instructions"
-					Type="string" />
-				<IndependentAttribute Name="Days to Deliver"
-					Type="Count" />
-				<ReferentialAttribute Name="Product">
-					<GeneralizationReference Relationship="12"
-						Attribute="Product ID" />
-				</ReferentialAttribute>
-			</Class>
-
-			<Class Name="Stocked Product">
-				<IndependentAttribute Name="Stocked Product ID"
-					Type="arbitraryId">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<IndependentAttribute Name="Quantity On hand"
-					Type="Count" />
-				<IndependentAttribute Name="Reorder Threshold"
-					Type="Count" />
-				<IndependentAttribute Name="Reorder Increment"
-					Type="Count" />
-				<IndependentAttribute Name="Reorder Instructions"
-					Type="string" />
-				<ReferentialAttribute Name="Product">
-					<GeneralizationReference Relationship="12"
-						Attribute="Product ID" />
-				</ReferentialAttribute>
-			</Class>
-
-			<Class Name="Product Category">
-				<IndependentAttribute Name="Category ID" Type="arbitraryId">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<IndependentAttribute Name="Category Name"
-					Type="string" />
-			</Class>
-
-			<Class Name="Publisher">
-				<IndependentAttribute Name="Group code"
-					Type="ISBN Group Identifier">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<IndependentAttribute Name="Publisher code"
-					Type="ISBN Publisher Prefix">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<IndependentAttribute Name="Name" Type="string" />
-				<IndependentAttribute Name="Address" Type="Mailing Address" />
-				<IndependentAttribute Name="Website" Type="Website URL" />
-			</Class>
-
-			<Generalization Rnum="12" Superclass="Product">
-				<SpecializedClass Name="Stocked Product" />
-				<SpecializedClass Name="Special Order Product" />
-			</Generalization>
-
-			<BinaryAssociation Rnum="15">
-				<ActivePerspective Phrase="classifies"
-					ViewedClass="Product" OnePerspective="false" Conditional="true" />
-				<PassivePerspective Phrase="is classified according to"
-					ViewedClass="Product Category" OnePerspective="true" Conditional="false" />
-			</BinaryAssociation>
-
-			<UnaryAssociation Rnum="14">
-				<SymmetricPerspective Phrase="is part of"
-					ViewedClass="Product Category" OnePerspective="true" Conditional="true" />
-			</UnaryAssociation>
-
-			<BinaryAssociation Rnum="1">
-				<ActivePerspective Phrase="produces and markets"
-					ViewedClass="Product" OnePerspective="false" Conditional="true" />
-				<PassivePerspective Phrase="is produced and marketed by"
-					ViewedClass="Publisher" OnePerspective="true" Conditional="false" />
-			</BinaryAssociation>
-
-		</Subsystem>
-
-		<Subsystem Name="Ordering" Alias="Ordering" Floor="1"
-			Ceiling="10">
-
-			<Class Name="Shopping Cart">
-				<IndependentAttribute Name="Cart ID" Type="arbitraryId">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<DerivedAttribute Name="Total value" Formula="formula for total value"
-					Type="Money" />
-			</Class>
-
-			<Class Name="Order">
-				<IndependentAttribute Name="Order ID" Type="arbitraryId">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<IndependentAttribute Name="Date order placed"
-					Type="date" />
-				<DerivedAttribute Name="Total value" Formula="formula for total value"
-					Type="Money" />
-				<IndependentAttribute Name="Recipient" Type="Personal Name" />
-				<IndependentAttribute Name="Delivery address"
-					Type="Mailing Address" />
-				<IndependentAttribute Name="Contact phone"
-					Type="Telephone Number" />
-
-				<Lifecycle>
-
-					<State Name="Establishing Customer and Verifying Payment" />
-					<State Name="Making Charge" />
-					<State Name="Being Packed and Shipped" />
-					<State Name="Payment Not Approved" />
-					<State Name="Delivered to Customer" />
-
-					<CreationEvent Name="Check out" ID="1"
-						State="Establishing Customer and Verifying Payment">
-						<EventSignature>
-							<StateModelParameter Name="Cart" Type="arbitraryId" />
-							<StateModelParameter Name="Account number"
-								Type="Bank Card Account Number" />
-							<StateModelParameter Name="Billing address"
-								Type="Mailing Address" />
-							<StateModelParameter Name="Card expiration date]"
-								Type="Month Year" />
-							<StateModelParameter Name="Cardholder name"
-								Type="Personal Name" />
-							<StateModelParameter Name="Customer email"
-								Type="Internet Email Address" />
-							<StateModelParameter Name="Customer Name"
-								Type="Personal Name" />
-							<StateModelParameter Name="Customer phone"
-								Type="Telephone Number" />
-							<StateModelParameter Name="Shipping address"
-								Type="Mailing Address" />
-						</EventSignature>
-					</CreationEvent>
-
-					<LocalEffectiveSignalingEvent Name="Submit charge"
-						ID="2">
-						<EventSignature>
-							<StateModelParameter Name="Cart" Type="arbitraryId" />
-							<StateModelParameter Name="Account number"
-								Type="Bank Card Account Number" />
-							<StateModelParameter Name="Billing address"
-								Type="Mailing Address" />
-							<StateModelParameter Name="Card expiration date"
-								Type="Month Year" />
-							<StateModelParameter Name="Cardholder name"
-								Type="Personal Name" />
-						</EventSignature>
-					</LocalEffectiveSignalingEvent>
-
-					<LocalEffectiveSignalingEvent Name="Payment declined"
-						ID="3">
-						<EventSignature></EventSignature>
-					</LocalEffectiveSignalingEvent>
-					<LocalEffectiveSignalingEvent Name="Payment approved"
-						ID="4">
-						<EventSignature></EventSignature>
-					</LocalEffectiveSignalingEvent>
-					<LocalEffectiveSignalingEvent Name="Order delivered"
-						ID="5">
-						<EventSignature></EventSignature>
-					</LocalEffectiveSignalingEvent>
-
-					<Transition State="Establishing Customer and Verifying Payment"
-						Destination="Making Charge" EventID="2" />
-					<Transition State="Making Charge" Destination="Payment Not Approved"
-						EventID="3" />
-					<Transition State="Making Charge" Destination="Being Packed and Shipped"
-						EventID="5" />
-				</Lifecycle>
-
-			</Class>
-
-			<Class Name="Customer">
-				<IndependentAttribute Name="Email"
-					Type="Internet Email Address">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<IndependentAttribute Name="Name" Type="Personal Name" />
-				<IndependentAttribute Name="Shipping address"
-					Type="Mailing Address" />
-				<IndependentAttribute Name="Phone" Type="Telephone Number" />
-				<IndependentAttribute Name="Purchases made"
-					Type="Count" />
-			</Class>
-
-			<Class Name="Credit Card Charge">
-				<IndependentAttribute Name="Charge Id" Type="arbitraryId">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<IndependentAttribute Name="Account number"
-					Type="Bank Card Account Number" />
-				<IndependentAttribute Name="Cardholder name"
-					Type="Personal Name" />
-				<IndependentAttribute Name="Billing address"
-					Type="Mailing Address" />
-				<IndependentAttribute Name="Card expiration date"
-					Type="Month Year" />
-				<IndependentAttribute Name="Date charge made"
-					Type="date" />
-				<IndependentAttribute Name="Charge amount"
-					Type="Money" />
-				<IndependentAttribute Name="Approval code"
-					Type="Bank Card Approval Code" />
-			</Class>
-
-			<Class Name="Product Selection">
-				<IndependentAttribute Name="Product Selection ID"
-					Type="arbitraryId">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<ReferentialAttribute Name="Product">
-					<AssociativeReference Class="Product"
-						Attribute="Product ID" Relationship="4" />
-				</ReferentialAttribute>
-				<ReferentialAttribute Name="Shopping Cart">
-					<AssociativeReference Class="Shopping Cart"
-						Attribute="Cart ID" Relationship="4" />
-				</ReferentialAttribute>
-				<IndependentAttribute Name="Quantity" Type="Count" />
-				<IndependentAttribute Name="Unit price of selection"
-					Type="Money" />
-				<DerivedAttribute Name="Selection value" Type="Money"
-					Formula="selection value formula" />
-			</Class>
-
-		</Subsystem>
-
-	</ModeledDomain>
-
-	<ModeledDomain Name="miUML">
-
-		<Subsystem Name="Class and Attribute" Floor="20" Ceiling="40">
-
-			<Class Name="Class">
-				<IndependentAttribute Name="Domain" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<IndependentAttribute Name="Name" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-			</Class>
-
-			<Class Name="Attribute">
-				<IndependentAttribute Name="Domain" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<ReferentialAttribute Name="Class">
-					<ToOneReference Relationship="1" Attribute="Name" />
-				</ReferentialAttribute>
-				<IndependentAttribute Name="Name" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<IndependentAttribute Name="Type" Type="string" />
-			</Class>
-
-			<BinaryAssociation Rnum="1">
-				<ActivePerspective Phrase="characterizes"
-					ViewedClass="Class" OnePerspective="true" Conditional="false" />
-				<PassivePerspective Phrase="is characterized by"
-					ViewedClass="Attribute" OnePerspective="false" Conditional="false" />
-			</BinaryAssociation>
-
-		</Subsystem>
-	</ModeledDomain>
-
-	<ModeledDomain Name="Nested composite id example">
-
-		<Subsystem Name="Composite Id example" Floor="61" Ceiling="80">
-
-			<Class Name="A">
-
-				<IndependentAttribute Name="A one" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<IndependentAttribute Name="A two" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<IndependentAttribute Name="A three" Type="string" />
-				<Lifecycle>
-					<State Name="Has Started" />
-					<State Name="Done Something">
-						<StateSignature>
-							<StateModelParameter Name="The count" Type="Count" />
-						</StateSignature>
-					</State>
-					<State Name="Done Something Else" />
-					<CreationEvent Name="Create" ID="1" State="Has Started">
-						<EventSignature>
-							<StateModelParameter Name="A one" Type="string" />
-							<StateModelParameter Name="A two" Type="string" />
-							<StateModelParameter Name="Account number"
-								Type="Bank Card Account Number" />
-						</EventSignature>
-					</CreationEvent>
-					<LocalEffectiveSignalingEvent Name="Something Done"
-						ID="2">
-					</LocalEffectiveSignalingEvent>
-					<Transition State="Has Started" Destination="Done Something"
-						EventID="2" />
-				</Lifecycle>
-			</Class>
-
-			<Class Name="B">
-				<IndependentAttribute Name="B one" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<ReferentialAttribute Name="B A one">
-					<Identifier Number="1" />
-					<ToOneReference Relationship="1" Attribute="A one" />
-				</ReferentialAttribute>
-				<ReferentialAttribute Name="B A two">
-					<Identifier Number="1" />
-					<ToOneReference Relationship="1" Attribute="A two" />
-				</ReferentialAttribute>
-				<IndependentAttribute Name="B two" Type="string" />
-			</Class>
-
-			<Class Name="C">
-				<IndependentAttribute Name="C one" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<ReferentialAttribute Name="C B one">
-					<Identifier Number="1" />
-					<ToOneReference Relationship="2" Attribute="B one" />
-				</ReferentialAttribute>
-				<ReferentialAttribute Name="C B A one">
-					<Identifier Number="1" />
-					<ToOneReference Relationship="2" Attribute="B A one" />
-				</ReferentialAttribute>
-				<ReferentialAttribute Name="C B A two">
-					<Identifier Number="1" />
-					<ToOneReference Relationship="2" Attribute="B A two" />
-				</ReferentialAttribute>
-				<IndependentAttribute Name="C two" Type="string" />
-			</Class>
-
-			<BinaryAssociation Rnum="1">
-				<ActivePerspective Phrase="characterizes"
-					ViewedClass="B" OnePerspective="false" Conditional="true" />
-				<PassivePerspective Phrase="is characterized by"
-					ViewedClass="A" OnePerspective="true" Conditional="true" />
-			</BinaryAssociation>
-
-			<BinaryAssociation Rnum="2">
-				<ActivePerspective Phrase="characterizes"
-					ViewedClass="C" OnePerspective="false" Conditional="true" />
-				<PassivePerspective Phrase="is characterized by"
-					ViewedClass="B" OnePerspective="true" Conditional="true" />
-			</BinaryAssociation>
-
-
-		</Subsystem>
-	</ModeledDomain>
-
-	<ModeledDomain Name="one-to-zero-one">
-
-		<Subsystem Name="one-to-zero-one" Floor="81" Ceiling="100">
-
-			<Class Name="A">
-
-				<IndependentAttribute Name="A one" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<IndependentAttribute Name="A two" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<ReferentialAttribute Name="A B one">
-					<ToOneReference Relationship="1" Attribute="B one" />
-				</ReferentialAttribute>
-				<ReferentialAttribute Name="A B two">
-					<ToOneReference Relationship="1" Attribute="B two" />
-				</ReferentialAttribute>
-			</Class>
-
-			<Class Name="B">
-				<IndependentAttribute Name="B one" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<IndependentAttribute Name="B two" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<ReferentialAttribute Name="B A one">
-					<ToOneReference Relationship="1" Attribute="A one" />
-				</ReferentialAttribute>
-				<ReferentialAttribute Name="B A two">
-					<ToOneReference Relationship="1" Attribute="A two" />
-				</ReferentialAttribute>
-			</Class>
-
-			<BinaryAssociation Rnum="1">
-				<ActivePerspective Phrase="characterizes"
-					ViewedClass="B" OnePerspective="true" Conditional="true" />
-				<PassivePerspective Phrase="is characterized by"
-					ViewedClass="A" OnePerspective="true" Conditional="false" />
-			</BinaryAssociation>
-
-		</Subsystem>
-	</ModeledDomain>
-
-	<ModeledDomain Name="one-to-many">
-
-		<Subsystem Name="one-to-many" Floor="101" Ceiling="120">
-
-			<Class Name="A">
-
-				<IndependentAttribute Name="A one" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<IndependentAttribute Name="A two" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-			</Class>
-
-			<Class Name="B">
-				<IndependentAttribute Name="B one" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<IndependentAttribute Name="B two" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<ReferentialAttribute Name="B A one">
-					<ToOneReference Relationship="1" Attribute="A one" />
-				</ReferentialAttribute>
-				<ReferentialAttribute Name="B A two">
-					<ToOneReference Relationship="1" Attribute="A two" />
-				</ReferentialAttribute>
-			</Class>
-
-			<BinaryAssociation Rnum="1">
-				<ActivePerspective Phrase="characterizes"
-					ViewedClass="B" OnePerspective="false" Conditional="true" />
-				<PassivePerspective Phrase="is characterized by"
-					ViewedClass="A" OnePerspective="true" Conditional="false" />
-			</BinaryAssociation>
-
-		</Subsystem>
-	</ModeledDomain>
-
-	<ModeledDomain Name="one-to-one">
-
-		<Subsystem Name="one-to-one" Floor="121" Ceiling="140">
-
-			<Class Name="A">
-
-				<IndependentAttribute Name="A one" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<IndependentAttribute Name="A two" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<ReferentialAttribute Name="A B one">
-					<ToOneReference Relationship="1" Attribute="B one" />
-				</ReferentialAttribute>
-				<ReferentialAttribute Name="A B two">
-					<ToOneReference Relationship="1" Attribute="B two" />
-				</ReferentialAttribute>
-			</Class>
-
-			<Class Name="B">
-				<IndependentAttribute Name="B one" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<IndependentAttribute Name="B two" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<ReferentialAttribute Name="B A one">
-					<ToOneReference Relationship="1" Attribute="A one" />
-				</ReferentialAttribute>
-				<ReferentialAttribute Name="B A two">
-					<ToOneReference Relationship="1" Attribute="A two" />
-				</ReferentialAttribute>
-			</Class>
-
-			<BinaryAssociation Rnum="1">
-				<ActivePerspective Phrase="characterizes"
-					ViewedClass="B" OnePerspective="true" Conditional="false" />
-				<PassivePerspective Phrase="is characterized by"
-					ViewedClass="A" OnePerspective="true" Conditional="false" />
-			</BinaryAssociation>
-
-		</Subsystem>
-	</ModeledDomain>
-
-	<ModeledDomain Name="zero-one-to-many">
-
-		<Subsystem Name="zero-one-to-many" Floor="141" Ceiling="160">
-
-			<Class Name="A">
-				<IndependentAttribute Name="A one" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<IndependentAttribute Name="A two" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-			</Class>
-
-			<Class Name="B">
-				<IndependentAttribute Name="B one" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<IndependentAttribute Name="B two" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<ReferentialAttribute Name="B A one">
-					<ToOneReference Relationship="1" Attribute="A one" />
-				</ReferentialAttribute>
-				<ReferentialAttribute Name="B A two">
-					<ToOneReference Relationship="1" Attribute="A two" />
-				</ReferentialAttribute>
-			</Class>
-
-			<BinaryAssociation Rnum="1">
-				<ActivePerspective Phrase="characterizes"
-					ViewedClass="B" OnePerspective="false" Conditional="true" />
-				<PassivePerspective Phrase="is characterized by"
-					ViewedClass="A" OnePerspective="true" Conditional="true" />
-			</BinaryAssociation>
-
-		</Subsystem>
-	</ModeledDomain>
-
-	<ModeledDomain Name="one-to-one-many">
-
-		<Subsystem Name="one-to-one-many" Floor="161" Ceiling="180">
-
-			<Class Name="A">
-				<IndependentAttribute Name="A one" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<IndependentAttribute Name="A two" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-			</Class>
-
-			<Class Name="B">
-				<IndependentAttribute Name="B one" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<IndependentAttribute Name="B two" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<ReferentialAttribute Name="B A one">
-					<ToOneReference Relationship="1" Attribute="A one" />
-				</ReferentialAttribute>
-				<ReferentialAttribute Name="B A two">
-					<ToOneReference Relationship="1" Attribute="A two" />
-				</ReferentialAttribute>
-			</Class>
-
-			<BinaryAssociation Rnum="1">
-				<ActivePerspective Phrase="characterizes"
-					ViewedClass="B" OnePerspective="false" Conditional="false" />
-				<PassivePerspective Phrase="is characterized by"
-					ViewedClass="A" OnePerspective="true" Conditional="false" />
-			</BinaryAssociation>
-
-		</Subsystem>
-	</ModeledDomain>
-
-	<ModeledDomain Name="zero-one-to-one-many">
-
-		<Subsystem Name="zero-one-to-one-many" Floor="181" Ceiling="200">
-
-			<Class Name="A">
-
-				<IndependentAttribute Name="A one" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<IndependentAttribute Name="A two" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-			</Class>
-
-			<Class Name="B">
-				<IndependentAttribute Name="B one" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<IndependentAttribute Name="B two" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<ReferentialAttribute Name="B A one">
-					<ToOneReference Relationship="1" Attribute="A one" />
-				</ReferentialAttribute>
-				<ReferentialAttribute Name="B A two">
-					<ToOneReference Relationship="1" Attribute="A two" />
-				</ReferentialAttribute>
-			</Class>
-
-			<BinaryAssociation Rnum="1">
-				<ActivePerspective Phrase="characterizes"
-					ViewedClass="B" OnePerspective="false" Conditional="false" />
-				<PassivePerspective Phrase="is characterized by"
-					ViewedClass="A" OnePerspective="true" Conditional="true" />
-			</BinaryAssociation>
-
-		</Subsystem>
-	</ModeledDomain>
-
-	<ModeledDomain Name="many-to-many">
-
-		<Subsystem Name="many-to-many" Floor="161" Ceiling="180">
-
-			<Class Name="A">
-				<IndependentAttribute Name="A one" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-			</Class>
-
-			<Class Name="B">
-				<IndependentAttribute Name="B one" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-			</Class>
-
-			<BinaryAssociation Rnum="1">
-				<ActivePerspective Phrase="characterizes"
-					ViewedClass="B" OnePerspective="false" Conditional="true" />
-				<PassivePerspective Phrase="is characterized by"
-					ViewedClass="A" OnePerspective="false" Conditional="true" />
-			</BinaryAssociation>
-
-		</Subsystem>
-	</ModeledDomain>
-
-	<ModeledDomain Name="many-to-many-association-class">
-
-		<Subsystem Name="many-to-many-association-class" Floor="161"
-			Ceiling="180">
-
-			<!-- TODO setup for AssociativeReference -->
-
-			<Class Name="A">
-				<IndependentAttribute Name="A one" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-			</Class>
-
-			<Class Name="B">
-				<IndependentAttribute Name="B one" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-			</Class>
-
-			<Class Name="C">
-				<IndependentAttribute Name="C one" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<ReferentialAttribute Name="C A one">
-					<AssociativeReference Relationship="1" Class="A"
-						Attribute="A one" />
-				</ReferentialAttribute>
-				<ReferentialAttribute Name="C B one">
-					<AssociativeReference Relationship="1" Class="B"
-						Attribute="B one" />
-				</ReferentialAttribute>
-				<IndependentAttribute Name="Description" Type="string" />
-			</Class>
-
-			<BinaryAssociation Rnum="1" AssociationClass="C">
-				<ActivePerspective Phrase="characterizes"
-					ViewedClass="B" OnePerspective="false" Conditional="true" />
-				<PassivePerspective Phrase="is characterized by"
-					ViewedClass="A" OnePerspective="false" Conditional="true" />
-			</BinaryAssociation>
-
-		</Subsystem>
-	</ModeledDomain>
-
-	<ModeledDomain Name="one-many-to-many-association-class">
-
-		<Subsystem Name="one-many-to-many-association-class" Floor="161"
-			Ceiling="180">
-
-			<!-- TODO setup for AssociativeReference -->
-
-			<Class Name="A">
-				<IndependentAttribute Name="A one" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-			</Class>
-
-			<Class Name="B">
-				<IndependentAttribute Name="B one" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-			</Class>
-
-			<Class Name="C">
-				<ReferentialAttribute Name="C A one">
-					<AssociativeReference Relationship="1" Class="A"
-						Attribute="A one" />
-				</ReferentialAttribute>
-				<ReferentialAttribute Name="C B one">
-					<AssociativeReference Relationship="1" Class="B"
-						Attribute="B one" />
-				</ReferentialAttribute>
-				<IndependentAttribute Name="C one" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<IndependentAttribute Name="Description" Type="string" />
-			</Class>
-
-			<BinaryAssociation Rnum="1" AssociationClass="C">
-				<ActivePerspective Phrase="characterizes"
-					ViewedClass="B" OnePerspective="false" Conditional="true" />
-				<PassivePerspective Phrase="is characterized by"
-					ViewedClass="A" OnePerspective="false" Conditional="false" />
-			</BinaryAssociation>
-
-		</Subsystem>
-	</ModeledDomain>
-
-	<ModeledDomain Name="one-many-to-one-many-association-class">
-
-		<Subsystem Name="one-many-to-one-many-association-class"
-			Floor="161" Ceiling="180">
-
-			<!-- TODO setup for AssociativeReference -->
-
-			<Class Name="A">
-				<IndependentAttribute Name="A one" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-			</Class>
-
-			<Class Name="B">
-				<IndependentAttribute Name="B one" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-			</Class>
-
-			<Class Name="C">
-				<ReferentialAttribute Name="C A one">
-					<AssociativeReference Relationship="1" Class="A"
-						Attribute="A one" />
-				</ReferentialAttribute>
-				<ReferentialAttribute Name="C B one">
-					<AssociativeReference Relationship="1" Class="B"
-						Attribute="B one" />
-				</ReferentialAttribute>
-				<IndependentAttribute Name="C one" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<IndependentAttribute Name="Description" Type="string" />
-			</Class>
-
-			<BinaryAssociation Rnum="1" AssociationClass="C">
-				<ActivePerspective Phrase="characterizes"
-					ViewedClass="B" OnePerspective="false" Conditional="false" />
-				<PassivePerspective Phrase="is characterized by"
-					ViewedClass="A" OnePerspective="false" Conditional="false" />
-			</BinaryAssociation>
-
-		</Subsystem>
-	</ModeledDomain>
-
-
-	<ModeledDomain Name="unary-one">
-
-		<Subsystem Name="unary-one" Floor="201" Ceiling="220">
-
-			<Class Name="A">
-				<IndependentAttribute Name="A one" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<IndependentAttribute Name="A two" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<ReferentialAttribute Name="A B one">
-					<ToOneReference Relationship="1" Attribute="B one" />
-				</ReferentialAttribute>
-				<ReferentialAttribute Name="A B two">
-					<ToOneReference Relationship="1" Attribute="B two" />
-				</ReferentialAttribute>
-			</Class>
-
-			<UnaryAssociation Rnum="1">
-				<SymmetricPerspective OnePerspective="true"
-					Conditional="false" ViewedClass="A" Phrase="has parent" />
-			</UnaryAssociation>
-
-		</Subsystem>
-	</ModeledDomain>
-
-	<ModeledDomain Name="unary-zero-one">
-
-		<Subsystem Name="unary-zero-one" Floor="221" Ceiling="240">
-
-			<Class Name="A">
-				<IndependentAttribute Name="A one" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<IndependentAttribute Name="A two" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<ReferentialAttribute Name="A B one">
-					<ToOneReference Relationship="1" Attribute="B one" />
-				</ReferentialAttribute>
-				<ReferentialAttribute Name="A B two">
-					<ToOneReference Relationship="1" Attribute="B two" />
-				</ReferentialAttribute>
-			</Class>
-
-			<UnaryAssociation Rnum="1">
-				<SymmetricPerspective OnePerspective="true"
-					Conditional="true" ViewedClass="A" Phrase="has parent" />
-			</UnaryAssociation>
-
-		</Subsystem>
-	</ModeledDomain>
-
-	<ModeledDomain Name="unary-many">
-
-		<Subsystem Name="unary-many" Floor="221" Ceiling="240">
-
-			<Class Name="A">
-
-				<IndependentAttribute Name="A one" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<IndependentAttribute Name="A two" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<ReferentialAttribute Name="A B one">
-					<ToOneReference Relationship="1" Attribute="B one" />
-				</ReferentialAttribute>
-				<ReferentialAttribute Name="A B two">
-					<ToOneReference Relationship="1" Attribute="B two" />
-				</ReferentialAttribute>
-			</Class>
-
-			<UnaryAssociation Rnum="1">
-				<SymmetricPerspective OnePerspective="false"
-					Conditional="true" ViewedClass="A" Phrase="has children" />
-			</UnaryAssociation>
-
-		</Subsystem>
-	</ModeledDomain>
-
-	<ModeledDomain Name="unary-many-association-class">
-
-		<Subsystem Name="unary-many-assocation-class" Floor="221"
-			Ceiling="240">
-
-			<Class Name="A">
-
-				<IndependentAttribute Name="A one" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<IndependentAttribute Name="A two" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<ReferentialAttribute Name="A B one">
-					<ToOneReference Relationship="1" Attribute="B one" />
-				</ReferentialAttribute>
-				<ReferentialAttribute Name="A B two">
-					<ToOneReference Relationship="1" Attribute="B two" />
-				</ReferentialAttribute>
-			</Class>
-
-			<Class Name="B">
-				<IndependentAttribute Name="Id" Type="integer">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				
-				<!-- describe the parent - child relationship -->
-				<IndependentAttribute Name="contactFrequencyPerYear"
-					Type="real" />
-			</Class>
-
-			<UnaryAssociation Rnum="1" AssociationClass="B">
-				<SymmetricPerspective OnePerspective="false"
-					Conditional="true" ViewedClass="A" Phrase="has children" />
-			</UnaryAssociation>
-
-		</Subsystem>
-	</ModeledDomain>
-
-	<ModeledDomain Name="unary-one-many">
-
-		<Subsystem Name="unary-one-many" Floor="221" Ceiling="240">
-
-			<Class Name="A">
-
-				<IndependentAttribute Name="A one" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<IndependentAttribute Name="A two" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<ReferentialAttribute Name="A B one">
-					<ToOneReference Relationship="1" Attribute="B one" />
-				</ReferentialAttribute>
-				<ReferentialAttribute Name="A B two">
-					<ToOneReference Relationship="1" Attribute="B two" />
-				</ReferentialAttribute>
-			</Class>
-
-			<UnaryAssociation Rnum="1">
-				<SymmetricPerspective OnePerspective="false"
-					Conditional="false" ViewedClass="A" Phrase="has children" />
-			</UnaryAssociation>
-
-		</Subsystem>
-	</ModeledDomain>
-
-	<ModeledDomain Name="secondary-identifiers">
-
-		<Subsystem Name="secondary-identifiers" Floor="241" Ceiling="260">
-
-			<Class Name="A">
-				<IndependentAttribute Name="A one" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<IndependentAttribute Name="A two" Type="string">
-					<Identifier Number="2" />
-				</IndependentAttribute>
-				<IndependentAttribute Name="A three" Type="string">
-					<Identifier Number="2" />
-				</IndependentAttribute>
-				<IndependentAttribute Name="A four" Type="string">
-					<Identifier Number="3" />
-				</IndependentAttribute>
-				<IndependentAttribute Name="A five" Type="string">
-					<Identifier Number="3" />
-				</IndependentAttribute>
-			</Class>
-
-		</Subsystem>
-	</ModeledDomain>
-
-	<ModeledDomain Name="all-types">
-		<Subsystem Name="all-types" Floor="261" Ceiling="280">
-			<Class Name="A">
-				<IndependentAttribute Name="A one" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<IndependentAttribute Name="one" Type="boolean" />
-				<IndependentAttribute Name="two" Type="integer" />
-				<IndependentAttribute Name="three" Type="real" />
-				<IndependentAttribute Name="four" Type="date" />
-				<IndependentAttribute Name="five" Type="timestamp" />
-				<IndependentAttribute Name="six" Type="arbitraryId" />
-			</Class>
-		</Subsystem>
-	</ModeledDomain>
-
-	<ModeledDomain Name="specialization">
-		<Subsystem Name="specialization" Floor="281" Ceiling="300">
-
-			<Class Name="A">
-				<IndependentAttribute Name="one" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<IndependentAttribute Name="two" Type="integer" />
-				<ReferentialAttribute Name="B name">
-					<SpecializationReference Relationship="1"
-						Attribute="name" />
-				</ReferentialAttribute>
-				<ReferentialAttribute Name="C name">
-					<SpecializationReference Relationship="1"
-						Attribute="category" />
-				</ReferentialAttribute>
-			</Class>
-
-			<Class Name="B">
-				<IndependentAttribute Name="name" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<IndependentAttribute Name="number" Type="integer" />
-				<ReferentialAttribute Name="A one">
-					<GeneralizationReference Relationship="1"
-						Attribute="one" />
-				</ReferentialAttribute>
-			</Class>
-
-			<Class Name="C">
-				<IndependentAttribute Name="category" Type="string">
-					<Identifier Number="1" />
-				</IndependentAttribute>
-				<IndependentAttribute Name="count" Type="integer" />
-				<ReferentialAttribute Name="A one">
-					<GeneralizationReference Relationship="1"
-						Attribute="one" />
-				</ReferentialAttribute>
-			</Class>
-
-			<Generalization Superclass="A" Rnum="1">
-				<SpecializedClass Name="B" />
-				<SpecializedClass Name="C" />
-			</Generalization>
-
-		</Subsystem>
-	</ModeledDomain>
-
-	<ModeledDomain Name="extensions">
-		<Subsystem Name="extensions" Floor="301" Ceiling="320">
-			<Class Name="A">
-				<IndependentAttribute Name="one" Type="arbitraryId">
-					<Identifier Number="1" />
-					<Extension>
-						<xt:Documentation>
-							<xt:Content>This is the primary identifier for the class A</xt:Content>
-							<xt:MimeType>text/plain</xt:MimeType>
-						</xt:Documentation>
-					</Extension>
-					<Extension>
-						<xt:Generation generated="true" />
-					</Extension>
-				</IndependentAttribute>
-				<IndependentAttribute Name="email" Type="string" />
-				<IndependentAttribute Name="postcode" Type="integer" />
-				<Extension>
-					<xt:Find>
-						<xt:Attribute name="one" />
-					</xt:Find>
-				</Extension>
-				<Extension>
-					<xt:Find>
-						<xt:Attribute name="email" />
-						<xt:Attribute name="postcode" />
-					</xt:Find>
-				</Extension>
-			</Class>
-		</Subsystem>
-	</ModeledDomain>
-
+    xsi:schemaLocation="http://www.miuml.org/metamodel miuml-metamodel.xsd  http://org.github/xuml-tools/miuml-metamodel-extensions xuml-tools-miuml-metamodel-extensions.xsd"
+    xmlns:xt="http://org.github/xuml-tools/miuml-metamodel-extensions">
+
+    <DomainBuildSpecification Name="Base" DomainNameIsDefaultSubsystemName="true"
+        DefaultSubsystemName="Subsystem" DefaultSubsystemRange="100" DefaultIdName="Id"
+        DefaultIdType="arbitraryId" />
+
+    <SymbolicType Name="string" MinLength="1" MaxLength="4096" Prefix="" Suffix=""
+        ValidationPattern=".*" DefaultValue="" />
+    <IntegerType Name="integer" Units="none" DefaultValue="0" UpperLimit="99999999999"
+        LowerLimit="-9999999999999" />
+    <IntegerType Name="date" Units="epoch ms" DefaultValue="0" UpperLimit="99999999999"
+        LowerLimit="-9999999999999" />
+    <IntegerType Name="timestamp" Units="epoch ms" DefaultValue="0" UpperLimit="99999999999"
+        LowerLimit="-9999999999999" />
+    <IntegerType Name="time" Units="epoch ms" DefaultValue="0" UpperLimit="99999999999"
+        LowerLimit="-9999999999999" />
+    <IntegerType Name="arbitraryId" Units="None" DefaultValue="1" UpperLimit="99999999999"
+        LowerLimit="1" />
+    <BooleanType Name="boolean" DefaultValue="false" />
+    <RealType Name="real" UpperLimit="99999999999" LowerLimit="-9999999999999" Precision="20"
+        Units="none" DefaultValue="0" />
+
+    <IntegerType Name="Nominal" Units="None" DefaultValue="1" UpperLimit="99999999999"
+        LowerLimit="1" />
+    <IntegerType Name="Year" Units="year" DefaultValue="0" UpperLimit="2100" LowerLimit="-5000" />
+    <RealType Name="Money" Precision="2" Units="Dollars" LowerLimit="0" UpperLimit="999999999999"
+        DefaultValue="0" />
+    <IntegerType Name="Count" Units="Instances" DefaultValue="0" UpperLimit="999999999999"
+        LowerLimit="0" />
+    <SymbolicType Name="Bank Card Approval Code" MinLength="1" MaxLength="64" Prefix=""
+        Suffix="" ValidationPattern=".*" DefaultValue="" />
+    <SymbolicType Name="Bank Card Account Number" MinLength="1" MaxLength="64" Prefix=""
+        Suffix="" ValidationPattern=".*" DefaultValue="" />
+    <SymbolicType Name="Month Year" MinLength="6" MaxLength="6" Prefix="" Suffix=""
+        ValidationPattern="[01][0-9][12][9012345][0-9]" DefaultValue="" />
+
+    <ModeledDomain Name="Bookstore">
+
+        <!-- types local to the domain -->
+        <SymbolicType Name="ISBN Group Identifier" MinLength="5" MaxLength="5" Prefix=""
+            Suffix="" ValidationPattern="\d{5}" DefaultValue="" />
+        <SymbolicType Name="ISBN Publisher Prefix" MinLength="2" MaxLength="2" Prefix=""
+            Suffix="" ValidationPattern="[^\s]{5}" DefaultValue="" />
+        <SymbolicType Name="Universal Product Code" MinLength="1" MaxLength="64"
+            Prefix="" Suffix="" ValidationPattern=".*" DefaultValue="" />
+        <SymbolicType Name="Website URL" MinLength="1" MaxLength="2000" Prefix=""
+            Suffix="" ValidationPattern=".*" DefaultValue="" />
+        <SymbolicType Name="Personal Name" MinLength="1" MaxLength="512" Prefix=""
+            Suffix="" ValidationPattern=".*" DefaultValue="" />
+        <SymbolicType Name="Mailing Address" MinLength="1" MaxLength="512" Prefix=""
+            Suffix="" ValidationPattern=".*" DefaultValue="" />
+        <SymbolicType Name="Internet Email Address" MinLength="1" MaxLength="512"
+            Prefix="" Suffix="" ValidationPattern=".*" DefaultValue="" />
+        <SymbolicType Name="Telephone Number" MinLength="1" MaxLength="256" Prefix=""
+            Suffix="" ValidationPattern=".*" DefaultValue="" />
+
+        <Subsystem Name="Product Specification" Alias="Product Specification" Floor="11"
+            Ceiling="20">
+
+            <Class Name="Product" Cnum="1" Element="1" Alias="Product">
+                <IndependentAttribute Name="Product ID" Type="Universal Product Code">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <DerivedAttribute Name="Product Name" Formula="formula for product name"
+                    Type="string" />
+                <IndependentAttribute Name="Copyright" Type="Year" />
+                <IndependentAttribute Name="Unit Price" Type="Money" />
+                <IndependentAttribute Name="Description" Type="string" />
+                <IndependentAttribute Name="Website" Type="Website URL" />
+                <ReferentialAttribute Name="Publisher code">
+                    <ToOneReference Relationship="1" Attribute="Publisher code" />
+                </ReferentialAttribute>
+                <ReferentialAttribute Name="Publisher Group code">
+                    <ToOneReference Relationship="1" Attribute="Group code" />
+                </ReferentialAttribute>
+                <ReferentialAttribute Name="Category ID">
+                    <ToOneReference Relationship="15" Attribute="Category ID" />
+                </ReferentialAttribute>
+                <ReferentialAttribute Name="Stocked Product">
+                    <SpecializationReference Relationship="12"
+                        Attribute="Stocked Product ID" />
+                </ReferentialAttribute>
+                <ReferentialAttribute Name="Special Order Product">
+                    <SpecializationReference Relationship="12"
+                        Attribute="Special Order Product ID" />
+                </ReferentialAttribute>
+            </Class>
+
+            <Class Name="Special Order Product" Alias="Special Order Product">
+                <IndependentAttribute Name="Special Order Product ID" Type="arbitraryId">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="Special Order Instructions" Type="string" />
+                <IndependentAttribute Name="Days to Deliver" Type="Count" />
+                <ReferentialAttribute Name="Product">
+                    <GeneralizationReference Relationship="12" Attribute="Product ID" />
+                </ReferentialAttribute>
+            </Class>
+
+            <Class Name="Stocked Product">
+                <IndependentAttribute Name="Stocked Product ID" Type="arbitraryId">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="Quantity On hand" Type="Count" />
+                <IndependentAttribute Name="Reorder Threshold" Type="Count" />
+                <IndependentAttribute Name="Reorder Increment" Type="Count" />
+                <IndependentAttribute Name="Reorder Instructions" Type="string" />
+                <ReferentialAttribute Name="Product">
+                    <GeneralizationReference Relationship="12" Attribute="Product ID" />
+                </ReferentialAttribute>
+            </Class>
+
+            <Class Name="Product Category">
+                <IndependentAttribute Name="Category ID" Type="arbitraryId">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="Category Name" Type="string" />
+            </Class>
+
+            <Class Name="Publisher">
+                <IndependentAttribute Name="Group code" Type="ISBN Group Identifier">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="Publisher code" Type="ISBN Publisher Prefix">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="Name" Type="string" />
+                <IndependentAttribute Name="Address" Type="Mailing Address" />
+                <IndependentAttribute Name="Website" Type="Website URL" />
+            </Class>
+
+            <Generalization Rnum="12" Superclass="Product">
+                <SpecializedClass Name="Stocked Product" />
+                <SpecializedClass Name="Special Order Product" />
+            </Generalization>
+
+            <BinaryAssociation Rnum="15">
+                <ActivePerspective Phrase="classifies" ViewedClass="Product"
+                    OnePerspective="false" Conditional="true" />
+                <PassivePerspective Phrase="is classified according to"
+                    ViewedClass="Product Category" OnePerspective="true" Conditional="false" />
+            </BinaryAssociation>
+
+            <UnaryAssociation Rnum="14">
+                <SymmetricPerspective Phrase="is part of" ViewedClass="Product Category"
+                    OnePerspective="true" Conditional="true" />
+            </UnaryAssociation>
+
+            <BinaryAssociation Rnum="1">
+                <ActivePerspective Phrase="produces and markets" ViewedClass="Product"
+                    OnePerspective="false" Conditional="true" />
+                <PassivePerspective Phrase="is produced and marketed by"
+                    ViewedClass="Publisher" OnePerspective="true" Conditional="false" />
+            </BinaryAssociation>
+
+        </Subsystem>
+
+        <Subsystem Name="Ordering" Alias="Ordering" Floor="1" Ceiling="10">
+
+            <Class Name="Shopping Cart">
+                <IndependentAttribute Name="Cart ID" Type="arbitraryId">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <DerivedAttribute Name="Total value" Formula="formula for total value"
+                    Type="Money" />
+            </Class>
+
+            <Class Name="Order">
+                <IndependentAttribute Name="Order ID" Type="arbitraryId">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="Date order placed" Type="date" />
+                <DerivedAttribute Name="Total value" Formula="formula for total value"
+                    Type="Money" />
+                <IndependentAttribute Name="Recipient" Type="Personal Name" />
+                <IndependentAttribute Name="Delivery address" Type="Mailing Address" />
+                <IndependentAttribute Name="Contact phone" Type="Telephone Number" />
+
+                <Lifecycle>
+
+                    <State Name="Establishing Customer and Verifying Payment" />
+                    <State Name="Making Charge" />
+                    <State Name="Being Packed and Shipped" />
+                    <State Name="Payment Not Approved" />
+                    <State Name="Delivered to Customer" />
+
+                    <CreationEvent Name="Check out" ID="1"
+                        State="Establishing Customer and Verifying Payment">
+                        <EventSignature>
+                            <StateModelParameter Name="Cart" Type="arbitraryId" />
+                            <StateModelParameter Name="Account number" Type="Bank Card Account Number" />
+                            <StateModelParameter Name="Billing address" Type="Mailing Address" />
+                            <StateModelParameter Name="Card expiration date]"
+                                Type="Month Year" />
+                            <StateModelParameter Name="Cardholder name" Type="Personal Name" />
+                            <StateModelParameter Name="Customer email" Type="Internet Email Address" />
+                            <StateModelParameter Name="Customer Name" Type="Personal Name" />
+                            <StateModelParameter Name="Customer phone" Type="Telephone Number" />
+                            <StateModelParameter Name="Shipping address" Type="Mailing Address" />
+                        </EventSignature>
+                    </CreationEvent>
+
+                    <LocalEffectiveSignalingEvent Name="Submit charge"
+                        ID="2">
+                        <EventSignature>
+                            <StateModelParameter Name="Cart" Type="arbitraryId" />
+                            <StateModelParameter Name="Account number" Type="Bank Card Account Number" />
+                            <StateModelParameter Name="Billing address" Type="Mailing Address" />
+                            <StateModelParameter Name="Card expiration date"
+                                Type="Month Year" />
+                            <StateModelParameter Name="Cardholder name" Type="Personal Name" />
+                        </EventSignature>
+                    </LocalEffectiveSignalingEvent>
+
+                    <LocalEffectiveSignalingEvent Name="Payment declined"
+                        ID="3">
+                        <EventSignature></EventSignature>
+                    </LocalEffectiveSignalingEvent>
+                    <LocalEffectiveSignalingEvent Name="Payment approved"
+                        ID="4">
+                        <EventSignature></EventSignature>
+                    </LocalEffectiveSignalingEvent>
+                    <LocalEffectiveSignalingEvent Name="Order delivered"
+                        ID="5">
+                        <EventSignature></EventSignature>
+                    </LocalEffectiveSignalingEvent>
+
+                    <Transition State="Establishing Customer and Verifying Payment"
+                        Destination="Making Charge" EventID="2" />
+                    <Transition State="Making Charge" Destination="Payment Not Approved"
+                        EventID="3" />
+                    <Transition State="Making Charge" Destination="Being Packed and Shipped"
+                        EventID="5" />
+                </Lifecycle>
+
+            </Class>
+
+            <Class Name="Customer">
+                <IndependentAttribute Name="Email" Type="Internet Email Address">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="Name" Type="Personal Name" />
+                <IndependentAttribute Name="Shipping address" Type="Mailing Address" />
+                <IndependentAttribute Name="Phone" Type="Telephone Number" />
+                <IndependentAttribute Name="Purchases made" Type="Count" />
+            </Class>
+
+            <Class Name="Credit Card Charge">
+                <IndependentAttribute Name="Charge Id" Type="arbitraryId">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="Account number" Type="Bank Card Account Number" />
+                <IndependentAttribute Name="Cardholder name" Type="Personal Name" />
+                <IndependentAttribute Name="Billing address" Type="Mailing Address" />
+                <IndependentAttribute Name="Card expiration date" Type="Month Year" />
+                <IndependentAttribute Name="Date charge made" Type="date" />
+                <IndependentAttribute Name="Charge amount" Type="Money" />
+                <IndependentAttribute Name="Approval code" Type="Bank Card Approval Code" />
+            </Class>
+
+            <Class Name="Product Selection">
+                <IndependentAttribute Name="Product Selection ID" Type="arbitraryId">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <ReferentialAttribute Name="Product">
+                    <AssociativeReference Class="Product" Attribute="Product ID"
+                        Relationship="4" />
+                </ReferentialAttribute>
+                <ReferentialAttribute Name="Shopping Cart">
+                    <AssociativeReference Class="Shopping Cart" Attribute="Cart ID"
+                        Relationship="4" />
+                </ReferentialAttribute>
+                <IndependentAttribute Name="Quantity" Type="Count" />
+                <IndependentAttribute Name="Unit price of selection" Type="Money" />
+                <DerivedAttribute Name="Selection value" Type="Money"
+                    Formula="selection value formula" />
+            </Class>
+
+        </Subsystem>
+
+    </ModeledDomain>
+
+    <ModeledDomain Name="miUML">
+
+        <Subsystem Name="Class and Attribute" Floor="20" Ceiling="40">
+
+            <Class Name="Class">
+                <IndependentAttribute Name="Domain" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="Name" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+            </Class>
+
+            <Class Name="Attribute">
+                <IndependentAttribute Name="Domain" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <ReferentialAttribute Name="Class">
+                    <ToOneReference Relationship="1" Attribute="Name" />
+                </ReferentialAttribute>
+                <IndependentAttribute Name="Name" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="Type" Type="string" />
+            </Class>
+
+            <BinaryAssociation Rnum="1">
+                <ActivePerspective Phrase="characterizes" ViewedClass="Class"
+                    OnePerspective="true" Conditional="false" />
+                <PassivePerspective Phrase="is characterized by" ViewedClass="Attribute"
+                    OnePerspective="false" Conditional="false" />
+            </BinaryAssociation>
+
+        </Subsystem>
+    </ModeledDomain>
+
+    <ModeledDomain Name="Nested composite id example">
+
+        <Subsystem Name="Composite Id example" Floor="61" Ceiling="80">
+
+            <Class Name="A">
+
+                <IndependentAttribute Name="A one" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="A two" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="A three" Type="string" />
+                <Lifecycle>
+                    <State Name="Has Started" />
+                    <State Name="Done Something">
+                        <StateSignature>
+                            <StateModelParameter Name="The count" Type="Count" />
+                        </StateSignature>
+                    </State>
+                    <State Name="Done Something Else" />
+                    <CreationEvent Name="Create" ID="1" State="Has Started">
+                        <EventSignature>
+                            <StateModelParameter Name="A one" Type="string" />
+                            <StateModelParameter Name="A two" Type="string" />
+                            <StateModelParameter Name="Account number" Type="Bank Card Account Number" />
+                        </EventSignature>
+                    </CreationEvent>
+                    <LocalEffectiveSignalingEvent Name="Something Done"
+                        ID="2">
+                    </LocalEffectiveSignalingEvent>
+                    <Transition State="Has Started" Destination="Done Something" EventID="2" />
+                </Lifecycle>
+            </Class>
+
+            <Class Name="B">
+                <IndependentAttribute Name="B one" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <ReferentialAttribute Name="B A one">
+                    <Identifier Number="1" />
+                    <ToOneReference Relationship="1" Attribute="A one" />
+                </ReferentialAttribute>
+                <ReferentialAttribute Name="B A two">
+                    <Identifier Number="1" />
+                    <ToOneReference Relationship="1" Attribute="A two" />
+                </ReferentialAttribute>
+                <IndependentAttribute Name="B two" Type="string" />
+            </Class>
+
+            <Class Name="C">
+                <IndependentAttribute Name="C one" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <ReferentialAttribute Name="C B one">
+                    <Identifier Number="1" />
+                    <ToOneReference Relationship="2" Attribute="B one" />
+                </ReferentialAttribute>
+                <ReferentialAttribute Name="C B A one">
+                    <Identifier Number="1" />
+                    <ToOneReference Relationship="2" Attribute="B A one" />
+                </ReferentialAttribute>
+                <ReferentialAttribute Name="C B A two">
+                    <Identifier Number="1" />
+                    <ToOneReference Relationship="2" Attribute="B A two" />
+                </ReferentialAttribute>
+                <IndependentAttribute Name="C two" Type="string" />
+            </Class>
+
+            <BinaryAssociation Rnum="1">
+                <ActivePerspective Phrase="characterizes" ViewedClass="B"
+                    OnePerspective="false" Conditional="true" />
+                <PassivePerspective Phrase="is characterized by" ViewedClass="A"
+                    OnePerspective="true" Conditional="true" />
+            </BinaryAssociation>
+
+            <BinaryAssociation Rnum="2">
+                <ActivePerspective Phrase="characterizes" ViewedClass="C"
+                    OnePerspective="false" Conditional="true" />
+                <PassivePerspective Phrase="is characterized by" ViewedClass="B"
+                    OnePerspective="true" Conditional="true" />
+            </BinaryAssociation>
+
+
+        </Subsystem>
+    </ModeledDomain>
+
+    <ModeledDomain Name="one-to-zero-one">
+
+        <Subsystem Name="one-to-zero-one" Floor="81" Ceiling="100">
+
+            <Class Name="A">
+
+                <IndependentAttribute Name="A one" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="A two" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <ReferentialAttribute Name="A B one">
+                    <ToOneReference Relationship="1" Attribute="B one" />
+                </ReferentialAttribute>
+                <ReferentialAttribute Name="A B two">
+                    <ToOneReference Relationship="1" Attribute="B two" />
+                </ReferentialAttribute>
+            </Class>
+
+            <Class Name="B">
+                <IndependentAttribute Name="B one" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="B two" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <ReferentialAttribute Name="B A one">
+                    <ToOneReference Relationship="1" Attribute="A one" />
+                </ReferentialAttribute>
+                <ReferentialAttribute Name="B A two">
+                    <ToOneReference Relationship="1" Attribute="A two" />
+                </ReferentialAttribute>
+            </Class>
+
+            <BinaryAssociation Rnum="1">
+                <ActivePerspective Phrase="characterizes" ViewedClass="B"
+                    OnePerspective="true" Conditional="true" />
+                <PassivePerspective Phrase="is characterized by" ViewedClass="A"
+                    OnePerspective="true" Conditional="false" />
+            </BinaryAssociation>
+
+        </Subsystem>
+    </ModeledDomain>
+
+    <ModeledDomain Name="one-to-many">
+
+        <Subsystem Name="one-to-many" Floor="101" Ceiling="120">
+
+            <Class Name="A">
+
+                <IndependentAttribute Name="A one" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="A two" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+            </Class>
+
+            <Class Name="B">
+                <IndependentAttribute Name="B one" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="B two" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <ReferentialAttribute Name="B A one">
+                    <ToOneReference Relationship="1" Attribute="A one" />
+                </ReferentialAttribute>
+                <ReferentialAttribute Name="B A two">
+                    <ToOneReference Relationship="1" Attribute="A two" />
+                </ReferentialAttribute>
+            </Class>
+
+            <BinaryAssociation Rnum="1">
+                <ActivePerspective Phrase="characterizes" ViewedClass="B"
+                    OnePerspective="false" Conditional="true" />
+                <PassivePerspective Phrase="is characterized by" ViewedClass="A"
+                    OnePerspective="true" Conditional="false" />
+            </BinaryAssociation>
+
+        </Subsystem>
+    </ModeledDomain>
+
+    <ModeledDomain Name="one-to-one">
+
+        <Subsystem Name="one-to-one" Floor="121" Ceiling="140">
+
+            <Class Name="A">
+
+                <IndependentAttribute Name="A one" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="A two" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <ReferentialAttribute Name="A B one">
+                    <ToOneReference Relationship="1" Attribute="B one" />
+                </ReferentialAttribute>
+                <ReferentialAttribute Name="A B two">
+                    <ToOneReference Relationship="1" Attribute="B two" />
+                </ReferentialAttribute>
+            </Class>
+
+            <Class Name="B">
+                <IndependentAttribute Name="B one" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="B two" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <ReferentialAttribute Name="B A one">
+                    <ToOneReference Relationship="1" Attribute="A one" />
+                </ReferentialAttribute>
+                <ReferentialAttribute Name="B A two">
+                    <ToOneReference Relationship="1" Attribute="A two" />
+                </ReferentialAttribute>
+            </Class>
+
+            <BinaryAssociation Rnum="1">
+                <ActivePerspective Phrase="characterizes" ViewedClass="B"
+                    OnePerspective="true" Conditional="false" />
+                <PassivePerspective Phrase="is characterized by" ViewedClass="A"
+                    OnePerspective="true" Conditional="false" />
+            </BinaryAssociation>
+
+        </Subsystem>
+    </ModeledDomain>
+
+    <ModeledDomain Name="zero-one-to-many">
+
+        <Subsystem Name="zero-one-to-many" Floor="141" Ceiling="160">
+
+            <Class Name="A">
+                <IndependentAttribute Name="A one" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="A two" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+            </Class>
+
+            <Class Name="B">
+                <IndependentAttribute Name="B one" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="B two" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <ReferentialAttribute Name="B A one">
+                    <ToOneReference Relationship="1" Attribute="A one" />
+                </ReferentialAttribute>
+                <ReferentialAttribute Name="B A two">
+                    <ToOneReference Relationship="1" Attribute="A two" />
+                </ReferentialAttribute>
+            </Class>
+
+            <BinaryAssociation Rnum="1">
+                <ActivePerspective Phrase="characterizes" ViewedClass="B"
+                    OnePerspective="false" Conditional="true" />
+                <PassivePerspective Phrase="is characterized by" ViewedClass="A"
+                    OnePerspective="true" Conditional="true" />
+            </BinaryAssociation>
+
+        </Subsystem>
+    </ModeledDomain>
+
+    <ModeledDomain Name="one-to-one-many">
+
+        <Subsystem Name="one-to-one-many" Floor="161" Ceiling="180">
+
+            <Class Name="A">
+                <IndependentAttribute Name="A one" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="A two" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+            </Class>
+
+            <Class Name="B">
+                <IndependentAttribute Name="B one" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="B two" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <ReferentialAttribute Name="B A one">
+                    <ToOneReference Relationship="1" Attribute="A one" />
+                </ReferentialAttribute>
+                <ReferentialAttribute Name="B A two">
+                    <ToOneReference Relationship="1" Attribute="A two" />
+                </ReferentialAttribute>
+            </Class>
+
+            <BinaryAssociation Rnum="1">
+                <ActivePerspective Phrase="characterizes" ViewedClass="B"
+                    OnePerspective="false" Conditional="false" />
+                <PassivePerspective Phrase="is characterized by" ViewedClass="A"
+                    OnePerspective="true" Conditional="false" />
+            </BinaryAssociation>
+
+        </Subsystem>
+    </ModeledDomain>
+
+    <ModeledDomain Name="zero-one-to-one-many">
+
+        <Subsystem Name="zero-one-to-one-many" Floor="181" Ceiling="200">
+
+            <Class Name="A">
+
+                <IndependentAttribute Name="A one" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="A two" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+            </Class>
+
+            <Class Name="B">
+                <IndependentAttribute Name="B one" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="B two" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <ReferentialAttribute Name="B A one">
+                    <ToOneReference Relationship="1" Attribute="A one" />
+                </ReferentialAttribute>
+                <ReferentialAttribute Name="B A two">
+                    <ToOneReference Relationship="1" Attribute="A two" />
+                </ReferentialAttribute>
+            </Class>
+
+            <BinaryAssociation Rnum="1">
+                <ActivePerspective Phrase="characterizes" ViewedClass="B"
+                    OnePerspective="false" Conditional="false" />
+                <PassivePerspective Phrase="is characterized by" ViewedClass="A"
+                    OnePerspective="true" Conditional="true" />
+            </BinaryAssociation>
+
+        </Subsystem>
+    </ModeledDomain>
+
+    <ModeledDomain Name="many-to-many">
+
+        <Subsystem Name="many-to-many" Floor="161" Ceiling="180">
+
+            <Class Name="A">
+                <IndependentAttribute Name="A one" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+            </Class>
+
+            <Class Name="B">
+                <IndependentAttribute Name="B one" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+            </Class>
+
+            <BinaryAssociation Rnum="1">
+                <ActivePerspective Phrase="characterizes" ViewedClass="B"
+                    OnePerspective="false" Conditional="true" />
+                <PassivePerspective Phrase="is characterized by" ViewedClass="A"
+                    OnePerspective="false" Conditional="true" />
+            </BinaryAssociation>
+
+        </Subsystem>
+    </ModeledDomain>
+
+    <ModeledDomain Name="many-to-many-association-class">
+
+        <Subsystem Name="many-to-many-association-class" Floor="161" Ceiling="180">
+
+            <!-- TODO setup for AssociativeReference -->
+
+            <Class Name="A">
+                <IndependentAttribute Name="A one" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+            </Class>
+
+            <Class Name="B">
+                <IndependentAttribute Name="B one" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+            </Class>
+
+            <Class Name="C">
+                <IndependentAttribute Name="C one" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <ReferentialAttribute Name="C A one">
+                    <AssociativeReference Relationship="1" Class="A" Attribute="A one" />
+                </ReferentialAttribute>
+                <ReferentialAttribute Name="C B one">
+                    <AssociativeReference Relationship="1" Class="B" Attribute="B one" />
+                </ReferentialAttribute>
+                <IndependentAttribute Name="Description" Type="string" />
+            </Class>
+
+            <BinaryAssociation Rnum="1" AssociationClass="C">
+                <ActivePerspective Phrase="characterizes" ViewedClass="B"
+                    OnePerspective="false" Conditional="true" />
+                <PassivePerspective Phrase="is characterized by" ViewedClass="A"
+                    OnePerspective="false" Conditional="true" />
+            </BinaryAssociation>
+
+        </Subsystem>
+    </ModeledDomain>
+
+    <ModeledDomain Name="one-many-to-many-association-class">
+
+        <Subsystem Name="one-many-to-many-association-class" Floor="161" Ceiling="180">
+
+            <!-- TODO setup for AssociativeReference -->
+
+            <Class Name="A">
+                <IndependentAttribute Name="A one" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+            </Class>
+
+            <Class Name="B">
+                <IndependentAttribute Name="B one" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+            </Class>
+
+            <Class Name="C">
+                <ReferentialAttribute Name="C A one">
+                    <AssociativeReference Relationship="1" Class="A" Attribute="A one" />
+                </ReferentialAttribute>
+                <ReferentialAttribute Name="C B one">
+                    <AssociativeReference Relationship="1" Class="B" Attribute="B one" />
+                </ReferentialAttribute>
+                <IndependentAttribute Name="C one" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="Description" Type="string" />
+            </Class>
+
+            <BinaryAssociation Rnum="1" AssociationClass="C">
+                <ActivePerspective Phrase="characterizes" ViewedClass="B"
+                    OnePerspective="false" Conditional="true" />
+                <PassivePerspective Phrase="is characterized by" ViewedClass="A"
+                    OnePerspective="false" Conditional="false" />
+            </BinaryAssociation>
+
+        </Subsystem>
+    </ModeledDomain>
+
+    <ModeledDomain Name="one-many-to-one-many-association-class">
+
+        <Subsystem Name="one-many-to-one-many-association-class" Floor="161" Ceiling="180">
+
+            <!-- TODO setup for AssociativeReference -->
+
+            <Class Name="A">
+                <IndependentAttribute Name="A one" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+            </Class>
+
+            <Class Name="B">
+                <IndependentAttribute Name="B one" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+            </Class>
+
+            <Class Name="C">
+                <ReferentialAttribute Name="C A one">
+                    <AssociativeReference Relationship="1" Class="A" Attribute="A one" />
+                </ReferentialAttribute>
+                <ReferentialAttribute Name="C B one">
+                    <AssociativeReference Relationship="1" Class="B" Attribute="B one" />
+                </ReferentialAttribute>
+                <IndependentAttribute Name="C one" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="Description" Type="string" />
+            </Class>
+
+            <BinaryAssociation Rnum="1" AssociationClass="C">
+                <ActivePerspective Phrase="characterizes" ViewedClass="B"
+                    OnePerspective="false" Conditional="false" />
+                <PassivePerspective Phrase="is characterized by" ViewedClass="A"
+                    OnePerspective="false" Conditional="false" />
+            </BinaryAssociation>
+
+        </Subsystem>
+    </ModeledDomain>
+
+
+    <ModeledDomain Name="unary-one">
+
+        <Subsystem Name="unary-one" Floor="201" Ceiling="220">
+
+            <Class Name="A">
+                <IndependentAttribute Name="A one" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="A two" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <ReferentialAttribute Name="A B one">
+                    <ToOneReference Relationship="1" Attribute="B one" />
+                </ReferentialAttribute>
+                <ReferentialAttribute Name="A B two">
+                    <ToOneReference Relationship="1" Attribute="B two" />
+                </ReferentialAttribute>
+            </Class>
+
+            <UnaryAssociation Rnum="1">
+                <SymmetricPerspective OnePerspective="true" Conditional="false"
+                    ViewedClass="A" Phrase="has parent" />
+            </UnaryAssociation>
+
+        </Subsystem>
+    </ModeledDomain>
+
+    <ModeledDomain Name="unary-zero-one">
+
+        <Subsystem Name="unary-zero-one" Floor="221" Ceiling="240">
+
+            <Class Name="A">
+                <IndependentAttribute Name="A one" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="A two" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <ReferentialAttribute Name="A B one">
+                    <ToOneReference Relationship="1" Attribute="B one" />
+                </ReferentialAttribute>
+                <ReferentialAttribute Name="A B two">
+                    <ToOneReference Relationship="1" Attribute="B two" />
+                </ReferentialAttribute>
+            </Class>
+
+            <UnaryAssociation Rnum="1">
+                <SymmetricPerspective OnePerspective="true" Conditional="true"
+                    ViewedClass="A" Phrase="has parent" />
+            </UnaryAssociation>
+
+        </Subsystem>
+    </ModeledDomain>
+
+    <ModeledDomain Name="unary-many">
+
+        <Subsystem Name="unary-many" Floor="221" Ceiling="240">
+
+            <Class Name="A">
+
+                <IndependentAttribute Name="A one" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="A two" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <ReferentialAttribute Name="A B one">
+                    <ToOneReference Relationship="1" Attribute="B one" />
+                </ReferentialAttribute>
+                <ReferentialAttribute Name="A B two">
+                    <ToOneReference Relationship="1" Attribute="B two" />
+                </ReferentialAttribute>
+            </Class>
+
+            <UnaryAssociation Rnum="1">
+                <SymmetricPerspective OnePerspective="false" Conditional="true"
+                    ViewedClass="A" Phrase="has children" />
+            </UnaryAssociation>
+
+        </Subsystem>
+    </ModeledDomain>
+
+    <ModeledDomain Name="unary-many-association-class">
+
+        <Subsystem Name="unary-many-assocation-class" Floor="221" Ceiling="240">
+
+            <Class Name="A">
+
+                <IndependentAttribute Name="A one" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="A two" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <ReferentialAttribute Name="A B one">
+                    <ToOneReference Relationship="1" Attribute="B one" />
+                </ReferentialAttribute>
+                <ReferentialAttribute Name="A B two">
+                    <ToOneReference Relationship="1" Attribute="B two" />
+                </ReferentialAttribute>
+            </Class>
+
+            <Class Name="B">
+                <IndependentAttribute Name="Id" Type="integer">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+
+                <!-- describe the parent - child relationship -->
+                <IndependentAttribute Name="contactFrequencyPerYear" Type="real" />
+            </Class>
+
+            <UnaryAssociation Rnum="1" AssociationClass="B">
+                <SymmetricPerspective OnePerspective="false" Conditional="true"
+                    ViewedClass="A" Phrase="has children" />
+            </UnaryAssociation>
+
+        </Subsystem>
+    </ModeledDomain>
+
+    <ModeledDomain Name="unary-one-many">
+
+        <Subsystem Name="unary-one-many" Floor="221" Ceiling="240">
+
+            <Class Name="A">
+
+                <IndependentAttribute Name="A one" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="A two" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <ReferentialAttribute Name="A B one">
+                    <ToOneReference Relationship="1" Attribute="B one" />
+                </ReferentialAttribute>
+                <ReferentialAttribute Name="A B two">
+                    <ToOneReference Relationship="1" Attribute="B two" />
+                </ReferentialAttribute>
+            </Class>
+
+            <UnaryAssociation Rnum="1">
+                <SymmetricPerspective OnePerspective="false" Conditional="false"
+                    ViewedClass="A" Phrase="has children" />
+            </UnaryAssociation>
+
+        </Subsystem>
+    </ModeledDomain>
+
+    <ModeledDomain Name="secondary-identifiers">
+
+        <Subsystem Name="secondary-identifiers" Floor="241" Ceiling="260">
+
+            <Class Name="A">
+                <IndependentAttribute Name="A one" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="A two" Type="string">
+                    <Identifier Number="2" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="A three" Type="string">
+                    <Identifier Number="2" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="A four" Type="string">
+                    <Identifier Number="3" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="A five" Type="string">
+                    <Identifier Number="3" />
+                </IndependentAttribute>
+            </Class>
+
+        </Subsystem>
+    </ModeledDomain>
+
+    <ModeledDomain Name="all-types">
+        <Subsystem Name="all-types" Floor="261" Ceiling="280">
+            <Class Name="A">
+                <IndependentAttribute Name="A one" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="one" Type="boolean" />
+                <IndependentAttribute Name="two" Type="integer" />
+                <IndependentAttribute Name="three" Type="real" />
+                <IndependentAttribute Name="four" Type="date" />
+                <IndependentAttribute Name="five" Type="timestamp" />
+                <IndependentAttribute Name="six" Type="arbitraryId" />
+            </Class>
+        </Subsystem>
+    </ModeledDomain>
+
+    <ModeledDomain Name="specialization">
+        <Subsystem Name="specialization" Floor="281" Ceiling="300">
+
+            <Class Name="A">
+                <IndependentAttribute Name="one" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="two" Type="integer" />
+                <ReferentialAttribute Name="B name">
+                    <SpecializationReference Relationship="1" Attribute="name" />
+                </ReferentialAttribute>
+                <ReferentialAttribute Name="C name">
+                    <SpecializationReference Relationship="1" Attribute="category" />
+                </ReferentialAttribute>
+            </Class>
+
+            <Class Name="B">
+                <IndependentAttribute Name="name" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="number" Type="integer" />
+                <ReferentialAttribute Name="A one">
+                    <GeneralizationReference Relationship="1" Attribute="one" />
+                </ReferentialAttribute>
+            </Class>
+
+            <Class Name="C">
+                <IndependentAttribute Name="category" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="count" Type="integer" />
+                <ReferentialAttribute Name="A one">
+                    <GeneralizationReference Relationship="1" Attribute="one" />
+                </ReferentialAttribute>
+            </Class>
+
+            <Generalization Superclass="A" Rnum="1">
+                <SpecializedClass Name="B" />
+                <SpecializedClass Name="C" />
+            </Generalization>
+
+        </Subsystem>
+    </ModeledDomain>
+
+    <ModeledDomain Name="extensions">
+        <Subsystem Name="extensions" Floor="301" Ceiling="320">
+            <Class Name="A">
+                <IndependentAttribute Name="one" Type="arbitraryId">
+                    <Identifier Number="1" />
+                    <Extension>
+                        <xt:Documentation>
+                            <xt:Content>This is the primary identifier for the class A</xt:Content>
+                            <xt:MimeType>text/plain</xt:MimeType>
+                        </xt:Documentation>
+                    </Extension>
+                    <Extension>
+                        <xt:Generation generated="true" />
+                    </Extension>
+                </IndependentAttribute>
+                <IndependentAttribute Name="email" Type="string" />
+                <IndependentAttribute Name="postcode" Type="integer" />
+                <Extension>
+                    <xt:Find>
+                        <xt:Attribute name="one" />
+                    </xt:Find>
+                </Extension>
+                <Extension>
+                    <xt:Find>
+                        <xt:Attribute name="email" />
+                        <xt:Attribute name="postcode" />
+                    </xt:Find>
+                </Extension>
+            </Class>
+        </Subsystem>
+    </ModeledDomain>
+
+    <ModeledDomain Name="two-transitions-to-same-state">
+        <Subsystem Name="two-transitions-to-same-state" Floor="321" Ceiling="340">
+            <Class Name="A">
+                <IndependentAttribute Name="ID" Type="integer">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <Lifecycle>
+                    <State Name="Created" />
+                    <State Name="State1" />
+                    <State Name="State2" />
+                    <CreationEvent Name="Create" ID="1" State="Created">
+                        <EventSignature />
+                    </CreationEvent>
+                    <LocalEffectiveSignalingEvent Name="first" ID="2">
+                        <EventSignature />
+                    </LocalEffectiveSignalingEvent>
+                    <Transition State="Created" EventID="2" Destination="State1" />
+                    <Transition State="State2" EventID="2" Destination="State1" />
+                </Lifecycle>
+            </Class>
+        </Subsystem>
+    </ModeledDomain>
 
 </Domains>

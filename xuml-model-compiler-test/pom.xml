@@ -313,6 +313,18 @@
 							<packageName>one_many_to_one_many_association</packageName>
 						</configuration>
 					</execution>
+                    <execution>
+                        <id>two-transitions-to-same-state</id>
+                        <goals>
+                            <goal>generate-jpa</goal>
+                        </goals>
+                        <configuration>
+                            <domainsXml>/samples.xml</domainsXml>
+                            <domain>two-transitions-to-same-state</domain>
+                            <schema>two_transitions_to_same_state</schema>
+                            <packageName>two_transitions_to_same_state</packageName>
+                        </configuration>
+                    </execution>
 					<!-- 
 					<execution>
 						<id>atc</id>
