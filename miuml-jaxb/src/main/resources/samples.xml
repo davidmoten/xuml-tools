@@ -1077,7 +1077,7 @@
                     <CreationEvent Name="Create" ID="1" State="Created">
                         <EventSignature />
                     </CreationEvent>
-                    <LocalEffectiveSignalingEvent Name="first" ID="2">
+                    <LocalEffectiveSignalingEvent Name="First" ID="2">
                         <EventSignature />
                     </LocalEffectiveSignalingEvent>
                     <Transition State="Created" EventID="2" Destination="State1" />
