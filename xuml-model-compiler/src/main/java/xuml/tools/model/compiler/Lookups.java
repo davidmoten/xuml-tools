@@ -169,9 +169,9 @@ class Lookups {
 			result = Boolean.class.getName();
 		else if (t instanceof EnumeratedType)
 			result = String.class.getName();
-		else if (t instanceof IntegerType && "date".equals(name))
+		else if (t instanceof IntegerType && "date".equalsIgnoreCase(name))
 			result = Date.class.getName();
-		else if (t instanceof IntegerType && "timestamp".equals(name))
+		else if (t instanceof IntegerType && "timestamp".equalsIgnoreCase(name))
 			result = Date.class.getName();
 		else if (t instanceof IntegerType)
 			result = Integer.class.getName();
