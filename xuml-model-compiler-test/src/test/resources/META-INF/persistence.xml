@@ -130,6 +130,14 @@
 		<class>xuml.tools.model.compiler.runtime.QueuedSignal</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 	</persistence-unit>
+    <persistence-unit name="many-to-many-association-two">
+        <class>many_to_many_association_two.A</class>
+        <class>many_to_many_association_two.B</class>
+        <class>many_to_many_association_two.C</class>
+        <class>many_to_many_association_two.D</class>
+        <class>xuml.tools.model.compiler.runtime.QueuedSignal</class>
+        <exclude-unlisted-classes>true</exclude-unlisted-classes>
+    </persistence-unit>
 	<persistence-unit name="one-many-to-one-many-association">
 		<class>one_many_to_one_many_association.A</class>
 		<class>one_many_to_one_many_association.B</class>

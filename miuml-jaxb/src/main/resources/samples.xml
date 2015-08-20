@@ -667,7 +667,7 @@
             </Class>
 
             <BinaryAssociation Rnum="1">
-                <ActivePerspective Phrase="characterizes" ViewedClass="B"
+                <ActivePerspective Phrase="characterizes" ViewedClass="B" 
                     OnePerspective="false" Conditional="true" />
                 <PassivePerspective Phrase="is characterized by" ViewedClass="A"
                     OnePerspective="false" Conditional="true" />
@@ -716,6 +716,7 @@
 
         </Subsystem>
     </ModeledDomain>
+    
 
     <ModeledDomain Name="one-many-to-many-association-class">
 
@@ -1084,6 +1085,68 @@
                     <Transition State="State2" EventID="2" Destination="State1" />
                 </Lifecycle>
             </Class>
+        </Subsystem>
+    </ModeledDomain>
+
+    <ModeledDomain Name="many-to-many-association-class-two">
+
+        <Subsystem Name="many-to-many-association-class-two" Floor="341" Ceiling="360">
+
+            <!-- TODO setup for AssociativeReference -->
+
+            <Class Name="A">
+                <IndependentAttribute Name="A one" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+            </Class>
+
+            <Class Name="B">
+                <IndependentAttribute Name="B one" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+            </Class>
+
+            <Class Name="C">
+                <IndependentAttribute Name="C one" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <ReferentialAttribute Name="C A one">
+                    <AssociativeReference Relationship="1" Class="A" Attribute="A one" />
+                </ReferentialAttribute>
+                <ReferentialAttribute Name="C B one">
+                    <AssociativeReference Relationship="1" Class="B" Attribute="B one" />
+                </ReferentialAttribute>
+                <IndependentAttribute Name="Description" Type="string" />
+            </Class>
+
+            <BinaryAssociation Rnum="1" AssociationClass="C">
+                <ActivePerspective Phrase="characterizes" ViewedClass="B"
+                    OnePerspective="false" Conditional="true" />
+                <PassivePerspective Phrase="is characterized by" ViewedClass="A"
+                    OnePerspective="false" Conditional="true" />
+            </BinaryAssociation>
+            
+            <Class Name="D">
+                <IndependentAttribute Name="D one" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <ReferentialAttribute Name="D A one">
+                    <AssociativeReference Relationship="2" Class="A" Attribute="A one" />
+                </ReferentialAttribute>
+                <ReferentialAttribute Name="D B one">
+                    <AssociativeReference Relationship="2" Class="B" Attribute="B one" />
+                </ReferentialAttribute>
+                <IndependentAttribute Name="Description" Type="string" />
+            </Class>
+
+            <BinaryAssociation Rnum="2" AssociationClass="D">
+                <ActivePerspective Phrase="characterizes" ViewedClass="B"
+                    OnePerspective="false" Conditional="true" />
+                <PassivePerspective Phrase="is characterized by" ViewedClass="A"
+                    OnePerspective="false" Conditional="true" />
+            </BinaryAssociation>
+            
+
         </Subsystem>
     </ModeledDomain>
 

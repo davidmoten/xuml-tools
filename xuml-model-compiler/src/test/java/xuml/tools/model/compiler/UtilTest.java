@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static xuml.tools.model.compiler.Util.camelCaseToLowerUnderscore;
 import static xuml.tools.model.compiler.Util.toColumnName;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class UtilTest {
@@ -44,5 +45,12 @@ public class UtilTest {
         String s = Util.toJavaConstantIdentifier("State 1");
         System.out.println(s);
         assertEquals("STATE_1", s);
+    }
+
+    @Test
+    @Ignore
+    public void testCamelCaseToUnderscoreForAllCapitalsJustConvertsLowerToUpper() {
+        assertEquals("mmsi", Util.camelCaseToLowerUnderscore("MMSI"));
+        assertEquals("id", Util.camelCaseToLowerUnderscore("ID"));
     }
 }

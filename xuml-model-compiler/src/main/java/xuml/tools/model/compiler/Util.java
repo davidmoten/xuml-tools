@@ -69,6 +69,10 @@ public class Util {
     }
 
     public static String camelCaseToLowerUnderscore(String s) {
+        // if (s.toUpperCase().equals(s)) {
+        // return s.toLowerCase();
+        // }
+
         StringBuilder b = new StringBuilder();
         b.append(s.charAt(0));
         boolean underscoreAdded = false;

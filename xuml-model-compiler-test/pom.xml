@@ -289,6 +289,18 @@
 							<packageName>many_to_many_association</packageName>
 						</configuration>
 					</execution>
+                    <execution>
+                        <id>many-to-many-association-class-two</id>
+                        <goals>
+                            <goal>generate-jpa</goal>
+                        </goals>
+                        <configuration>
+                            <domainsXml>/samples.xml</domainsXml>
+                            <domain>many-to-many-association-class-two</domain>
+                            <schema>many_to_many_association_two</schema>
+                            <packageName>many_to_many_association_two</packageName>
+                        </configuration>
+                    </execution>
 					<execution>
 						<id>one-many-to-many-association-class</id>
 						<goals>

@@ -179,7 +179,7 @@ public class ClassWriter {
         out.format("@%s\n", info.addType(Entity.class));
         List<List<String>> uniqueConstraints = info.getUniqueConstraintColumnNames();
         if (uniqueConstraints.size() >= 1) {
-            out.format("@%s(schema=\"%s\",name=\"%s\",\n", info.addType(Table.class),
+            out.format("@%s(schema=\"%s\", name=\"%s\",\n", info.addType(Table.class),
                     info.getSchema(), info.getTable());
             StringBuilder s = new StringBuilder();
             for (List<String> list : uniqueConstraints) {
@@ -191,7 +191,7 @@ public class ClassWriter {
             out.format("    uniqueConstraints={\n");
             out.format("%s})\n", s);
         } else {
-            out.format("@%s(schema=\"%s\",name=\"%s\")\n", info.addType(Table.class),
+            out.format("@%s(schema=\"%s\", name=\"%s\")\n", info.addType(Table.class),
                     info.getSchema(), info.getTable());
         }
 
@@ -894,6 +894,22 @@ public class ClassWriter {
 
     private void writeJoinColumnsAnnotation(PrintStream out, MyReferenceMember ref,
             boolean nullable, boolean insertable, boolean updatable) {
+        HashSet<String> cols = new HashSet<String>();
+        for (MyJoinColumn col : ref.getJoinColumns()) {
+            cols.add(col.getThisColumnName());
+        }
+
+        boolean twice = false;
+        info.getSpecializations();
+        for (MyReferenceMember r : info.getReferenceMembers()) {
+            if (r.getJoinColumns() != null && !ref.getFieldName().equals(r.getFieldName())) {
+                for (MyJoinColumn col : r.getJoinColumns()) {
+                    if (cols.contains(col.getThisColumnName())) {
+                        twice = true;
+                    }
+                }
+            }
+        }
         out.format("    @%s(value={\n", info.addType(JoinColumns.class));
         boolean first = true;
         for (MyJoinColumn col : ref.getJoinColumns()) {
@@ -901,9 +917,9 @@ public class ClassWriter {
                 out.format(",\n");
             first = false;
             out.format(
-                    "        @%s(name=\"%s\",referencedColumnName=\"%s\",nullable=%s,insertable=%s,updatable=%s)",
+                    "        @%s(name=\"%s\", referencedColumnName=\"%s\", nullable=%s, insertable=%s, updatable=%s)",
                     info.addType(JoinColumn.class), col.getThisColumnName(),
-                    col.getOtherColumnName(), nullable, insertable, updatable);
+                    col.getOtherColumnName(), nullable, insertable && !twice, updatable && !twice);
         }
         out.format("})\n");
     }

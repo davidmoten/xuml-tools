@@ -383,8 +383,8 @@ public class ClassInfo {
         boolean isNullable = !inIdentifier;
         MyAttributeExtensions extensions = getAttributeExtensions(a);
         return new MyIndependentAttribute(a.getName(), getFieldName(a.getName()),
-                Util.toColumnName(a.getName()), getTypeDefinition(a.getType()), isNullable,
-                "description", extensions);
+                nameManager.toColumnName(cls.getName(), a.getName()),
+                getTypeDefinition(a.getType()), isNullable, "description", extensions);
     }
 
     List<MyIndependentAttribute> getNonIdIndependentAttributeMembers() {
@@ -556,6 +556,10 @@ public class ClassInfo {
 
     boolean isSubclass() {
         return lookups.isSpecialization(cls.getName());
+    }
+
+    boolean isAssociationClass() {
+        return lookups.associationForAssociationClass(cls.getName()).isPresent();
     }
 
     MySubclassRole getSubclassRole() {
