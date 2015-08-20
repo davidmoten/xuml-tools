@@ -87,7 +87,7 @@ public class ClassWriter {
 
     private static final String BEHAVIOUR_COMMENT = "All actions like onEntry actions and defined\noperations are performed by this Behaviour class.";
     private static final String STATE_COMMENT = "For internal use only by the state machine but is persisted by the jpa provider.";
-    private static final String MEMBER_MODIFIERS = "private volatile";
+    private static final String MEMBER_MODIFIERS = "private";
     public static boolean useJpaJoinedStrategyForSpecialization = false;
     private final ClassInfo info;
 
