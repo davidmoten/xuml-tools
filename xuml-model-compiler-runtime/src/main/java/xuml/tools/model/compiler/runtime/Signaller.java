@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
@@ -57,26 +58,40 @@ public class Signaller {
      * @return
      */
     public <T extends Entity<T>> T create(Class<T> cls, CreationEvent<T> event) {
+        EntityManager em = null;
+        EntityTransaction tx = null;
+        T t;
         try {
             // TODO add before and after listener notifications for create event
             // (see EntityActor for listener example for non-creation events
-            T t = cls.newInstance();
-            EntityManager em = emf.createEntityManager();
-            t.helper().setEntityManager(em);
-            em.getTransaction().begin();
-            t.event(event);
-            em.persist(t);
-            em.getTransaction().commit();
-            em.close();
-            // only after successful commit do we send the signals to other
-            // entities made during onEntry procedure.
-            t.helper().sendQueuedSignals();
-            return t;
+            t = cls.newInstance();
         } catch (InstantiationException e) {
             throw new RuntimeException(e);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
+        try {
+            em = emf.createEntityManager();
+            t.helper().setEntityManager(em);
+            tx = em.getTransaction();
+            tx.begin();
+            t.event(event);
+            em.persist(t);
+            tx.commit();
+        } catch (RuntimeException e) {
+            if (tx != null && tx.isActive())
+                tx.rollback();
+            throw e;
+        } finally {
+            t.helper().setEntityManager(null);
+            if (em != null && em.isOpen())
+                em.close();
+        }
+        // only after successful commit do we send the signals to other
+        // entities made during onEntry procedure.
+        t.helper().sendQueuedSignals();
+        return t;
+
     }
 
     public <T extends Entity<T>> void signal(String fromEntityUniqueId, Entity<T> entity,
