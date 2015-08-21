@@ -20,7 +20,6 @@ import scala.concurrent.ExecutionContext;
 import scala.concurrent.duration.Duration;
 import scala.concurrent.duration.FiniteDuration;
 import xuml.tools.model.compiler.runtime.actor.RootActor;
-import xuml.tools.model.compiler.runtime.message.EntityCommit;
 import xuml.tools.model.compiler.runtime.message.Signal;
 
 public class Signaller {
@@ -78,6 +77,9 @@ public class Signaller {
             t.event(event);
             em.persist(t);
             tx.commit();
+            // only after successful commit do we send the signals to other
+            // entities made during onEntry procedure.
+            t.helper().sendQueuedSignals();
         } catch (RuntimeException e) {
             if (tx != null && tx.isActive())
                 tx.rollback();
@@ -87,9 +89,6 @@ public class Signaller {
             if (em != null && em.isOpen())
                 em.close();
         }
-        // only after successful commit do we send the signals to other
-        // entities made during onEntry procedure.
-        t.helper().sendQueuedSignals();
         return t;
 
     }
@@ -300,10 +299,6 @@ public class Signaller {
 
     private boolean signalInitiatedFromEvent() {
         return info.get().getCurrentEntity() != null;
-    }
-
-    public <T, R> void signalCommit(Entity<T> entity) {
-        root.tell(new EntityCommit<T>(entity), root);
     }
 
     public Info getInfo() {
