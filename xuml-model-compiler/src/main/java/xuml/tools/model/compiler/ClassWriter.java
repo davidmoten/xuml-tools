@@ -254,9 +254,11 @@ public class ClassWriter {
         if (info.hasBehaviour()) {
             out.format("        if (_behaviourFactory == null) {\n");
             out.format(
-                    "            throw new %s(\"%s does not have a BehaviourFactory set. Use %s.setBehaviourFactory in your App class (one-time setup).\")\n",
+                    "            throw new %s(\"%s does not have "
+                            + "a BehaviourFactory set. Use %s.setBehaviourFactory in your App class (one-time setup).\");\n",
                     info.addType(BehaviourFactoryNotSetException.class),
                     info.getJavaClassSimpleName(), info.getJavaClassSimpleName());
+            out.format("        }\n");
             out.format("        _behaviour = _behaviourFactory.create(this);\n");
         }
         out.format("    }\n\n");
