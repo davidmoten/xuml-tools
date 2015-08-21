@@ -387,7 +387,7 @@ public class ClassInfo {
                 getTypeDefinition(a.getType()), isNullable, "description", extensions);
     }
 
-    List<MyIndependentAttribute> getNonIdIndependentAttributeMembers() {
+    List<MyIndependentAttribute> getNonPrimaryIdIndependentAttributeMembers() {
         List<MyIndependentAttribute> list = newArrayList();
         for (JAXBElement<? extends Attribute> element : cls.getAttribute()) {
             if (element.getValue() instanceof IndependentAttribute) {

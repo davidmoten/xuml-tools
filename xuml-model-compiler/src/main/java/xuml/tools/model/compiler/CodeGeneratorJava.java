@@ -4,7 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.List;
 
@@ -106,13 +105,12 @@ public class CodeGeneratorJava {
     }
 
     private void createPersistenceXml(ModeledDomain domain, File file) {
-        OutputStream out;
         try {
             file.getParentFile().mkdirs();
-            out = new FileOutputStream(file);
-            String xml = generatePersistenceXml(domain);
-            out.write(xml.toString().getBytes());
-            out.close();
+            try (FileOutputStream out = new FileOutputStream(file)) {
+                String xml = generatePersistenceXml(domain);
+                out.write(xml.toString().getBytes());
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -247,9 +245,9 @@ public class CodeGeneratorJava {
 
         String filename = domainPackageName.replace(".", "/") + "/Context.java";
         try {
-            FileOutputStream fos = new FileOutputStream(new File(destination, filename));
-            fos.write(s.getBytes());
-            fos.close();
+            try (FileOutputStream fos = new FileOutputStream(new File(destination, filename))) {
+                fos.write(s.getBytes());
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -293,9 +291,9 @@ public class CodeGeneratorJava {
         try {
             file.getParentFile().mkdirs();
             log("writing to " + file);
-            FileOutputStream fos = new FileOutputStream(file);
-            fos.write(bytes);
-            fos.close();
+            try (FileOutputStream fos = new FileOutputStream(file)) {
+                fos.write(bytes);
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

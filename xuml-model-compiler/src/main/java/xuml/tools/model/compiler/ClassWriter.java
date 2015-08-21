@@ -633,7 +633,7 @@ public class ClassWriter {
 
     private void writeNonIdIndependentAttributeMembers(PrintStream out, ClassInfo info,
             Set<String> validationMethods) {
-        for (MyIndependentAttribute attribute : info.getNonIdIndependentAttributeMembers()) {
+        for (MyIndependentAttribute attribute : info.getNonPrimaryIdIndependentAttributeMembers()) {
             writeIndependentAttributeMember(out, attribute, "    ");
             writeAttributeValidationMethod(out, attribute, info, validationMethods);
         }
@@ -946,7 +946,7 @@ public class ClassWriter {
     }
 
     private void writeNonIdIndependentAttributeGettersAndSetters(PrintStream out, ClassInfo info) {
-        for (MyIndependentAttribute attribute : info.getNonIdIndependentAttributeMembers()) {
+        for (MyIndependentAttribute attribute : info.getNonPrimaryIdIndependentAttributeMembers()) {
             writeIndependentAttributeGetterAndSetter(out, attribute);
         }
     }
@@ -1860,7 +1860,7 @@ public class ClassWriter {
     private void writeQueryMethods(PrintStream out, ClassInfo info) {
 
         out.format("    public static class Attribute {\n");
-        for (MyIndependentAttribute member : info.getNonIdIndependentAttributeMembers()) {
+        for (MyIndependentAttribute member : info.getNonPrimaryIdIndependentAttributeMembers()) {
             MyType type = member.getType().getMyType();
             String fieldName = member.getFieldName();
             String fieldNameInQuery = fieldName;
