@@ -72,6 +72,7 @@ import xuml.tools.model.compiler.info.MySubclassRole;
 import xuml.tools.model.compiler.info.MyTransition;
 import xuml.tools.model.compiler.info.MyType;
 import xuml.tools.model.compiler.info.MyTypeDefinition;
+import xuml.tools.model.compiler.runtime.BehaviourFactoryNotSetException;
 import xuml.tools.model.compiler.runtime.CreationEvent;
 import xuml.tools.model.compiler.runtime.EntityHelper;
 import xuml.tools.model.compiler.runtime.Event;
@@ -251,6 +252,11 @@ public class ClassWriter {
         out.format("    public %s(){\n", info.getJavaClassSimpleName());
         out.format("        //JPA requires no-arg constructor\n");
         if (info.hasBehaviour()) {
+            out.format("        if (_behaviourFactory == null) {\n");
+            out.format(
+                    "            throw new %s(\"%s does not have a BehaviourFactory set. Use %s.setBehaviourFactory in your App class (one-time setup).\")\n",
+                    info.addType(BehaviourFactoryNotSetException.class),
+                    info.getJavaClassSimpleName(), info.getJavaClassSimpleName());
             out.format("        _behaviour = _behaviourFactory.create(this);\n");
         }
         out.format("    }\n\n");
