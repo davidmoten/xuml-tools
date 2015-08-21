@@ -90,7 +90,7 @@ public class ClassWriter {
     private static final String BEHAVIOUR_COMMENT = "All actions like onEntry actions and defined\noperations are performed by this Behaviour class.";
     private static final String STATE_COMMENT = "For internal use only by the state machine but is persisted by the jpa provider.";
     private static final String MEMBER_MODIFIERS = "private";
-    private static final int MAX_VARCHAR_LENGTH = 255;
+    private static final int MAX_VARCHAR_LENGTH = 65535;
     public static boolean useJpaJoinedStrategyForSpecialization = false;
     private final ClassInfo info;
 
@@ -1635,7 +1635,7 @@ public class ClassWriter {
             String indent, MyTypeDefinition type, boolean insertable, boolean updatable) {
         final String length;
         boolean isLong = type.getMyType().equals(MyType.STRING)
-                && type.getMaxLength().compareTo(BigInteger.valueOf(MAX_VARCHAR_LENGTH)) < 0;
+                && type.getMaxLength().compareTo(BigInteger.valueOf(MAX_VARCHAR_LENGTH)) > 0;
         if (type.getMyType().equals(MyType.STRING) && isLong)
             out.format("@%s", info.addType(Lob.class));
         if (type.getMyType().equals(MyType.STRING) && !isLong)
