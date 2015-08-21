@@ -5,6 +5,7 @@ import java.io.PrintStream;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -32,6 +33,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.JoinTable;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -88,6 +90,7 @@ public class ClassWriter {
     private static final String BEHAVIOUR_COMMENT = "All actions like onEntry actions and defined\noperations are performed by this Behaviour class.";
     private static final String STATE_COMMENT = "For internal use only by the state machine but is persisted by the jpa provider.";
     private static final String MEMBER_MODIFIERS = "private";
+    private static final int MAX_VARCHAR_LENGTH = 255;
     public static boolean useJpaJoinedStrategyForSpecialization = false;
     private final ClassInfo info;
 
@@ -1631,7 +1634,11 @@ public class ClassWriter {
     private void writeFieldAnnotation(PrintStream out, String columnName, boolean isNullable,
             String indent, MyTypeDefinition type, boolean insertable, boolean updatable) {
         final String length;
-        if (type.getMyType().equals(MyType.STRING))
+        boolean isLong = type.getMyType().equals(MyType.STRING)
+                && type.getMaxLength().compareTo(BigInteger.valueOf(MAX_VARCHAR_LENGTH)) < 0;
+        if (type.getMyType().equals(MyType.STRING) && isLong)
+            out.format("@%s", info.addType(Lob.class));
+        if (type.getMyType().equals(MyType.STRING) && !isLong)
             length = ",length=" + type.getMaxLength();
         else
             length = "";
@@ -1659,7 +1666,6 @@ public class ClassWriter {
         else if (type.getMyType().equals(MyType.TIMESTAMP))
             out.format("%s@%s(%s.TIMESTAMP)\n", indent, info.addType(Temporal.class),
                     info.addType(TemporalType.class));
-
     }
 
     private void writeIndependentAttributeGetterAndSetter(PrintStream out,
