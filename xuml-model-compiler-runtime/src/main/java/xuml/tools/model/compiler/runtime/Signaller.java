@@ -209,28 +209,28 @@ public class Signaller {
                 synchronized (this) {
                     EntityEvent key = cancelSignal(signal.getFromEntityUniqueId(),
                             signal.getEntity().uniqueId(), signal.getEvent().signatureKey());
-
-                    Cancellable cancellable;
-                    ExecutionContext executionContext = actorSystem.dispatcher();
-                    if (!signal.getRepeatInterval().isPresent())
-                        cancellable = actorSystem.scheduler().scheduleOnce(
-                                Duration.create(delayMs, TimeUnit.MILLISECONDS), root, signal,
-                                executionContext, root);
-                    else
-                        cancellable = actorSystem.scheduler().schedule(
-                                Duration.create(delayMs, TimeUnit.MILLISECONDS),
-                                signal.getRepeatInterval().get(), root, signal, executionContext,
-                                root);
+                    Cancellable cancellable = schedulerSignal(signal, delayMs);
                     scheduleCancellers.put(key, cancellable);
                 }
             }
         }
     }
 
+    private <T> Cancellable schedulerSignal(Signal<T> signal, long delayMs) {
+        ExecutionContext executionContext = actorSystem.dispatcher();
+        if (!signal.getRepeatInterval().isPresent())
+            return actorSystem.scheduler().scheduleOnce(
+                    Duration.create(delayMs, TimeUnit.MILLISECONDS), root, signal, executionContext,
+                    root);
+        else
+            return actorSystem.scheduler().schedule(Duration.create(delayMs, TimeUnit.MILLISECONDS),
+                    signal.getRepeatInterval().get(), root, signal, executionContext, root);
+    }
+
     private <T> EntityEvent cancelSignal(String fromEntityUniqueid, String toEntityUniqueId,
             String eventSignatureKey) {
         EntityEvent key = new EntityEvent(fromEntityUniqueid, toEntityUniqueId, eventSignatureKey);
-        Cancellable current = scheduleCancellers.get(key);
+        Cancellable current = scheduleCancellers.remove(key);
         if (current != null)
             current.cancel();
         return key;
