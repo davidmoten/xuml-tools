@@ -774,7 +774,7 @@ public class ClassWriter {
 
     private void writeReferenceMembersManyToZeroOne(PrintStream out, ClassInfo info,
             MyReferenceMember ref) {
-        out.format("    @%s(targetEntity=%s.class,fetch=%s.LAZY)\n", info.addType(ManyToOne.class),
+        out.format("    @%s(targetEntity=%s.class, fetch=%s.LAZY)\n", info.addType(ManyToOne.class),
                 info.addType(ref.getFullClassName()), info.addType(FetchType.class));
         writeJoinColumnsAnnotation(out, ref, true, !ref.isInPrimaryId(), !ref.isInPrimaryId());
         writeField(out, ref);
@@ -782,7 +782,8 @@ public class ClassWriter {
 
     private void writeReferenceMembersZeroOneToMany(PrintStream out, ClassInfo info,
             MyReferenceMember ref) {
-        out.format("    @%s(mappedBy=\"%s\",cascade=%s.ALL,fetch=%s.LAZY,targetEntity=%s.class)\n",
+        out.format(
+                "    @%s(mappedBy=\"%s\", cascade=%s.ALL, fetch=%s.LAZY, targetEntity=%s.class)\n",
                 info.addType(OneToMany.class), ref.getMappedBy(), info.addType(CascadeType.class),
                 info.addType(FetchType.class), info.addType(ref.getFullClassName()));
         writeMultipleField(out, ref);
@@ -793,13 +794,13 @@ public class ClassWriter {
         if (info.getJavaClassSimpleName().compareTo(ref.getSimpleClassName()) < 0) {
             // primary
             out.format("    //primary side of relationship\n");
-            out.format("    @%s(mappedBy=\"%s\",fetch=%s.LAZY,targetEntity=%s.class)\n",
+            out.format("    @%s(mappedBy=\"%s\", fetch=%s.LAZY, targetEntity=%s.class)\n",
                     info.addType(OneToOne.class), ref.getMappedBy(), info.addType(FetchType.class),
                     info.addType(ref.getFullClassName()));
         } else {
             // secondary
             out.format("    //secondary side of relationship\n");
-            out.format("    @%s(targetEntity=%s.class,fetch=%s.LAZY)\n",
+            out.format("    @%s(targetEntity=%s.class, fetch=%s.LAZY)\n",
                     info.addType(OneToOne.class), info.addType(ref.getFullClassName()),
                     info.addType(FetchType.class));
             writeJoinColumnsAnnotation(out, ref, true, !ref.isInPrimaryId(), !ref.isInPrimaryId());
@@ -818,7 +819,7 @@ public class ClassWriter {
 
     private void writeReferenceMembersManyToOne(PrintStream out, ClassInfo info,
             MyReferenceMember ref) {
-        out.format("    @%s(targetEntity=%s.class,fetch=%s.LAZY)\n", info.addType(ManyToOne.class),
+        out.format("    @%s(targetEntity=%s.class, fetch=%s.LAZY)\n", info.addType(ManyToOne.class),
                 ref.getFullClassName(), info.addType(FetchType.class));
         writeJoinColumnsAnnotation(out, ref, false, !ref.isInPrimaryId(), !ref.isInPrimaryId());
         writeField(out, ref);
@@ -831,7 +832,7 @@ public class ClassWriter {
         // class without persistence exceptions due to circular
         // dependencies.
         out.format(
-                "    @%s(mappedBy=\"%s\",cascade={%3$s.MERGE,%3$s.REFRESH,%3$s.REMOVE},fetch=%4$s.LAZY,targetEntity=%5$s.class)\n",
+                "    @%s(mappedBy=\"%s\", cascade={%3$s.MERGE,%3$s.REFRESH,%3$s.REMOVE}, fetch=%4$s.LAZY, targetEntity=%5$s.class)\n",
                 info.addType(OneToMany.class), ref.getMappedBy(), info.addType(CascadeType.class),
                 info.addType(FetchType.class), info.addType(ref.getFullClassName()));
         writeMultipleField(out, ref);
@@ -839,7 +840,7 @@ public class ClassWriter {
 
     private void writeReferenceMembersZeroOneToOne(PrintStream out, ClassInfo info,
             MyReferenceMember ref) {
-        out.format("    @%s(targetEntity=%s.class,cascade=%s.ALL,fetch=%s.LAZY)\n",
+        out.format("    @%s(targetEntity=%s.class, cascade=%s.ALL, fetch=%s.LAZY)\n",
                 info.addType(OneToOne.class), info.addType(ref.getFullClassName()),
                 info.addType(CascadeType.class), info.addType(FetchType.class));
         writeJoinColumnsAnnotation(out, ref, false, !ref.isInPrimaryId(), !ref.isInPrimaryId());
@@ -849,14 +850,14 @@ public class ClassWriter {
     private void writeReferenceMembersOneToZeroOne(PrintStream out, ClassInfo info,
             MyReferenceMember ref) {
         if (isUnary(ref, info)) {
-            out.format("    @%s(targetEntity=%s.class,cascade=%s.ALL,fetch=%s.LAZY)\n",
+            out.format("    @%s(targetEntity=%s.class, cascade=%s.ALL, fetch=%s.LAZY)\n",
                     info.addType(OneToOne.class), info.addType(ref.getFullClassName()),
                     info.addType(CascadeType.class), info.addType(FetchType.class));
 
             writeJoinColumnsAnnotation(out, ref, true, !ref.isInPrimaryId(), !ref.isInPrimaryId());
             writeField(out, ref);
         } else {
-            out.format("    @%s(mappedBy=\"%s\",fetch=%s.LAZY,targetEntity=%s.class)\n",
+            out.format("    @%s(mappedBy=\"%s\", fetch=%s.LAZY, targetEntity=%s.class)\n",
                     info.addType(OneToOne.class), ref.getMappedBy(), info.addType(FetchType.class),
                     info.addType(ref.getFullClassName()));
             writeField(out, ref);
@@ -869,7 +870,7 @@ public class ClassWriter {
         // annotated in which way
         if (info.getJavaClassSimpleName().compareTo(ref.getSimpleClassName()) < 0) {
             writeValidationNotNull(out, ref.getFieldName(), validationMethods);
-            out.format("    @%s(mappedBy=\"%s\",fetch=%s.LAZY,targetEntity=%s.class)\n",
+            out.format("    @%s(mappedBy=\"%s\", fetch=%s.LAZY, targetEntity=%s.class)\n",
                     info.addType(OneToOne.class), ref.getMappedBy(), info.addType(FetchType.class),
                     info.addType(ref.getFullClassName()));
             writeField(out, ref);
@@ -1168,7 +1169,7 @@ public class ClassWriter {
     private void writeManyToManyPrimarySide(PrintStream out, ClassInfo info,
             MyReferenceMember ref) {
         out.format("    //primary side of relationship\n");
-        out.format("    @%s(targetEntity=%s.class,cascade=%s.ALL,fetch=%s.LAZY)\n",
+        out.format("    @%s(targetEntity=%s.class, cascade=%s.ALL, fetch=%s.LAZY)\n",
                 info.addType(ManyToMany.class), info.addType(ref.getFullClassName()),
                 info.addType(CascadeType.class), info.addType(FetchType.class));
 
@@ -1178,7 +1179,7 @@ public class ClassWriter {
     }
 
     private void writeJoinTableAnnotation(PrintStream out, ClassInfo info, MyJoinTable jt) {
-        out.format("    @%s(name=\"%s\",schema=\"%s\",\n", info.addType(JoinTable.class),
+        out.format("    @%s(name=\"%s\", schema=\"%s\",\n", info.addType(JoinTable.class),
                 jt.getJoinTable(), jt.getJoinTableSchema());
 
         out.format("            joinColumns={\n");
@@ -1194,7 +1195,7 @@ public class ClassWriter {
         for (MyJoinColumn jc : cols) {
             if (!first)
                 out.format(",\n");
-            out.format("                @%s(name=\"%s\",referencedColumnName=\"%s\")",
+            out.format("                @%s(name=\"%s\", referencedColumnName=\"%s\")",
                     info.addType(JoinColumn.class), jc.getThisColumnName(),
                     jc.getOtherColumnName());
             first = false;
@@ -1204,7 +1205,8 @@ public class ClassWriter {
     private void writeManyToManySecondarySide(PrintStream out, ClassInfo info,
             MyReferenceMember ref) {
         out.format("    //secondary side of relationship\n");
-        out.format("    @%s(mappedBy=\"%s\",targetEntity=%s.class,cascade=%s.ALL,fetch=%s.LAZY)\n",
+        out.format(
+                "    @%s(mappedBy=\"%s\", targetEntity=%s.class, cascade=%s.ALL, fetch=%s.LAZY)\n",
                 info.addType(ManyToMany.class), ref.getMappedBy(),
                 info.addType(ref.getFullClassName()), info.addType(CascadeType.class),
                 info.addType(FetchType.class));
@@ -1666,7 +1668,7 @@ public class ClassWriter {
         else
             precision = "";
 
-        out.format("%s@%s(name=\"%s\",nullable=%s%s%s%s%s)\n", indent, info.addType(Column.class),
+        out.format("%s@%s(name=\"%s\", nullable=%s%s%s%s%s)\n", indent, info.addType(Column.class),
                 columnName, isNullable, length, insertableParameter, updatableParameter, precision);
         if (type.getMyType().equals(MyType.DATE))
             out.format("%s@%s(%s.DATE)\n", indent, info.addType(Temporal.class),
