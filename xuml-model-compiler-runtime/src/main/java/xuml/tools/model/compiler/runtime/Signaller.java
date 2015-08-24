@@ -187,7 +187,7 @@ public class Signaller {
 
     }
 
-    private final Map<EntityEvent, Cancellable> scheduleCancellers = Maps.newHashMap();
+    private final Map<EntityEvent, Cancellable> scheduleCancellers = Maps.newConcurrentMap();
 
     public <T> void cancelSignal(String fromEntityUniqueId, Entity<T> entity,
             String eventSignatureKey) {
