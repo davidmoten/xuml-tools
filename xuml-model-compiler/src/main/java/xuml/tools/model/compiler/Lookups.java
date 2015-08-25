@@ -170,6 +170,8 @@ class Lookups {
             result = Integer.class.getName();
         else if (t instanceof RealType)
             result = Double.class.getName();
+        else if (t instanceof SymbolicType && "bytes".equalsIgnoreCase(name))
+            result = "byte[]";
         else if (t instanceof SymbolicType)
             result = String.class.getName();
         else

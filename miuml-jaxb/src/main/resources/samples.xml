@@ -6,8 +6,9 @@
     <DomainBuildSpecification Name="Base" DomainNameIsDefaultSubsystemName="true"
         DefaultSubsystemName="Subsystem" DefaultSubsystemRange="100" DefaultIdName="Id"
         DefaultIdType="arbitraryId" />
-
     <SymbolicType Name="string" MinLength="1" MaxLength="4096" Prefix="" Suffix=""
+        ValidationPattern=".*" DefaultValue="" />
+    <SymbolicType Name="bytes" MinLength="1" MaxLength="100000000" Prefix="" Suffix=""
         ValidationPattern=".*" DefaultValue="" />
     <IntegerType Name="integer" Units="none" DefaultValue="0" UpperLimit="99999999999"
         LowerLimit="-9999999999999" />
@@ -667,7 +668,7 @@
             </Class>
 
             <BinaryAssociation Rnum="1">
-                <ActivePerspective Phrase="characterizes" ViewedClass="B" 
+                <ActivePerspective Phrase="characterizes" ViewedClass="B"
                     OnePerspective="false" Conditional="true" />
                 <PassivePerspective Phrase="is characterized by" ViewedClass="A"
                     OnePerspective="false" Conditional="true" />
@@ -716,7 +717,7 @@
 
         </Subsystem>
     </ModeledDomain>
-    
+
 
     <ModeledDomain Name="one-many-to-many-association-class">
 
@@ -1125,7 +1126,7 @@
                 <PassivePerspective Phrase="is characterized by" ViewedClass="A"
                     OnePerspective="false" Conditional="true" />
             </BinaryAssociation>
-            
+
             <Class Name="D">
                 <IndependentAttribute Name="D one" Type="string">
                     <Identifier Number="1" />
@@ -1145,9 +1146,21 @@
                 <PassivePerspective Phrase="is characterized by" ViewedClass="A"
                     OnePerspective="false" Conditional="true" />
             </BinaryAssociation>
-            
+
 
         </Subsystem>
     </ModeledDomain>
+
+    <ModeledDomain Name="bytes">
+        <Subsystem Name="bytes" Floor="361" Ceiling="381">
+            <Class Name="A">
+                <IndependentAttribute Name="A one" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="A two" Type="bytes" />
+            </Class>
+        </Subsystem>
+    </ModeledDomain>
+
 
 </Domains>

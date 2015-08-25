@@ -594,6 +594,10 @@ public class ClassWriter {
             out.format("%s%s %s %s = new %s(%s);\n\n", indent, MEMBER_MODIFIERS,
                     info.addType(type.getType()), fieldName, info.addType(type.getType()),
                     defaultValue);
+        else if (type.getType().getBase().equals(byte.class.getName()))
+            out.format("%s%s %s %s = new byte[0];\n\n", indent, MEMBER_MODIFIERS,
+                    info.addType(type.getType()), fieldName, info.addType(type.getType()),
+                    defaultValue);
         else
             out.format("%s%s %s %s = new %s(\"%s\");\n\n", indent, MEMBER_MODIFIERS,
                     info.addType(type.getType()), fieldName, info.addType(type.getType()),
@@ -690,6 +694,7 @@ public class ClassWriter {
                 out.format("%s        throw new %s(\"min length constraint not met\");\n", indent,
                         info.addType(ex));
             }
+            // max length already handles by JPA annotations on column
             if (type.getPrefix() != null) {
                 out.format("%s     if (%s == null || !%s.startsWith(\"%s\"))\n", indent, fieldName,
                         fieldName, StringEscapeUtils.escapeJava(type.getPrefix()));
@@ -708,6 +713,19 @@ public class ClassWriter {
                         StringEscapeUtils.escapeJava(type.getValidationPattern()), fieldName);
                 out.format("%s        throw new %s(\"validation pattern constraint not met\");\n",
                         indent, info.addType(ex));
+            }
+        } else if (myType.equals(MyType.BYTES)) {
+            if (type.getMinLength().intValue() > 0) {
+                out.format("%s    if (%s == null || %s.length < %s)\n", indent, fieldName,
+                        fieldName, type.getMinLength().toString());
+                out.format("%s        throw new %s(\"min length constraint not met\");\n", indent,
+                        info.addType(ex));
+            }
+            if (type.getMaxLength().intValue() > 0) {
+                out.format("%s    if (%s == null || %s.length > %s)\n", indent, fieldName,
+                        fieldName, type.getMaxLength().toString());
+                out.format("%s        throw new %s(\"max length constraint not met\");\n", indent,
+                        info.addType(ex));
             }
         }
 
@@ -1646,8 +1664,9 @@ public class ClassWriter {
         final String length;
         boolean isLong = type.getMyType().equals(MyType.STRING)
                 && type.getMaxLength().compareTo(BigInteger.valueOf(MAX_VARCHAR_LENGTH)) > 0;
-        if (type.getMyType().equals(MyType.STRING) && isLong)
-            out.format("@%s", info.addType(Lob.class));
+        if ((type.getMyType().equals(MyType.STRING) && isLong)
+                || (type.getMyType().equals(MyType.BYTES)))
+            out.format("%s@%s\n", indent, info.addType(Lob.class));
         if (type.getMyType().equals(MyType.STRING) && !isLong)
             length = ",length=" + type.getMaxLength();
         else

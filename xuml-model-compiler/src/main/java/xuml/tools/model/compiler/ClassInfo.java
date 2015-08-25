@@ -1104,9 +1104,14 @@ public class ClassInfo {
     }
 
     private MyTypeDefinition getTypeDefinition(SymbolicType t) {
-        return new MyTypeDefinition(t.getName(), MyType.STRING, new Type(String.class), null, null,
-                null, null, t.getDefaultValue().toString(), null, t.getMinLength(),
-                t.getMaxLength(), t.getPrefix(), t.getSuffix(), t.getValidationPattern());
+        if (t.getName().equalsIgnoreCase("bytes")) {
+            return new MyTypeDefinition(t.getName(), MyType.BYTES, new Type(byte.class, true), null,
+                    null, null, null, t.getDefaultValue().toString(), null, t.getMinLength(),
+                    t.getMaxLength(), t.getPrefix(), t.getSuffix(), t.getValidationPattern());
+        } else
+            return new MyTypeDefinition(t.getName(), MyType.STRING, new Type(String.class), null,
+                    null, null, null, t.getDefaultValue().toString(), null, t.getMinLength(),
+                    t.getMaxLength(), t.getPrefix(), t.getSuffix(), t.getValidationPattern());
     }
 
     final public String getBehaviourPackage() {

@@ -152,5 +152,10 @@
 		<class>xuml.tools.model.compiler.runtime.QueuedSignal</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 	</persistence-unit>
+    <persistence-unit name="bytes">
+        <class>bytes.A</class>
+        <class>xuml.tools.model.compiler.runtime.QueuedSignal</class>
+        <exclude-unlisted-classes>true</exclude-unlisted-classes>
+    </persistence-unit>
 
 </persistence>
