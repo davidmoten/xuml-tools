@@ -157,5 +157,11 @@
         <class>xuml.tools.model.compiler.runtime.QueuedSignal</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
     </persistence-unit>
+    <persistence-unit name="zero-one-to-zero-one">
+        <class>zero_one_to_zero_one.A</class>
+        <class>zero_one_to_zero_one.B</class>
+        <class>xuml.tools.model.compiler.runtime.QueuedSignal</class>
+        <exclude-unlisted-classes>true</exclude-unlisted-classes>
+    </persistence-unit>
 
 </persistence>

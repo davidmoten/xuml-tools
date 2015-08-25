@@ -1614,6 +1614,8 @@ public class ClassWriter {
         out.format(
                 "                              \"expected only one constructor in the Behaviour implementation\");\n");
         out.format("                try {\n");
+        // TODO add error message about not having a single parameter
+        // constructor with certain type
         out.format(
                 "                    return (Behaviour) cls.getConstructors()[0].newInstance(entity);\n");
         out.format("                } catch (%s e) {\n",

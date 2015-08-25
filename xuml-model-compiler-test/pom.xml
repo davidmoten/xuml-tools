@@ -333,6 +333,18 @@
                         </configuration>
                     </execution>
                     <execution>
+                        <id>zero-one-to-zero-one</id>
+                        <goals>
+                            <goal>generate-jpa</goal>
+                        </goals>
+                        <configuration>
+                            <domainsXml>/samples.xml</domainsXml>
+                            <domain>zero-one-to-zero-one</domain>
+                            <schema>zero_one_to_zero_one</schema>
+                            <packageName>zero_one_to_zero_one</packageName>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>bytes</id>
                         <goals>
                             <goal>generate-jpa</goal>

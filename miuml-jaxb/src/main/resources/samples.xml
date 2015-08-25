@@ -1147,12 +1147,11 @@
                     OnePerspective="false" Conditional="true" />
             </BinaryAssociation>
 
-
         </Subsystem>
     </ModeledDomain>
 
     <ModeledDomain Name="bytes">
-        <Subsystem Name="bytes" Floor="361" Ceiling="381">
+        <Subsystem Name="bytes" Floor="361" Ceiling="380">
             <Class Name="A">
                 <IndependentAttribute Name="A one" Type="string">
                     <Identifier Number="1" />
@@ -1162,5 +1161,50 @@
         </Subsystem>
     </ModeledDomain>
 
+    <ModeledDomain Name="zero-one-to-zero-one">
+    <!--  not supported, needs a resolution table in JPA I believe -->
+
+        <Subsystem Name="zero-one-to-zero-one" Floor="381" Ceiling="400">
+
+            <Class Name="A">
+
+                <IndependentAttribute Name="A one" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="A two" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <ReferentialAttribute Name="A B one">
+                    <ToOneReference Relationship="1" Attribute="B one" />
+                </ReferentialAttribute>
+                <ReferentialAttribute Name="A B two">
+                    <ToOneReference Relationship="1" Attribute="B two" />
+                </ReferentialAttribute>
+            </Class>
+
+            <Class Name="B">
+                <IndependentAttribute Name="B one" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="B two" Type="string">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <ReferentialAttribute Name="B A one">
+                    <ToOneReference Relationship="1" Attribute="A one" />
+                </ReferentialAttribute>
+                <ReferentialAttribute Name="B A two">
+                    <ToOneReference Relationship="1" Attribute="A two" />
+                </ReferentialAttribute>
+            </Class>
+
+            <BinaryAssociation Rnum="1">
+                <ActivePerspective Phrase="characterizes" ViewedClass="B"
+                    OnePerspective="true" Conditional="true" />
+                <PassivePerspective Phrase="is characterized by" ViewedClass="A"
+                    OnePerspective="true" Conditional="true" />
+            </BinaryAssociation>
+
+        </Subsystem>
+    </ModeledDomain>
 
 </Domains>
