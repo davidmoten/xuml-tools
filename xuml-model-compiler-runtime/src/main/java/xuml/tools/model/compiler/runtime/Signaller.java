@@ -187,7 +187,7 @@ public class Signaller {
 
     }
 
-    private final Map<EntityEvent, Cancellable> scheduleCancellers = Maps.newConcurrentMap();
+    private final Map<EntityEvent, Cancellable> scheduleCancellers = Maps.newHashMap();
 
     public <T> void cancelSignal(String fromEntityUniqueId, Entity<T> entity,
             String eventSignatureKey) {
@@ -209,28 +209,28 @@ public class Signaller {
                 synchronized (this) {
                     EntityEvent key = cancelSignal(signal.getFromEntityUniqueId(),
                             signal.getEntity().uniqueId(), signal.getEvent().signatureKey());
-                    Cancellable cancellable = schedulerSignal(signal, delayMs);
+
+                    Cancellable cancellable;
+                    ExecutionContext executionContext = actorSystem.dispatcher();
+                    if (!signal.getRepeatInterval().isPresent())
+                        cancellable = actorSystem.scheduler().scheduleOnce(
+                                Duration.create(delayMs, TimeUnit.MILLISECONDS), root, signal,
+                                executionContext, root);
+                    else
+                        cancellable = actorSystem.scheduler().schedule(
+                                Duration.create(delayMs, TimeUnit.MILLISECONDS),
+                                signal.getRepeatInterval().get(), root, signal, executionContext,
+                                root);
                     scheduleCancellers.put(key, cancellable);
                 }
             }
         }
     }
 
-    private <T> Cancellable schedulerSignal(Signal<T> signal, long delayMs) {
-        ExecutionContext executionContext = actorSystem.dispatcher();
-        if (!signal.getRepeatInterval().isPresent())
-            return actorSystem.scheduler().scheduleOnce(
-                    Duration.create(delayMs, TimeUnit.MILLISECONDS), root, signal, executionContext,
-                    root);
-        else
-            return actorSystem.scheduler().schedule(Duration.create(delayMs, TimeUnit.MILLISECONDS),
-                    signal.getRepeatInterval().get(), root, signal, executionContext, root);
-    }
-
     private <T> EntityEvent cancelSignal(String fromEntityUniqueid, String toEntityUniqueId,
             String eventSignatureKey) {
         EntityEvent key = new EntityEvent(fromEntityUniqueid, toEntityUniqueId, eventSignatureKey);
-        Cancellable current = scheduleCancellers.remove(key);
+        Cancellable current = scheduleCancellers.get(key);
         if (current != null)
             current.cancel();
         return key;
@@ -239,16 +239,25 @@ public class Signaller {
     @SuppressWarnings({ "unchecked" })
     public int sendSignalsInQueue() {
         EntityManager em = emf.createEntityManager();
-        em.getTransaction().begin();
-        List<QueuedSignal> signals = em
-                .createQuery(
-                        "select s from " + QueuedSignal.class.getSimpleName() + " s order by id")
-                .getResultList();
-        em.getTransaction().commit();
-        em.close();
-        // close transaction before signalling because EntityActor will attempt
-        // to delete the QueuedSignal within its transaction processing the
-        // event
+        EntityTransaction tx = null;
+        List<QueuedSignal> signals;
+        try {
+            tx = em.getTransaction();
+            tx.begin();
+            signals = em.createQuery(
+                    "select s from " + QueuedSignal.class.getSimpleName() + " s order by id")
+                    .getResultList();
+            tx.commit();
+        } catch (RuntimeException e) {
+            if (tx != null && tx.isActive())
+                tx.rollback();
+            throw e;
+        } finally {
+            em.close();
+        }
+        // close transaction before signalling because EntityActor will
+        // attempt to delete the QueuedSignal within its transaction
+        // processing the event
         for (QueuedSignal sig : signals) {
             signal(sig);
         }
