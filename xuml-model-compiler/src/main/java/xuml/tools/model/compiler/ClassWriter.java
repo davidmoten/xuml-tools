@@ -981,6 +981,12 @@ public class ClassWriter {
             out.format("    public void setState(String state){\n");
             out.format("        this.state= state;\n");
             out.format("    }\n\n");
+            jd(out, "Sets the current state. This should only be used when creating an instance without using the state machine.",
+                    "    ");
+            out.format("    public void setState(%s state){\n",
+                    info.addType(info.getClassFullName() + ".State"));
+            out.format("        this.state= state.toString();\n");
+            out.format("    }\n\n");
         }
     }
 
