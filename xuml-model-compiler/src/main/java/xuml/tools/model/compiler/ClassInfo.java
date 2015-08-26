@@ -447,7 +447,15 @@ public class ClassInfo {
             // destination state
             State destinationState = getDestinationState(event);
             if (destinationState != null) {
-                signature = destinationState.getStateSignature();
+                if (destinationState.getStateSignature() != null)
+                    signature = destinationState.getStateSignature();
+                else
+                    signature = new StateModelSignature() {
+                        @Override
+                        public List<StateModelParameter> getStateModelParameter() {
+                            return Collections.emptyList();
+                        }
+                    };
                 stateName = destinationState.getName();
             } else {
                 signature = null;
