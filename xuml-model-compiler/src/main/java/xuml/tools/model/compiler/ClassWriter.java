@@ -57,6 +57,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 import scala.concurrent.duration.Duration;
+import xuml.tools.model.compiler.ClassInfo.OtherId;
 import xuml.tools.model.compiler.info.Mult;
 import xuml.tools.model.compiler.info.MyAttributeExtensions;
 import xuml.tools.model.compiler.info.MyEvent;
@@ -1895,6 +1896,10 @@ public class ClassWriter {
             String fieldNameInQuery = "id." + fieldName;
             writeQueryField(out, info, type, fieldName, fieldNameInQuery);
         }
+        for (MyReferenceMember member : info.getReferenceMembers()) {
+            writeQueryReferenceField(out, info, member);
+
+        }
         out.format("    }\n\n");
         out.format("    public static %s<%s> select(%s<%s> where) {\n",
                 info.addType(SelectBuilder.class), info.getJavaClassSimpleName(),
@@ -1910,6 +1915,15 @@ public class ClassWriter {
         out.format("        return select(null);\n");
         out.format("    }\n\n");
 
+    }
+
+    private void writeQueryReferenceField(PrintStream out, ClassInfo info,
+            MyReferenceMember member) {
+        for (OtherId id : member.getOtherIds()) {
+            writeQueryField(out, info, id.getType().getMyType(),
+                    member.getFieldName() + "_" + id.getFieldName(),
+                    member.getFieldName() + "." + id.getFieldName());
+        }
     }
 
     private void writeQueryField(PrintStream out, ClassInfo info, MyType type, String fieldName,

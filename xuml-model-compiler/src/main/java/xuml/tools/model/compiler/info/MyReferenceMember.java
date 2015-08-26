@@ -2,6 +2,8 @@ package xuml.tools.model.compiler.info;
 
 import java.util.List;
 
+import xuml.tools.model.compiler.ClassInfo.OtherId;
+
 public class MyReferenceMember {
     private final String simpleClassName;
     private final String fullClassName;
@@ -18,11 +20,12 @@ public class MyReferenceMember {
     private final String mappedBy;
     private final MyJoinTable joinTable;
     private final String rnum;
+    private final List<OtherId> otherIds;
 
     public MyReferenceMember(String simpleClassName, String fullClassName, Mult thisMult,
             Mult thatMult, String thisVerbClause, String thatVerbClause, String fieldName,
             List<MyJoinColumn> joinColumns, String mappedBy, MyJoinTable joinTable,
-            boolean inPrimaryId, String rnum) {
+            boolean inPrimaryId, String rnum, List<OtherId> otherIds) {
         this.simpleClassName = simpleClassName;
         this.fullClassName = fullClassName;
         this.thisMult = thisMult;
@@ -35,6 +38,7 @@ public class MyReferenceMember {
         this.joinTable = joinTable;
         this.inPrimaryId = inPrimaryId;
         this.rnum = rnum;
+        this.otherIds = otherIds;
     }
 
     public boolean isInPrimaryId() {
@@ -43,6 +47,10 @@ public class MyReferenceMember {
 
     public String getFieldName() {
         return fieldName;
+    }
+
+    public List<OtherId> getOtherIds() {
+        return otherIds;
     }
 
     public String getMappedBy() {
@@ -100,6 +108,8 @@ public class MyReferenceMember {
         builder.append(thatVerbClause);
         builder.append(", fieldName=");
         builder.append(fieldName);
+        builder.append(", otherIds=");
+        builder.append(otherIds);
         builder.append(", joinColumns=");
         builder.append(joinColumns);
         builder.append(", inPrimaryId=");

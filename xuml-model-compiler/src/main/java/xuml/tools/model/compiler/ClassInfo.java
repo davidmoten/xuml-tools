@@ -8,11 +8,13 @@ import static com.google.common.collect.Sets.newHashSet;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -224,7 +226,6 @@ public class ClassInfo {
         HashMultimap<BigInteger, Attribute> map = HashMultimap.create();
         for (JAXBElement<? extends Attribute> element : cls.getAttribute()) {
             Attribute attribute = element.getValue();
-
             for (IdentifierAttribute id : attribute.getIdentifier()) {
                 map.put(id.getNumber(), attribute);
             }
@@ -658,7 +659,7 @@ public class ClassInfo {
         }
         return new MyReferenceMember(g.getSuperclass(), infoOther.getClassFullName(), Mult.ZERO_ONE,
                 Mult.ONE, "generalizes", "specializes", fieldName, joins, thisFieldName,
-                (MyJoinTable) null, false, g.getRnum().toString());
+                (MyJoinTable) null, false, g.getRnum().toString(), Collections.emptyList());
     }
 
     private MyJoinColumn createJoinColumn(Generalization g, MyIdAttribute member) {
@@ -675,7 +676,7 @@ public class ClassInfo {
         String thisFieldName = nameManager.toFieldName(spec.getName(), cls.getName(), g.getRnum());
         return new MyReferenceMember(spec.getName(), infoOther.getClassFullName(), Mult.ONE,
                 Mult.ZERO_ONE, "specializes", "generalizes", fieldName, null, thisFieldName,
-                (MyJoinTable) null, false, g.getRnum().toString());
+                (MyJoinTable) null, false, g.getRnum().toString(), Collections.emptyList());
     }
 
     private List<MyReferenceMember> createMyReferenceMembers(Association a, Class cls) {
@@ -712,10 +713,10 @@ public class ClassInfo {
 
         list.add(new MyReferenceMember(getJavaClassSimpleName(), getClassFullName(), fromMult,
                 toMult(p), p.getPhrase() + " Inverse", p.getPhrase(), fieldName2, joins2,
-                fieldName1, null, false, a.getRnum().toString()));
+                fieldName1, null, false, a.getRnum().toString(), Collections.emptyList()));
         list.add(new MyReferenceMember(getJavaClassSimpleName(), getClassFullName(), toMult(p),
                 fromMult, p.getPhrase(), p.getPhrase() + " Inverse", fieldName1, joins, fieldName2,
-                null, false, a.getRnum().toString()));
+                null, false, a.getRnum().toString(), Collections.emptyList()));
 
         if (a.getAssociationClass() != null) {
             // TODO get this working
@@ -807,8 +808,12 @@ public class ClassInfo {
         else
             joins = Lists.newArrayList();
 
-        String fieldName = nameManager.toFieldName(cls.getName(), pThat.getViewedClass(),
+        final String fieldName = nameManager.toFieldName(cls.getName(), pThat.getViewedClass(),
                 a.getRnum());
+
+        List<OtherId> otherIds = infoOther.getPrimaryIdAttributeMembers().stream()
+                .map(att -> new OtherId(att.getFieldName(), att.getType()))
+                .collect(Collectors.toList());
         // now establish the name of the field for this class as seen in the
         // other class
         String mappedBy = nameManager.toFieldName(otherClassName, cls.getName(), a.getRnum());
@@ -816,9 +821,34 @@ public class ClassInfo {
 
         MyJoinTable manyToMany = createManyToMany(a, cls, infoOther, pThis, pThat);
 
-        return new MyReferenceMember(pThat.getViewedClass(), infoOther.getClassFullName(),
-                toMult(pThis), toMult(pThat), pThis.getPhrase(), pThat.getPhrase(), fieldName,
-                joins, mappedBy, manyToMany, inPrimaryId, a.getRnum().toString());
+        return new MyReferenceMember(otherClassName, infoOther.getClassFullName(), toMult(pThis),
+                toMult(pThat), pThis.getPhrase(), pThat.getPhrase(), fieldName, joins, mappedBy,
+                manyToMany, inPrimaryId, a.getRnum().toString(), otherIds);
+    }
+
+    public static class OtherId {
+
+        private final String fieldName;
+        private final MyTypeDefinition type;
+
+        OtherId(String fieldName, MyTypeDefinition type) {
+            this.fieldName = fieldName;
+            this.type = type;
+        }
+
+        public String getFieldName() {
+            return fieldName;
+        }
+
+        public MyTypeDefinition getType() {
+            return type;
+        }
+
+        @Override
+        public String toString() {
+            return "OtherId [fieldName=" + fieldName + ", type=" + type + "]";
+        }
+
     }
 
     private List<MyJoinColumn> getJoinColumns(BigInteger rnum, Class cls, ClassInfo infoOther) {
