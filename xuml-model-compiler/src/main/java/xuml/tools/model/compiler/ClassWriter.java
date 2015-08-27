@@ -1073,6 +1073,10 @@ public class ClassWriter {
 
             StringBuilder constructorBody = new StringBuilder();
             for (MyParameter p : event.getParameters()) {
+                constructorBody.append(String.format(
+                        "                if (%s == null) throw new %s(\"%s cannot be null\");\n",
+                        p.getFieldName(), info.addType(NullPointerException.class),
+                        p.getFieldName()));
                 constructorBody.append("                this." + p.getFieldName() + " = "
                         + p.getFieldName() + ";\n");
             }
@@ -1106,6 +1110,10 @@ public class ClassWriter {
             // create constructor using Builder
             out.format("            private %s(Builder builder) {\n", event.getSimpleClassName());
             for (MyParameter p : event.getParameters()) {
+                out.format(
+                        "                if (builder.%s == null) throw new %s(\"%s cannot be null\");\n",
+                        p.getFieldName(), info.addType(NullPointerException.class),
+                        p.getFieldName());
                 out.format("                this.%s = builder.%s;\n", p.getFieldName(),
                         p.getFieldName());
             }
@@ -1493,6 +1501,13 @@ public class ClassWriter {
         out.format("    public %s persist(%s em) {\n", info.getJavaClassSimpleName(),
                 info.addType(EntityManager.class));
         out.format("        em.persist(this);\n");
+        out.format("        return this;\n");
+        out.format("    }\n\n");
+        out.println();
+        jd(out, "Same as {@code persist(Context.em())}. Returns this.", "    ");
+        out.format("    public %s persist() {\n", info.getJavaClassSimpleName(),
+                info.addType(EntityManager.class));
+        out.format("        Context.em().persist(this);\n");
         out.format("        return this;\n");
         out.format("    }\n\n");
     }
