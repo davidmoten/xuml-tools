@@ -745,9 +745,7 @@ public class ClassWriter {
     private void writeReferenceMembers(PrintStream out, ClassInfo info,
             Set<String> validationMethods) {
         for (MyReferenceMember ref : info.getReferenceMembers()) {
-            jd(out, ref.getThisMult() + " " + info.getJavaClassSimpleName() + " "
-                    + ref.getThatVerbClause() + " " + ref.getThatMult() + " "
-                    + ref.getSimpleClassName(), "    ");
+            writeReferenceJavadoc(out, info, ref);
             if (isRelationship(ref, Mult.ONE, Mult.ONE)) {
                 writeReferenceMembersOneToOne(out, info, validationMethods, ref);
             } else if (isRelationship(ref, Mult.ONE, Mult.ZERO_ONE)) {
@@ -783,6 +781,17 @@ public class ClassWriter {
                 writeManyToManyPrimarySide(out, info, ref);
             }
         }
+    }
+
+    private void writeReferenceJavadoc(PrintStream out, ClassInfo info, MyReferenceMember ref) {
+        String javadoc = getReferenceJavadoc(info, ref);
+        jd(out, javadoc, "    ");
+    }
+
+    private String getReferenceJavadoc(ClassInfo info, MyReferenceMember ref) {
+        return ref.getThisMult() + " " + info.getJavaClassSimpleName() + " "
+                + ref.getThatVerbClause() + " " + ref.getThatMult() + " "
+                + ref.getSimpleClassName();
     }
 
     private void writeReferenceMembersOneToOneMany(PrintStream out, ClassInfo info,
@@ -1250,7 +1259,7 @@ public class ClassWriter {
         out.format("    private %s %s;\n\n", info.addType(ref.getFullClassName()),
                 ref.getFieldName());
         writeGetterAndSetter(out, info, ref.getSimpleClassName(), ref.getFullClassName(),
-                ref.getFieldName(), false);
+                ref.getFieldName(), false, getReferenceJavadoc(info, ref));
         writeRelateTo(out, ref);
         writeUnrelateTo(out, ref);
     }
@@ -1267,6 +1276,7 @@ public class ClassWriter {
 
         String fieldName = ref.getFieldName();
         String mappedBy = Util.lowerFirst(ref.getMappedBy());
+        writeReferenceJavadoc(out, info, ref);
         out.format("    public %s relateAcrossR%s(%s %s) {\n", info.getJavaClassSimpleName(),
                 ref.getRnum(), info.addType(ref.getFullClassName()), fieldName);
         Mult thisMult = ref.getThisMult();
@@ -1297,6 +1307,7 @@ public class ClassWriter {
 
         String fieldName = ref.getFieldName();
         String mappedBy = Util.lowerFirst(ref.getMappedBy());
+        writeReferenceJavadoc(out, info, ref);
         out.format("    public %s unrelateAcrossR%s(%s %s) {\n", info.getJavaClassSimpleName(),
                 ref.getRnum(), info.addType(ref.getFullClassName()), fieldName);
         Mult thisMult = ref.getThisMult();
@@ -1321,18 +1332,18 @@ public class ClassWriter {
     }
 
     private void writeGetterAndSetter(PrintStream out, ClassInfo info, String simpleClassName,
-            String fullClassName, String fieldName, boolean isMultiple) {
+            String fullClassName, String fieldName, boolean isMultiple, String javadoc) {
         String type;
         if (isMultiple)
             type = info.addType(new Type(Set.class.getName(), new Type(fullClassName)));
         else
             type = info.addType(fullClassName);
         // write getter and setter
-        jd(out, "Getter.", "    ");
+        jd(out, "Getter. " + javadoc, "    ");
         out.format("    public %s get%s(){\n", type, Util.upperFirst(fieldName));
         out.format("        return %s;\n", fieldName);
         out.format("    }\n\n");
-        jd(out, "Setter.", "    ");
+        jd(out, "Setter. " + javadoc, "    ");
         out.format("    public void set%s(%s %s){\n", Util.upperFirst(fieldName), type, fieldName);
         out.format("        this.%1$s=%1$s;\n", fieldName);
         out.format("    }\n\n");
@@ -1343,7 +1354,7 @@ public class ClassWriter {
                 info.addType(new Type(Set.class.getName(), new Type(ref.getFullClassName()))),
                 ref.getFieldName(), info.addType(Sets.class));
         writeGetterAndSetter(out, info, ref.getSimpleClassName(), ref.getFullClassName(),
-                ref.getFieldName(), true);
+                ref.getFieldName(), true, getReferenceJavadoc(info, ref));
         writeRelateTo(out, ref);
         writeUnrelateTo(out, ref);
     }
