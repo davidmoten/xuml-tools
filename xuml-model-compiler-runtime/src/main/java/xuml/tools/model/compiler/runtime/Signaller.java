@@ -8,6 +8,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
@@ -23,6 +26,8 @@ import xuml.tools.model.compiler.runtime.actor.RootActor;
 import xuml.tools.model.compiler.runtime.message.Signal;
 
 public class Signaller {
+
+    private static final Logger log = LoggerFactory.getLogger(Signaller.class);
 
     private final ThreadLocal<Info> info = new ThreadLocal<Info>() {
         @Override
@@ -236,18 +241,17 @@ public class Signaller {
         return key;
     }
 
-    @SuppressWarnings({ "unchecked" })
-    public int sendSignalsInQueue() {
+    public List<QueuedSignal> queuedSignals() {
         EntityManager em = emf.createEntityManager();
         EntityTransaction tx = null;
-        List<QueuedSignal> signals;
         try {
             tx = em.getTransaction();
             tx.begin();
-            signals = em.createQuery(
-                    "select s from " + QueuedSignal.class.getSimpleName() + " s order by id")
-                    .getResultList();
+            List<QueuedSignal> signals = em.createQuery(
+                    "select s from " + QueuedSignal.class.getSimpleName() + " s order by id",
+                    QueuedSignal.class).getResultList();
             tx.commit();
+            return signals;
         } catch (RuntimeException e) {
             if (tx != null && tx.isActive())
                 tx.rollback();
@@ -255,16 +259,16 @@ public class Signaller {
         } finally {
             em.close();
         }
-        // close transaction before signalling because EntityActor will
-        // attempt to delete the QueuedSignal within its transaction
-        // processing the event
+    }
+
+    public int sendSignalsInQueue() {
+        List<QueuedSignal> signals = queuedSignals();
         for (QueuedSignal sig : signals) {
             signal(sig);
         }
         return signals.size();
     }
 
-    @SuppressWarnings({ "unchecked" })
     public long queueSize() {
         EntityManager em = emf.createEntityManager();
         EntityTransaction tx = null;
@@ -291,19 +295,18 @@ public class Signaller {
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
         System.out.println("sending " + sig);
-        Event event = (Event) Util.toObject(sig.eventContent);
+        Event<?> event = (Event<?>) Util.toObject(sig.eventContent);
         Object id = Util.toObject(sig.idContent);
         Class<?> entityClass;
         entityClass = getClassForName(sig.entityClassName);
-        Entity entity = (Entity) em.find(entityClass, id);
+        Entity<?> entity = (Entity<?>) em.find(entityClass, id);
         em.getTransaction().commit();
         em.close();
         // TODO reschedule signals
         if (entity != null) {
             signal(new Signal(sig.fromEntityUniqueId, entity, event, sig.id));
         } else
-            System.out.println(
-                    "ENTITY NOT FOUND for entityClassName=" + sig.entityClassName + ",id=" + id);
+            log.warn("ENTITY NOT FOUND for entityClassName=" + sig.entityClassName + ",id=" + id);
     }
 
     private Class<?> getClassForName(String className) {
@@ -323,6 +326,7 @@ public class Signaller {
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
         em.persist(signal);
+        log.info("persisting {}", signal);
         em.getTransaction().commit();
         em.close();
         return signal.id;

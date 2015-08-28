@@ -22,6 +22,7 @@ import xuml.tools.miuml.metamodel.jaxb.SubsystemElement;
 import xuml.tools.model.compiler.runtime.CreationEvent;
 import xuml.tools.model.compiler.runtime.Entity;
 import xuml.tools.model.compiler.runtime.Event;
+import xuml.tools.model.compiler.runtime.QueuedSignal;
 import xuml.tools.model.compiler.runtime.SignalProcessorListenerFactory;
 import xuml.tools.model.compiler.runtime.Signaller;
 
@@ -152,6 +153,10 @@ public class CodeGeneratorJava {
         out.format("    }\n\n");
         out.format("    public static long queueSize() {\n");
         out.format("        return signaller.queueSize();\n");
+        out.format("    }\n\n");
+        out.format("    public static %s<%s> queuedSignals() {\n", types.addType(List.class),
+                types.addType(QueuedSignal.class));
+        out.format("        return signaller.queuedSignals();\n");
         out.format("    }\n\n");
         out.format(
                 "    public static <T extends %s<T>> long persistSignal(String fromEntityUniqueId, Object id, Class<T> cls, %s<T> event, long time, %s<Long> repeatIntervalMs) {\n",

@@ -76,8 +76,8 @@ public class QueuedSignal {
         builder.append(entityClassName);
         builder.append(", eventClassName=");
         builder.append(eventClassName);
-        builder.append(", idContent=");
-        builder.append(Arrays.toString(idContent));
+        // builder.append(", idContent=");
+        // builder.append(Arrays.toString(idContent));
         builder.append(", eventContent=");
         builder.append(Arrays.toString(eventContent));
         builder.append(", time=");
