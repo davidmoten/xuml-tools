@@ -264,6 +264,28 @@ public class Signaller {
         return signals.size();
     }
 
+    @SuppressWarnings({ "unchecked" })
+    public long queueSize() {
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = null;
+        long count;
+        try {
+            tx = em.getTransaction();
+            tx.begin();
+            count = em.createQuery(
+                    "select count(s) from " + QueuedSignal.class.getSimpleName() + " s", Long.class)
+                    .getSingleResult();
+            tx.commit();
+            return count;
+        } catch (RuntimeException e) {
+            if (tx != null && tx.isActive())
+                tx.rollback();
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
+
     @SuppressWarnings({ "rawtypes", "unchecked" })
     private void signal(QueuedSignal sig) {
         EntityManager em = emf.createEntityManager();

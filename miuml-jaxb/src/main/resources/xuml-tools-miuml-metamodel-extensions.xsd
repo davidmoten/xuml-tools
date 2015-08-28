@@ -1,33 +1,36 @@
-<schema targetNamespace="http://org.github/xuml-tools/miuml-metamodel-extensions"
-	xmlns:xt="http://org.github/xuml-tools/miuml-metamodel-extensions"
-	xmlns="http://www.w3.org/2001/XMLSchema" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
-	jaxb:version="2.0" elementFormDefault="qualified">
+<schema targetNamespace="http://org.github/xuml-tools/miuml-metamodel-extensions" xmlns:xt="http://org.github/xuml-tools/miuml-metamodel-extensions"
+    xmlns="http://www.w3.org/2001/XMLSchema" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+    jaxb:version="2.0" elementFormDefault="qualified">
 
-	<element name="Documentation" type="xt:Documentation" />
-	<element name="Generation" type="xt:Generation" />
-	<element name="Find" type="xt:Find" />
+    <element name="Documentation" type="xt:Documentation" />
+    <element name="Generation" type="xt:Generation" />
+    <element name="Find" type="xt:Find" />
+    <element name="Optional" type="xt:Optional" />
 
 
-	<complexType name="Documentation">
-		<sequence>
-			<element name="Content" type="string" />
-			<element name="MimeType" type="string" />
-		</sequence>
-	</complexType>
+    <complexType name="Documentation">
+        <sequence>
+            <element name="Content" type="string" />
+            <element name="MimeType" type="string" />
+        </sequence>
+    </complexType>
 
-	<complexType name="Generation">
-		<attribute name="generated" type="boolean" use="optional"
-			default="false" />
-	</complexType>
+    <complexType name="Optional">
+        <attribute name="optional" type="boolean" use="optional" default="true" />
+    </complexType>
 
-	<complexType name="Find">
-		<sequence>
-			<element name="Attribute" type="xt:Attribute" maxOccurs="unbounded" />
-		</sequence>
-	</complexType>
+    <complexType name="Generation">
+        <attribute name="generated" type="boolean" use="optional" default="false" />
+    </complexType>
 
-	<complexType name="Attribute">
-		<attribute name="name" type="string" use="required"/>
-	</complexType>
+    <complexType name="Find">
+        <sequence>
+            <element name="Attribute" type="xt:Attribute" maxOccurs="unbounded" />
+        </sequence>
+    </complexType>
+
+    <complexType name="Attribute">
+        <attribute name="name" type="string" use="required" />
+    </complexType>
 
 </schema>

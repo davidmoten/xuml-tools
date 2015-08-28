@@ -150,6 +150,9 @@ public class CodeGeneratorJava {
         out.format("    public static int sendSignalsInQueue() {\n");
         out.format("        return signaller.sendSignalsInQueue();\n");
         out.format("    }\n\n");
+        out.format("    public static long queueSize() {\n");
+        out.format("        return signaller.queueSize();\n");
+        out.format("    }\n\n");
         out.format(
                 "    public static <T extends %s<T>> long persistSignal(String fromEntityUniqueId, Object id, Class<T> cls, %s<T> event, long time, %s<Long> repeatIntervalMs) {\n",
                 types.addType(Entity.class), types.addType(Event.class),
@@ -169,7 +172,11 @@ public class CodeGeneratorJava {
                 types.addType(EntityManagerFactory.class));
         out.format("        signaller = new %s(emf,listenerFactory);\n",
                 types.addType(Signaller.class), types.addType(Signaller.class));
-        for (Subsystem subsystem : domain.getSubsystem()) {
+        for (
+
+        Subsystem subsystem : domain.getSubsystem())
+
+        {
             for (JAXBElement<? extends SubsystemElement> element : subsystem
                     .getSubsystemElement()) {
                 if (element.getValue() instanceof Class) {
@@ -244,13 +251,20 @@ public class CodeGeneratorJava {
         s += bytes.toString();
 
         String filename = domainPackageName.replace(".", "/") + "/Context.java";
-        try {
+        try
+
+        {
             try (FileOutputStream fos = new FileOutputStream(new File(destination, filename))) {
                 fos.write(s.getBytes());
             }
-        } catch (IOException e) {
+        } catch (
+
+        IOException e)
+
+        {
             throw new RuntimeException(e);
         }
+
     }
 
     private static void log(String message) {

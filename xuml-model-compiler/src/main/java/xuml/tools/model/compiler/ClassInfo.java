@@ -194,6 +194,7 @@ public class ClassInfo {
         String documentationMimeType = null;
         String documentationContent = null;
         boolean generated = false;
+        boolean optional = false;
         for (Extension ext : a.getExtension()) {
             for (Object any : ext.getAny()) {
                 Object e = getJaxbElementValue(any);
@@ -204,10 +205,14 @@ public class ClassInfo {
                 } else if (e instanceof Generation) {
                     Generation g = (Generation) e;
                     generated = g.getGenerated();
+                } else if (e instanceof Optional) {
+                    xuml.tools.miuml.metamodel.extensions.jaxb.Optional o = (xuml.tools.miuml.metamodel.extensions.jaxb.Optional) e;
+                    optional = o.getOptional();
                 }
             }
         }
-        return new MyAttributeExtensions(generated, documentationMimeType, documentationContent);
+        return new MyAttributeExtensions(generated, documentationMimeType, documentationContent,
+                optional);
     }
 
     private Object getJaxbElementValue(Object any) {
@@ -381,8 +386,13 @@ public class ClassInfo {
             if (a.getName().equals(attribute.getName()))
                 inIdentifier = true;
         }
-        boolean isNullable = !inIdentifier;
         MyAttributeExtensions extensions = getAttributeExtensions(a);
+        final boolean isNullable;
+        if (inIdentifier)
+            isNullable = false;
+        else
+            isNullable = extensions.isOptional();
+
         return new MyIndependentAttribute(a.getName(), getFieldName(a.getName()),
                 nameManager.toColumnName(cls.getName(), a.getName()),
                 getTypeDefinition(a.getType()), isNullable, "description", extensions);
