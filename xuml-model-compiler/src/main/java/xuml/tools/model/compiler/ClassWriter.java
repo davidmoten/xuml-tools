@@ -15,6 +15,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
+import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
@@ -1700,8 +1701,12 @@ public class ClassWriter {
         boolean isLong = type.getMyType().equals(MyType.STRING)
                 && type.getMaxLength().compareTo(BigInteger.valueOf(MAX_VARCHAR_LENGTH)) > 0;
         if ((type.getMyType().equals(MyType.STRING) && isLong)
-                || (type.getMyType().equals(MyType.BYTES)))
+                || (type.getMyType().equals(MyType.BYTES))) {
             out.format("%s@%s\n", indent, info.addType(Lob.class));
+            out.format("%s@%s(fetch=%s.LAZY)\n", indent, info.addType(Basic.class),
+                    info.addType(FetchType.class));
+
+        }
         if (type.getMyType().equals(MyType.STRING) && !isLong)
             length = ",length=" + type.getMaxLength();
         else

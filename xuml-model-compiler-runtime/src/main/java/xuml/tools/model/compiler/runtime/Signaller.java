@@ -199,7 +199,7 @@ public class Signaller {
         cancelSignal(fromEntityUniqueId, entity.uniqueId(), eventSignatureKey);
     }
 
-    private <T> void signal(Signal<T> signal) {
+    <T> void signal(Signal<T> signal) {
         if (signalInitiatedFromEvent()) {
             info.get().getCurrentEntity().helper().queueSignal(signal);
         } else {
@@ -326,9 +326,9 @@ public class Signaller {
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
         em.persist(signal);
-        log.info("persisting {}", signal);
         em.getTransaction().commit();
         em.close();
+        log.info("persisted {}", signal);
         return signal.id;
     }
 

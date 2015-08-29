@@ -59,7 +59,13 @@ public class EntityActor extends UntypedActor {
                 tx = em.getTransaction();
                 tx.begin();
                 log.info("started transaction");
-                entity = em.merge(signal.getEntity());
+                Entity<?> en;
+                synchronized (signal) {
+                    // because signal is not an immutable object make sure we
+                    // have its latest values
+                    en = signal.getEntity();
+                }
+                entity = em.merge(en);
                 log.info("merged");
                 em.refresh(entity);
                 log.info("calling event " + signal.getEvent().getClass().getSimpleName()
@@ -69,23 +75,32 @@ public class EntityActor extends UntypedActor {
                 entity.helper().setEntityManager(em);
                 log.info("removing signal from persistence signalId={}, entityId={}",
                         signal.getId(), signal.getEntity().getId());
-                em.createQuery(
-                        "delete from " + QueuedSignal.class.getSimpleName() + " where id=:id")
+                int countDeleted = em
+                        .createQuery("delete from " + QueuedSignal.class.getSimpleName()
+                                + " where id=:id")
                         .setParameter("id", signal.getId()).executeUpdate();
+                if (countDeleted == 0)
+                    throw new RuntimeException("queued signal not deleted: " + signal.getId());
                 tx.commit();
-                log.info("commited");
+                log.info("committed");
                 listener.afterProcessing(signal, this);
                 em.close();
+                entity.helper().setEntityManager(null);
                 // only after successful commit do we send the signals to other
                 // entities made during onEntry procedure.
                 entity.helper().sendQueuedSignals();
                 closed = true;
             } catch (RuntimeException e) {
-                if (tx != null && tx.isActive())
-                    tx.rollback();
-                if (em != null && em.isOpen())
-                    em.close();
-                listener.failure(signal, e, this);
+                try {
+                    if (tx != null && tx.isActive())
+                        tx.rollback();
+                    if (em != null && em.isOpen())
+                        em.close();
+                    listener.failure(signal, e, this);
+                } catch (RuntimeException e2) {
+                    log.error(e2.getMessage(), e2);
+                    throw e;
+                }
             } finally {
                 getSender().tell(new CloseEntityActor(signal.getEntity()), getSelf());
             }

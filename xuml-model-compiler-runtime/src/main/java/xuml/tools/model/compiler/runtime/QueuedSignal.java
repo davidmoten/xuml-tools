@@ -1,6 +1,5 @@
 package xuml.tools.model.compiler.runtime;
 
-import java.util.Arrays;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -76,10 +75,10 @@ public class QueuedSignal {
         builder.append(entityClassName);
         builder.append(", eventClassName=");
         builder.append(eventClassName);
-        // builder.append(", idContent=");
-        // builder.append(Arrays.toString(idContent));
-        builder.append(", eventContent=");
-        builder.append(Arrays.toString(eventContent));
+        builder.append(", idContentSize=");
+        builder.append(idContent.length);
+        builder.append(", eventContentSize=");
+        builder.append(eventContent.length);
         builder.append(", time=");
         builder.append(time);
         builder.append(", repeatIntervalMs=");
