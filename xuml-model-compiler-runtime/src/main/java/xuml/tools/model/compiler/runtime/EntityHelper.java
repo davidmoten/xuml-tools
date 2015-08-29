@@ -64,17 +64,9 @@ public class EntityHelper {
         signalsToOther.add(signal);
     }
 
-    // use synchronized to ensure that other threads will be able to see
-    // (store/load barrier)
     public void sendQueuedSignals() {
         for (Signal signal : signalsToOther) {
-            Entity en;
-            synchronized (signal.getEntity()) {
-                en = signal.getEntity();
-            }
-            // signaller.signal(signal.getFromEntityUniqueId(), en,
-            // signal.getEvent(),
-            // signal.getTime(), signal.getRepeatInterval());
+            // signal has already been persisted so can send it
             signaller.signal(signal);
         }
     }
