@@ -100,8 +100,6 @@ public class SelectBuilder<T extends Entity<T>> {
         Preconditions.checkNotNull(em, "entity manager is null!");
         ClauseAndParameters c = getClauseAndParameters();
         String sql = getSql(entityClass, c.clause);
-        System.out.println(sql);
-        System.out.println(c.parameters);
         TypedQuery<T> query = em.createQuery(sql, entityClass);
         for (Entry<String, Object> p : c.parameters.entrySet())
             query = query.setParameter(p.getKey(), p.getValue());

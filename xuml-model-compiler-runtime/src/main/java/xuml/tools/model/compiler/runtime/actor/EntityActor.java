@@ -28,7 +28,7 @@ public class EntityActor extends UntypedActor {
 
     @Override
     public void onReceive(Object message) throws Exception {
-        log.info("received message " + message.getClass().getName());
+        log.debug("received message {}", message.getClass().getName());
         if (message instanceof EntityManagerFactory)
             handleMessage((EntityManagerFactory) message);
         else if (message instanceof SignalProcessorListener)
@@ -58,7 +58,7 @@ public class EntityActor extends UntypedActor {
                 em = emf.createEntityManager();
                 tx = em.getTransaction();
                 tx.begin();
-                log.info("started transaction");
+                log.debug("started transaction");
                 Entity<?> en;
                 synchronized (signal) {
                     // because signal is not an immutable object make sure we
@@ -66,14 +66,14 @@ public class EntityActor extends UntypedActor {
                     en = signal.getEntity();
                 }
                 entity = em.merge(en);
-                log.info("merged");
+                log.debug("merged");
                 em.refresh(entity);
-                log.info("calling event " + signal.getEvent().getClass().getSimpleName()
-                        + " on entity id = " + signal.getEntity().getId());
+                log.debug("calling event {} on entity id = ",
+                        signal.getEvent().getClass().getSimpleName(), signal.getEntity().getId());
                 entity.helper().setEntityManager(em);
                 entity.event(signal.getEvent());
                 entity.helper().setEntityManager(em);
-                log.info("removing signal from persistence signalId={}, entityId={}",
+                log.debug("removing signal from persistence signalId={}, entityId={}",
                         signal.getId(), signal.getEntity().getId());
                 int countDeleted = em
                         .createQuery("delete from " + QueuedSignal.class.getSimpleName()
@@ -82,7 +82,7 @@ public class EntityActor extends UntypedActor {
                 if (countDeleted == 0)
                     throw new RuntimeException("queued signal not deleted: " + signal.getId());
                 tx.commit();
-                log.info("committed");
+                log.debug("committed");
                 listener.afterProcessing(signal, this);
                 em.close();
                 entity.helper().setEntityManager(null);

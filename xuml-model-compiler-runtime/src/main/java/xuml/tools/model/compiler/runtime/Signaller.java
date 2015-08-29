@@ -294,7 +294,7 @@ public class Signaller {
     private void signal(QueuedSignal sig) {
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
-        System.out.println("sending " + sig);
+        log.debug("sending {}", sig);
         Event<?> event = (Event<?>) Util.toObject(sig.eventContent);
         Object id = Util.toObject(sig.idContent);
         Class<?> entityClass;
@@ -328,7 +328,7 @@ public class Signaller {
         em.persist(signal);
         em.getTransaction().commit();
         em.close();
-        log.info("persisted {}", signal);
+        log.trace("persisted {}", signal);
         return signal.id;
     }
 
