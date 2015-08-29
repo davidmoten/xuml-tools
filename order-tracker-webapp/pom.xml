@@ -10,9 +10,9 @@
     <description>Web application for order-tracker using REST API</description>
     <packaging>war</packaging>
     <properties>
-        <jetty.plugin.version>9.2.5.v20141112</jetty.plugin.version>
+        <jetty.plugin.version>9.3.2.v20150730</jetty.plugin.version>
         <jetty.stop.port>8079</jetty.stop.port>
-        <jersey.version>2.13</jersey.version>
+        <jersey.version>2.21</jersey.version>
     </properties>
     <dependencies>
         <dependency>
@@ -91,6 +91,7 @@
             <plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-deploy-plugin</artifactId>
+                <version>2.8.2</version>
 				<configuration>
 					<skip>true</skip>
 				</configuration>
