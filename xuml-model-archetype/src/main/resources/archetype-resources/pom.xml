@@ -27,6 +27,8 @@
             <version>${xuml.tools.version}</version>
             <type>pom</type>
         </dependency>
+
+        <!-- test dependencies -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
@@ -43,6 +45,12 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.davidmoten</groupId>
+            <artifactId>xuml-model-compiler</artifactId>
+            <version>${xuml.tools.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
