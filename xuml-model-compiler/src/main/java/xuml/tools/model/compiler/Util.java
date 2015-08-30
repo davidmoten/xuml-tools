@@ -1,6 +1,10 @@
 package xuml.tools.model.compiler;
 
+import java.util.regex.Pattern;
+
 import javax.xml.bind.JAXBElement;
+
+import com.google.common.annotations.VisibleForTesting;
 
 import xuml.tools.miuml.metamodel.jaxb.Domain;
 import xuml.tools.miuml.metamodel.jaxb.Domains;
@@ -68,10 +72,15 @@ public class Util {
         return s.toString();
     }
 
+    @VisibleForTesting
+    static boolean isLettersAndDigits(String s) {
+        return Pattern.compile("[0-9a-zA-Z]*").matcher(s).matches();
+    }
+
     public static String camelCaseToLowerUnderscore(String s) {
-        // if (s.toUpperCase().equals(s)) {
-        // return s.toLowerCase();
-        // }
+        if (s.toUpperCase().equals(s) && isLettersAndDigits(s)) {
+            return s.toLowerCase();
+        }
 
         StringBuilder b = new StringBuilder();
         b.append(s.charAt(0));
