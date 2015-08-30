@@ -1939,10 +1939,7 @@ public class ClassWriter {
             writeQueryField(out, info, type, fieldName, fieldNameInQuery);
         }
         for (MyReferenceMember member : info.getReferenceMembers()) {
-            if (member.getSimpleClassName().equals("Contact"))
-                System.out.println("boo");
             writeQueryReferenceField(out, info, member);
-
         }
         out.format("    }\n\n");
         out.format("    public static %s<%s> select(%s<%s> where) {\n",
