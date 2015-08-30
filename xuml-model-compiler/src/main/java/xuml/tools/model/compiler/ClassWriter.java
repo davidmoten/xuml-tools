@@ -1930,10 +1930,17 @@ public class ClassWriter {
         for (MyIdAttribute member : info.getPrimaryIdAttributeMembers()) {
             MyType type = member.getType().getMyType();
             String fieldName = member.getFieldName();
-            String fieldNameInQuery = "id." + fieldName;
+            String fieldNameInQuery;
+            if (hasEmbeddedId()) {
+                fieldNameInQuery = "id." + fieldName;
+            } else {
+                fieldNameInQuery = fieldName;
+            }
             writeQueryField(out, info, type, fieldName, fieldNameInQuery);
         }
         for (MyReferenceMember member : info.getReferenceMembers()) {
+            if (member.getSimpleClassName().equals("Contact"))
+                System.out.println("boo");
             writeQueryReferenceField(out, info, member);
 
         }
