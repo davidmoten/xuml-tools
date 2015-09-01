@@ -1770,7 +1770,8 @@ public class ClassWriter {
         if (doco == null)
             return "";
         else {
-            if (doco.endsWith("."))
+            doco = doco.trim();
+            if (doco.endsWith(".") || doco.endsWith("?") || doco.endsWith("!"))
                 return doco;
             else
                 return doco.concat(".");
