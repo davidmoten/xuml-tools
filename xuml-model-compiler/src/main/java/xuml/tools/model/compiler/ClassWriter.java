@@ -233,9 +233,8 @@ public class ClassWriter {
         } else
             extension = "";
 
-        out.format("public final class %s%s implements %s<%1$s> {\n\n",
-                info.getJavaClassSimpleName(), extension,
-                info.addType(xuml.tools.model.compiler.runtime.Entity.class));
+        out.format("public class %s%s implements %s<%1$s> {\n\n", info.getJavaClassSimpleName(),
+                extension, info.addType(xuml.tools.model.compiler.runtime.Entity.class));
     }
 
     private Type getIdType(ClassInfo info) {
@@ -1740,7 +1739,8 @@ public class ClassWriter {
     private void writeIndependentAttributeGetterAndSetter(PrintStream out,
             MyIndependentAttribute attribute) {
         String type = info.addType(attribute.getType().getType());
-        jd(out, "Returns " + attribute.getFieldName() + ".", "    ");
+        String doco = getDocumentation(attribute);
+        jd(out, "Returns " + attribute.getFieldName() + ". " + doco, "    ");
         if (attribute.getFieldName().equals("id")) {
             info.addType(Override.class);
             out.format("    @Override\n");
@@ -1749,7 +1749,7 @@ public class ClassWriter {
         out.format("        return %s;\n", attribute.getFieldName());
         out.format("    }\n\n");
 
-        jd(out, "Sets " + attribute.getFieldName() + " to the given value.", "    ");
+        jd(out, "Sets " + attribute.getFieldName() + " to the given value. " + doco, "    ");
         out.format("    public void set%s(%s %s){\n", Util.upperFirst(attribute.getFieldName()),
                 type, attribute.getFieldName());
         out.format("        this.%1$s=%1$s;\n", attribute.getFieldName());
@@ -1763,6 +1763,18 @@ public class ClassWriter {
                 attribute.getFieldName());
         out.format("        return this;\n");
         out.format("    }\n\n");
+    }
+
+    private static String getDocumentation(MyIndependentAttribute attribute) {
+        String doco = attribute.getExtensions().getDocumentationContent();
+        if (doco == null)
+            return "";
+        else {
+            if (doco.endsWith("."))
+                return doco;
+            else
+                return doco.concat(".");
+        }
     }
 
     private void writeStaticFinderMethods(PrintStream out, ClassInfo info) {

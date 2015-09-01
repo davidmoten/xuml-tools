@@ -65,6 +65,7 @@ import xuml.tools.miuml.metamodel.jaxb.SymbolicType;
 import xuml.tools.miuml.metamodel.jaxb.SymmetricPerspective;
 import xuml.tools.miuml.metamodel.jaxb.Transition;
 import xuml.tools.miuml.metamodel.jaxb.UnaryAssociation;
+import xuml.tools.model.compiler.info.ClassExtensions;
 import xuml.tools.model.compiler.info.Mult;
 import xuml.tools.model.compiler.info.MyAttributeExtensions;
 import xuml.tools.model.compiler.info.MyEvent;
@@ -91,7 +92,6 @@ public class ClassInfo {
 
     private final Class cls;
     private final String packageName;
-    private final String classDescription;
     private final String schema;
     private final TypeRegister typeRegister = new TypeRegister();
     private final Lookups lookups;
@@ -108,12 +108,11 @@ public class ClassInfo {
      * @param schema
      * @param lookups
      */
-    public ClassInfo(NameManager nameManager, Class cls, String packageName,
-            String classDescription, String schema, Lookups lookups) {
+    public ClassInfo(NameManager nameManager, Class cls, String packageName, String schema,
+            Lookups lookups) {
         this.nameManager = nameManager;
         this.cls = cls;
         this.packageName = packageName;
-        this.classDescription = classDescription;
         this.schema = schema;
         this.lookups = lookups;
     }
@@ -133,7 +132,11 @@ public class ClassInfo {
      * @return
      */
     String getClassDescription() {
-        return classDescription;
+        ClassExtensions x = getClassExtensions();
+        if (x.getDocumentationContent().isPresent())
+            return x.getDocumentationContent().get();
+        else
+            return "";
     }
 
     /**
@@ -213,6 +216,23 @@ public class ClassInfo {
         }
         return new MyAttributeExtensions(generated, documentationMimeType, documentationContent,
                 optional);
+    }
+
+    public ClassExtensions getClassExtensions() {
+        String documentationContent = null;
+        String documentationMimeType = null;
+        for (Extension ext : cls.getExtension()) {
+            for (Object any : ext.getAny()) {
+                Object e = getJaxbElementValue(any);
+                if (e instanceof Documentation) {
+                    Documentation doco = (Documentation) e;
+                    documentationMimeType = doco.getMimeType();
+                    documentationContent = doco.getContent();
+                }
+            }
+        }
+        return new ClassExtensions(Optional.fromNullable(documentationContent),
+                Optional.fromNullable(documentationMimeType));
     }
 
     private Object getJaxbElementValue(Object any) {
@@ -348,7 +368,7 @@ public class ClassInfo {
 
     private ClassInfo getClassInfo(String otherClassName) {
         ClassInfo otherInfo = new ClassInfo(nameManager, lookups.getClassByName(otherClassName),
-                packageName, "unknown", schema, lookups);
+                packageName, schema, lookups);
         return otherInfo;
     }
 

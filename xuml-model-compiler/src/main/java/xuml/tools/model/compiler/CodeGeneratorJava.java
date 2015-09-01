@@ -285,8 +285,7 @@ public class CodeGeneratorJava {
 
     private ClassInfo createClassInfo(Class cls) {
         Lookups lookups = new Lookups(domains, domain);
-        return new ClassInfo(nameManager, cls, domainPackageName, "description", domainSchema,
-                lookups);
+        return new ClassInfo(nameManager, cls, domainPackageName, domainSchema, lookups);
     }
 
     private String getClassJavaSimpleName(Class cls) {

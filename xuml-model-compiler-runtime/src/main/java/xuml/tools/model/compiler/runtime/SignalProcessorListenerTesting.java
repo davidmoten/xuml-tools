@@ -9,7 +9,13 @@ import org.slf4j.LoggerFactory;
 import xuml.tools.model.compiler.runtime.actor.EntityActor;
 import xuml.tools.model.compiler.runtime.message.Signal;
 
-public class SignalProcessorListenerTesting implements SignalProcessorListener {
+public final class SignalProcessorListenerTesting implements SignalProcessorListener {
+
+    private static final SignalProcessorListenerTesting INSTANCE = new SignalProcessorListenerTesting();
+
+    public static SignalProcessorListenerTesting instance() {
+        return INSTANCE;
+    }
 
     private final List<Exception> exceptions = new CopyOnWriteArrayList<>();
 
@@ -35,6 +41,10 @@ public class SignalProcessorListenerTesting implements SignalProcessorListener {
 
     public List<Exception> exceptions() {
         return exceptions;
+    }
+
+    public void clear() {
+        exceptions.clear();
     }
 
 }
