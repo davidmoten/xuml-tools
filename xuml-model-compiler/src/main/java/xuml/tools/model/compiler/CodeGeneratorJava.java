@@ -105,6 +105,7 @@ public class CodeGeneratorJava {
     }
 
     private static void createStateMachineTables(List<Class> classes, File file) {
+        file.getParentFile().mkdirs();
         try (PrintStream out = new PrintStream(file)) {
             out.println("<html>");
             out.println("<head>");
@@ -126,6 +127,8 @@ public class CodeGeneratorJava {
     }
 
     private static void createStateMachineTable(Class cls, PrintStream out) {
+        if (cls.getLifecycle() == null)
+            return;
         List<String> states = cls.getLifecycle().getState().stream().map(state -> state.getName())
                 .sorted().collect(Collectors.toList());
         out.println();
