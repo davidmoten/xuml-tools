@@ -2,10 +2,14 @@ package xuml.tools.model.compiler;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.math.BigInteger;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -17,6 +21,7 @@ import com.google.common.collect.Lists;
 
 import xuml.tools.miuml.metamodel.jaxb.Class;
 import xuml.tools.miuml.metamodel.jaxb.Domains;
+import xuml.tools.miuml.metamodel.jaxb.LocalEffectiveSignalingEvent;
 import xuml.tools.miuml.metamodel.jaxb.ModeledDomain;
 import xuml.tools.miuml.metamodel.jaxb.Subsystem;
 import xuml.tools.miuml.metamodel.jaxb.SubsystemElement;
@@ -77,77 +82,6 @@ public class CodeGeneratorJava {
         return new Builder();
     }
 
-    public static class Builder {
-        private String domainName;
-        private String domainPackageName;
-        private String domainSchema;
-        private Domains domains;
-        private File resourcesDirectory;
-        private boolean generatePersistenceXml;
-        private File entitySourceDirectory;
-        private final String implementationPackageName = "not used yet";
-        private File implementationSourceDirectory;
-        private final boolean overwriteImplementation = false;
-
-        private Builder() {
-
-        }
-
-        public Builder domains(Domains domains) {
-            this.domains = domains;
-            return this;
-        }
-
-        public Builder domainName(String domainName) {
-            this.domainName = domainName;
-            return this;
-        }
-
-        public Builder domainSchema(String domainSchema) {
-            this.domainSchema = domainSchema;
-            return this;
-        }
-
-        public Builder domainPackageName(String packageName) {
-            this.domainPackageName = packageName;
-            return this;
-        }
-
-        public Builder generatedResourcesDirectory(File directory) {
-            this.resourcesDirectory = directory;
-            return this;
-        }
-
-        public Builder generatedResourcesDirectory(String directory) {
-            this.resourcesDirectory = new File(directory);
-            return this;
-        }
-
-        public Builder generatePersistenceXml(boolean generate) {
-            this.generatePersistenceXml = generate;
-            return this;
-        }
-
-        public Builder generatedSourcesDirectory(File directory) {
-            this.entitySourceDirectory = directory;
-            return this;
-        }
-
-        public Builder generatedSourcesDirectory(String directory) {
-            this.entitySourceDirectory = new File(directory);
-            return this;
-        }
-
-        public CodeGeneratorJava build() {
-            if (implementationSourceDirectory == null)
-                implementationSourceDirectory = entitySourceDirectory;
-            return new CodeGeneratorJava(domains, domainName, domainPackageName, domainSchema,
-                    entitySourceDirectory, resourcesDirectory, implementationPackageName,
-                    implementationSourceDirectory, generatePersistenceXml, overwriteImplementation);
-        }
-
-    }
-
     public void generate() {
         generateEntitySources();
     }
@@ -162,10 +96,77 @@ public class CodeGeneratorJava {
             // implementationSourceDirectory,
             // lookups);
         }
+        createStateMachineTables(getClasses(md),
+                new File(resourcesDirectory, "state-transitions.html"));
         if (generatePersistenceXml)
             createPersistenceXml(domain, new File(resourcesDirectory, "META-INF/persistence.xml"));
         createContext(domain, entitySourceDirectory, lookups);
         log("finished generation");
+    }
+
+    private static void createStateMachineTables(List<Class> classes, File file) {
+        try (PrintStream out = new PrintStream(file)) {
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<style>");
+            out.println("table, th, td {\n" + "    border: 1px solid black;\n"
+                    + "    border-collapse: collapse;\n" + "}\n" + "th, td {\n"
+                    + "    padding: 15px;\n" + "}");
+            out.println("</style>");
+            out.println("</head>");
+            out.println("<body>");
+            for (Class cls : classes) {
+                createStateMachineTable(cls, out);
+            }
+            out.println("</body>");
+            out.println("</html>");
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static void createStateMachineTable(Class cls, PrintStream out) {
+        List<String> states = cls.getLifecycle().getState().stream().map(state -> state.getName())
+                .sorted().collect(Collectors.toList());
+        out.println();
+        out.format("<h3>%s</h3>\n", cls.getName());
+        out.format("<table>\n");
+        out.format("<tr><th></th>%s</tr>",
+                states.stream().map(s -> "<th>" + s + "</th>").collect(Collectors.joining()));
+        for (String state1 : states) {
+            out.format("<tr><th>%s</th>", state1);
+            for (String state2 : states) {
+                String eventNames = cls.getLifecycle().getTransition().stream()
+                        .filter(t -> t.getState().equals(state1)
+                                && t.getDestination().equals(state2))
+                        .map(t -> t.getEventID()).map(eventId -> eventName(cls, eventId))
+                        .collect(Collectors.joining("<br/>"));
+                out.format("<td>%s</td>", eventNames);
+            }
+            out.println("</tr>");
+        }
+        out.println("</table>");
+    }
+
+    private static String eventName(Class cls, BigInteger eventId) {
+        return cls.getLifecycle().getEvent().stream().flatMap(event -> {
+            if (event.getValue() instanceof xuml.tools.miuml.metamodel.jaxb.CreationEvent) {
+                xuml.tools.miuml.metamodel.jaxb.CreationEvent creation = (xuml.tools.miuml.metamodel.jaxb.CreationEvent) event
+                        .getValue();
+                if (creation.getID().equals(eventId))
+                    return Stream.of(creation.getName());
+                else
+                    return Stream.empty();
+            } else if (event.getValue() instanceof LocalEffectiveSignalingEvent) {
+                LocalEffectiveSignalingEvent local = (LocalEffectiveSignalingEvent) event
+                        .getValue();
+                if (local.getID().equals(eventId))
+                    return Stream.of(local.getName());
+                else
+                    return Stream.empty();
+            } else
+                return Stream.empty();
+        }).findAny().orElseThrow(RuntimeException::new);
     }
 
     private void createImplementationJavaSource(Class cls, File destination, Lookups lookups) {
@@ -208,6 +209,7 @@ public class CodeGeneratorJava {
             ClassInfo info = createClassInfo(cls);
             classes.add(info.getClassFullName());
         }
+        classes.add(QueuedSignal.class.getName());
         String xml = new PersistenceXmlWriter().generate(classes);
         return xml;
     }
@@ -405,6 +407,77 @@ public class CodeGeneratorJava {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static class Builder {
+        private String domainName;
+        private String domainPackageName;
+        private String domainSchema;
+        private Domains domains;
+        private File resourcesDirectory;
+        private boolean generatePersistenceXml;
+        private File entitySourceDirectory;
+        private final String implementationPackageName = "not used yet";
+        private File implementationSourceDirectory;
+        private final boolean overwriteImplementation = false;
+
+        private Builder() {
+
+        }
+
+        public Builder domains(Domains domains) {
+            this.domains = domains;
+            return this;
+        }
+
+        public Builder domainName(String domainName) {
+            this.domainName = domainName;
+            return this;
+        }
+
+        public Builder domainSchema(String domainSchema) {
+            this.domainSchema = domainSchema;
+            return this;
+        }
+
+        public Builder domainPackageName(String packageName) {
+            this.domainPackageName = packageName;
+            return this;
+        }
+
+        public Builder generatedResourcesDirectory(File directory) {
+            this.resourcesDirectory = directory;
+            return this;
+        }
+
+        public Builder generatedResourcesDirectory(String directory) {
+            this.resourcesDirectory = new File(directory);
+            return this;
+        }
+
+        public Builder generatePersistenceXml(boolean generate) {
+            this.generatePersistenceXml = generate;
+            return this;
+        }
+
+        public Builder generatedSourcesDirectory(File directory) {
+            this.entitySourceDirectory = directory;
+            return this;
+        }
+
+        public Builder generatedSourcesDirectory(String directory) {
+            this.entitySourceDirectory = new File(directory);
+            return this;
+        }
+
+        public CodeGeneratorJava build() {
+            if (implementationSourceDirectory == null)
+                implementationSourceDirectory = entitySourceDirectory;
+            return new CodeGeneratorJava(domains, domainName, domainPackageName, domainSchema,
+                    entitySourceDirectory, resourcesDirectory, implementationPackageName,
+                    implementationSourceDirectory, generatePersistenceXml, overwriteImplementation);
+        }
+
     }
 
 }
