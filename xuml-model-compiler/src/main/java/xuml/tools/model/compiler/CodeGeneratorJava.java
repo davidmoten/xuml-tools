@@ -250,15 +250,17 @@ public class CodeGeneratorJava {
         out.format(
                 "        return signaller.persistSignal(fromEntityUniqueId, id,cls,event,time,repeatIntervalMs);\n");
         out.format("    }\n\n");
-        out.format("    public static void stop() {\n");
-        out.format("        signaller.stop();\n");
+        out.format("    public synchronized static void stop() {\n");
+        out.format("        if (signaller != null) {\n");
+        out.format("            signaller.stop();\n");
+        out.format("        }\n");
         out.format("    }\n\n");
         out.format("    public static <T extends %s<T>> T create(%s<T> cls, %s<T> event) {\n",
                 types.addType(Entity.class), types.addType(java.lang.Class.class),
                 types.addType(CreationEvent.class));
         out.format("        return signaller.create(cls,event);\n");
         out.format("    }\n\n");
-        out.format("    public static void setEntityManagerFactory(%s emf) {\n",
+        out.format("    public synchronized static void setEntityManagerFactory(%s emf) {\n",
                 types.addType(EntityManagerFactory.class));
         out.format("        signaller = new %s(emf,listenerFactory);\n",
                 types.addType(Signaller.class), types.addType(Signaller.class));
@@ -296,8 +298,11 @@ public class CodeGeneratorJava {
                 types.addType(EntityManager.class));
         out.format("        return signaller.getEntityManagerFactory().createEntityManager();\n");
         out.format("    }\n\n");
-        out.format("    public static void close() {\n");
-        out.format("        signaller.close();\n");
+        out.format("    public synchronized static void close() {\n");
+        out.format("        if (signaller != null) {\n");
+        out.format("            signaller.close();\n");
+        out.format("            signaller = null;\n");
+        out.format("        }\n");
         out.format("    }\n\n");
 
         out.format("    public static <T extends %s<T>> T remove(T entity) {\n",
