@@ -3,10 +3,8 @@ CanvasRenderingContext2D.prototype.dashedLineTo = function(fromX, fromY, toX,
 	// Our growth rate for our line can be one of the following:
 	// (+,+), (+,-), (-,+), (-,-)
 	// Because of this, our algorithm needs to understand if the x-coord
-	// and
-	// y-coord should be getting smaller or larger and properly cap the
-	// values
-	// based on (x,y).
+	// and y-coord should be getting smaller or larger and properly cap the
+	// values based on (x,y).
 	var lt = function(a, b) {
 		return a <= b;
 	};
@@ -422,14 +420,67 @@ function paintRelationshipLineWithArrow(ctx,p1,p2,angle,arrowSize,mult) {
 	paintArrowMany(ctx,p1,p2,25,10,doubleHead,filled);
 }
 
+function getKey(rel) {
+    var className1 = rel.attr("className1");
+    var className2 = rel.attr("className2");
+    var key;
+    if (className1 < className2) 
+        key = className1 + ":" + className2;
+    else 
+        key = className2 + ":" + className1;
+    return key;
+}
+
 function paintRelationships(c, ctx) {
+
+    //count the number of relationships between each pair of classes
+    //so we can offset them a bit when drawing
+    var relationshipCounts = {};
+    var relationshipIndex = {};
+    $(".relationship").each(function() {
+		var rel = $(this);
+        var relationshipId = rel.attr("id");
+        var key = getKey(rel);
+        var v;
+        if (key in relationshipCounts) {
+            v = relationshipCounts[key] + 1;
+        } else {
+            v = 1;
+        }
+        relationshipCounts[key] = v + 0;
+        relationshipIndex[relationshipId] = v + 0;
+    });
 	$(".relationship").each(function() {
 		var rel = $(this);
+        var relationshipId = rel.attr("id");
 		var w1 = $("#" + rel.attr("className1"));
 		var w2 = $("#" + rel.attr("className2"));
 		console.log("relationship="+ rel.attr("className1") + " - " + rel.attr("className2"));
-		var middle1 = middle(w1);
+        var key = getKey(rel);
+        
+        var middle1 = middle(w1);
 		var middle2 = middle(w2);
+
+        // one based index
+        var n = relationshipIndex[relationshipId];
+        // of this many
+        var relCount = relationshipCounts[key];
+        var spacing = 160;
+        var d;
+        if (relCount==1)
+            d = 0;
+        else 
+            d = (n - (relCount-1)/2.0 - 1) * spacing;
+console.log("rel" + relationshipId + " d=" + d + ", relCount=" + relCount + ", n = " + n +", key=" + key);
+        var a = middle2.left - middle1.left;
+        var b = middle1.top - middle2.top;
+        var dist = Math.sqrt(a * a + b * b);
+        if (dist == 0) dist = 0.001;
+        middle1.left -= Math.round(d * b / dist);
+        middle1.top -= Math.round(d * a / dist);
+        middle2.left -= Math.round(d * b / dist);
+        middle2.top -= Math.round(d * a / dist);
+
 		var mid = midpoint(middle1, middle2);
 		var i1 = elementBorderIntersection(mid, w1);
 		var i2 = elementBorderIntersection(mid, w2);
