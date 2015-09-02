@@ -118,6 +118,11 @@ public class CodeGeneratorJava {
             return this;
         }
 
+        public Builder generatedResourcesDirectory(String directory) {
+            this.resourcesDirectory = new File(directory);
+            return this;
+        }
+
         public Builder generatePersistenceXml(boolean generate) {
             this.generatePersistenceXml = generate;
             return this;
@@ -125,6 +130,11 @@ public class CodeGeneratorJava {
 
         public Builder generatedSourcesDirectory(File directory) {
             this.entitySourceDirectory = directory;
+            return this;
+        }
+
+        public Builder generatedSourcesDirectory(String directory) {
+            this.entitySourceDirectory = new File(directory);
             return this;
         }
 
