@@ -47,10 +47,10 @@ public class EntityHelper {
         // instance is being used to refer to a database entity at any given
         // time.
         boolean isSignalToSelf = entity == info.getCurrentEntity();
-        if (isSignalToSelf)
+        if (isSignalToSelf && (!delay.isPresent() || delay.get().toMillis() == 0)) {
             // delay is ignored signals to self
             stack.peek().getEventsToSelf().add(event);
-        else {
+        } else {
             String fromEntityUniqueId;
             if (info.getCurrentEntity() == null)
                 fromEntityUniqueId = "Unknown";
