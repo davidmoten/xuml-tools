@@ -11,7 +11,7 @@ xuml-tools
 
 The primary inspiration for this project is  [*Executable UML - A Foundation for Model Driven Architecture*](http://www.executableumlbook.com/) by Mellor &amp; Balcer.
 
-*24 November 2014*: active on this at the moment and documenting, so setting at *pre-alpha* till Jan 2015.
+*2 September 2015*: active on this at the moment and documenting, so setting at *pre-alpha* till Nov 2015.
 
 Status: *pre-alpha*
 
