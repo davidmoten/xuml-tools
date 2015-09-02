@@ -129,7 +129,7 @@ public class CodeGeneratorJava {
         List<String> states = cls.getLifecycle().getState().stream().map(state -> state.getName())
                 .sorted().collect(Collectors.toList());
         out.println();
-        out.format("<h3>%s</h3>\n", cls.getName());
+        out.format("<h2>%s</h2>\n", cls.getName());
         out.format("<table>\n");
         out.format("<tr><th></th>%s</tr>",
                 states.stream().map(s -> "<th>" + s + "</th>").collect(Collectors.joining()));
