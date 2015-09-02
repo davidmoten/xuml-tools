@@ -12,6 +12,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.xml.bind.JAXBElement;
 
 import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
 import xuml.tools.miuml.metamodel.jaxb.Class;
@@ -50,6 +51,15 @@ public class CodeGeneratorJava {
             String domainSchema, File entitySourceDirectory, File resourcesDirectory,
             String implementationPackageName, File implementationSourceDirectory,
             boolean generatePersistenceXml, boolean overwriteImplementation) {
+        Preconditions.checkNotNull(domains);
+        Preconditions.checkNotNull(domainName);
+        Preconditions.checkNotNull(domainPackageName);
+        Preconditions.checkNotNull(domainSchema);
+        Preconditions.checkNotNull(entitySourceDirectory);
+        Preconditions.checkNotNull(resourcesDirectory);
+        Preconditions.checkNotNull(implementationPackageName);
+        Preconditions.checkNotNull(implementationSourceDirectory);
+
         this.domains = domains;
         this.entitySourceDirectory = entitySourceDirectory;
         this.resourcesDirectory = resourcesDirectory;
@@ -61,6 +71,71 @@ public class CodeGeneratorJava {
         this.domainPackageName = domainPackageName;
         this.domainSchema = domainSchema;
         this.nameManager = new NameManager();
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private String domainName;
+        private String domainPackageName;
+        private String domainSchema;
+        private Domains domains;
+        private File resourcesDirectory;
+        private boolean generatePersistenceXml;
+        private File entitySourceDirectory;
+        private final String implementationPackageName = "not used yet";
+        private File implementationSourceDirectory;
+        private final boolean overwriteImplementation = false;
+
+        private Builder() {
+
+        }
+
+        public Builder domains(Domains domains) {
+            this.domains = domains;
+            return this;
+        }
+
+        public Builder domainName(String domainName) {
+            this.domainName = domainName;
+            return this;
+        }
+
+        public Builder domainSchema(String domainSchema) {
+            this.domainSchema = domainSchema;
+            return this;
+        }
+
+        public Builder domainPackageName(String packageName) {
+            this.domainPackageName = packageName;
+            return this;
+        }
+
+        public Builder generatedResourcesDirectory(File directory) {
+            this.resourcesDirectory = directory;
+            return this;
+        }
+
+        public Builder generatePersistenceXml(boolean generate) {
+            this.generatePersistenceXml = generate;
+            return this;
+        }
+
+        public Builder generatedSourcesDirectory(File directory) {
+            this.entitySourceDirectory = directory;
+            return this;
+        }
+
+        public CodeGeneratorJava build() {
+            if (implementationSourceDirectory == null)
+                implementationSourceDirectory = entitySourceDirectory;
+            return new CodeGeneratorJava(domains, domainName, domainPackageName, domainSchema,
+                    entitySourceDirectory, resourcesDirectory, implementationPackageName,
+                    implementationSourceDirectory, generatePersistenceXml, overwriteImplementation);
+        }
+
     }
 
     public void generate() {
