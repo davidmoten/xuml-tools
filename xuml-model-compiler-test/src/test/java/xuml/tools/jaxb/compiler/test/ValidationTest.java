@@ -4,9 +4,9 @@ import org.junit.Test;
 
 public class ValidationTest {
 
-	@Test
-	public void dummy() {
-		// TODO
-	}
+    @Test
+    public void dummy() {
+        // TODO
+    }
 
 }

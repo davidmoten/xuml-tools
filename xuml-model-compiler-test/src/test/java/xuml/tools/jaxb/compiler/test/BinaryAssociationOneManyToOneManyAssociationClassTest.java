@@ -16,107 +16,106 @@ import xuml.tools.model.compiler.runtime.RelationshipNotEstablishedException;
 
 public class BinaryAssociationOneManyToOneManyAssociationClassTest {
 
-	@BeforeClass
-	public static void setup() {
-		EntityManagerFactory emf = PersistenceHelper
-				.createEmf("one-many-to-one-many-association");
-		Context.setEntityManagerFactory(emf);
-	}
+    @BeforeClass
+    public static void setup() {
+        EntityManagerFactory emf = PersistenceHelper.createEmf("one-many-to-one-many-association");
+        Context.setEntityManagerFactory(emf);
+    }
 
-	@AfterClass
-	public static void shutdown() {
-		Context.close();
-	}
+    @AfterClass
+    public static void shutdown() {
+        Context.close();
+    }
 
-	// TODO many more tests can be added here
+    // TODO many more tests can be added here
 
-	@Test(expected = RelationshipNotEstablishedException.class)
-	public void testCannotCreateBWithoutInstanceOfAViaC() {
+    @Test(expected = RelationshipNotEstablishedException.class)
+    public void testCannotCreateBWithoutInstanceOfAViaC() {
 
-		EntityManager em = Context.createEntityManager();
-		try {
-			em.getTransaction().begin();
-			B.create("b").persist(em);
-		} finally {
-			em.close();
-		}
-	}
+        EntityManager em = Context.createEntityManager();
+        try {
+            em.getTransaction().begin();
+            B.create("b").persist(em);
+        } finally {
+            em.close();
+        }
+    }
 
-	@Test(expected = RelationshipNotEstablishedException.class)
-	public void testCanCreateInstanceOfAWithoutB() {
+    @Test(expected = RelationshipNotEstablishedException.class)
+    public void testCanCreateInstanceOfAWithoutB() {
 
-		EntityManager em = Context.createEntityManager();
-		try {
-			em.getTransaction().begin();
-			A.create("a").persist(em);
-			em.getTransaction().commit();
-		} finally {
-			em.close();
-		}
-	}
+        EntityManager em = Context.createEntityManager();
+        try {
+            em.getTransaction().begin();
+            A.create("a").persist(em);
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+    }
 
-	@Test(expected = RelationshipNotEstablishedException.class)
-	public void testCanCreateInstanceOfBWithoutA() {
+    @Test(expected = RelationshipNotEstablishedException.class)
+    public void testCanCreateInstanceOfBWithoutA() {
 
-		EntityManager em = Context.createEntityManager();
-		try {
-			em.getTransaction().begin();
-			B.create("b").persist(em);
-			em.getTransaction().commit();
-		} finally {
-			em.close();
-		}
-	}
+        EntityManager em = Context.createEntityManager();
+        try {
+            em.getTransaction().begin();
+            B.create("b").persist(em);
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+    }
 
-	@Test
-	public void testCanCreateInstanceOfBWithA() {
+    @Test
+    public void testCanCreateInstanceOfBWithA() {
 
-		EntityManager em = Context.createEntityManager();
-		try {
-			em.getTransaction().begin();
-			A a = A.create("a1");
-			B b = B.create("b1");
-			C c = C.create("c1");
-			c.setA_R1(a);
-			c.setB_R1(b);
-			c.setDescription("hello");
-			a.getC_R1().add(c);
-			b.getC_R1().add(c);
-			em.persist(a);
-			em.persist(b);
-			em.persist(c);
-			em.getTransaction().commit();
-		} finally {
-			em.close();
-		}
-	}
+        EntityManager em = Context.createEntityManager();
+        try {
+            em.getTransaction().begin();
+            A a = A.create("a1");
+            B b = B.create("b1");
+            C c = C.create("c1");
+            c.setA_R1(a);
+            c.setB_R1(b);
+            c.setDescription("hello");
+            a.getC_R1().add(c);
+            b.getC_R1().add(c);
+            em.persist(a);
+            em.persist(b);
+            em.persist(c);
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+    }
 
-	@Test(expected = RelationshipNotEstablishedException.class)
-	public void testCannotCreateTwoLinksBetweenAAndB() {
+    @Test(expected = RelationshipNotEstablishedException.class)
+    public void testCannotCreateTwoLinksBetweenAAndB() {
 
-		EntityManager em = Context.createEntityManager();
-		try {
-			em.getTransaction().begin();
-			A a = A.create("a2").persist(em);
-			B b = B.create("b2");
-			C c = C.create("c2");
-			c.setA_R1(a);
-			c.setB_R1(b);
-			c.setDescription("hello");
-			a.getC_R1().add(c);
-			b.getC_R1().add(c);
-			em.persist(b);
-			em.persist(c);
-			C c3 = C.create("c3");
-			c3.setA_R1(a);
-			c3.setB_R1(b);
-			c3.setDescription("hello");
-			a.getC_R1().add(c3);
-			b.getC_R1().add(c3);
-			c3.persist(em);
-			em.getTransaction().commit();
-		} finally {
-			em.close();
-		}
-	}
+        EntityManager em = Context.createEntityManager();
+        try {
+            em.getTransaction().begin();
+            A a = A.create("a2").persist(em);
+            B b = B.create("b2");
+            C c = C.create("c2");
+            c.setA_R1(a);
+            c.setB_R1(b);
+            c.setDescription("hello");
+            a.getC_R1().add(c);
+            b.getC_R1().add(c);
+            em.persist(b);
+            em.persist(c);
+            C c3 = C.create("c3");
+            c3.setA_R1(a);
+            c3.setB_R1(b);
+            c3.setDescription("hello");
+            a.getC_R1().add(c3);
+            b.getC_R1().add(c3);
+            c3.persist(em);
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+    }
 }

@@ -1,16 +1,15 @@
 package xuml.tools.model.compiler.runtime.query;
 
-
 public class Field {
 
-	private final String name;
+    private final String name;
 
-	public Field(String name) {
-		this.name = name;
-	}
+    public Field(String name) {
+        this.name = name;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
 }

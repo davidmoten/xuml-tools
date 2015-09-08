@@ -16,68 +16,68 @@ import all_types.Context;
 
 public class AllTypesTest {
 
-	@BeforeClass
-	public static void setup() {
-		EntityManagerFactory emf = PersistenceHelper.createEmf("all-types");
-		Context.setEntityManagerFactory(emf);
-	}
+    @BeforeClass
+    public static void setup() {
+        EntityManagerFactory emf = PersistenceHelper.createEmf("all-types");
+        Context.setEntityManagerFactory(emf);
+    }
 
-	@AfterClass
-	public static void shutdown() {
-		Context.close();
-	}
+    @AfterClass
+    public static void shutdown() {
+        Context.close();
+    }
 
-	@Test
-	public void testDefaultValueForIntegerIsSet() {
-		A a = new A();
-		assertEquals(1, a.getSix().intValue());
-	}
+    @Test
+    public void testDefaultValueForIntegerIsSet() {
+        A a = new A();
+        assertEquals(1, a.getSix().intValue());
+    }
 
-	@Test
-	public void testDefaultValueForDateIsSet() {
-		A a = new A();
-		assertEquals(0, a.getFive().getTime());
-	}
+    @Test
+    public void testDefaultValueForDateIsSet() {
+        A a = new A();
+        assertEquals(0, a.getFive().getTime());
+    }
 
-	@Test
-	public void testDefaultValueForBooleanIsSet() {
-		A a = new A();
-		assertEquals(Boolean.FALSE, a.getOne());
-	}
+    @Test
+    public void testDefaultValueForBooleanIsSet() {
+        A a = new A();
+        assertEquals(Boolean.FALSE, a.getOne());
+    }
 
-	@Test
-	public void testDefaultValueForStringIdIsSet() {
-		A a = new A();
-		assertEquals("", a.getId());
-	}
+    @Test
+    public void testDefaultValueForStringIdIsSet() {
+        A a = new A();
+        assertEquals("", a.getId());
+    }
 
-	// TODO test default values for embedded ids
+    // TODO test default values for embedded ids
 
-	@Test
-	public void testTypesAreGeneratedAsExpectedForEachMember() {
-		EntityManager em = Context.createEntityManager();
-		try {
-			em.getTransaction().begin();
-			A a = A.create("something");
-			// boolean
-			a.setOne(true);
-			// integer
-			a.setTwo(123);
-			// real
-			a.setThree(1.0001);
-			// date
-			a.setFour(new Date());
-			// timestamp
-			a.setFive(new Date());
-			// arbitraryId
-			a.setSix(10);
+    @Test
+    public void testTypesAreGeneratedAsExpectedForEachMember() {
+        EntityManager em = Context.createEntityManager();
+        try {
+            em.getTransaction().begin();
+            A a = A.create("something");
+            // boolean
+            a.setOne(true);
+            // integer
+            a.setTwo(123);
+            // real
+            a.setThree(1.0001);
+            // date
+            a.setFour(new Date());
+            // timestamp
+            a.setFive(new Date());
+            // arbitraryId
+            a.setSix(10);
 
-			a.persist(em);
+            a.persist(em);
 
-			em.getTransaction().commit();
-		} finally {
-			em.close();
-		}
-	}
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+    }
 
 }

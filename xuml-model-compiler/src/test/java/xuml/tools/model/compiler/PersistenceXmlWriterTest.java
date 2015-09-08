@@ -9,13 +9,12 @@ import com.google.common.collect.Lists;
 
 public class PersistenceXmlWriterTest {
 
-	@Test
-	public void test() {
+    @Test
+    public void test() {
 
-		String s = new PersistenceXmlWriter().generate(Lists
-				.newArrayList("bingorama"));
-		System.out.println(s);
-		Assert.assertTrue(s.contains("bingorama"));
+        String s = new PersistenceXmlWriter().generate(Lists.newArrayList("bingorama"));
+        System.out.println(s);
+        Assert.assertTrue(s.contains("bingorama"));
 
-	}
+    }
 }

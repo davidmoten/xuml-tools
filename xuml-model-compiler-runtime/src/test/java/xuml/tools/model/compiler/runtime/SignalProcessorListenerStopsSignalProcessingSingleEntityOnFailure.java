@@ -9,39 +9,35 @@ import xuml.tools.model.compiler.runtime.message.Signal;
 import com.google.common.collect.Sets;
 
 public class SignalProcessorListenerStopsSignalProcessingSingleEntityOnFailure
-		implements SignalProcessorListener {
+        implements SignalProcessorListener {
 
-	private static Set<String> stoppedEntities = Sets.newHashSet();
+    private static Set<String> stoppedEntities = Sets.newHashSet();
 
-	@Override
-	public synchronized void beforeProcessing(Signal<?> signal,
-			EntityActor actor) {
-		if (stoppedEntities.contains(signal.getEntity().uniqueId()))
-			throw new SignalProcessingStoppedException(signal.getEntity()
-					.uniqueId());
-	}
+    @Override
+    public synchronized void beforeProcessing(Signal<?> signal, EntityActor actor) {
+        if (stoppedEntities.contains(signal.getEntity().uniqueId()))
+            throw new SignalProcessingStoppedException(signal.getEntity().uniqueId());
+    }
 
-	@Override
-	public void afterProcessing(Signal<?> signal, EntityActor actor) {
-		// do nothing
-	}
+    @Override
+    public void afterProcessing(Signal<?> signal, EntityActor actor) {
+        // do nothing
+    }
 
-	@Override
-	public synchronized void failure(Signal<?> signal, Exception e,
-			EntityActor actor) {
-		if (!(e instanceof SignalProcessingStoppedException))
-			stoppedEntities.add(signal.getEntity().uniqueId());
-	}
+    @Override
+    public synchronized void failure(Signal<?> signal, Exception e, EntityActor actor) {
+        if (!(e instanceof SignalProcessingStoppedException))
+            stoppedEntities.add(signal.getEntity().uniqueId());
+    }
 
-	public static class SignalProcessingStoppedException extends
-			RuntimeException {
+    public static class SignalProcessingStoppedException extends RuntimeException {
 
-		private static final long serialVersionUID = 4537196557689877257L;
+        private static final long serialVersionUID = 4537196557689877257L;
 
-		public SignalProcessingStoppedException(String message) {
-			super(message);
-		}
+        public SignalProcessingStoppedException(String message) {
+            super(message);
+        }
 
-	}
+    }
 
 }

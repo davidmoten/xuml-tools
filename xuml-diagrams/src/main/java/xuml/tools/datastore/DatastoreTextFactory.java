@@ -8,10 +8,10 @@ package xuml.tools.datastore;
  */
 public interface DatastoreTextFactory {
 
-	/**
-	 * Creates an instance of {@link DatastoreText}.
-	 * 
-	 * @return
-	 */
-	DatastoreText create();
+    /**
+     * Creates an instance of {@link DatastoreText}.
+     * 
+     * @return
+     */
+    DatastoreText create();
 }

@@ -13,43 +13,43 @@ import bookstore.Order.Behaviour;
 
 public class BookstoreTest {
 
-	@BeforeClass
-	public static void setup() {
+    @BeforeClass
+    public static void setup() {
 
-		// create the entity manager factory
-		EntityManagerFactory emf = PersistenceHelper.createEmf("bookstore");
+        // create the entity manager factory
+        EntityManagerFactory emf = PersistenceHelper.createEmf("bookstore");
 
-		// pass the EntityManagerFactory to the generated xuml Context
-		Context.setEntityManagerFactory(emf);
+        // pass the EntityManagerFactory to the generated xuml Context
+        Context.setEntityManagerFactory(emf);
 
-	}
+    }
 
-	@AfterClass
-	public static void cleanup() {
+    @AfterClass
+    public static void cleanup() {
 
-		// shutdown the actor system
-		Context.stop();
+        // shutdown the actor system
+        Context.stop();
 
-		// close the entity manager factory if desired
-		Context.close();
-	}
+        // close the entity manager factory if desired
+        Context.close();
+    }
 
-	@Test
-	public void testCreateEntityManager() {
-		EntityManager em = Context.createEntityManager();
-		em.close();
-	}
+    @Test
+    public void testCreateEntityManager() {
+        EntityManager em = Context.createEntityManager();
+        em.close();
+    }
 
-	public Order.BehaviourFactory createOrderBehaviourFactory() {
-		return new Order.BehaviourFactory() {
+    public Order.BehaviourFactory createOrderBehaviourFactory() {
+        return new Order.BehaviourFactory() {
 
-			@Override
-			public Behaviour create(Order self) {
-				// TOOD create a Behaviour implementation when have some tests
-				// for it
-				return null;
-			}
+            @Override
+            public Behaviour create(Order self) {
+                // TOOD create a Behaviour implementation when have some tests
+                // for it
+                return null;
+            }
 
-		};
-	}
+        };
+    }
 }

@@ -16,51 +16,50 @@ import org.junit.Test;
 
 public class BinaryAssociationManyToManyAssociationClassTest {
 
-	@BeforeClass
-	public static void setup() {
-		EntityManagerFactory emf = PersistenceHelper
-				.createEmf("many-to-many-association");
-		Context.setEntityManagerFactory(emf);
-	}
+    @BeforeClass
+    public static void setup() {
+        EntityManagerFactory emf = PersistenceHelper.createEmf("many-to-many-association");
+        Context.setEntityManagerFactory(emf);
+    }
 
-	@AfterClass
-	public static void shutdown() {
-		Context.close();
-	}
+    @AfterClass
+    public static void shutdown() {
+        Context.close();
+    }
 
-	// TODO many more tests can be added here
+    // TODO many more tests can be added here
 
-	@Test
-	public void testCanCreateManyToMany() {
+    @Test
+    public void testCanCreateManyToMany() {
 
-		EntityManager em = Context.createEntityManager();
-		em.getTransaction().begin();
-		A a1 = A.create("thing").persist(em);
-		B b1 = B.create("boo").persist(em);
-		B b2 = B.create("boo2").persist(em);
-		C c1 = new C("c1");
-		c1.setDescription("example");
-		c1.setA_R1(a1);
-		c1.setB_R1(b1);
-		a1.getC_R1().add(c1);
-		b1.getC_R1().add(c1);
+        EntityManager em = Context.createEntityManager();
+        em.getTransaction().begin();
+        A a1 = A.create("thing").persist(em);
+        B b1 = B.create("boo").persist(em);
+        B b2 = B.create("boo2").persist(em);
+        C c1 = new C("c1");
+        c1.setDescription("example");
+        c1.setA_R1(a1);
+        c1.setB_R1(b1);
+        a1.getC_R1().add(c1);
+        b1.getC_R1().add(c1);
 
-		C c2 = new C("c2");
-		c2.setDescription("example2");
-		c2.setA_R1(a1);
-		c2.setB_R1(b2);
-		a1.getC_R1().add(c2);
-		b2.getC_R1().add(c2);
+        C c2 = new C("c2");
+        c2.setDescription("example2");
+        c2.setA_R1(a1);
+        c2.setB_R1(b2);
+        a1.getC_R1().add(c2);
+        b2.getC_R1().add(c2);
 
-		c1.persist(em);
-		c2.persist(em);
-		em.getTransaction().commit();
+        c1.persist(em);
+        c2.persist(em);
+        em.getTransaction().commit();
 
-		em.close();
+        em.close();
 
-		em = Context.createEntityManager();
-		assertEquals(2, a1.load(em).getB_R1().size());
+        em = Context.createEntityManager();
+        assertEquals(2, a1.load(em).getB_R1().size());
 
-		em.close();
-	}
+        em.close();
+    }
 }
