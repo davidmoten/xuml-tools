@@ -37,6 +37,7 @@ import xuml.tools.miuml.metamodel.jaxb.Class;
 public class StateDiagramViewer {
 
     public static void show(Class c) {
+        System.out.println("showing " + c);
         Graph<String, Edge> g = new DirectedSparseGraph<String, Edge>();
         if (c.getLifecycle() != null) {
             c.getLifecycle().getState().stream().forEach(state -> g.addVertex(state.getName()));
