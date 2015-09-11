@@ -93,6 +93,7 @@
 		<module>xuml-model-archetype</module>
 		<module>order-tracker</module>
 		<module>order-tracker-webapp</module>
+		<module>state-diagram-viewer</module>
   	</modules>	
 	<profiles>
 		<profile>

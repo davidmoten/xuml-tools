@@ -1,5 +1,7 @@
 package xuml.tools.model.compiler;
 
+import static xuml.tools.model.compiler.Util.getClasses;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -215,20 +217,6 @@ public class CodeGeneratorJava {
         classes.add(QueuedSignal.class.getName());
         String xml = new PersistenceXmlWriter().generate(classes);
         return xml;
-    }
-
-    private List<Class> getClasses(ModeledDomain domain) {
-        List<Class> list = Lists.newArrayList();
-        for (Subsystem subsystem : domain.getSubsystem()) {
-            for (JAXBElement<? extends SubsystemElement> element : subsystem
-                    .getSubsystemElement()) {
-                if (element.getValue() instanceof Class) {
-                    Class cls = (Class) element.getValue();
-                    list.add(cls);
-                }
-            }
-        }
-        return list;
     }
 
     private void createContext(ModeledDomain domain, File destination, Lookups lookups) {

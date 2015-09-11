@@ -25,21 +25,53 @@ import org.apache.commons.collections15.Transformer;
 
 import edu.uci.ics.jung.algorithms.layout.FRLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
+import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.decorators.EdgeShape;
 import edu.uci.ics.jung.visualization.renderers.Renderer;
+import xuml.tools.miuml.metamodel.jaxb.Class;
 
 public class StateDiagramViewer {
 
-    public static void show(Graph<String, String> graph) {
-        FRLayout<String, String> layout = new FRLayout<String, String>(graph, new Dimension(800, 600));
+    public static void show(Class c) {
+        Graph<String, Edge> g = new DirectedSparseGraph<String, Edge>();
+        if (c.getLifecycle() != null) {
+            c.getLifecycle().getState().stream().forEach(state -> g.addVertex(state.getName()));
+            c.getLifecycle().getTransition().stream().forEach(transition -> {
+                String fromState = transition.getState();
+                String toState = transition.getDestination();
+                String eventName = c.getLifecycle().getEvent().stream().map(ev -> ev.getValue())
+                        .filter(event -> event.getID().equals(transition.getEventID()))
+                        .map(event -> event.getName()).findAny().get();
+                g.addEdge(new Edge(eventName), fromState, toState);
+            });
+        }
+        if (!g.getVertices().isEmpty())
+            show(g);
+    }
+
+    public static final class Edge {
+        final String name;
+
+        Edge(String name) {
+            this.name = name;
+        }
+
+        public static Edge of(String name) {
+            return new Edge(name);
+        }
+    }
+
+    public static void show(Graph<String, Edge> graph) {
+
+        FRLayout<String, Edge> layout = new FRLayout<String, Edge>(graph, new Dimension(800, 600));
         while (!layout.done())
             layout.step();
 
-        VisualizationViewer<String, String> vv = new VisualizationViewer<String, String>(layout,
+        VisualizationViewer<String, Edge> vv = new VisualizationViewer<String, Edge>(layout,
                 new Dimension(800, 600));
         vv.getRenderContext().setVertexLabelTransformer(s -> s);
         vv.getRenderContext().setVertexFillPaintTransformer(vertex -> vertex.equals("Created")
@@ -47,8 +79,8 @@ public class StateDiagramViewer {
         vv.getRenderContext().setVertexDrawPaintTransformer(vertex -> Color.black);
         vv.getRenderContext().setVertexShapeTransformer(createVertexShapeTransformer(layout));
         vv.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.CNTR);
-        vv.getRenderContext().setEdgeLabelTransformer(s -> s.substring(0, s.length() - 1));
-        vv.getRenderContext().setEdgeShapeTransformer(new EdgeShape.QuadCurve<String, String>());
+        vv.getRenderContext().setEdgeLabelTransformer(edge -> edge.name);
+        vv.getRenderContext().setEdgeShapeTransformer(new EdgeShape.QuadCurve<String, Edge>());
 
         // The following code adds capability for mouse picking of
         // vertices/edges. Vertices can even be moved!
@@ -71,7 +103,7 @@ public class StateDiagramViewer {
     }
 
     private static Transformer<String, Shape> createVertexShapeTransformer(
-            Layout<String, String> layout) {
+            Layout<String, Edge> layout) {
         return vertex -> {
             int w = 100;
             int margin = 5;

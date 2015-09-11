@@ -46,6 +46,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.github.davidmoten</groupId>
+            <artifactId>xuml-model-compiler</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>

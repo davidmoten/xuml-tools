@@ -1,15 +1,22 @@
 package xuml.tools.model.compiler;
 
+import java.io.InputStream;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import javax.xml.bind.JAXBElement;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.Lists;
 
+import xuml.tools.miuml.metamodel.jaxb.Class;
 import xuml.tools.miuml.metamodel.jaxb.Domain;
 import xuml.tools.miuml.metamodel.jaxb.Domains;
+import xuml.tools.miuml.metamodel.jaxb.Marshaller;
 import xuml.tools.miuml.metamodel.jaxb.ModeledDomain;
 import xuml.tools.miuml.metamodel.jaxb.Perspective;
+import xuml.tools.miuml.metamodel.jaxb.Subsystem;
+import xuml.tools.miuml.metamodel.jaxb.SubsystemElement;
 
 public class Util {
 
@@ -131,6 +138,14 @@ public class Util {
         return null;
     }
 
+    public static ModeledDomain getModeledDomain(InputStream is, String domainName) {
+        Domains domains = new Marshaller().unmarshal(is);
+        return domains.getDomain().stream().map(d -> d.getValue())
+                .filter(d -> d instanceof ModeledDomain).map(d -> (ModeledDomain) d)
+                .filter(d -> d.getName().equals(domainName)).findFirst().get();
+
+    }
+
     public static String getPackage(String className) {
         if (!className.contains("."))
             return className;
@@ -143,6 +158,20 @@ public class Util {
             return className;
         else
             return className.substring(className.lastIndexOf(".") + 1, className.length());
+    }
+
+    public static List<Class> getClasses(ModeledDomain domain) {
+        List<Class> list = Lists.newArrayList();
+        for (Subsystem subsystem : domain.getSubsystem()) {
+            for (JAXBElement<? extends SubsystemElement> element : subsystem
+                    .getSubsystemElement()) {
+                if (element.getValue() instanceof Class) {
+                    Class cls = (Class) element.getValue();
+                    list.add(cls);
+                }
+            }
+        }
+        return list;
     }
 
 }
