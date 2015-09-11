@@ -3,7 +3,7 @@
 	<parent>
 		<artifactId>xuml-tools</artifactId>
 		<groupId>com.github.davidmoten</groupId>
-		<version>0.4.1</version>
+		<version>0.4.2-SNAPSHOT</version>
 	</parent>
 	<artifactId>hibernate</artifactId>
 	<packaging>pom</packaging>
