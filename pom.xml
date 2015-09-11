@@ -209,10 +209,11 @@
 						<plugin>
 							<groupId>org.apache.maven.plugins</groupId>
 							<artifactId>maven-javadoc-plugin</artifactId>
-							<version>2.8.1</version>
+							<version>${javadoc.version}</version>
 							<configuration>
 								<aggregate>true</aggregate>
 								<excludePackageNames>abc:all_types:one_to_many:one_to_one:one_to_one_many:one_to_zero_one:secondary_identifiers:unary_one:unary_zero_one:unary_many:zero_one_to_many:zero_one_to_one_many:bookstore:extensions:specialization:many_to_many:many_to_many_association</excludePackageNames>
+     						    <additionalparam>-Xdoclint:none</additionalparam>
 							</configuration>
 						</plugin>
 						<!-- commented this plugin out because cannot run offline (e.g. at 
@@ -222,6 +223,22 @@
 							<password>${svn.password}</password> </configuration> </plugin> -->
 					</reportPlugins>
 				</configuration>
+			</plugin>
+            <plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>${javadoc.version}</version>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+						    <goal>jar</goal>
+						</goals>
+						<configuration>
+						    <additionalparam>-Xdoclint:none</additionalparam>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 		<pluginManagement>
