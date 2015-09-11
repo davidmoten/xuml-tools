@@ -9,7 +9,7 @@
     </parent>
 
 	<artifactId>xuml-tools</artifactId>
-	<version>0.4</version>
+	<version>0.5-SNAPSHOT</version>
 	<name>${project.artifactId}</name>
 	<packaging>pom</packaging>
 	<description>A collection of tools for Executable UML in the style of Mellor and Balcer and miUML.org based on JPA and Akka</description>
@@ -35,7 +35,7 @@
         <connection>scm:git:git@github.com:davidmoten/xuml-tools.git</connection>
         <developerConnection>scm:git:git@github.com:davidmoten/xuml-tools.git</developerConnection>
         <url>scm:git:git@github.com:davidmoten/xuml-tools.git</url>
-      <tag>0.4</tag>
+      <tag>0.2.1</tag>
   </scm>
 	<developers>
 		<developer>
