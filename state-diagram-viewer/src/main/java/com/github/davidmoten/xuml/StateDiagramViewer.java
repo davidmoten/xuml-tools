@@ -1,27 +1,17 @@
-package com.github.davidmoten.graph;
+package com.github.davidmoten.xuml;
 
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
-import java.awt.print.PageFormat;
-import java.awt.print.Printable;
 import java.awt.print.PrinterException;
-import java.awt.print.PrinterJob;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 
-import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -35,19 +25,17 @@ import org.apache.commons.collections15.Transformer;
 
 import edu.uci.ics.jung.algorithms.layout.FRLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
-import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import edu.uci.ics.jung.graph.Graph;
-import edu.uci.ics.jung.graph.util.EdgeType;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.decorators.EdgeShape;
 import edu.uci.ics.jung.visualization.renderers.Renderer;
 
-public class StateDiagram {
-    public static void main(String[] args) {
-        Graph<String, String> g = createTestGraph();
-        FRLayout<String, String> layout = new FRLayout<String, String>(g, new Dimension(800, 600));
+public class StateDiagramViewer {
+
+    public static void show(Graph<String, String> graph) {
+        FRLayout<String, String> layout = new FRLayout<String, String>(graph, new Dimension(800, 600));
         while (!layout.done())
             layout.step();
 
@@ -95,86 +83,6 @@ public class StateDiagram {
         };
     }
 
-    public static Graph<String, String> createTestGraph() {
-        Graph<String, String> g = new DirectedSparseGraph<String, String>();
-        g.addVertex("Created");
-        g.addVertex("Inside");
-        g.addVertex("Entered");
-        g.addVertex("Never Outside");
-        g.addVertex("Outside");
-        g.addEdge("In1", "Created", "Never Outside", EdgeType.DIRECTED);
-        g.addEdge("In2", "Entered", "Inside", EdgeType.DIRECTED);
-        g.addEdge("In3", "Inside", "Inside", EdgeType.DIRECTED);
-        g.addEdge("In4", "Never Outside", "Never Outside", EdgeType.DIRECTED);
-        g.addEdge("In5", "Outside", "Entered", EdgeType.DIRECTED);
-        g.addEdge("Out1", "Created", "Outside", EdgeType.DIRECTED);
-        g.addEdge("Out2", "Entered", "Outside", EdgeType.DIRECTED);
-        g.addEdge("Out3", "Inside", "Outside", EdgeType.DIRECTED);
-        g.addEdge("Out4", "Never Outside", "Outside", EdgeType.DIRECTED);
-        g.addEdge("Out5", "Outside", "Outside", EdgeType.DIRECTED);
-        return g;
-    }
-
-    private static void print(final JPanel panel) throws PrinterException {
-        PrinterJob pj = PrinterJob.getPrinterJob();
-        pj.setJobName("State Diagram");
-        pj.setCopies(1);
-        PageFormat format = pj.defaultPage();
-        if (panel.getPreferredSize().getWidth() > panel.getPreferredSize().getHeight())
-            format.setOrientation(PageFormat.LANDSCAPE);
-        else
-            format.setOrientation(PageFormat.PORTRAIT);
-
-        pj.setPrintable(new Printable() {
-            @Override
-            public int print(Graphics pg, PageFormat pf, int pageNum) {
-                if (pageNum > 0)
-                    return Printable.NO_SUCH_PAGE;
-                Graphics2D g2 = (Graphics2D) pg;
-                double w;
-                double h;
-                if (pf.getOrientation() == PageFormat.LANDSCAPE) {
-                    w = pf.getPaper().getImageableHeight();
-                    h = pf.getPaper().getImageableWidth();
-                } else {
-                    w = pf.getPaper().getImageableWidth();
-                    h = pf.getPaper().getImageableHeight();
-                }
-                double scalex = w / panel.getPreferredSize().getWidth();
-                double scaley = h / panel.getPreferredSize().getHeight();
-                double scale = Math.min(scalex, scaley);
-
-                g2.translate(pf.getImageableX(), pf.getImageableY());
-                g2.scale(scale, scale);
-                panel.setDoubleBuffered(false);
-                panel.paint(g2);
-                panel.setDoubleBuffered(true);
-                return Printable.PAGE_EXISTS;
-            }
-        });
-        if (pj.printDialog() == false)
-            return;
-        pj.print();
-    }
-
-    public static void saveImageFromGui(JPanel panel, File file) throws IOException {
-        FileOutputStream fos;
-        fos = new FileOutputStream(file);
-        saveImageFromGui(panel, fos);
-        fos.close();
-    }
-
-    private static void saveImageFromGui(JPanel panel, OutputStream os) throws IOException {
-        BufferedImage bi = new BufferedImage(panel.getPreferredSize().width,
-                panel.getPreferredSize().height, BufferedImage.TYPE_INT_RGB);
-        Graphics2D g2 = bi.createGraphics();
-        panel.setDoubleBuffered(false);
-        panel.paint(g2);
-        panel.setDoubleBuffered(true);
-        g2.dispose();
-        ImageIO.write(bi, "png", os);
-    }
-
     private static void createMenu(JPanel panel) {
         final JPopupMenu menu = new JPopupMenu();
         JMenuItem m = new JMenuItem("Print...");
@@ -183,7 +91,7 @@ public class StateDiagram {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    print(panel);
+                    Panels.print(panel);
                 } catch (PrinterException e1) {
                     e1.printStackTrace();
                 }
@@ -202,8 +110,8 @@ public class StateDiagram {
                     if (!file.getName().toUpperCase().endsWith(".PNG"))
                         file = new File(file.getAbsolutePath() + ".PNG");
                     try {
-                        saveImageFromGui(panel, file);
-                    } catch (IOException e1) {
+                        Panels.saveImage(panel, file);
+                    } catch (RuntimeException e1) {
                         e1.printStackTrace();
                     }
                 }
