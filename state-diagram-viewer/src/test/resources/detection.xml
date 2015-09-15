@@ -1,0 +1,764 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Domains xmlns="http://www.miuml.org/metamodel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.miuml.org/metamodel https://raw.github.com/davidmoten/xuml-tools/master/miuml-jaxb/src/main/resources/miuml-metamodel.xsd  http://org.github/xuml-tools/miuml-metamodel-extensions https://raw.github.com/davidmoten/xuml-tools/master/miuml-jaxb/src/main/resources/xuml-tools-miuml-metamodel-extensions.xsd"
+    xmlns:xt="http://org.github/xuml-tools/miuml-metamodel-extensions">
+
+    <SymbolicType Name="String" MinLength="1" MaxLength="4096" Prefix="" Suffix=""
+        ValidationPattern=".*" DefaultValue="" />
+    <SymbolicType Name="ShortString" MinLength="1" MaxLength="50" Prefix="" Suffix=""
+        ValidationPattern=".*" DefaultValue="" />
+    <SymbolicType Name="MediumString" MinLength="1" MaxLength="255" Prefix="" Suffix=""
+        ValidationPattern=".*" DefaultValue="" />
+    <SymbolicType Name="LongString" MinLength="1" MaxLength="65535" Prefix="" Suffix=""
+        ValidationPattern=".*" DefaultValue="" />
+    <SymbolicType Name="MessageSubject" MinLength="1" MaxLength="255" Prefix="" Suffix=""
+        ValidationPattern=".*" DefaultValue="" />
+    <SymbolicType Name="MessageBody" MinLength="1" MaxLength="65535" Prefix="" Suffix=""
+        ValidationPattern=".*" DefaultValue="" />
+    <SymbolicType Name="Email" MinLength="1" MaxLength="512" Prefix="" Suffix=""
+        ValidationPattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$"
+        DefaultValue="" />
+    <SymbolicType Name="Email Subject Prefix" MinLength="1" MaxLength="50" Prefix=""
+        Suffix="" ValidationPattern=".*" DefaultValue="" />
+    <SymbolicType Name="Bytes" MinLength="1" MaxLength="100000000" Prefix="" Suffix=""
+        ValidationPattern=".*" DefaultValue=""></SymbolicType>
+    <SymbolicType Name="Craft Identifier" MinLength="1" MaxLength="255" Prefix=""
+        Suffix="" ValidationPattern=".*" DefaultValue="" />
+    <RealType Name="Latitude" Precision="20" LowerLimit="-90" UpperLimit="90" DefaultValue="0"
+        Units="degrees" />
+    <RealType Name="Longitude" Precision="20" LowerLimit="-180" UpperLimit="180"
+        DefaultValue="0" Units="degrees" />
+    <RealType Name="Altitude Metres" Precision="20" LowerLimit="-10000" UpperLimit="99999999999"
+        DefaultValue="0" Units="metres" />
+    <SymbolicType Name="Arbitrary ID" DefaultValue="" MinLength="1" MaxLength="32"
+        Prefix="" Suffix="" ValidationPattern=".*" />
+    <IntegerType Name="date" Units="epoch ms" DefaultValue="0" UpperLimit="99999999999"
+        LowerLimit="-9999999999999" />
+    <IntegerType Name="timestamp" Units="epoch ms" DefaultValue="0" UpperLimit="99999999999"
+        LowerLimit="-9999999999999" />
+    <IntegerType Name="MMSI" LowerLimit="0" UpperLimit="999999999" DefaultValue="0"
+        Units="mmsi" />
+    <IntegerType Name="Interval Seconds" LowerLimit="0" UpperLimit="999999999"
+        DefaultValue="0" Units="seconds" />
+    <IntegerType Name="Interval Ms" LowerLimit="0" UpperLimit="999999999999"
+        DefaultValue="0" Units="milliseconds" />
+    <SymbolicType Name="Craft Identifier Pattern" DefaultValue=".*" MinLength="1"
+        MaxLength="512" ValidationPattern=".*" Prefix="" Suffix="" />
+    <BooleanType Name="boolean" DefaultValue="false" />
+
+
+    <ModeledDomain Name="detection-domain">
+
+        <Subsystem Name="detection" Floor="1" Ceiling="30">
+            <Class Name="Detection Rule">
+                <IndependentAttribute Name="ID" Type="Arbitrary ID">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="Name" Type="ShortString">
+                    <Identifier Number="2" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="Description" Type="MediumString" />
+                <IndependentAttribute Name="Start Time" Type="timestamp">
+                    <Extension>
+                        <xt:Documentation>
+                            <xt:Content>Start Time is earliest position time (inclusive) that will be accepted for processing by this Detection Rule.</xt:Content>
+                            <xt:MimeType>text/plain</xt:MimeType>
+                        </xt:Documentation>
+                    </Extension>
+                </IndependentAttribute>
+                <IndependentAttribute Name="End Time" Type="timestamp">
+                    <Extension>
+                        <xt:Documentation>
+                            <xt:Content>End Time is latest position time (exclusive) that will be accepted for processing by this Detection Rule.</xt:Content>
+                            <xt:MimeType>text/plain</xt:MimeType>
+                        </xt:Documentation>
+                    </Extension>
+                </IndependentAttribute>
+                <IndependentAttribute Name="Min Interval Secs" Type="Interval Seconds">
+                    <Extension>
+                        <xt:Documentation>
+                            <xt:Content>If current time minus the last detection creation time is greater than min interval secs then send a message.</xt:Content>
+                            <xt:MimeType>text/plain</xt:MimeType>
+                        </xt:Documentation>
+                    </Extension>
+                </IndependentAttribute>
+                <IndependentAttribute Name="Min Interval Secs Out" Type="Interval Seconds">
+                    <Extension>
+                        <xt:Documentation>
+                            <xt:Content>If Min Interval Secs is not exceeded and the position report is for an entrance into the region and the time spent outside is more than Min Interval Secs Out then a message is sent.</xt:Content>
+                            <xt:MimeType>text/plain</xt:MimeType>
+                        </xt:Documentation>
+                    </Extension>
+                </IndependentAttribute>
+                <IndependentAttribute Name="Must Cross" Type="boolean" />
+                <IndependentAttribute Name="Craft Identifier Pattern" Type="Craft Identifier Pattern" />
+                <ReferentialAttribute Name="Region">
+                    <ToOneReference Relationship="1" Attribute="ID" />
+                </ReferentialAttribute>
+                <ReferentialAttribute Name="Message Template Default">
+                    <ToOneReference Relationship="8" Attribute="ID" />
+                </ReferentialAttribute>
+                <ReferentialAttribute Name="Last Detection">
+                    <ToOneReference Attribute="ID" Relationship="18" />
+                </ReferentialAttribute>
+                <Lifecycle>
+                    <State Name="Created" />
+                    <State Name="Position In Region" />
+                    <CreationEvent Name="Create" ID="1" State="Created">
+                        <EventSignature>
+                            <StateModelParameter Name="Name" Type="MediumString" />
+                            <StateModelParameter Name="Description" Type="LongString" />
+                            <StateModelParameter Name="StartTime" Type="timestamp" />
+                            <StateModelParameter Name="EndTime" Type="timestamp" />
+                            <StateModelParameter Name="Region ID" Type="Arbitrary ID" />
+                            <StateModelParameter Name="Min Interval Secs" Type="Interval Seconds" />
+                            <StateModelParameter Name="Min Interval Secs Out"
+                                Type="Interval Seconds" />
+                            <StateModelParameter Name="Must Cross" Type="boolean" />
+                            <StateModelParameter Name="Craft Identifier Pattern"
+                                Type="Craft Identifier Pattern" />
+                        </EventSignature>
+                    </CreationEvent>
+                    <LocalEffectiveSignalingEvent Name="Position In Region"
+                        ID="2">
+                        <EventSignature>
+                            <StateModelParameter Name="Craft ID" Type="Arbitrary ID" />
+                            <StateModelParameter Name="Latitude" Type="Latitude" />
+                            <StateModelParameter Name="Longitude" Type="Longitude" />
+                            <StateModelParameter Name="Altitude Metres" Type="Altitude Metres" />
+                            <StateModelParameter Name="Time" Type="timestamp" />
+                            <StateModelParameter Name="Last Time Entered" Type="timestamp" />
+                            <StateModelParameter Name="Last Exit Time From Region"
+                                Type="timestamp" />
+                            <StateModelParameter Name="Has Been Outside Region"
+                                Type="boolean" />
+                            <StateModelParameter Name="Current Time" Type="timestamp" />
+                            <StateModelParameter Name="Is Entrance" Type="boolean" />
+                        </EventSignature>
+                    </LocalEffectiveSignalingEvent>
+                    <Transition State="Created" EventID="2" Destination="Position In Region" />
+                    <Transition State="Position In Region" EventID="2" Destination="Position In Region" />
+                </Lifecycle>
+                <Extension>
+                    <xt:Documentation>
+                        <xt:Content>Criteria that when applied to a position found in a single region of interest (may be a compound region) will determine whether that a message is generated to either the craft described by the position or an email contact.</xt:Content>
+                        <xt:MimeType>text/plain</xt:MimeType>
+                    </xt:Documentation>
+                </Extension>
+            </Class>
+
+            <Class Name="Region">
+                <IndependentAttribute Name="ID" Type="Arbitrary ID">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="Name" Type="ShortString">
+                    <Identifier Number="2" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="Description" Type="MediumString" />
+                <ReferentialAttribute Name="Simple Region">
+                    <SpecializationReference Relationship="4" Attribute="ID" />
+                </ReferentialAttribute>
+                <ReferentialAttribute Name="Composite Region">
+                    <SpecializationReference Relationship="4" Attribute="ID" />
+                </ReferentialAttribute>
+                <Lifecycle>
+                    <State Name="Created" />
+                    <State Name="HasPosition" />
+                    <CreationEvent Name="Create" ID="1" State="Created" />
+                    <LocalEffectiveSignalingEvent Name="Position" ID="2">
+                        <EventSignature>
+                            <StateModelParameter Name="Craft ID" Type="Arbitrary ID" />
+                            <StateModelParameter Name="Latitude" Type="Latitude" />
+                            <StateModelParameter Name="Longitude" Type="Longitude" />
+                            <StateModelParameter Name="Altitude Metres" Type="Altitude Metres" />
+                            <StateModelParameter Name="Time" Type="timestamp" />
+                        </EventSignature>
+                    </LocalEffectiveSignalingEvent>
+                    <Transition State="Created" EventID="2" Destination="HasPosition" />
+                    <Transition State="HasPosition" EventID="2" Destination="HasPosition" />
+                </Lifecycle>
+            </Class>
+
+            <BinaryAssociation Rnum="1">
+                <ActivePerspective Phrase="detects positions in" ViewedClass="Region"
+                    OnePerspective="true" Conditional="false" />
+                <PassivePerspective Phrase="is for" ViewedClass="Detection Rule"
+                    OnePerspective="false" Conditional="true" />
+            </BinaryAssociation>
+
+
+            <Class Name="Craft">
+                <IndependentAttribute Name="ID" Type="Arbitrary ID">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <ReferentialAttribute Name="Identifier Type">
+                    <ToOneReference Attribute="ID" Relationship="20" />
+                </ReferentialAttribute>
+                <IndependentAttribute Name="Identifier" Type="Craft Identifier" />
+                <Lifecycle>
+                    <State Name="Created" />
+                    <State Name="HasPosition" />
+                    <CreationEvent Name="Create" ID="1" State="Created">
+                        <EventSignature>
+                            <StateModelParameter Name="Craft Identifier" Type="Craft Identifier" />
+                            <StateModelParameter Name="Craft Identifier Type Name"
+                                Type="ShortString" />
+                            <StateModelParameter Name="Craft Type ID" Type="Arbitrary ID" />
+                        </EventSignature>
+                    </CreationEvent>
+                    <LocalEffectiveSignalingEvent Name="Position" ID="2">
+                        <EventSignature>
+                            <StateModelParameter Name="Latitude" Type="Latitude" />
+                            <StateModelParameter Name="Longitude" Type="Longitude" />
+                            <StateModelParameter Name="Altitude Metres" Type="Altitude Metres" />
+                            <StateModelParameter Name="Time" Type="timestamp" />
+                        </EventSignature>
+                    </LocalEffectiveSignalingEvent>
+                    <Transition State="Created" EventID="2" Destination="HasPosition" />
+                    <Transition State="HasPosition" EventID="2" Destination="HasPosition" />
+                </Lifecycle>
+            </Class>
+
+            <Class Name="Craft Identifier Type">
+                <IndependentAttribute Name="ID" Type="Arbitrary ID">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="Name" Type="ShortString">
+                    <Identifier Number="2" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="Description" Type="MediumString" />
+                <ReferentialAttribute Name="Craft Type">
+                    <ToOneReference Relationship="3" Attribute="ID"></ToOneReference>
+                </ReferentialAttribute>
+                <Lifecycle>
+                    <State Name="Created" />
+                    <CreationEvent Name="Create" ID="1" State="Created">
+                        <EventSignature>
+                            <StateModelParameter Name="Name" Type="ShortString" />
+                            <StateModelParameter Name="Description" Type="MediumString" />
+                            <StateModelParameter Name="Craft Type ID" Type="Arbitrary ID" />
+                        </EventSignature>
+                    </CreationEvent>
+                </Lifecycle>
+            </Class>
+
+            <Class Name="Craft Type">
+                <IndependentAttribute Name="ID" Type="Arbitrary ID">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="Name" Type="ShortString">
+                    <Identifier Number="2" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="Description" Type="MediumString" />
+                <Lifecycle>
+                    <State Name="Created" />
+                    <CreationEvent Name="Create" ID="1" State="Created">
+                        <EventSignature>
+                            <StateModelParameter Name="Name" Type="ShortString" />
+                            <StateModelParameter Name="Description" Type="MediumString" />
+                        </EventSignature>
+                    </CreationEvent>
+                </Lifecycle>
+                <Extension>
+                    <xt:Find>
+                        <xt:Attribute name="Name" />
+                    </xt:Find>
+                </Extension>
+            </Class>
+
+            <BinaryAssociation Rnum="3">
+                <ActivePerspective Phrase="is for craft of" ViewedClass="Craft Type"
+                    OnePerspective="true" Conditional="false" />
+                <PassivePerspective Phrase="categorizes" ViewedClass="Craft Identifier Type"
+                    OnePerspective="false" Conditional="true" />
+            </BinaryAssociation>
+
+            <Generalization Rnum="4" Superclass="Region">
+                <SpecializedClass Name="Simple Region" />
+                <SpecializedClass Name="Composite Region" />
+            </Generalization>
+
+            <Class Name="Simple Region Type">
+                <IndependentAttribute Name="ID" Type="Arbitrary ID">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="Name" Type="ShortString">
+                    <Identifier Number="2" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="Description" Type="MediumString" />
+                <Lifecycle>
+                    <State Name="Created" />
+                    <CreationEvent Name="Create" ID="1" State="Created">
+                        <EventSignature>
+                            <StateModelParameter Name="Name" Type="ShortString" />
+                            <StateModelParameter Name="Description" Type="MediumString" />
+                        </EventSignature>
+                    </CreationEvent>
+                </Lifecycle>
+            </Class>
+
+            <Class Name="Simple Region">
+                <IndependentAttribute Name="ID" Type="Arbitrary ID">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="Bytes" Type="Bytes" />
+                <ReferentialAttribute Name="Type">
+                    <ToOneReference Attribute="ID" Relationship="19" />
+                </ReferentialAttribute>
+                <ReferentialAttribute Name="Region">
+                    <GeneralizationReference Relationship="4" Attribute="ID" />
+                </ReferentialAttribute>
+
+                <Lifecycle>
+                    <State Name="Created" />
+                    <CreationEvent Name="Create" ID="1" State="Created">
+                        <EventSignature>
+                            <StateModelParameter Name="Name" Type="ShortString" />
+                            <StateModelParameter Name="Description" Type="MediumString" />
+                            <StateModelParameter Name="Simple Region Type ID"
+                                Type="Arbitrary ID" />
+                            <StateModelParameter Name="Bytes" Type="Bytes" />
+                        </EventSignature>
+                    </CreationEvent>
+                </Lifecycle>
+
+            </Class>
+
+            <Class Name="Composite Region">
+                <IndependentAttribute Name="ID" Type="Arbitrary ID">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <ReferentialAttribute Name="Region">
+                    <GeneralizationReference Relationship="4" Attribute="ID" />
+                </ReferentialAttribute>
+                <Lifecycle>
+                    <State Name="Created" />
+                    <State Name="Has Members" />
+                    <CreationEvent Name="Create" ID="1" State="Created">
+                        <EventSignature>
+                            <StateModelParameter Name="Name" Type="ShortString" />
+                            <StateModelParameter Name="Description" Type="MediumString" />
+                        </EventSignature>
+                    </CreationEvent>
+                    <LocalEffectiveSignalingEvent Name="Add Region" ID="2">
+                        <EventSignature>
+                            <StateModelParameter Name="Region ID" Type="Arbitrary ID" />
+                            <StateModelParameter Name="Include" Type="boolean" />
+                        </EventSignature>
+                    </LocalEffectiveSignalingEvent>
+                    <Transition State="Created" EventID="2" Destination="Has Members" />
+                    <Transition State="Has Members" EventID="2" Destination="Has Members" />
+                </Lifecycle>
+
+            </Class>
+
+            <Class Name="Composite Region Member">
+                <IndependentAttribute Name="ID" Type="Arbitrary ID">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="Include" Type="boolean" />
+                <ReferentialAttribute Name="Region">
+                    <ToOneReference Relationship="9" Attribute="ID" />
+                </ReferentialAttribute>
+                <ReferentialAttribute Name="Composite Region">
+                    <Identifier Number="2" />
+                    <ToOneReference Relationship="10" Attribute="ID" />
+                </ReferentialAttribute>
+                <Lifecycle>
+                    <State Name="Created" />
+                    <CreationEvent Name="Create" ID="1" State="Created">
+                        <EventSignature>
+                            <!-- Not used because state machine not used to instantiate -->
+                        </EventSignature>
+                    </CreationEvent>
+                </Lifecycle>
+            </Class>
+
+            <BinaryAssociation Rnum="9">
+                <ActivePerspective Phrase="is" ViewedClass="Composite Region Member"
+                    OnePerspective="false" Conditional="true" />
+                <PassivePerspective Phrase="has member" ViewedClass="Region"
+                    OnePerspective="true" Conditional="false" />
+            </BinaryAssociation>
+
+            <BinaryAssociation Rnum="10">
+                <ActivePerspective Phrase="has member" ViewedClass="Composite Region"
+                    OnePerspective="true" Conditional="false" />
+                <PassivePerspective Phrase="is" ViewedClass="Composite Region Member"
+                    OnePerspective="false" Conditional="true" />
+            </BinaryAssociation>
+
+            <Class Name="Region Craft">
+                <IndependentAttribute Name="ID" Type="Arbitrary ID">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="Last Time Entered" Type="timestamp" />
+                <IndependentAttribute Name="Last Time In Region" Type="timestamp" />
+                <IndependentAttribute Name="Last Exit Time From Region" Type="timestamp" />
+                <ReferentialAttribute Name="Region">
+                    <Identifier Number="2" />
+                    <ToOneReference Relationship="5" Attribute="ID" />
+                </ReferentialAttribute>
+                <ReferentialAttribute Name="Craft">
+                    <Identifier Number="2" />
+                    <ToOneReference Relationship="15" Attribute="ID" />
+                </ReferentialAttribute>
+                <Lifecycle>
+                    <State Name="Created" />
+                    <State Name="Never Outside" />
+                    <State Name="Outside" />
+                    <State Name="Inside" />
+                    <State Name="Entered" />
+                    <CreationEvent Name="Create" ID="1" State="Created">
+                        <EventSignature>
+                            <StateModelParameter Name="Latitude" Type="Latitude" />
+                            <StateModelParameter Name="Longitude" Type="Longitude" />
+                            <StateModelParameter Name="Altitude Metres" Type="Altitude Metres" />
+                            <StateModelParameter Name="Time" Type="timestamp" />
+                            <StateModelParameter Name="Region ID" Type="Arbitrary ID" />
+                            <StateModelParameter Name="Craft ID" Type="Arbitrary ID" />
+                            <StateModelParameter Name="Inside" Type="boolean" />
+                        </EventSignature>
+                    </CreationEvent>
+                    <LocalEffectiveSignalingEvent Name="In" ID="2">
+                        <EventSignature>
+                            <StateModelParameter Name="Latitude" Type="Latitude" />
+                            <StateModelParameter Name="Longitude" Type="Longitude" />
+                            <StateModelParameter Name="Altitude Metres" Type="Altitude Metres" />
+                            <StateModelParameter Name="Time" Type="timestamp" />
+                        </EventSignature>
+                    </LocalEffectiveSignalingEvent>
+                    <LocalEffectiveSignalingEvent Name="Out" ID="3">
+                        <EventSignature>
+                            <StateModelParameter Name="Latitude" Type="Latitude" />
+                            <StateModelParameter Name="Longitude" Type="Longitude" />
+                            <StateModelParameter Name="Altitude Metres" Type="Altitude Metres" />
+                            <StateModelParameter Name="Time" Type="timestamp" />
+                        </EventSignature>
+                    </LocalEffectiveSignalingEvent>
+                    <Transition State="Created" Destination="Never Outside" EventID="2" />
+                    <Transition State="Created" Destination="Outside" EventID="3" />
+                    <Transition State="Never Outside" Destination="Outside" EventID="3" />
+                    <Transition State="Never Outside" Destination="Never Outside"
+                        EventID="2" />
+                    <Transition State="Outside" Destination="Entered" EventID="2" />
+                    <Transition State="Outside" Destination="Outside" EventID="3" />
+                    <Transition State="Entered" Destination="Inside" EventID="2" />
+                    <Transition State="Entered" Destination="Outside" EventID="3" />
+                    <Transition State="Inside" Destination="Outside" EventID="3" />
+                    <Transition State="Inside" Destination="Inside" EventID="2" />
+                </Lifecycle>
+            </Class>
+
+            <BinaryAssociation Rnum="5">
+                <ActivePerspective Phrase="relates to craft via" ViewedClass="Region Craft"
+                    OnePerspective="false" Conditional="true" />
+                <PassivePerspective Phrase="relates craft to" ViewedClass="Region"
+                    OnePerspective="true" Conditional="false" />
+            </BinaryAssociation>
+
+            <BinaryAssociation Rnum="15">
+                <ActivePerspective Phrase="relates region to" ViewedClass="Craft"
+                    OnePerspective="true" Conditional="false" />
+                <PassivePerspective Phrase="relates to region via" ViewedClass="Region Craft"
+                    OnePerspective="false" Conditional="true" />
+            </BinaryAssociation>
+
+            <Class Name="Detection">
+                <IndependentAttribute Name="ID" Type="Arbitrary ID">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="Report Time" Type="timestamp" />
+                <IndependentAttribute Name="Report Latitude" Type="Latitude" />
+                <IndependentAttribute Name="Report Longitude" Type="Longitude" />
+                <IndependentAttribute Name="Report Altitude Metres" Type="Altitude Metres" />
+                <IndependentAttribute Name="Created Time" Type="timestamp" />
+                <ReferentialAttribute Name="Craft">
+                    <ToOneReference Relationship="6" Attribute="ID" />
+                </ReferentialAttribute>
+                <ReferentialAttribute Name="Detection Rule">
+                    <ToOneReference Relationship="7" Attribute="ID" />
+                </ReferentialAttribute>
+                <ReferentialAttribute Name="Detection Rule Last For">
+                    <ToOneReference Attribute="ID" Relationship="18" />
+                </ReferentialAttribute>
+                <Lifecycle>
+                    <State Name="Created" />
+                    <State Name="Sent" />
+                    <CreationEvent Name="Create" ID="1" State="Created">
+                        <EventSignature>
+                            <StateModelParameter Name="Report Time" Type="timestamp" />
+                            <StateModelParameter Name="Report Latitude" Type="Latitude" />
+                            <StateModelParameter Name="Report Longitude" Type="Longitude" />
+                            <StateModelParameter Name="Report Altitude Metres"
+                                Type="Altitude Metres" />
+                            <StateModelParameter Name="Craft ID" Type="Arbitrary ID" />
+                            <StateModelParameter Name="Detection Rule ID" Type="Arbitrary ID" />
+                        </EventSignature>
+                    </CreationEvent>
+                    <LocalEffectiveSignalingEvent Name="Send" ID="2">
+                        <EventSignature>
+                            <StateModelParameter Name="Send Time" Type="timestamp" />
+                        </EventSignature>
+                    </LocalEffectiveSignalingEvent>
+                    <Transition State="Created" EventID="2" Destination="Sent" />
+                    <Transition State="Sent" EventID="2" Destination="Sent" />
+                </Lifecycle>
+            </Class>
+
+            <BinaryAssociation Rnum="6">
+                <ActivePerspective Phrase="position triggers a" ViewedClass="Detection"
+                    OnePerspective="false" Conditional="true" />
+                <PassivePerspective Phrase="triggered for" ViewedClass="Craft"
+                    OnePerspective="true" Conditional="false" />
+            </BinaryAssociation>
+
+            <BinaryAssociation Rnum="7">
+                <ActivePerspective Phrase="has" ViewedClass="Detection"
+                    OnePerspective="false" Conditional="true" />
+                <PassivePerspective Phrase="pertains to" ViewedClass="Detection Rule"
+                    OnePerspective="true" Conditional="false" />
+            </BinaryAssociation>
+
+            <Class Name="Message Template">
+                <IndependentAttribute Name="ID" Type="Arbitrary ID">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="Subject" Type="MessageSubject" />
+                <IndependentAttribute Name="Body" Type="MessageBody" />
+                <IndependentAttribute Name="Start Time" Type="timestamp">
+                    <Extension>
+                        <xt:Documentation>
+                            <xt:Content>Start Time is earliest (inclusive) detection creation time that can provoke a detection message being sent.</xt:Content>
+                            <xt:MimeType>text/plain</xt:MimeType>
+                        </xt:Documentation>
+                    </Extension>
+                </IndependentAttribute>
+                <IndependentAttribute Name="End Time" Type="timestamp">
+                    <Extension>
+                        <xt:Documentation>
+                            <xt:Content>End Time is latest (exclusive) detection creation time that can provoke a detection message being sent.</xt:Content>
+                            <xt:MimeType>text/plain</xt:MimeType>
+                        </xt:Documentation>
+                    </Extension>
+                </IndependentAttribute>
+                <IndependentAttribute Name="Force Update Before Time" Type="timestamp">
+                    <Extension>
+                        <xt:Documentation>
+                            <xt:Content>If the last detection creation time for the detection rule is before this time then send a new message (regardless of the minimum interval between messages settings on the detection rule). As a consequence of this be careful not to set this value to a time in the future otherwise every new position report for a craft will generate a detection!</xt:Content>
+                            <xt:MimeType>text/plain</xt:MimeType>
+                        </xt:Documentation>
+                    </Extension>
+                </IndependentAttribute>
+                <Lifecycle>
+                    <State Name="Created" />
+                    <CreationEvent Name="Create" ID="1" State="Created">
+                        <EventSignature>
+                            <StateModelParameter Name="Subject" Type="MessageSubject" />
+                            <StateModelParameter Name="Body" Type="MessageBody" />
+                            <StateModelParameter Name="StartTime" Type="timestamp" />
+                            <StateModelParameter Name="EndTime" Type="timestamp" />
+                            <StateModelParameter Name="ForceUpdateBeforeTime"
+                                Type="timestamp" />
+                            <StateModelParameter Name="Detection Rule ID" Type="Arbitrary ID" />
+                        </EventSignature>
+                    </CreationEvent>
+
+                </Lifecycle>
+            </Class>
+
+            <BinaryAssociation Rnum="8">
+                <ActivePerspective Phrase="is default for" ViewedClass="Detection Rule"
+                    OnePerspective="false" Conditional="true" />
+                <PassivePerspective Phrase="has default" ViewedClass="Message Template"
+                    OnePerspective="true" Conditional="true" />
+            </BinaryAssociation>
+
+            <Class Name="Detection Message">
+                <IndependentAttribute Name="ID" Type="Arbitrary ID">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <ReferentialAttribute Name="Message Recipient">
+                    <ToOneReference Relationship="13" Attribute="ID" />
+                </ReferentialAttribute>
+                <IndependentAttribute Name="Subject" Type="MessageSubject" />
+                <IndependentAttribute Name="Body" Type="MessageBody" />
+                <IndependentAttribute Name="Sent Time" Type="timestamp" />
+                <ReferentialAttribute Name="Detection">
+                    <ToOneReference Relationship="11" Attribute="ID" />
+                </ReferentialAttribute>
+
+                <Lifecycle>
+                    <State Name="Created" />
+                    <CreationEvent Name="Create" ID="1" State="Created">
+                        <EventSignature>
+                            <StateModelParameter Name="Subject" Type="MessageSubject" />
+                            <StateModelParameter Name="Body" Type="MessageBody" />
+                            <StateModelParameter Name="SentTime" Type="timestamp" />
+                            <StateModelParameter Name="Detection ID" Type="Arbitrary ID" />
+                            <StateModelParameter Name="Message Template ID"
+                                Type="Arbitrary ID" />
+                            <StateModelParameter Name="Message Recipient ID"
+                                Type="Arbitrary ID" />
+                        </EventSignature>
+                    </CreationEvent>
+                </Lifecycle>
+
+            </Class>
+
+            <BinaryAssociation Rnum="11">
+                <ActivePerspective Phrase="is notification of" ViewedClass="Detection"
+                    OnePerspective="true" Conditional="false" />
+                <PassivePerspective Phrase="provokes sending of" ViewedClass="Detection Message"
+                    OnePerspective="false" Conditional="true" />
+            </BinaryAssociation>
+
+            <Class Name="Message Recipient">
+                <IndependentAttribute Name="ID" Type="Arbitrary ID">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="Start Time" Type="timestamp" />
+                <IndependentAttribute Name="End Time" Type="timestamp" />
+                <ReferentialAttribute Name="Detected Craft">
+                    <SpecializationReference Relationship="14" Attribute="ID" />
+                </ReferentialAttribute>
+                <ReferentialAttribute Name="Contact">
+                    <SpecializationReference Relationship="14" Attribute="ID" />
+                </ReferentialAttribute>
+                <ReferentialAttribute Name="Detection Rule">
+                    <SpecializationReference Relationship="16" Attribute="ID" />
+                </ReferentialAttribute>
+                <Lifecycle>
+                    <State Name="Created" />
+                    <State Name="Sent" />
+                    <CreationEvent Name="Create" ID="1" State="Created">
+                        <EventSignature></EventSignature>
+                    </CreationEvent>
+                    <LocalEffectiveSignalingEvent Name="Send" ID="2">
+                        <EventSignature>
+                            <StateModelParameter Name="Detection Message ID"
+                                Type="Arbitrary ID" />
+                        </EventSignature>
+                    </LocalEffectiveSignalingEvent>
+                    <Transition State="Created" EventID="2" Destination="Sent" />
+                    <Transition State="Sent" EventID="2" Destination="Sent" />
+                </Lifecycle>
+            </Class>
+
+            <BinaryAssociation Rnum="13">
+                <ActivePerspective Phrase="is sent to" ViewedClass="Message Recipient"
+                    OnePerspective="true" Conditional="false" />
+                <PassivePerspective Phrase="was sent" ViewedClass="Detection Message"
+                    OnePerspective="false" Conditional="true" />
+            </BinaryAssociation>
+
+            <Class Name="Detected Craft">
+                <IndependentAttribute Name="ID" Type="Arbitrary ID">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="Retry Interval Ms" Type="Interval Ms"/>
+                <ReferentialAttribute Name="Message Recipient">
+                    <GeneralizationReference Relationship="14" Attribute="ID" />
+                </ReferentialAttribute>
+                <Lifecycle>
+                    <State Name="Created" />
+                    <State Name="Sent" />
+                    <CreationEvent Name="Create" ID="1" State="Created">
+                        <EventSignature>
+                            <StateModelParameter Name="Detection Rule ID" Type="Arbitrary ID" />
+                            <StateModelParameter Name="Start Time" Type="timestamp" />
+                            <StateModelParameter Name="End Time" Type="timestamp" />
+                            <StateModelParameter Name="Retry Interval Ms" Type="Interval Ms"/>
+                        </EventSignature>
+                    </CreationEvent>
+                    <LocalEffectiveSignalingEvent Name="Send" ID="2">
+                        <EventSignature>
+                            <StateModelParameter Name="Detection Message ID"
+                                Type="Arbitrary ID" />
+                        </EventSignature>
+                    </LocalEffectiveSignalingEvent>
+                    <Transition State="Created" EventID="2" Destination="Sent" />
+                    <Transition State="Sent" EventID="2" Destination="Sent" />
+                </Lifecycle>
+            </Class>
+
+            <Class Name="Contact">
+                <IndependentAttribute Name="ID" Type="Arbitrary ID">
+                    <Identifier Number="1" />
+                </IndependentAttribute>
+                <IndependentAttribute Name="Email" Type="Email" />
+                <IndependentAttribute Name="Email Subject Prefix" Type="Email Subject Prefix">
+                    <Extension>
+                        <xt:Documentation>
+                            <xt:Content>When an email is to be sent to a contact then prefix with Email Subject Prefix. A use case example for this is to prefix the subject with "FW: " or "FYI: " on a craft warning when sending it to craft monitoring staff.</xt:Content>
+                            <xt:MimeType>text/plain</xt:MimeType>
+                        </xt:Documentation>
+                    </Extension>
+                </IndependentAttribute>
+                <IndependentAttribute Name="Retry Interval Ms" Type="Interval Ms"/>
+                <ReferentialAttribute Name="Message Recipient">
+                    <GeneralizationReference Relationship="14" Attribute="ID" />
+                </ReferentialAttribute>
+                <Lifecycle>
+                    <State Name="Created" />
+                    <State Name="Sent" />
+                    <CreationEvent Name="Create" ID="1" State="Created">
+                        <EventSignature>
+                            <StateModelParameter Name="Detection Rule ID" Type="Arbitrary ID" />
+                            <StateModelParameter Name="Email" Type="Email" />
+                            <StateModelParameter Name="Email Subject Prefix"
+                                Type="Email Subject Prefix" />
+                            <StateModelParameter Name="Start Time" Type="timestamp" />
+                            <StateModelParameter Name="End Time" Type="timestamp" />
+                            <StateModelParameter Name="Retry Interval Ms" Type="Interval Ms"/>
+                        </EventSignature>
+                    </CreationEvent>
+                    <LocalEffectiveSignalingEvent Name="Send" ID="2">
+                        <EventSignature>
+                            <StateModelParameter Name="Detection Message ID"
+                                Type="Arbitrary ID" />
+                        </EventSignature>
+                    </LocalEffectiveSignalingEvent>
+                    <Transition State="Created" EventID="2" Destination="Sent" />
+                    <Transition State="Sent" EventID="2" Destination="Sent" />
+                </Lifecycle>
+            </Class>
+
+            <Generalization Rnum="14" Superclass="Message Recipient">
+                <SpecializedClass Name="Detected Craft" />
+                <SpecializedClass Name="Contact" />
+            </Generalization>
+
+            <BinaryAssociation Rnum="16">
+                <ActivePerspective Phrase="has" OnePerspective="false"
+                    Conditional="true" ViewedClass="Message Recipient" />
+                <PassivePerspective Phrase="receives messages for"
+                    OnePerspective="true" Conditional="false" ViewedClass="Detection Rule" />
+            </BinaryAssociation>
+
+            <BinaryAssociation Rnum="18">
+                <ActivePerspective Phrase="has latest" OnePerspective="true"
+                    Conditional="true" ViewedClass="Detection" />
+                <PassivePerspective Phrase="is latest for" OnePerspective="true"
+                    Conditional="true" ViewedClass="Detection Rule" />
+            </BinaryAssociation>
+
+            <BinaryAssociation Rnum="19">
+                <ActivePerspective Phrase="is categorized by" OnePerspective="true"
+                    Conditional="false" ViewedClass="Simple Region Type" />
+                <PassivePerspective Phrase="categorizes" OnePerspective="false"
+                    Conditional="true" ViewedClass="Simple Region" />
+            </BinaryAssociation>
+
+            <BinaryAssociation Rnum="20">
+                <ActivePerspective Phrase="has identifier categorized by"
+                    OnePerspective="true" Conditional="false" ViewedClass="Craft Identifier Type" />
+                <PassivePerspective Phrase="categorizes identifier of"
+                    OnePerspective="false" Conditional="true" ViewedClass="Craft" />
+            </BinaryAssociation>
+
+
+        </Subsystem>
+    </ModeledDomain>
+
+</Domains>

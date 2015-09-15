@@ -1,16 +1,15 @@
 package com.github.davidmoten.xuml;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.Rectangle;
 import java.awt.Shape;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.print.PrinterException;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFileChooser;
@@ -19,7 +18,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 
@@ -42,18 +40,22 @@ public class StateDiagramViewer {
 
     private final JFrame frame = new JFrame();
     private final JPanel vvContainer = createVvContainer();
-    private volatile ModeledDomain domain;
     private volatile JMenu classMenu;
 
-    public void open(ModeledDomain domain) {
-        this.domain = domain;
+    private void open(ModeledDomain domain) {
+        if (classMenu == null)
+            throw new RuntimeException("must call start() before calling open(domain)");
         classMenu.removeAll();
-        Util.getClasses(domain).stream().forEach(cls -> {
+        List<Class> classes = Util.getClasses(domain);
+        classes.stream().forEach(cls -> {
             JMenuItem m = new JMenuItem(cls.getName());
             m.setEnabled(cls.getLifecycle() != null);
             m.addActionListener(evt -> show(cls));
             classMenu.add(m);
         });
+        // show the first class with a lifecyle
+        classes.stream().filter(cls -> cls.getLifecycle() != null).limit(1)
+                .forEach(cls -> show(cls));
     }
 
     public void show(Class c) {
@@ -75,7 +77,7 @@ public class StateDiagramViewer {
             SwingUtilities.invokeLater(() -> {
                 vvContainer.removeAll();
                 vvContainer.add(vv);
-                createMenu(vv);
+                vvContainer.setFocusable(true);
                 vvContainer.repaint();
                 vvContainer.revalidate();
                 System.out.println("added vv");
@@ -84,7 +86,7 @@ public class StateDiagramViewer {
         }
     }
 
-    public void start() {
+    private void start() {
         SwingUtilities.invokeLater(() -> {
             // Creates a menubar for a JFrame
             JMenuBar menuBar = new JMenuBar();
@@ -98,23 +100,51 @@ public class StateDiagramViewer {
             menuBar.add(editMenu);
             menuBar.add(classMenu);
             JMenuItem openAction = new JMenuItem("Open");
+            JMenuItem printAction = new JMenuItem("Print...");
+            JMenuItem savePngAction = new JMenuItem("Save as PNG...");
             JMenuItem exitAction = new JMenuItem("Exit");
             fileMenu.add(openAction);
             fileMenu.add(exitAction);
             openAction.addActionListener(System.out::println);
             exitAction.addActionListener(e -> System.exit(0));
+            printAction.addActionListener(e -> {
+                try {
+                    Panels.print(vvContainer);
+                } catch (PrinterException e1) {
+                    e1.printStackTrace();
+                }
+            });
+            savePngAction.addActionListener(e -> {
+                JFileChooser fc = new JFileChooser();
+                fc.addChoosableFileFilter(new ImageFilter());
+                int returnVal = fc.showSaveDialog(vvContainer);
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    File file = fc.getSelectedFile();
+                    if (!file.getName().toUpperCase().endsWith(".PNG"))
+                        file = new File(file.getAbsolutePath() + ".PNG");
+                    try {
+                        Panels.saveImage(vvContainer, file);
+                    } catch (RuntimeException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+            });
+
             frame.getContentPane().add(vvContainer);
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(new Dimension(1000, 800));
             frame.setLocationRelativeTo(null);
-            frame.pack();
+            // frame.pack();
             frame.setVisible(true);
         });
+
     }
 
     private static JPanel createVvContainer() {
         JPanel panel = new JPanel();
         panel.setPreferredSize(new Dimension(800, 600));
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        panel.setLayout(new GridLayout(0, 1));
         return panel;
     }
 
@@ -128,10 +158,6 @@ public class StateDiagramViewer {
         public static Edge of(String name) {
             return new Edge(name);
         }
-    }
-
-    public static void show(Graph<String, Edge> graph) {
-
     }
 
     private static VisualizationViewer<String, Edge> createVisualizationViewer(
@@ -172,49 +198,6 @@ public class StateDiagramViewer {
         };
     }
 
-    private static void createMenu(JPanel panel) {
-        final JPopupMenu menu = new JPopupMenu();
-        JMenuItem m = new JMenuItem("Print...");
-        menu.add(m);
-        m.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    Panels.print(panel);
-                } catch (PrinterException e1) {
-                    e1.printStackTrace();
-                }
-            }
-        });
-        m = new JMenuItem("Save image as PNG...");
-        menu.add(m);
-        m.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JFileChooser fc = new JFileChooser();
-                fc.addChoosableFileFilter(new ImageFilter());
-                int returnVal = fc.showSaveDialog(panel);
-                if (returnVal == JFileChooser.APPROVE_OPTION) {
-                    File file = fc.getSelectedFile();
-                    if (!file.getName().toUpperCase().endsWith(".PNG"))
-                        file = new File(file.getAbsolutePath() + ".PNG");
-                    try {
-                        Panels.saveImage(panel, file);
-                    } catch (RuntimeException e1) {
-                        e1.printStackTrace();
-                    }
-                }
-            }
-        });
-        panel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (e.getButton() == MouseEvent.BUTTON3)
-                    menu.show((Component) e.getSource(), e.getX(), e.getY());
-            }
-        });
-    }
-
     private static class ImageFilter extends FileFilter {
 
         // Accept all directories and all gif, jpg, tiff, or png files.
@@ -230,6 +213,16 @@ public class StateDiagramViewer {
         @Override
         public String getDescription() {
             return "PNG files";
+        }
+    }
+
+    public void start(InputStream input, String domainName) {
+        try (InputStream is = input) {
+            start();
+            ModeledDomain domain = Util.getModeledDomain(is, domainName);
+            open(domain);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
