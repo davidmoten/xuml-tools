@@ -57,6 +57,12 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.github.davidmoten</groupId>
+            <artifactId>rtree</artifactId>
+            <version>0.6.4</version>
+        </dependency>
+        
     </dependencies>
 
     <build>

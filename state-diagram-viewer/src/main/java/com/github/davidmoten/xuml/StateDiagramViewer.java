@@ -2,6 +2,8 @@ package com.github.davidmoten.xuml;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.EventQueue;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Rectangle;
 import java.awt.Shape;
@@ -17,7 +19,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 
 import org.apache.commons.collections15.Transformer;
@@ -30,6 +31,8 @@ import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.decorators.EdgeShape;
+import edu.uci.ics.jung.visualization.renderers.DefaultEdgeLabelRenderer;
+import edu.uci.ics.jung.visualization.renderers.EdgeLabelRenderer;
 import edu.uci.ics.jung.visualization.renderers.Renderer;
 import xuml.tools.miuml.metamodel.jaxb.Class;
 import xuml.tools.miuml.metamodel.jaxb.ModeledDomain;
@@ -40,6 +43,8 @@ public class StateDiagramViewer {
     private final JFrame frame = new JFrame();
     private final JPanel vvContainer = createVvContainer();
     private volatile JMenu classMenu;
+
+    private final static ThreadLocal<DrawingState> state = new ThreadLocal<>();
 
     private void open(ModeledDomain domain) {
         if (classMenu == null)
@@ -73,7 +78,7 @@ public class StateDiagramViewer {
         }
         if (!g.getVertices().isEmpty()) {
             VisualizationViewer<String, Edge> vv = createVisualizationViewer(g);
-            SwingUtilities.invokeLater(() -> {
+            EventQueue.invokeLater(() -> {
                 vvContainer.removeAll();
                 vvContainer.add(vv);
                 vvContainer.setFocusable(true);
@@ -86,7 +91,7 @@ public class StateDiagramViewer {
     }
 
     private void start() {
-        SwingUtilities.invokeLater(() -> {
+        EventQueue.invokeLater(() -> {
             // Creates a menubar for a JFrame
             JMenuBar menuBar = new JMenuBar();
             // Add the menubar to the frame
@@ -171,6 +176,10 @@ public class StateDiagramViewer {
         }
     }
 
+    private static class DrawingState {
+
+    }
+
     private static VisualizationViewer<String, Edge> createVisualizationViewer(
             Graph<String, Edge> graph) {
         FRLayout<String, Edge> layout = new FRLayout<String, Edge>(graph, new Dimension(800, 600));
@@ -178,7 +187,19 @@ public class StateDiagramViewer {
             layout.step();
 
         VisualizationViewer<String, Edge> vv = new VisualizationViewer<String, Edge>(layout,
-                new Dimension(800, 600));
+                new Dimension(800, 600)) {
+
+            @Override
+            public void paintComponents(Graphics g) {
+                try {
+                    state.set(new DrawingState());
+                    super.paintComponents(g);
+                } finally {
+                    state.remove();
+                }
+            }
+
+        };
         vv.getRenderContext().setVertexLabelTransformer(s -> s);
         vv.getRenderContext().setVertexFillPaintTransformer(vertex -> vertex.equals("Created")
                 ? Color.decode("#B5D9E6") : Color.decode("#FFF1BC"));
@@ -187,7 +208,7 @@ public class StateDiagramViewer {
         vv.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.CNTR);
         vv.getRenderContext().setEdgeLabelTransformer(edge -> edge.name);
         vv.getRenderContext().setEdgeShapeTransformer(new EdgeShape.QuadCurve<String, Edge>());
-
+        vv.getRenderContext().setEdgeLabelRenderer(createEdgeLabelRenderer(vv));
         // The following code adds capability for mouse picking of
         // vertices/edges. Vertices can even be moved!
         final DefaultModalGraphMouse<String, Number> graphMouse = new DefaultModalGraphMouse<String, Number>();
@@ -196,10 +217,17 @@ public class StateDiagramViewer {
         return vv;
     }
 
+    private static EdgeLabelRenderer createEdgeLabelRenderer(VisualizationViewer<String, Edge> vv) {
+        DefaultEdgeLabelRenderer r = new DefaultEdgeLabelRenderer(Color.blue, true);
+        r.setOpaque(true);
+        r.setBackground(Color.red);
+        return r;
+    }
+
     private static Transformer<String, Shape> createVertexShapeTransformer(
             Layout<String, Edge> layout) {
         return vertex -> {
-            int w = 100;
+            int w = 150;
             int margin = 5;
             int ascent = 12;
             int descent = 5;
