@@ -223,11 +223,12 @@ public class StateDiagramViewer {
     private static EdgeLabelRenderer createEdgeLabelRenderer(VisualizationViewer<String, Edge> vv) {
         DefaultEdgeLabelRenderer r = new DefaultEdgeLabelRenderer(Color.blue, true) {
 
+            private static final long serialVersionUID = -4302766740538555072L;
+
             @Override
             public boolean isOpaque() {
                 return true;
             }
-
         };
         return r;
     }
