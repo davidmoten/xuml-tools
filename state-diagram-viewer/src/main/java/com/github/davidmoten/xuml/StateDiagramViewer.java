@@ -15,6 +15,8 @@ import java.io.File;
 import javax.swing.BorderFactory;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -33,11 +35,29 @@ import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.decorators.EdgeShape;
 import edu.uci.ics.jung.visualization.renderers.Renderer;
 import xuml.tools.miuml.metamodel.jaxb.Class;
+import xuml.tools.miuml.metamodel.jaxb.ModeledDomain;
+import xuml.tools.model.compiler.Util;
 
 public class StateDiagramViewer {
 
-    public static void show(Class c) {
-        System.out.println("showing " + c);
+    private final JFrame frame = new JFrame();
+    private final JPanel vvContainer = createVvContainer();
+    private volatile ModeledDomain domain;
+    private volatile JMenu classMenu;
+
+    public void open(ModeledDomain domain) {
+        this.domain = domain;
+        classMenu.removeAll();
+        Util.getClasses(domain).stream().forEach(cls -> {
+            JMenuItem m = new JMenuItem(cls.getName());
+            m.setEnabled(cls.getLifecycle() != null);
+            m.addActionListener(evt -> show(cls));
+            classMenu.add(m);
+        });
+    }
+
+    public void show(Class c) {
+        System.out.println("showing " + c.getName());
         Graph<String, Edge> g = new DirectedSparseGraph<String, Edge>();
         if (c.getLifecycle() != null) {
             c.getLifecycle().getState().stream().forEach(state -> g.addVertex(state.getName()));
@@ -50,8 +70,52 @@ public class StateDiagramViewer {
                 g.addEdge(new Edge(eventName), fromState, toState);
             });
         }
-        if (!g.getVertices().isEmpty())
-            show(g);
+        if (!g.getVertices().isEmpty()) {
+            VisualizationViewer<String, Edge> vv = createVisualizationViewer(g);
+            SwingUtilities.invokeLater(() -> {
+                vvContainer.removeAll();
+                vvContainer.add(vv);
+                createMenu(vv);
+                vvContainer.repaint();
+                vvContainer.revalidate();
+                System.out.println("added vv");
+                frame.setTitle(c.getName());
+            });
+        }
+    }
+
+    public void start() {
+        SwingUtilities.invokeLater(() -> {
+            // Creates a menubar for a JFrame
+            JMenuBar menuBar = new JMenuBar();
+            // Add the menubar to the frame
+            frame.setJMenuBar(menuBar);
+            // Define and add two drop down menu to the menubar
+            JMenu fileMenu = new JMenu("File");
+            classMenu = new JMenu("Class");
+            JMenu editMenu = new JMenu("Edit");
+            menuBar.add(fileMenu);
+            menuBar.add(editMenu);
+            menuBar.add(classMenu);
+            JMenuItem openAction = new JMenuItem("Open");
+            JMenuItem exitAction = new JMenuItem("Exit");
+            fileMenu.add(openAction);
+            fileMenu.add(exitAction);
+            openAction.addActionListener(System.out::println);
+            exitAction.addActionListener(e -> System.exit(0));
+            frame.getContentPane().add(vvContainer);
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setLocationRelativeTo(null);
+            frame.pack();
+            frame.setVisible(true);
+        });
+    }
+
+    private static JPanel createVvContainer() {
+        JPanel panel = new JPanel();
+        panel.setPreferredSize(new Dimension(800, 600));
+        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        return panel;
     }
 
     public static final class Edge {
@@ -68,6 +132,10 @@ public class StateDiagramViewer {
 
     public static void show(Graph<String, Edge> graph) {
 
+    }
+
+    private static VisualizationViewer<String, Edge> createVisualizationViewer(
+            Graph<String, Edge> graph) {
         FRLayout<String, Edge> layout = new FRLayout<String, Edge>(graph, new Dimension(800, 600));
         while (!layout.done())
             layout.step();
@@ -88,19 +156,7 @@ public class StateDiagramViewer {
         final DefaultModalGraphMouse<String, Number> graphMouse = new DefaultModalGraphMouse<String, Number>();
         vv.setGraphMouse(graphMouse);
         graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
-
-        SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame();
-            JPanel surround = new JPanel();
-            surround.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-            surround.add(vv);
-            createMenu(vv);
-            frame.getContentPane().add(surround);
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setLocationRelativeTo(null);
-            frame.pack();
-            frame.setVisible(true);
-        });
+        return vv;
     }
 
     private static Transformer<String, Shape> createVertexShapeTransformer(

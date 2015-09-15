@@ -10,17 +10,21 @@ import com.github.davidmoten.xuml.StateDiagramViewer.Edge;
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.util.EdgeType;
+import xuml.tools.miuml.metamodel.jaxb.ModeledDomain;
 import xuml.tools.model.compiler.Util;
 
 public class StateDiagramViewerTestMain {
 
     public static void main(String[] args) throws IOException {
         // StateDiagramViewer.show(createTestGraph());
-
+        StateDiagramViewer viewer = new StateDiagramViewer();
         try (InputStream is = StateDiagramViewerTestMain.class
                 .getResourceAsStream("/samples.xml")) {
-            Util.getClasses(Util.getModeledDomain(is, "Bookstore")).stream()
-                    .forEach(c -> StateDiagramViewer.show(c));
+            viewer.start();
+            ModeledDomain domain = Util.getModeledDomain(is, "Bookstore");
+            viewer.open(domain);
+            Util.getClasses(domain).stream().filter(cls -> cls.getName().equals("Order"))
+                    .forEach(c -> viewer.show(c));
         }
     }
 
