@@ -103,57 +103,60 @@ public class StateDiagramViewer {
             menuBar.add(fileMenu);
             menuBar.add(editMenu);
             menuBar.add(classMenu);
-            JMenuItem openAction = new JMenuItem("Open");
-            JMenuItem printAction = new JMenuItem("Print...");
-            JMenuItem saveAsImageAction = new JMenuItem("Save as PNG...");
-            JMenuItem exitAction = new JMenuItem("Exit");
-            fileMenu.add(openAction);
-            fileMenu.add(printAction);
-            fileMenu.add(saveAsImageAction);
-            fileMenu.add(exitAction);
-            openAction.addActionListener(System.out::println);
-            exitAction.addActionListener(e -> System.exit(0));
-            printAction.addActionListener(e -> {
-                Color bg = vvContainer.getBackground();
-                try {
-                    vvContainer.setPreferredSize(vvContainer.getSize());
-                    vvContainer.setBackground(Color.white);
-                    Panels.print(vvContainer);
-                } catch (PrinterException e1) {
-                    e1.printStackTrace();
-                } finally {
-                    vvContainer.setBackground(bg);
-                }
-            });
-            saveAsImageAction.addActionListener(e -> {
-                JFileChooser fc = new JFileChooser();
-                fc.addChoosableFileFilter(new ImageFilter());
-                int returnVal = fc.showSaveDialog(vvContainer);
-                if (returnVal == JFileChooser.APPROVE_OPTION) {
-                    File file = fc.getSelectedFile();
-                    if (!file.getName().toUpperCase().endsWith(".PNG"))
-                        file = new File(file.getAbsolutePath() + ".PNG");
-                    Color bg = vvContainer.getBackground();
-                    try {
-                        vvContainer.setPreferredSize(vvContainer.getSize());
-                        vvContainer.setBackground(Color.white);
-                        Panels.saveImage(vvContainer, file);
-                    } catch (RuntimeException e1) {
-                        e1.printStackTrace();
-                    } finally {
-                        vvContainer.setBackground(bg);
-                    }
-                }
-            });
+            JMenuItem openMenuItem = new JMenuItem("Open");
+            JMenuItem printMenuItem = new JMenuItem("Print...");
+            JMenuItem saveAsImageMenuItem = new JMenuItem("Save as PNG...");
+            JMenuItem exitMenuItem = new JMenuItem("Exit");
+            fileMenu.add(openMenuItem);
+            fileMenu.add(printMenuItem);
+            fileMenu.add(saveAsImageMenuItem);
+            fileMenu.add(exitMenuItem);
+            openMenuItem.addActionListener(System.out::println);
+            exitMenuItem.addActionListener(e -> System.exit(0));
+            printMenuItem.addActionListener(e -> print());
+            saveAsImageMenuItem.addActionListener(e -> saveAsImage());
 
             frame.getContentPane().add(vvContainer);
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setSize(new Dimension(1000, 800));
             frame.setLocationRelativeTo(null);
-            // frame.pack();
             frame.setVisible(true);
         });
 
+    }
+
+    private void saveAsImage() {
+        JFileChooser fc = new JFileChooser();
+        fc.addChoosableFileFilter(new ImageFilter());
+        int returnVal = fc.showSaveDialog(vvContainer);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fc.getSelectedFile();
+            if (!file.getName().toUpperCase().endsWith(".PNG"))
+                file = new File(file.getAbsolutePath() + ".PNG");
+            Color bg = vvContainer.getBackground();
+            try {
+                vvContainer.setPreferredSize(vvContainer.getSize());
+                vvContainer.setBackground(Color.white);
+                Panels.saveImage(vvContainer, file);
+            } catch (RuntimeException e1) {
+                e1.printStackTrace();
+            } finally {
+                vvContainer.setBackground(bg);
+            }
+        }
+    }
+
+    private void print() {
+        Color bg = vvContainer.getBackground();
+        try {
+            vvContainer.setPreferredSize(vvContainer.getSize());
+            vvContainer.setBackground(Color.white);
+            Panels.print(vvContainer);
+        } catch (PrinterException e1) {
+            e1.printStackTrace();
+        } finally {
+            vvContainer.setBackground(bg);
+        }
     }
 
     private static JPanel createVvContainer() {
@@ -206,7 +209,7 @@ public class StateDiagramViewer {
         vv.getRenderContext().setVertexDrawPaintTransformer(vertex -> Color.black);
         vv.getRenderContext().setVertexShapeTransformer(createVertexShapeTransformer(layout));
         vv.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.CNTR);
-        vv.getRenderContext().setEdgeLabelTransformer(edge -> edge.name);
+        vv.getRenderContext().setEdgeLabelTransformer(edge -> " " + edge.name + " ");
         vv.getRenderContext().setEdgeShapeTransformer(new EdgeShape.QuadCurve<String, Edge>());
         vv.getRenderContext().setEdgeLabelRenderer(createEdgeLabelRenderer(vv));
         // The following code adds capability for mouse picking of
@@ -218,7 +221,14 @@ public class StateDiagramViewer {
     }
 
     private static EdgeLabelRenderer createEdgeLabelRenderer(VisualizationViewer<String, Edge> vv) {
-        DefaultEdgeLabelRenderer r = new DefaultEdgeLabelRenderer(Color.blue, true);
+        DefaultEdgeLabelRenderer r = new DefaultEdgeLabelRenderer(Color.blue, true) {
+
+            @Override
+            public boolean isOpaque() {
+                return true;
+            }
+
+        };
         return r;
     }
 
