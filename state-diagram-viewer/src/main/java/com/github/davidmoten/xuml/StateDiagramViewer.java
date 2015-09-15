@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import javax.swing.BorderFactory;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -145,7 +144,7 @@ public class StateDiagramViewer {
     private static JPanel createVvContainer() {
         JPanel panel = new JPanel();
         panel.setPreferredSize(new Dimension(800, 600));
-        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        // panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         panel.setLayout(new GridLayout(0, 1));
         return panel;
     }
