@@ -216,6 +216,10 @@ public class StateDiagramViewer {
         }
     }
 
+    public void start(String resource, String domainName) {
+        start(StateDiagramViewer.class.getResourceAsStream(resource), domainName);
+    }
+
     public void start(InputStream input, String domainName) {
         try (InputStream is = input) {
             start();
