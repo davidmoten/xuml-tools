@@ -219,8 +219,6 @@ public class StateDiagramViewer {
 
     private static EdgeLabelRenderer createEdgeLabelRenderer(VisualizationViewer<String, Edge> vv) {
         DefaultEdgeLabelRenderer r = new DefaultEdgeLabelRenderer(Color.blue, true);
-        r.setOpaque(true);
-        r.setBackground(Color.red);
         return r;
     }
 
