@@ -101,9 +101,11 @@ public class StateDiagramViewer {
             menuBar.add(classMenu);
             JMenuItem openAction = new JMenuItem("Open");
             JMenuItem printAction = new JMenuItem("Print...");
-            JMenuItem savePngAction = new JMenuItem("Save as PNG...");
+            JMenuItem saveAsImageAction = new JMenuItem("Save as PNG...");
             JMenuItem exitAction = new JMenuItem("Exit");
             fileMenu.add(openAction);
+            fileMenu.add(printAction);
+            fileMenu.add(saveAsImageAction);
             fileMenu.add(exitAction);
             openAction.addActionListener(System.out::println);
             exitAction.addActionListener(e -> System.exit(0));
@@ -114,7 +116,7 @@ public class StateDiagramViewer {
                     e1.printStackTrace();
                 }
             });
-            savePngAction.addActionListener(e -> {
+            saveAsImageAction.addActionListener(e -> {
                 JFileChooser fc = new JFileChooser();
                 fc.addChoosableFileFilter(new ImageFilter());
                 int returnVal = fc.showSaveDialog(vvContainer);
