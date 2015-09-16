@@ -211,7 +211,7 @@ public class StateDiagramViewer {
         vv.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.CNTR);
         vv.getRenderContext().setEdgeLabelTransformer(edge -> " " + edge.name + " ");
         vv.getRenderContext().setEdgeShapeTransformer(new EdgeShape.QuadCurve<String, Edge>());
-        vv.getRenderer().setEdgeLabelRenderer(new MyEdgeLabelRenderer<>(10));
+        vv.getRenderer().setEdgeLabelRenderer(new MyEdgeLabelRenderer<>(-10));
 
         // The following code adds capability for mouse picking of
         // vertices/edges. Vertices can even be moved!
