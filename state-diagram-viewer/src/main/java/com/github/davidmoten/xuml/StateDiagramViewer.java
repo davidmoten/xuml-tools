@@ -31,8 +31,6 @@ import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.decorators.EdgeShape;
-import edu.uci.ics.jung.visualization.renderers.DefaultEdgeLabelRenderer;
-import edu.uci.ics.jung.visualization.renderers.EdgeLabelRenderer;
 import edu.uci.ics.jung.visualization.renderers.Renderer;
 import xuml.tools.miuml.metamodel.jaxb.Class;
 import xuml.tools.miuml.metamodel.jaxb.ModeledDomain;
@@ -192,6 +190,8 @@ public class StateDiagramViewer {
         VisualizationViewer<String, Edge> vv = new VisualizationViewer<String, Edge>(layout,
                 new Dimension(800, 600)) {
 
+            private static final long serialVersionUID = -3546358007558213875L;
+
             @Override
             public void paintComponents(Graphics g) {
                 try {
@@ -211,26 +211,14 @@ public class StateDiagramViewer {
         vv.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.CNTR);
         vv.getRenderContext().setEdgeLabelTransformer(edge -> " " + edge.name + " ");
         vv.getRenderContext().setEdgeShapeTransformer(new EdgeShape.QuadCurve<String, Edge>());
-        vv.getRenderContext().setEdgeLabelRenderer(createEdgeLabelRenderer(vv));
+        vv.getRenderer().setEdgeLabelRenderer(new MyEdgeLabelRenderer<>(10));
+
         // The following code adds capability for mouse picking of
         // vertices/edges. Vertices can even be moved!
         final DefaultModalGraphMouse<String, Number> graphMouse = new DefaultModalGraphMouse<String, Number>();
         vv.setGraphMouse(graphMouse);
         graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
         return vv;
-    }
-
-    private static EdgeLabelRenderer createEdgeLabelRenderer(VisualizationViewer<String, Edge> vv) {
-        DefaultEdgeLabelRenderer r = new DefaultEdgeLabelRenderer(Color.blue, true) {
-
-            private static final long serialVersionUID = -4302766740538555072L;
-
-            @Override
-            public boolean isOpaque() {
-                return true;
-            }
-        };
-        return r;
     }
 
     private static Transformer<String, Shape> createVertexShapeTransformer(
