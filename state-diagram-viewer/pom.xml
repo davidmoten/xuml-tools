@@ -97,9 +97,9 @@
                             </execution>
                         </executions>
                         <configuration>
-                                <mainClass>com.github.davidmoten.xuml.StateDiagramViewerTestMain</mainClass>
-                                <classpathScope>test</classpathScope>
-                            </configuration>
+                            <mainClass>com.github.davidmoten.xuml.StateDiagramViewerTestMain</mainClass>
+                            <classpathScope>test</classpathScope>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>

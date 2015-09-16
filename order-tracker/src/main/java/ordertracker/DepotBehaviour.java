@@ -12,10 +12,9 @@ public class DepotBehaviour implements Depot.Behaviour {
 
     @Override
     public void onEntryCreated(Create event) {
-        self.setId(event.getDepotID());
-        self.setName(event.getName());
-        self.setLatitude(event.getLatitudet());
-        self.setLongitude(event.getLongitude());
+        // use method chaining
+        self.setId_(event.getDepotID()).setName_(event.getName()).setLatitude_(event.getLatitudet())
+                .setLongitude_(event.getLongitude());
     }
 
 }

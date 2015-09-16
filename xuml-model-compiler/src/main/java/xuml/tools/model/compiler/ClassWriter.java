@@ -972,6 +972,11 @@ public class ClassWriter {
         out.format("    public void setId(%s id) {\n", info.addType(getIdType(info)));
         out.format("        this.id = id;\n");
         out.format("    }\n\n");
+        out.format("    public %s setId_(%s id) {\n", info.getJavaClassSimpleName(),
+                info.addType(getIdType(info)));
+        out.format("        this.id = id;\n");
+        out.format("        return this;\n");
+        out.format("    }\n\n");
     }
 
     private void writeNonIdIndependentAttributeGettersAndSetters(PrintStream out, ClassInfo info) {
