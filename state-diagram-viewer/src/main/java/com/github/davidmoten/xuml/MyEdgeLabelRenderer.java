@@ -9,6 +9,7 @@
  */
 package com.github.davidmoten.xuml;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Shape;
@@ -29,9 +30,11 @@ import edu.uci.ics.jung.visualization.transform.shape.GraphicsDecorator;
 public class MyEdgeLabelRenderer<V, E> implements Renderer.EdgeLabel<V, E> {
 
     private final double unaryEdgeDeltaY;
+    private final Color bgColor;
 
-    public MyEdgeLabelRenderer(double unaryEdgeDeltaY) {
+    public MyEdgeLabelRenderer(double unaryEdgeDeltaY, Color bgColor) {
         this.unaryEdgeDeltaY = unaryEdgeDeltaY;
+        this.bgColor = bgColor;
     }
 
     public Component prepareRenderer(RenderContext<V, E> rc, EdgeLabelRenderer graphLabelRenderer,
@@ -119,6 +122,7 @@ public class MyEdgeLabelRenderer<V, E> implements Renderer.EdgeLabel<V, E> {
 
         xform.translate(-d.width / 2, -(d.height / 2 - parallelOffset));
         g.setTransform(xform);
+        g.setBackground(bgColor);
         g.clearRect(0, 0, d.width, d.height);
         g.draw(component, rc.getRendererPane(), 0, 0, d.width, d.height, true);
 
