@@ -130,7 +130,7 @@ public class StateDiagramViewer {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
             if (!file.getName().toUpperCase().endsWith(".PNG"))
-                file = new File(file.getAbsolutePath() + ".PNG");
+                file = new File(file.getAbsolutePath() + ".png");
             Color bg = vvContainer.getBackground();
             try {
                 vvContainer.setPreferredSize(vvContainer.getSize());
