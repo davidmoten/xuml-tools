@@ -237,11 +237,11 @@ public class CodeGeneratorJava {
         out.format("        return signaller.queuedSignals();\n");
         out.format("    }\n\n");
         out.format(
-                "    public static <T extends %s<T>> long persistSignal(String fromEntityUniqueId, Object id, Class<T> cls, %s<T> event, long time, %s<Long> repeatIntervalMs) {\n",
+                "    public static <T extends %s<T>> long persistSignal(String fromEntityUniqueId, Object id, Class<T> cls, %s<T> event, long time, %s<Long> repeatIntervalMs, String entityUniqueId) {\n",
                 types.addType(Entity.class), types.addType(Event.class),
                 types.addType(Optional.class));
         out.format(
-                "        return signaller.persistSignal(fromEntityUniqueId, id,cls,event,time,repeatIntervalMs);\n");
+                "        return signaller.persistSignal(fromEntityUniqueId, id, cls, event, time, repeatIntervalMs, entityUniqueId);\n");
         out.format("    }\n\n");
         out.format("    public synchronized static void stop() {\n");
         out.format("        if (signaller != null) {\n");

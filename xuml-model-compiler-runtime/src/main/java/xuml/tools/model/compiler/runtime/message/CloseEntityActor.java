@@ -1,15 +1,14 @@
 package xuml.tools.model.compiler.runtime.message;
 
-import xuml.tools.model.compiler.runtime.Entity;
-
 public class CloseEntityActor {
-    private final Entity<?> entity;
+    private final String entityUniqueId;
 
-    public CloseEntityActor(Entity<?> entity) {
-        this.entity = entity;
+    public CloseEntityActor(String entityUniqueId) {
+        this.entityUniqueId = entityUniqueId;
     }
 
-    public Entity<?> getEntity() {
-        return entity;
+    public String getEntityUniqueId() {
+        return entityUniqueId;
     }
+
 }

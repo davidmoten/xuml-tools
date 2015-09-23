@@ -35,7 +35,8 @@ public class SignalProcessorListenerRetryOnFailure implements SignalProcessorLis
     }
 
     private <T> void resend(Signal<T> signal, Duration delay) {
-        signal.getEntity().signal(signal.getEvent(), DELAY);
+        throw new RuntimeException("TODO");
+        // signal.getEntity().signal(signal.getEvent(), DELAY);
     }
 
 }

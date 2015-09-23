@@ -1,5 +1,6 @@
 package xuml.tools.model.compiler.runtime;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -134,9 +135,10 @@ public class Signaller {
 
         @SuppressWarnings("unchecked")
         long id = persistSignal(fromEntityUniqueId, entity.getId(), (Class<T>) entity.getClass(),
-                event, time, repeatIntervalMs);
-        Signal<T> signal = new Signal<T>(fromEntityUniqueId, entity, event, id, time,
-                repeatInterval);
+                event, time, repeatIntervalMs, entity.uniqueId());
+        @SuppressWarnings("unchecked")
+        Signal<T> signal = new Signal<T>(fromEntityUniqueId, (Class<Entity<T>>) entity.getClass(),
+                event, id, time, repeatInterval, entity.getId(), entity.uniqueId());
         signal(signal);
     }
 
@@ -146,7 +148,6 @@ public class Signaller {
         String eventSignature;
 
         EntityEvent(String fromEntityUniqueId, String entityUniqueId, String eventSignature) {
-            super();
             this.fromEntityUniqueId = fromEntityUniqueId;
             this.entityUniqueId = entityUniqueId;
             this.eventSignature = eventSignature;
@@ -213,7 +214,7 @@ public class Signaller {
                 // at any one time. Mellor & Balcer p194.
                 synchronized (this) {
                     EntityEvent key = cancelSignal(signal.getFromEntityUniqueId(),
-                            signal.getEntity().uniqueId(), signal.getEvent().signatureKey());
+                            signal.getEntityUniqueId(), signal.getEvent().signatureKey());
 
                     Cancellable cancellable;
                     ExecutionContext executionContext = actorSystem.dispatcher();
@@ -292,21 +293,12 @@ public class Signaller {
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     private void signal(QueuedSignal sig) {
-        EntityManager em = emf.createEntityManager();
-        em.getTransaction().begin();
         log.debug("sending {}", sig);
         Event<?> event = Util.toObject(sig.eventContent, sig.eventClass());
-        Object id = Util.toObject(sig.idContent, sig.idClass());
-        Class<?> entityClass;
-        entityClass = getClassForName(sig.entityClassName);
-        Entity<?> entity = (Entity<?>) em.find(entityClass, id);
-        em.getTransaction().commit();
-        em.close();
-        // TODO reschedule signals
-        if (entity != null) {
-            signal(new Signal(sig.fromEntityUniqueId, entity, event, sig.id));
-        } else
-            log.warn("ENTITY NOT FOUND for entityClassName=" + sig.entityClassName + ",id=" + id);
+        Serializable id = Util.toObject(sig.idContent, sig.idClass());
+        Class<?> entityClass = getClassForName(sig.entityClassName);
+        signal(new Signal(sig.fromEntityUniqueId, entityClass, event, sig.id, id,
+                sig.toEntityUniqueId));
     }
 
     private Class<?> getClassForName(String className) {
@@ -318,11 +310,13 @@ public class Signaller {
     }
 
     public <T extends Entity<T>> long persistSignal(String fromEntityUniqueId, Object id,
-            Class<T> cls, Event<T> event, long time, Optional<Long> repeatIntervalMs) {
+            Class<T> cls, Event<T> event, long time, Optional<Long> repeatIntervalMs,
+            String entityUniqueId) {
         byte[] idBytes = Util.toBytes(id);
         byte[] eventBytes = Util.toBytes(event);
         QueuedSignal signal = new QueuedSignal(id.getClass().getName(), idBytes, cls.getName(),
-                event.getClass().getName(), eventBytes, time, repeatIntervalMs, fromEntityUniqueId);
+                event.getClass().getName(), eventBytes, time, repeatIntervalMs, fromEntityUniqueId,
+                entityUniqueId);
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
         em.persist(signal);

@@ -52,7 +52,6 @@ public class EntityActor extends UntypedActor {
 
             EntityManager em = null;
             EntityTransaction tx = null;
-            Entity<?> entity = null;
             try {
                 listener.beforeProcessing(signal, this);
                 em = emf.createEntityManager();
@@ -60,21 +59,23 @@ public class EntityActor extends UntypedActor {
                 tx.begin();
                 log.debug("started transaction");
                 Entity<?> en;
-                synchronized (signal) {
-                    // because signal is not an immutable object make sure we
-                    // have its latest values
-                    en = signal.getEntity();
-                }
-                entity = em.merge(en);
-                log.debug("merged");
-                em.refresh(entity);
+                // TODO remove commented out code
+                // synchronized (signal) {
+                // // because signal is not an immutable object make sure we
+                // // have its latest values
+                // en = signal.getEntity();
+                // }
+                // entity = em.merge(en);
+                // log.debug("merged");
+                // em.refresh(entity);
+                en = (Entity<?>) em.find(signal.getEntityClass(), signal.getEntityId());
                 log.debug("calling event {} on entity id = ",
-                        signal.getEvent().getClass().getSimpleName(), signal.getEntity().getId());
-                entity.helper().setEntityManager(em);
-                entity.event(signal.getEvent());
-                entity.helper().setEntityManager(em);
+                        signal.getEvent().getClass().getSimpleName(), signal.getEntityId());
+                en.helper().setEntityManager(em);
+                en.event(signal.getEvent());
+                en.helper().setEntityManager(em);
                 log.debug("removing signal from persistence signalId={}, entityId={}",
-                        signal.getId(), signal.getEntity().getId());
+                        signal.getId(), signal.getEntityId());
                 int countDeleted = em
                         .createQuery("delete from " + QueuedSignal.class.getSimpleName()
                                 + " where id=:id")
@@ -85,10 +86,11 @@ public class EntityActor extends UntypedActor {
                 log.debug("committed");
                 listener.afterProcessing(signal, this);
                 em.close();
-                entity.helper().setEntityManager(null);
+                // TODO do this in finally?
+                en.helper().setEntityManager(null);
                 // only after successful commit do we send the signals to other
                 // entities made during onEntry procedure.
-                entity.helper().sendQueuedSignals();
+                en.helper().sendQueuedSignals();
                 closed = true;
             } catch (RuntimeException e) {
                 try {
@@ -102,7 +104,7 @@ public class EntityActor extends UntypedActor {
                     throw e;
                 }
             } finally {
-                getSender().tell(new CloseEntityActor(signal.getEntity()), getSelf());
+                getSender().tell(new CloseEntityActor(signal.getEntityUniqueId()), getSelf());
             }
         }
     }

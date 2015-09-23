@@ -2,11 +2,10 @@ package xuml.tools.model.compiler.runtime;
 
 import java.util.Set;
 
-import xuml.tools.model.compiler.runtime.SignalProcessorListener;
+import com.google.common.collect.Sets;
+
 import xuml.tools.model.compiler.runtime.actor.EntityActor;
 import xuml.tools.model.compiler.runtime.message.Signal;
-
-import com.google.common.collect.Sets;
 
 public class SignalProcessorListenerStopsSignalProcessingSingleEntityOnFailure
         implements SignalProcessorListener {
@@ -15,8 +14,8 @@ public class SignalProcessorListenerStopsSignalProcessingSingleEntityOnFailure
 
     @Override
     public synchronized void beforeProcessing(Signal<?> signal, EntityActor actor) {
-        if (stoppedEntities.contains(signal.getEntity().uniqueId()))
-            throw new SignalProcessingStoppedException(signal.getEntity().uniqueId());
+        if (stoppedEntities.contains(signal.getEntityUniqueId()))
+            throw new SignalProcessingStoppedException(signal.getEntityUniqueId());
     }
 
     @Override
@@ -27,7 +26,7 @@ public class SignalProcessorListenerStopsSignalProcessingSingleEntityOnFailure
     @Override
     public synchronized void failure(Signal<?> signal, Exception e, EntityActor actor) {
         if (!(e instanceof SignalProcessingStoppedException))
-            stoppedEntities.add(signal.getEntity().uniqueId());
+            stoppedEntities.add(signal.getEntityUniqueId());
     }
 
     public static class SignalProcessingStoppedException extends RuntimeException {

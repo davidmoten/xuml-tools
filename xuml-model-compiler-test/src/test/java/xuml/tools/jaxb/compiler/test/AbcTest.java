@@ -161,7 +161,7 @@ public class AbcTest {
 
         // test the reloading of a persisted signal to a1
         Context.persistSignal("fromSomeId", a.getId(), A.class, new A.Events.SomethingDone(14),
-                System.currentTimeMillis(), Optional.<Long> absent());
+                System.currentTimeMillis(), Optional.<Long> absent(), a.uniqueId());
         assertEquals(1, Context.sendSignalsInQueue());
         // wait a bit for all signals to be processed
         Thread.sleep(2000);

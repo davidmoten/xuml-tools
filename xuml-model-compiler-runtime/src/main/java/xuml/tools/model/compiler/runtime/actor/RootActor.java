@@ -11,7 +11,6 @@ import akka.actor.Props;
 import akka.actor.UntypedActor;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
-import xuml.tools.model.compiler.runtime.Entity;
 import xuml.tools.model.compiler.runtime.SignalProcessorListenerFactory;
 import xuml.tools.model.compiler.runtime.message.CloseEntityActor;
 import xuml.tools.model.compiler.runtime.message.Signal;
@@ -42,13 +41,9 @@ public class RootActor extends UntypedActor {
     }
 
     private void handleMessage(CloseEntityActor message) {
-        String key = getKey(message.getEntity());
+        String key = message.getEntityUniqueId();
         ActorRef actor = actors.remove(key);
         actor.tell(new StopEntityActor(), getSelf());
-    }
-
-    private String getKey(Entity<?> entity) {
-        return entity.uniqueId();
     }
 
     private void handleMessage(EntityManagerFactory message) {
@@ -56,7 +51,7 @@ public class RootActor extends UntypedActor {
     }
 
     private void handleMessage(Signal<?> message) {
-        String key = getKey(message.getEntity());
+        String key = message.getEntityUniqueId();
         ActorRef actor = getActor(key);
         actor.tell(message, getSelf());
     }

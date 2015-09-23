@@ -1,5 +1,6 @@
 package xuml.tools.model.compiler.runtime;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -25,7 +26,8 @@ public class QueuedSignal {
 
     public QueuedSignal(String idClassName, byte[] idContent, String entityClassName,
             String eventClassName, byte[] eventContent, long time, Optional<Long> repeatIntervalMs,
-            String fromEntityUniqueId) {
+            String fromEntityUniqueId, String toEntityUniqueId) {
+        this.toEntityUniqueId = toEntityUniqueId;
         Preconditions.checkNotNull(repeatIntervalMs);
         this.idContent = idContent;
         this.idClassName = idClassName;
@@ -67,8 +69,11 @@ public class QueuedSignal {
     @Column(name = "repeat_interval_ms", nullable = true)
     public Long repeatIntervalMs;
 
-    @Column(name = "from_entity")
+    @Column(name = "from_entity_unique_id")
     public String fromEntityUniqueId;
+
+    @Column(name = "to_entity_unique_id", nullable = false)
+    public String toEntityUniqueId;
 
     @Override
     public String toString() {
@@ -104,9 +109,10 @@ public class QueuedSignal {
         }
     }
 
-    public Class<?> idClass() {
+    @SuppressWarnings("unchecked")
+    public Class<? extends Serializable> idClass() {
         try {
-            return Class.forName(idClassName);
+            return (Class<? extends Serializable>) Class.forName(idClassName);
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
