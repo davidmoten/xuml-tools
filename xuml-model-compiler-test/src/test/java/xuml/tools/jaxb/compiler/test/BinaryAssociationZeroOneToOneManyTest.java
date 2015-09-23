@@ -60,8 +60,10 @@ public class BinaryAssociationZeroOneToOneManyTest {
             A a = A.create(new AId("boo", "baa"));
             B b = B.create(new BId("some2", "thing2"));
             B b2 = B.create(new BId("some3", "thing3"));
-            a.relateAcrossR1(b);
-            a.relateAcrossR1(b2);
+            a.getB_R1().add(b);
+            a.getB_R1().add(b2);
+            b2.relateAcrossR1(a);
+            b.relateAcrossR1(a);
             a.persist(em);
             b.persist(em);
             b2.persist(em);

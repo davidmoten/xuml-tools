@@ -5,16 +5,15 @@ import static org.junit.Assert.assertEquals;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 import one_to_one_many.A;
 import one_to_one_many.A.AId;
 import one_to_one_many.B;
 import one_to_one_many.B.BId;
 import one_to_one_many.Context;
-
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import xuml.tools.model.compiler.runtime.RelationshipNotEstablishedException;
 
 public class BinaryAssociationOneToOneManyTest {
@@ -61,8 +60,10 @@ public class BinaryAssociationOneToOneManyTest {
             A a = A.create(new AId("boo", "baa"));
             B b = B.create(new BId("some2", "thing2"));
             B b2 = B.create(new BId("some3", "thing3"));
-            a.relateAcrossR1(b);
-            a.relateAcrossR1(b2);
+            a.getB_R1().add(b);
+            b.setA_R1(a);
+            a.getB_R1().add(b2);
+            b2.setA_R1(a);
             a.persist(em);
             b.persist(em);
             b2.persist(em);
