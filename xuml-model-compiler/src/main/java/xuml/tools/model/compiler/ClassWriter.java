@@ -1291,14 +1291,20 @@ public class ClassWriter {
         if (thatMult.equals(Mult.ONE) || thatMult.equals(Mult.ZERO_ONE)) {
             out.format("        set%s(%s);\n", Util.upperFirst(fieldName), fieldName);
         } else {
-            out.format("        get%s().add(%s);\n", Util.upperFirst(fieldName), fieldName);
+            // this commented out because can hurt performance terribly
+            // hydrating a huge collection just so can add to it
+            // out.format(" get%s().add(%s);\n", Util.upperFirst(fieldName),
+            // fieldName);
         }
         // set the field on the other object
         if (thisMult.equals(Mult.ONE) || thisMult.equals(Mult.ZERO_ONE)) {
             out.format("        %s.set%s(this);\n", fieldName, Util.upperFirst(mappedBy));
         } else {
-            out.format("        %s.get%s().add(this);\n", fieldName, Util.upperFirst(mappedBy),
-                    fieldName);
+            // this commented out because can hurt performance terribly
+            // hydrating a huge collection just so can add to it
+            // out.format(" %s.get%s().add(this);\n", fieldName,
+            // Util.upperFirst(mappedBy),
+            // fieldName);
         }
         out.format("        return this;\n");
         out.format("    }\n\n");
