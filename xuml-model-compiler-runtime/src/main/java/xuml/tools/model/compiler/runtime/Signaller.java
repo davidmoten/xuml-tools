@@ -295,8 +295,8 @@ public class Signaller {
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
         log.debug("sending {}", sig);
-        Event<?> event = (Event<?>) Util.toObject(sig.eventContent);
-        Object id = Util.toObject(sig.idContent);
+        Event<?> event = Util.toObject(sig.eventContent, sig.eventClass());
+        Object id = Util.toObject(sig.idContent, sig.idClass());
         Class<?> entityClass;
         entityClass = getClassForName(sig.entityClassName);
         Entity<?> entity = (Entity<?>) em.find(entityClass, id);
@@ -321,8 +321,8 @@ public class Signaller {
             Class<T> cls, Event<T> event, long time, Optional<Long> repeatIntervalMs) {
         byte[] idBytes = Util.toBytes(id);
         byte[] eventBytes = Util.toBytes(event);
-        QueuedSignal signal = new QueuedSignal(idBytes, cls.getName(), event.getClass().getName(),
-                eventBytes, time, repeatIntervalMs, fromEntityUniqueId);
+        QueuedSignal signal = new QueuedSignal(id.getClass().getName(), idBytes, cls.getName(),
+                event.getClass().getName(), eventBytes, time, repeatIntervalMs, fromEntityUniqueId);
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
         em.persist(signal);

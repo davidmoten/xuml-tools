@@ -67,7 +67,7 @@ public class EntityActor extends UntypedActor {
                 }
                 entity = em.merge(en);
                 log.debug("merged");
-                // em.refresh(entity);
+                em.refresh(entity);
                 log.debug("calling event {} on entity id = ",
                         signal.getEvent().getClass().getSimpleName(), signal.getEntity().getId());
                 entity.helper().setEntityManager(em);

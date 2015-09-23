@@ -23,11 +23,12 @@ public class QueuedSignal {
         // no-arg constructor required by JPA
     }
 
-    public QueuedSignal(byte[] idContent, String entityClassName, String eventClassName,
-            byte[] eventContent, long time, Optional<Long> repeatIntervalMs,
+    public QueuedSignal(String idClassName, byte[] idContent, String entityClassName,
+            String eventClassName, byte[] eventContent, long time, Optional<Long> repeatIntervalMs,
             String fromEntityUniqueId) {
         Preconditions.checkNotNull(repeatIntervalMs);
         this.idContent = idContent;
+        this.idClassName = idClassName;
         this.entityClassName = entityClassName;
         this.eventClassName = eventClassName;
         this.eventContent = eventContent;
@@ -48,6 +49,9 @@ public class QueuedSignal {
 
     @Column(name = "event_class_name", nullable = false)
     public String eventClassName;
+
+    @Column(name = "id_class_name", nullable = false)
+    public String idClassName;
 
     @Column(name = "id_content", nullable = false)
     public byte[] idContent;
@@ -75,6 +79,8 @@ public class QueuedSignal {
         builder.append(entityClassName);
         builder.append(", eventClassName=");
         builder.append(eventClassName);
+        builder.append(", idClassName=");
+        builder.append(idClassName);
         builder.append(", idContentSize=");
         builder.append(idContent.length);
         builder.append(", eventContentSize=");
@@ -87,6 +93,23 @@ public class QueuedSignal {
         builder.append(fromEntityUniqueId);
         builder.append("]");
         return builder.toString();
+    }
+
+    @SuppressWarnings("unchecked")
+    public Class<Event<?>> eventClass() {
+        try {
+            return (Class<Event<?>>) Class.forName(eventClassName);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Class<?> idClass() {
+        try {
+            return Class.forName(idClassName);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

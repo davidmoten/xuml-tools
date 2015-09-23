@@ -5,14 +5,13 @@ import static org.junit.Assert.assertNotNull;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
-import one_to_zero_one.A;
-import one_to_zero_one.A.AId;
-import one_to_zero_one.Context;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import one_to_zero_one.A;
+import one_to_zero_one.A.AId;
+import one_to_zero_one.Context;
 import xuml.tools.model.compiler.runtime.Util;
 
 public class SignalPersistenceTest {
@@ -52,7 +51,7 @@ public class SignalPersistenceTest {
         em = Context.createEntityManager();
         em.getTransaction().begin();
         AId id = new A.AId("hello2", "there2");
-        Object id2 = Util.toObject(Util.toBytes(id));
+        A.AId id2 = Util.toObject(Util.toBytes(id), A.AId.class);
         assertNotNull(em.find(Class.forName(A.class.getName()), id2));
         em.getTransaction().commit();
 
