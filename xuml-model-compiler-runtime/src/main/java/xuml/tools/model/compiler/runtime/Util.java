@@ -2,36 +2,49 @@ package xuml.tools.model.compiler.runtime;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.io.Input;
+import com.esotericsoftware.kryo.io.Output;
+import com.esotericsoftware.kryo.pool.KryoFactory;
+import com.esotericsoftware.kryo.pool.KryoPool;
 
 public class Util {
 
+    private static final KryoPool pool = createKryoPool();
+
     public static byte[] toBytes(Object object) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        Kryo kryo = pool.borrow();
         try {
-            ObjectOutputStream oos = new ObjectOutputStream(bytes);
-            oos.writeObject(object);
-            oos.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            kryo.writeObject(new Output(bytes), object);
+            return bytes.toByteArray();
+        } finally {
+            pool.release(kryo);
         }
-        return bytes.toByteArray();
     }
 
     public static Object toObject(byte[] bytes) {
         ByteArrayInputStream in = new ByteArrayInputStream(bytes);
-        Object object;
+        Kryo kryo = pool.borrow();
         try {
-            ObjectInputStream ois = new ObjectInputStream(in);
-            object = ois.readObject();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
+            return kryo.readObject(new Input(in), Object.class);
+        } finally {
+            pool.release(kryo);
         }
-        return object;
+    }
+
+    private static KryoPool createKryoPool() {
+        KryoFactory factory = new KryoFactory() {
+            @Override
+            public Kryo create() {
+                Kryo kryo = new Kryo();
+                // configure kryo instance, customize settings
+                return kryo;
+            }
+        };
+        // Build pool with SoftReferences enabled (optional)
+        return new KryoPool.Builder(factory).softReferences().build();
     }
 
 }
