@@ -13,4 +13,4 @@ env:
 after_success:
   - python src/deploy/addServer.py
   - echo "MAVEN_OPTS='-Xmx512m'" > ~/.mavenrc
-  - mvn clean deploy --settings ~/.m2/mySettings.xml -Darguments="-DskipTests"
+  - mvn clean deploy --settings ~/.m2/mySettings.xml -Darguments="-DskipTests=true -Dmaven.test.skip=true"
