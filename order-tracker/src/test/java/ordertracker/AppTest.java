@@ -152,7 +152,7 @@ public class AppTest {
             List<String> states, int index) throws InterruptedException {
         System.out.println(
                 "waiting for latch " + index + " to detect state " + expectedStates.get(index));
-        latches.get(index).await(30000, TimeUnit.MILLISECONDS);
+        latches.get(index).await(120, TimeUnit.SECONDS);
         System.out.println("latch obtained for " + index);
         assertEquals(expectedStates.subList(0, index + 1), states);
     }
