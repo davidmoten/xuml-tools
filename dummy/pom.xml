@@ -9,4 +9,12 @@
 	<packaging>pom</packaging>
 	<name>${project.artifactId}</name>
 	<description>Dummy project required for release process in travis</description>
+    <dependencies>
+		<dependency>
+			<groupId>com.github.davidmoten</groupId>
+			<artifactId>xuml-model-compiler-test</artifactId>
+			<version>${project.parent.version}</version>
+            <type>pom</type>
+		</dependency>
+    </dependencies>
 </project>
