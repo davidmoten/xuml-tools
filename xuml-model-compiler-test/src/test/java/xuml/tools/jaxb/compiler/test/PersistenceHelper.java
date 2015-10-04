@@ -34,7 +34,7 @@ public class PersistenceHelper {
         Map<String, String> map = Maps.newHashMap();
         map.put("hibernate.hbm2ddl.auto", "create-drop");
         map.put("hibernate.connection.pool_size", "5");
-        map.put("hibernate.show_sql", "true");
+        map.put("hibernate.show_sql", "false");
         map.put("hibernate.format_sql", "true");
         if (type == DatabaseType.DERBY) {
             String dialect = "org.hibernate.dialect.DerbyDialect";
