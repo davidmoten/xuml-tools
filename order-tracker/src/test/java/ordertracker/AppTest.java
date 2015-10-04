@@ -2,6 +2,9 @@ package ordertracker;
 
 import static org.junit.Assert.assertEquals;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -30,6 +33,12 @@ public class AppTest {
     @Before
     public void setup() {
         DerbyUtil.disableDerbyLog();
+        try (Connection c = DriverManager.getConnection("jdbc:hsqldb:file:target/testdb", "sa",
+                "")) {
+            c.prepareStatement("create schema ORDERTRACKER authorization sa").execute();
+        } catch (SQLException e) {
+            log.warn(e.getMessage());
+        }
         App.startup();
     }
 
