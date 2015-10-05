@@ -69,7 +69,8 @@ public class AppTest {
                 Order.State.COURIER_ASSIGNED, Order.State.IN_TRANSIT, Order.State.IN_TRANSIT,
                 Order.State.READY_FOR_DELIVERY, Order.State.DELIVERING, Order.State.DELIVERED);
         final List<CountDownLatch> latches = new CopyOnWriteArrayList<>();
-        for (String state : expectedStates)
+        for (@SuppressWarnings("unused")
+        String state : expectedStates)
             latches.add(new CountDownLatch(1));
         Subscriber<String> subscriber = createSubscriber(states, latches);
         EventService.instance().events().take(expectedStates.size()).subscribeOn(scheduler)
@@ -111,7 +112,8 @@ public class AppTest {
                 Order.State.DELIVERING, Order.State.DELIVERY_FAILED, Order.State.HELD_FOR_PICKUP,
                 Order.State.DELIVERED);
         final List<CountDownLatch> latches = new ArrayList<>();
-        for (String state : expectedStates)
+        for (@SuppressWarnings("unused")
+        String state : expectedStates)
             latches.add(new CountDownLatch(1));
         Subscriber<String> subscriber = createSubscriber(states, latches);
         EventService.instance().events().take(expectedStates.size()).subscribeOn(scheduler)
