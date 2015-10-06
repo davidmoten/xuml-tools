@@ -2,6 +2,7 @@ package ordertracker;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -33,6 +34,8 @@ public class AppTest {
     @Before
     public void setup() {
         DerbyUtil.disableDerbyLog();
+        for (File file : new File("target").listFiles(f -> f.getName().startsWith("testdb.")))
+            file.delete();
         try (Connection c = DriverManager.getConnection("jdbc:hsqldb:file:target/testdb", "sa",
                 "")) {
             c.prepareStatement("create schema ORDERTRACKER authorization sa").execute();
@@ -149,10 +152,10 @@ public class AppTest {
         order.signal(new Order.Events.DeliverAgain());
         checkLatch(latches, expectedStates, states, count++);
         order.signal(new Order.Events.DeliveryFailed());
-        // checkLatch(latches, expectedStates, states, count++);
-        // order.signal(new Order.Events.DeliverAgain());
-        // checkLatch(latches, expectedStates, states, count++);
-        // order.signal(new Order.Events.DeliveryFailed());
+        checkLatch(latches, expectedStates, states, count++);
+        order.signal(new Order.Events.DeliverAgain());
+        checkLatch(latches, expectedStates, states, count++);
+        order.signal(new Order.Events.DeliveryFailed());
         // checkLatch(latches, expectedStates, states, count++);
         // order.signal(new Order.Events.DeliveredByPickup());
         // checkLatch(latches, expectedStates, states, count++);
@@ -166,8 +169,9 @@ public class AppTest {
         return list;
     }
 
-    private static void checkLatch(List<CountDownLatch> latches, List<String> expectedStates,
-            List<String> states, int index) throws InterruptedException {
+    private static synchronized void checkLatch(List<CountDownLatch> latches,
+            List<String> expectedStates, List<String> states, int index)
+                    throws InterruptedException {
         System.out.println(
                 "waiting for latch " + index + " to detect state " + expectedStates.get(index));
         latches.get(index).await(120, TimeUnit.SECONDS);
