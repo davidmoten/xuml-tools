@@ -1,3 +1,17 @@
+sudo: false
 language: java
 jdk:
   - oraclejdk8
+
+language: java
+
+env:
+  global:
+    - SONATYPE_USERNAME=davidmoten
+    - secure: "ZX+0UALfAn8xqCwP4FMDyAOC4L3i4flObRs3HWej9aBp4NPxrlkp/0t+vO/h9XsBDN5ets/lsGMsaaKIqb1Nw1LMeI6p8YIQITBVxFRxVyy+oJE1EY2/sixVMZPM95AVd/F8k/SuVgn76W5t9rF11EnkQ+TL+NKEwS7mvbYIq9I="
+    
+after_success:
+  - python src/deploy/addServer.py
+  - env
+  - echo "MAVEN_OPTS='-Xmx512m'" > ~/.mavenrc
+  - mvn clean deploy --settings ~/.m2/mySettings.xml -Darguments="-Dmaven.test.skip=true"

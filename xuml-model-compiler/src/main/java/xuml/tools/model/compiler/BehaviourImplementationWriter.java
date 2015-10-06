@@ -3,10 +3,10 @@ package xuml.tools.model.compiler;
 import java.io.PrintStream;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.io.output.ByteArrayOutputStream;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import xuml.tools.model.compiler.info.MyEvent;
@@ -101,11 +101,8 @@ public class BehaviourImplementationWriter {
             if (event.getStateName() != null)
                 stateEvent.put(event.getStateName(), event);
         }
-        List<MyEvent> nonStateEvents = Lists.newArrayList();
-        for (MyEvent event : info.getEvents()) {
-            if (event.getStateName() == null)
-                nonStateEvents.add(event);
-        }
+        List<MyEvent> nonStateEvents = info.getEvents().stream()
+                .filter(ev -> ev.getStateName() == null).collect(Collectors.toList());
 
         for (MyEvent event : stateEvent.values()) {
             writeStateEventOnEntryMethod(out, event);

@@ -2,6 +2,9 @@ package ordertracker;
 
 import static org.junit.Assert.assertEquals;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -30,6 +33,12 @@ public class AppTest {
     @Before
     public void setup() {
         DerbyUtil.disableDerbyLog();
+        try (Connection c = DriverManager.getConnection("jdbc:hsqldb:file:target/testdb", "sa",
+                "")) {
+            c.prepareStatement("create schema ORDERTRACKER authorization sa").execute();
+        } catch (SQLException e) {
+            log.warn(e.getMessage());
+        }
         App.startup();
     }
 
@@ -60,7 +69,8 @@ public class AppTest {
                 Order.State.COURIER_ASSIGNED, Order.State.IN_TRANSIT, Order.State.IN_TRANSIT,
                 Order.State.READY_FOR_DELIVERY, Order.State.DELIVERING, Order.State.DELIVERED);
         final List<CountDownLatch> latches = new CopyOnWriteArrayList<>();
-        for (String state : expectedStates)
+        for (@SuppressWarnings("unused")
+        String state : expectedStates)
             latches.add(new CountDownLatch(1));
         Subscriber<String> subscriber = createSubscriber(states, latches);
         EventService.instance().events().take(expectedStates.size()).subscribeOn(scheduler)
@@ -102,7 +112,8 @@ public class AppTest {
                 Order.State.DELIVERING, Order.State.DELIVERY_FAILED, Order.State.HELD_FOR_PICKUP,
                 Order.State.DELIVERED);
         final List<CountDownLatch> latches = new ArrayList<>();
-        for (String state : expectedStates)
+        for (@SuppressWarnings("unused")
+        String state : expectedStates)
             latches.add(new CountDownLatch(1));
         Subscriber<String> subscriber = createSubscriber(states, latches);
         EventService.instance().events().take(expectedStates.size()).subscribeOn(scheduler)
@@ -152,7 +163,7 @@ public class AppTest {
             List<String> states, int index) throws InterruptedException {
         System.out.println(
                 "waiting for latch " + index + " to detect state " + expectedStates.get(index));
-        latches.get(index).await(30000, TimeUnit.MILLISECONDS);
+        latches.get(index).await(120, TimeUnit.SECONDS);
         System.out.println("latch obtained for " + index);
         assertEquals(expectedStates.subList(0, index + 1), states);
     }

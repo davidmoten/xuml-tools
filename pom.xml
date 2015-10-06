@@ -94,6 +94,7 @@
 		<module>order-tracker</module>
 		<module>order-tracker-webapp</module>
 		<module>state-diagram-viewer</module>
+        <module>dummy</module>
   	</modules>	
 	<profiles>
 		<profile>
