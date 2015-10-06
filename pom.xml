@@ -32,9 +32,9 @@
 	</issueManagement>
 	<inceptionYear>2012</inceptionYear>
 	<scm>
-        <connection>scm:git:git@github.com:davidmoten/xuml-tools.git</connection>
-        <developerConnection>scm:git:git@github.com:davidmoten/xuml-tools.git</developerConnection>
-        <url>scm:git:git@github.com:davidmoten/xuml-tools.git</url>
+        <connection>scm:git:https://github.com/davidmoten/xuml-tools.git</connection>
+        <developerConnection>scm:git:https://github.com/davidmoten/xuml-tools.git</developerConnection>
+        <url>scm:git:https://github.com:davidmoten/xuml-tools.git</url>
       <tag>0.2.1</tag>
   </scm>
 	<developers>
