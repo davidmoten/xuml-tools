@@ -154,8 +154,8 @@ public class AppTest {
         order.signal(new Order.Events.DeliveryFailed());
         checkLatch(latches, expectedStates, states, count++);
         order.signal(new Order.Events.DeliverAgain());
-        checkLatch(latches, expectedStates, states, count++);
-        order.signal(new Order.Events.DeliveryFailed());
+        // checkLatch(latches, expectedStates, states, count++);
+        // order.signal(new Order.Events.DeliveryFailed());
         // checkLatch(latches, expectedStates, states, count++);
         // order.signal(new Order.Events.DeliveredByPickup());
         // checkLatch(latches, expectedStates, states, count++);

@@ -2,6 +2,8 @@ package ordertracker;
 
 import java.util.concurrent.TimeUnit;
 
+import com.google.common.base.Optional;
+
 import ordertracker.Order.Events.ArrivedDepot;
 import ordertracker.Order.Events.ArrivedFinalDepot;
 import ordertracker.Order.Events.Assign;
@@ -18,8 +20,6 @@ import ordertracker.Order.Events.ReturnToSender;
 import ordertracker.Order.Events.Send;
 import ordertracker.Order.State;
 import scala.concurrent.duration.Duration;
-
-import com.google.common.base.Optional;
 
 public class OrderBehaviour implements Order.Behaviour {
 
@@ -95,11 +95,11 @@ public class OrderBehaviour implements Order.Behaviour {
 
     @Override
     public void onEntryDeliveryFailed(DeliveryFailed event) {
+        event(Order.State.DELIVERY_FAILED);
         if (self.getAttempts() >= self.getMaxAttempts())
             self.signal(new Order.Events.NoMoreAttempts());
         else
             self.signal(new Order.Events.DeliverAgain());
-        event(Order.State.DELIVERY_FAILED);
     }
 
     @Override
