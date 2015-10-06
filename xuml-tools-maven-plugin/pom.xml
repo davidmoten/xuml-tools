@@ -3,7 +3,7 @@
     <parent>
         <artifactId>xuml-tools</artifactId>
         <groupId>com.github.davidmoten</groupId>
-        <version>0.4.2-SNAPSHOT</version>
+        <version>0.4.2</version>
     </parent>
     <artifactId>xuml-tools-maven-plugin</artifactId>
     <packaging>maven-plugin</packaging>
