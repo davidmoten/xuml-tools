@@ -76,9 +76,14 @@ public class AppTest {
         EventService.instance().events().take(expectedStates.size()).subscribeOn(scheduler)
                 .subscribe(subscriber);
 
-        Depot.create(new Depot.Events.Create("2", "Bungendore", -35.0, 142.0));
-        Order order = Order.create(new Order.Events.Create("2", "test order", "canberra", "sydney",
-                "fred@yahoo.com", "joey@gmail.com", 3, "created"));
+        Order order;
+        synchronized (this) {
+            // note for using with h2 enforce happens-before by creating order
+            // using depot
+            Depot depot = Depot.create(new Depot.Events.Create("2", "Bungendore", -35.0, 142.0));
+            order = Order.create(new Order.Events.Create(depot.getId(), "test order", "canberra",
+                    "sydney", "fred@yahoo.com", "joey@gmail.com", 3, "created"));
+        }
         int count = 0;
         checkLatch(latches, expectedStates, states, count++);
         order.signal(new Order.Events.Send());
@@ -118,11 +123,13 @@ public class AppTest {
         Subscriber<String> subscriber = createSubscriber(states, latches);
         EventService.instance().events().take(expectedStates.size()).subscribeOn(scheduler)
                 .subscribe(subscriber);
-
-        Order order = Order.create(new Order.Events.Create("3", "test order", "canberra", "sydney",
-                "fred@yahoo.com", "joey@gmail.com", 3, "created"));
-
-        Depot.create(new Depot.Events.Create("3", "Bungendore", -35.0, 142.0));
+        Order order;
+        synchronized (this) {
+            // prevent reordering with latch checks
+            order = Order.create(new Order.Events.Create("3", "test order", "canberra", "sydney",
+                    "fred@yahoo.com", "joey@gmail.com", 3, "created"));
+            Depot.create(new Depot.Events.Create("3", "Bungendore", -35.0, 142.0));
+        }
         int count = 0;
         checkLatch(latches, expectedStates, states, count++);
         order.signal(new Order.Events.Send());
