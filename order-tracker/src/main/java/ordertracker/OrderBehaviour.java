@@ -104,7 +104,7 @@ public class OrderBehaviour implements Order.Behaviour {
 
     @Override
     public void onEntryAwaitingNextDeliveryAttempt(DeliverAgain event) {
-        self.signal(new Order.Events.DeliverAgain(), Duration.create(12, TimeUnit.HOURS));
+        self.signal(new Order.Events.DeliverAgain(), Duration.create(12, TimeUnit.MILLISECONDS));
         event(Order.State.AWAITING_NEXT_DELIVERY_ATTEMPT);
     }
 
@@ -119,7 +119,7 @@ public class OrderBehaviour implements Order.Behaviour {
     }
 
     private void returnToSenderIfNotPickedUp() {
-        self.signal(new Order.Events.ReturnToSender(), Duration.create(14, TimeUnit.DAYS));
+        self.signal(new Order.Events.ReturnToSender(), Duration.create(14, TimeUnit.MILLISECONDS));
         event(Order.State.HELD_FOR_PICKUP);
     }
 
