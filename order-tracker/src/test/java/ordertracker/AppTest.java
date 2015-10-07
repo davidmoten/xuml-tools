@@ -153,7 +153,7 @@ public class AppTest {
         checkLatch(latches, expectedStates, states, count++);
         order.signal(new Order.Events.DeliveryFailed());
         checkLatch(latches, expectedStates, states, count++);
-        order.signal(new Order.Events.DeliverAgain());
+        // order.signal(new Order.Events.DeliverAgain());
         // checkLatch(latches, expectedStates, states, count++);
         // order.signal(new Order.Events.DeliveryFailed());
         // checkLatch(latches, expectedStates, states, count++);
@@ -176,7 +176,7 @@ public class AppTest {
                 "waiting for latch " + index + " to detect state " + expectedStates.get(index));
         latches.get(index).await(120, TimeUnit.SECONDS);
         System.out.println("latch obtained for " + index);
-        assertEquals(expectedStates.subList(0, index + 1), states);
+        assertEquals(expectedStates.subList(0, index + 1), states.subList(0, index + 1));
     }
 
     private Subscriber<String> createSubscriber(final List<String> states,
