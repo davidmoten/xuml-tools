@@ -554,7 +554,7 @@ public class ClassWriter {
             out.format("%spublic void set%s(%s %s){\n", "        ",
                     Util.upperFirst(member.getFieldName()),
                     info.addType(member.getType().getType()), member.getFieldName());
-            out.format("%sthis.%s=%s;\n", "            ", member.getFieldName(),
+            out.format("%sthis.%s = %s;\n", "            ", member.getFieldName(),
                     member.getFieldName());
             out.format("%s}\n\n", "        ");
         }
@@ -993,13 +993,13 @@ public class ClassWriter {
             out.format("    }\n\n");
             jd(out, STATE_COMMENT, "    ");
             out.format("    public void setState(String state){\n");
-            out.format("        this.state= state;\n");
+            out.format("        this.state = state;\n");
             out.format("    }\n\n");
             jd(out, "Sets the current state. This should only be used when creating an instance without using the state machine.",
                     "    ");
             out.format("    public void setState(%s state){\n",
                     info.addType(info.getClassFullName() + ".State"));
-            out.format("        this.state= state.toString();\n");
+            out.format("        this.state = state.toString();\n");
             out.format("    }\n\n");
         }
     }
@@ -1763,7 +1763,7 @@ public class ClassWriter {
         jd(out, "Sets " + attribute.getFieldName() + " to the given value. " + doco, "    ");
         out.format("    public void set%s(%s %s){\n", Util.upperFirst(attribute.getFieldName()),
                 type, attribute.getFieldName());
-        out.format("        this.%1$s=%1$s;\n", attribute.getFieldName());
+        out.format("        this.%1$s = %1$s;\n", attribute.getFieldName());
         out.format("    }\n\n");
 
         jd(out, "Sets the attribute to the given value and returns this\n(enables method chaining).",
