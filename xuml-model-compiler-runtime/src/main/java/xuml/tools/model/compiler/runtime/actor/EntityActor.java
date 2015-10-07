@@ -73,7 +73,7 @@ public class EntityActor extends UntypedActor {
                         signal.getEvent().getClass().getSimpleName(), signal.getEntityId());
                 en.helper().setEntityManager(em);
                 en.event(signal.getEvent());
-                en.helper().setEntityManager(em);
+                // en.helper().setEntityManager(em);
                 log.debug("removing signal from persistence signalId={}, entityId={}",
                         signal.getId(), signal.getEntityId());
                 int countDeleted = em
