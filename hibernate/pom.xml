@@ -10,7 +10,7 @@
 	<name>${project.artifactId}</name>
 	<description>Runtime dependencies for Hibernate JPA implementation</description>
 	<properties>
-		<hibernate.version>4.3.7.Final</hibernate.version>
+		<hibernate.version>5.0.2.Final</hibernate.version>
 	</properties>
 	<dependencies>
 		<dependency>
