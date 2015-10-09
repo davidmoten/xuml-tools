@@ -19,7 +19,7 @@ import xuml.tools.model.compiler.runtime.message.StopEntityActor;
 public class RootActor extends UntypedActor {
 
     private EntityManagerFactory emf;
-    private final HashMap<String, ActorRef> actors = Maps.newHashMap();
+    private final HashMap<String, ActorInfo> actors = Maps.newHashMap();
     private final LoggingAdapter log;
     private SignalProcessorListenerFactory listenerFactory;
 
@@ -42,8 +42,8 @@ public class RootActor extends UntypedActor {
 
     private void handleMessage(CloseEntityActor message) {
         String key = message.getEntityUniqueId();
-        ActorRef actor = actors.remove(key);
-        actor.tell(new StopEntityActor(), getSelf());
+        ActorInfo info = actors.remove(key);
+        info.actor.tell(new StopEntityActor(), getSelf());
     }
 
     private void handleMessage(EntityManagerFactory message) {
@@ -59,15 +59,35 @@ public class RootActor extends UntypedActor {
     private ActorRef getActor(String key) {
         if (actors.get(key) == null) {
             ActorRef actor = createActor();
-            actors.put(key, actor);
+            actors.put(key, new ActorInfo(actor, 1));
             actor.tell(emf, getSelf());
             if (listenerFactory != null)
                 actor.tell(listenerFactory.create(key), getSelf());
         }
-        return actors.get(key);
+        return actors.get(key).actor;
     }
 
     private ActorRef createActor() {
         return getContext().actorOf(Props.create(EntityActor.class));
+    }
+
+    private static final class ActorInfo {
+
+        final ActorRef actor;
+        final long counter;
+
+        ActorInfo(ActorRef actor, long counter) {
+            this.actor = actor;
+            this.counter = counter;
+        }
+
+        ActorInfo increment() {
+            return new ActorInfo(actor, counter + 1);
+        }
+
+        ActorInfo decrement() {
+            return new ActorInfo(actor, counter - 1);
+        }
+
     }
 }
