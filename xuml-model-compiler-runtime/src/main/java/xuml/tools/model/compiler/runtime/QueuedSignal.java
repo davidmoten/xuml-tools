@@ -5,8 +5,6 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
@@ -37,14 +35,15 @@ public class QueuedSignal {
         this.fromEntityUniqueId = fromEntityUniqueId;
         this.time = new Date(time);
         this.repeatIntervalMs = repeatIntervalMs.orNull();
+        this.id = ArbitraryId.next();
     }
 
     // TODO add new fields, numFailures, timeFirstFailure, timeLastFailure
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    // @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "signal_id")
-    public Long id;
+    public String id;
 
     @Column(name = "entity_class_name", nullable = false)
     public String entityClassName;

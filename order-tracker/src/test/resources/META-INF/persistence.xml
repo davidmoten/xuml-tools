@@ -17,7 +17,7 @@
                 /> -->
             <property name="hibernate.default_schema" value="ORDERTRACKER" />
             <property name="hibernate.connection.pool_size" value="12" />
-            <property name="hibernate.show_sql" value="false" />
+            <property name="hibernate.show_sql" value="true" />
             <property name="hibernate.format_sql" value="true" />
             <property name="hibernate.connection.provider_class" value="org.hibernate.hikaricp.internal.HikariCPConnectionProvider" />
             <property name="hibernate.hikari.minimumIdle" value="5" />

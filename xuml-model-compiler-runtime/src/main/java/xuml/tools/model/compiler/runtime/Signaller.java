@@ -134,7 +134,7 @@ public class Signaller {
             repeatIntervalMs = Optional.absent();
 
         @SuppressWarnings("unchecked")
-        long id = persistSignal(fromEntityUniqueId, entity.getId(), (Class<T>) entity.getClass(),
+        String id = persistSignal(fromEntityUniqueId, entity.getId(), (Class<T>) entity.getClass(),
                 event, time, repeatIntervalMs, entity.uniqueId());
         @SuppressWarnings("unchecked")
         Signal<T> signal = new Signal<T>(fromEntityUniqueId, (Class<Entity<T>>) entity.getClass(),
@@ -309,7 +309,7 @@ public class Signaller {
         }
     }
 
-    public <T extends Entity<T>> long persistSignal(String fromEntityUniqueId, Object id,
+    public <T extends Entity<T>> String persistSignal(String fromEntityUniqueId, Object id,
             Class<T> cls, Event<T> event, long time, Optional<Long> repeatIntervalMs,
             String entityUniqueId) {
         byte[] idBytes = Util.toBytes(id);

@@ -13,7 +13,7 @@ public class Signal<T> {
 
     private final Class<Entity<T>> entityClass;
     private final Event<T> event;
-    private final long id;
+    private final String id;
     // epoch time ms to process signal
     private final Long timeMs;
     private final Optional<FiniteDuration> repeatInterval;
@@ -21,8 +21,8 @@ public class Signal<T> {
     private final Serializable entityId;
     private final String entityUniqueId;
 
-    public Signal(String fromEntityUniqueId, Class<Entity<T>> entityClass, Event<T> event, long id,
-            Long timeMs, Optional<FiniteDuration> repeatInterval, Serializable entityId,
+    public Signal(String fromEntityUniqueId, Class<Entity<T>> entityClass, Event<T> event,
+            String id, Long timeMs, Optional<FiniteDuration> repeatInterval, Serializable entityId,
             String entityUniqueId) {
         if (entityId instanceof Optional)
             throw new RuntimeException("unexpected");
@@ -36,13 +36,13 @@ public class Signal<T> {
         this.entityUniqueId = entityUniqueId;
     }
 
-    public Signal(String fromEntityUniqueId, Class<Entity<T>> entityClass, Event<T> event, long id,
-            Long timeMs, Serializable entityId, String entityUniqueId) {
+    public Signal(String fromEntityUniqueId, Class<Entity<T>> entityClass, Event<T> event,
+            String id, Long timeMs, Serializable entityId, String entityUniqueId) {
         this(fromEntityUniqueId, entityClass, event, id, timeMs, null, entityId, entityUniqueId);
     }
 
-    public Signal(String fromEntityUniqueId, Class<Entity<T>> entityClass, Event<T> event, long id,
-            Duration delay, FiniteDuration repeatInterval, Serializable entityId,
+    public Signal(String fromEntityUniqueId, Class<Entity<T>> entityClass, Event<T> event,
+            String id, Duration delay, FiniteDuration repeatInterval, Serializable entityId,
             String entityUniqueId) {
         this(fromEntityUniqueId, entityClass, event, id, getTime(delay),
                 Optional.of(repeatInterval), entityId, entityUniqueId);
@@ -55,12 +55,12 @@ public class Signal<T> {
             return System.currentTimeMillis() + delay.toMillis();
     }
 
-    public Signal(String fromEntityUniqueId, Class<Entity<T>> entityClass, Event<T> event, long id,
-            Serializable entityId, String entityUniqueId) {
+    public Signal(String fromEntityUniqueId, Class<Entity<T>> entityClass, Event<T> event,
+            String id, Serializable entityId, String entityUniqueId) {
         this(fromEntityUniqueId, entityClass, event, id, null, entityId, entityUniqueId);
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
