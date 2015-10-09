@@ -43,7 +43,11 @@ public class RootActor extends UntypedActor {
     private void handleMessage(CloseEntityActor message) {
         String key = message.getEntityUniqueId();
         ActorInfo info = actors.remove(key);
-        info.actor.tell(new StopEntityActor(), getSelf());
+        if (info.counter > 1) {
+            actors.put(key, info.decrement());
+        } else {
+            info.actor.tell(new StopEntityActor(), getSelf());
+        }
     }
 
     private void handleMessage(EntityManagerFactory message) {

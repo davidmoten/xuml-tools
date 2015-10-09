@@ -18,7 +18,6 @@ import xuml.tools.model.compiler.runtime.message.StopEntityActor;
 public class EntityActor extends UntypedActor {
 
     private EntityManagerFactory emf;
-    private boolean closed = false;
     private final LoggingAdapter log;
     private SignalProcessorListener listener = SignalProcessorListenerDoesNothing.getInstance();
 
@@ -42,11 +41,7 @@ public class EntityActor extends UntypedActor {
 
     @SuppressWarnings("unchecked")
     private void handleMessage(@SuppressWarnings("rawtypes") Signal signal) {
-        if (closed) {
-            // if this actor is marked as closed then bounce all signal messages
-            // back to sender
-            getSender().tell(signal, getSelf());
-        } else if (emf != null) {
+        if (emf != null) {
             // otherwise perform the event on the entity after it has been
             // refreshed within the scope of the current entity manager
 
@@ -91,7 +86,6 @@ public class EntityActor extends UntypedActor {
                 // only after successful commit do we send the signals to other
                 // entities made during onEntry procedure.
                 en.helper().sendQueuedSignals();
-                closed = true;
             } catch (RuntimeException e) {
                 try {
                     if (tx != null && tx.isActive())
@@ -104,6 +98,7 @@ public class EntityActor extends UntypedActor {
                     throw e;
                 }
             } finally {
+                // give RootActor a chance to dispose of this actor
                 getSender().tell(new CloseEntityActor(signal.getEntityUniqueId()), getSelf());
             }
         }
