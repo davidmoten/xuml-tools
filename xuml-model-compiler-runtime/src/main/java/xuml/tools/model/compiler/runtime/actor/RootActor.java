@@ -57,12 +57,15 @@ public class RootActor extends UntypedActor {
     }
 
     private ActorRef getActor(String key) {
-        if (actors.get(key) == null) {
+        ActorInfo info = actors.get(key);
+        if (info == null) {
             ActorRef actor = createActor();
             actors.put(key, new ActorInfo(actor, 1));
             actor.tell(emf, getSelf());
             if (listenerFactory != null)
                 actor.tell(listenerFactory.create(key), getSelf());
+        } else {
+            actors.put(key, info.increment());
         }
         return actors.get(key).actor;
     }
