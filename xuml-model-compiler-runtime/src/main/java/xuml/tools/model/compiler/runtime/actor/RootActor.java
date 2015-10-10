@@ -46,6 +46,7 @@ public class RootActor extends UntypedActor {
         if (info.counter > 1) {
             actors.put(key, info.decrement());
         } else {
+            // when the counter gets down to 1 we stop the entity actor
             info.actor.tell(new StopEntityActor(), getSelf());
         }
     }
