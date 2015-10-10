@@ -42,65 +42,66 @@ public class EntityActor extends UntypedActor {
     @SuppressWarnings("unchecked")
     private void handleMessage(@SuppressWarnings("rawtypes") Signal signal) {
         if (emf != null) {
-            // otherwise perform the event on the entity after it has been
-            // refreshed within the scope of the current entity manager
-
+            // perform the event on the entity after it has been
+            // loaded by a new EntityManager
             EntityManager em = null;
             EntityTransaction tx = null;
+            Entity<?> entity = null;
             try {
                 listener.beforeProcessing(signal, this);
                 em = emf.createEntityManager();
                 tx = em.getTransaction();
                 tx.begin();
                 log.debug("started transaction");
-                Entity<?> en;
-                // TODO remove commented out code
-                // synchronized (signal) {
-                // // because signal is not an immutable object make sure we
-                // // have its latest values
-                // en = signal.getEntity();
-                // }
-                // entity = em.merge(en);
-                // log.debug("merged");
-                // em.refresh(entity);
-                en = (Entity<?>) em.find(signal.getEntityClass(), signal.getEntityId());
+                entity = (Entity<?>) em.find(signal.getEntityClass(), signal.getEntityId());
                 log.debug("calling event {} on entity id = ",
                         signal.getEvent().getClass().getSimpleName(), signal.getEntityId());
-                en.helper().setEntityManager(em);
-                en.event(signal.getEvent());
-                // en.helper().setEntityManager(em);
+                entity.helper().setEntityManager(em);
+                entity.event(signal.getEvent());
                 log.debug("removing signal from persistence signalId={}, entityId={}",
                         signal.getId(), signal.getEntityId());
                 int countDeleted = em
                         .createQuery("delete from " + QueuedSignal.class.getSimpleName()
                                 + " where id=:id")
                         .setParameter("id", signal.getId()).executeUpdate();
-                if (countDeleted == 0)
+                if (countDeleted == 0) {
                     throw new RuntimeException("queued signal not deleted: " + signal.getId());
+                }
                 tx.commit();
                 log.debug("committed");
                 listener.afterProcessing(signal, this);
                 em.close();
-                // TODO do this in finally?
-                en.helper().setEntityManager(null);
+                entity.helper().setEntityManager(null);
                 // only after successful commit do we send the signals to other
                 // entities made during onEntry procedure.
-                en.helper().sendQueuedSignals();
+                entity.helper().sendQueuedSignals();
             } catch (RuntimeException e) {
-                try {
-                    if (tx != null && tx.isActive())
-                        tx.rollback();
-                    if (em != null && em.isOpen())
-                        em.close();
-                    listener.failure(signal, e, this);
-                } catch (RuntimeException e2) {
-                    log.error(e2.getMessage(), e2);
-                    throw e;
-                }
+                handleException(signal, em, tx, e);
             } finally {
+                // in case this entity is reused make sure its entity manager is
+                // cleared
+                if (entity != null) {
+                    entity.helper().setEntityManager(null);
+                }
                 // give RootActor a chance to dispose of this actor
                 getSender().tell(new CloseEntityActor(signal.getEntityUniqueId()), getSelf());
             }
+        }
+    }
+
+    private void handleException(@SuppressWarnings("rawtypes") Signal signal, EntityManager em,
+            EntityTransaction tx, RuntimeException e) {
+        try {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+            if (em != null && em.isOpen()) {
+                em.close();
+            }
+            listener.failure(signal, e, this);
+        } catch (RuntimeException e2) {
+            log.error(e2.getMessage(), e2);
+            throw e;
         }
     }
 
