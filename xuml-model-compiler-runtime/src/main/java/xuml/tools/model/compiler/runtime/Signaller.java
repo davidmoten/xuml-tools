@@ -24,6 +24,7 @@ import scala.concurrent.ExecutionContext;
 import scala.concurrent.duration.Duration;
 import scala.concurrent.duration.FiniteDuration;
 import xuml.tools.model.compiler.runtime.actor.RootActor;
+import xuml.tools.model.compiler.runtime.message.ActorConfig;
 import xuml.tools.model.compiler.runtime.message.Signal;
 
 public class Signaller {
@@ -42,6 +43,8 @@ public class Signaller {
 
     public Signaller(EntityManagerFactory emf, SignalProcessorListenerFactory listenerFactory) {
         this.emf = emf;
+        // TODO user should be able to specify pool size in Context
+        root.tell(new ActorConfig(4), root);
         root.tell(emf, root);
         if (listenerFactory != null)
             root.tell(listenerFactory, root);

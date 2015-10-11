@@ -11,7 +11,9 @@ import akka.actor.Props;
 import akka.actor.UntypedActor;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
+import akka.routing.RoundRobinPool;
 import xuml.tools.model.compiler.runtime.SignalProcessorListenerFactory;
+import xuml.tools.model.compiler.runtime.message.ActorConfig;
 import xuml.tools.model.compiler.runtime.message.CloseEntityActor;
 import xuml.tools.model.compiler.runtime.message.Signal;
 import xuml.tools.model.compiler.runtime.message.StopEntityActor;
@@ -22,6 +24,7 @@ public class RootActor extends UntypedActor {
     private final HashMap<String, ActorInfo> actors = Maps.newHashMap();
     private final LoggingAdapter log;
     private SignalProcessorListenerFactory listenerFactory;
+    private RoundRobinPool pool;
 
     public RootActor() {
         log = Logging.getLogger(getContext().system(), this);
@@ -30,7 +33,9 @@ public class RootActor extends UntypedActor {
     @Override
     public void onReceive(Object message) throws Exception {
         log.debug("received message {}", message.getClass().getName());
-        if (message instanceof EntityManagerFactory)
+        if (message instanceof ActorConfig) {
+            handleMessage((ActorConfig) message);
+        } else if (message instanceof EntityManagerFactory)
             handleMessage((EntityManagerFactory) message);
         else if (message instanceof SignalProcessorListenerFactory)
             listenerFactory = (SignalProcessorListenerFactory) message;
@@ -38,6 +43,10 @@ public class RootActor extends UntypedActor {
             handleMessage((Signal<?>) message);
         else if (message instanceof CloseEntityActor)
             handleMessage((CloseEntityActor) message);
+    }
+
+    private void handleMessage(ActorConfig message) {
+        pool = new RoundRobinPool(message.getEntityActoryPoolSize());
     }
 
     private void handleMessage(CloseEntityActor message) {
@@ -76,7 +85,7 @@ public class RootActor extends UntypedActor {
     }
 
     private ActorRef createActor() {
-        return getContext().actorOf(Props.create(EntityActor.class));
+        return getContext().actorOf(pool.props(Props.create(EntityActor.class)));
     }
 
     private static final class ActorInfo {
