@@ -85,9 +85,8 @@ public class RootActor extends UntypedActor {
     }
 
     private ActorRef createActor(String key) {
-        return getContext().actorOf(
-                pool.props(Props.create(EntityActor.class)).withDispatcher("entity-dispatcher"),
-                key);
+        return getContext().actorOf(pool.props(Props.create(EntityActor.class))
+                .withDispatcher("my-thread-pool-dispatcher"), key);
     }
 
     private static final class ActorInfo {
