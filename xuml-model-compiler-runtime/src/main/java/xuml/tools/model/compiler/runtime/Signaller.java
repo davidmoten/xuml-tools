@@ -41,10 +41,10 @@ public class Signaller {
     private final ActorRef root = actorSystem.actorOf(Props.create(RootActor.class), "root");
     private final EntityManagerFactory emf;
 
-    public Signaller(EntityManagerFactory emf, SignalProcessorListenerFactory listenerFactory) {
+    public Signaller(EntityManagerFactory emf, int entityActorPoolSize,
+            SignalProcessorListenerFactory listenerFactory) {
         this.emf = emf;
-        // TODO user should be able to specify pool size in Context
-        root.tell(new ActorConfig(4), root);
+        root.tell(new ActorConfig(entityActorPoolSize), root);
         root.tell(emf, root);
         if (listenerFactory != null)
             root.tell(listenerFactory, root);

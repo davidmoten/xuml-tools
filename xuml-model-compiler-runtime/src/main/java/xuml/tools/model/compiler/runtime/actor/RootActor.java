@@ -73,7 +73,7 @@ public class RootActor extends UntypedActor {
     private ActorRef getActor(String key) {
         ActorInfo info = actors.get(key);
         if (info == null) {
-            ActorRef actor = createActor();
+            ActorRef actor = createActor(key);
             actors.put(key, new ActorInfo(actor, 1));
             actor.tell(emf, getSelf());
             if (listenerFactory != null)
@@ -84,8 +84,10 @@ public class RootActor extends UntypedActor {
         return actors.get(key).actor;
     }
 
-    private ActorRef createActor() {
-        return getContext().actorOf(pool.props(Props.create(EntityActor.class)));
+    private ActorRef createActor(String key) {
+        return getContext().actorOf(
+                pool.props(Props.create(EntityActor.class)).withDispatcher("entity-dispatcher"),
+                key);
     }
 
     private static final class ActorInfo {

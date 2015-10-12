@@ -16,8 +16,9 @@ public class App {
         // create the entity manager factory
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("testPersistenceUnit");
 
-        // pass the EntityManagerFactory to the generated xuml Context
-        Context.setEntityManagerFactory(emf);
+        // pass the EntityManagerFactory and pool size to the generated xuml
+        // Context
+        Context.setEntityManagerFactory(emf, "hibernate.hikari.maximumPoolSize");
 
         // set the behaviour factories
         Order.setBehaviourFactory(OrderBehaviour.class);

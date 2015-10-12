@@ -253,9 +253,20 @@ public class CodeGeneratorJava {
                 types.addType(CreationEvent.class));
         out.format("        return signaller.create(cls,event);\n");
         out.format("    }\n\n");
-        out.format("    public synchronized static void setEntityManagerFactory(%s emf) {\n",
+        out.format(
+                "    public synchronized static void setEntityManagerFactory(%s emf, String entityActorPoolSizeProperty) {\n",
                 types.addType(EntityManagerFactory.class));
-        out.format("        signaller = new %s(emf,listenerFactory);\n",
+        out.format(
+                "        int entityActorPoolSize = %s.parseInt((String) emf.getProperties().get(entityActorPoolSizeProperty));\n",
+                types.addType(Integer.class));
+        out.format("        signaller = new %s(emf, entityActorPoolSize, listenerFactory);\n",
+                types.addType(Signaller.class), types.addType(Signaller.class));
+        out.format("    }\n\n");
+
+        out.format(
+                "    public synchronized static void setEntityManagerFactory(%s emf, int entityActorPoolSize) {\n",
+                types.addType(EntityManagerFactory.class));
+        out.format("        signaller = new %s(emf, entityActorPoolSize, listenerFactory);\n",
                 types.addType(Signaller.class), types.addType(Signaller.class));
         for (
 

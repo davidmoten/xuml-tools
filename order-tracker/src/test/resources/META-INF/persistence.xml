@@ -16,12 +16,11 @@
             <!-- <property name="hibernate.connection.url" value="jdbc:hsqldb:file:/media/an/testing/testdb" 
                 /> -->
             <property name="hibernate.default_schema" value="ORDERTRACKER" />
-            <property name="hibernate.connection.pool_size" value="12" />
             <property name="hibernate.show_sql" value="true" />
             <property name="hibernate.format_sql" value="true" />
             <property name="hibernate.connection.provider_class" value="org.hibernate.hikaricp.internal.HikariCPConnectionProvider" />
             <property name="hibernate.hikari.minimumIdle" value="5" />
-            <property name="hibernate.hikari.maximumPoolSize" value="10" />
+            <property name="hibernate.hikari.maximumPoolSize" value="5" />
             <property name="hibernate.hikari.idleTimeout" value="30000" />
             <property name="hibernate.hikari.connectionTimeout" value="300000000" />
             <property name="hibernate.hikari.dataSourceClassName" value="org.hsqldb.jdbc.JDBCDataSource" />
