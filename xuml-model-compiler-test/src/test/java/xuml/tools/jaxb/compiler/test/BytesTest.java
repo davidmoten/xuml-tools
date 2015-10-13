@@ -15,7 +15,7 @@ public class BytesTest {
     @BeforeClass
     public static void setup() {
         EntityManagerFactory emf = PersistenceHelper.createEmf("bytes");
-        Context.setEntityManagerFactory(emf);
+        Context.setEntityManagerFactory(emf, 10);
     }
 
     @AfterClass

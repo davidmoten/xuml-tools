@@ -21,7 +21,7 @@ public class BinaryAssociationZeroOneToZeroOneTest {
     @BeforeClass
     public static void setup() {
         EntityManagerFactory emf = PersistenceHelper.createEmf("zero-one-to-zero-one");
-        Context.setEntityManagerFactory(emf);
+        Context.setEntityManagerFactory(emf, 10);
     }
 
     @AfterClass

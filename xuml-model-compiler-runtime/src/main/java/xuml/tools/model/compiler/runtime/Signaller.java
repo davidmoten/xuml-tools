@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
+import com.typesafe.config.ConfigFactory;
 
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
@@ -37,13 +38,15 @@ public class Signaller {
             return new Info();
         }
     };
-    private final ActorSystem actorSystem = ActorSystem.create();
+    private final ActorSystem actorSystem = ActorSystem.create("xuml-tools",
+            ConfigFactory.load("xuml-akka").withFallback(ConfigFactory.load()));
     private final ActorRef root = actorSystem.actorOf(Props.create(RootActor.class), "root");
     private final EntityManagerFactory emf;
 
     public Signaller(EntityManagerFactory emf, int entityActorPoolSize,
             SignalProcessorListenerFactory listenerFactory) {
         this.emf = emf;
+        log.debug("Akka system settings:\n{}", actorSystem.settings());
         root.tell(new ActorConfig(entityActorPoolSize), root);
         root.tell(emf, root);
         if (listenerFactory != null)

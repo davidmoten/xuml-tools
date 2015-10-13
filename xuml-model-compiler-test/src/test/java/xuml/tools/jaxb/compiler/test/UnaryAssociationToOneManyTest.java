@@ -19,7 +19,7 @@ public class UnaryAssociationToOneManyTest {
     @BeforeClass
     public static void setup() {
         EntityManagerFactory emf = PersistenceHelper.createEmf("unary-one-many");
-        Context.setEntityManagerFactory(emf);
+        Context.setEntityManagerFactory(emf, 10);
     }
 
     @AfterClass

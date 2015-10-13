@@ -17,7 +17,7 @@ public class SpecializationTest {
 
     @BeforeClass
     public static void setup() {
-        Context.setEntityManagerFactory(PersistenceHelper.createEmf("specialization"));
+        Context.setEntityManagerFactory(PersistenceHelper.createEmf("specialization"), 10);
     }
 
     @AfterClass

@@ -20,7 +20,7 @@ public class BookstoreTest {
         EntityManagerFactory emf = PersistenceHelper.createEmf("bookstore");
 
         // pass the EntityManagerFactory to the generated xuml Context
-        Context.setEntityManagerFactory(emf);
+        Context.setEntityManagerFactory(emf, 10);
 
     }
 

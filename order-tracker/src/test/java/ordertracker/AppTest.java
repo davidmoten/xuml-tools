@@ -60,6 +60,7 @@ public class AppTest {
                 latch.countDown();
             }
         });
+
         Order.create(new Order.Events.Create("1", "test order", "canberra", "sydney",
                 "fred@yahoo.com", "joey@gmail.com", 3, "created"));
         latch.await(5000, TimeUnit.MILLISECONDS);

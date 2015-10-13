@@ -259,7 +259,7 @@ public class CodeGeneratorJava {
         out.format(
                 "        int entityActorPoolSize = %s.parseInt((String) emf.getProperties().get(entityActorPoolSizeProperty));\n",
                 types.addType(Integer.class));
-        out.format("        signaller = new %s(emf, entityActorPoolSize, listenerFactory);\n",
+        out.format("        setEntityManagerFactory(emf, entityActorPoolSize);\n",
                 types.addType(Signaller.class), types.addType(Signaller.class));
         out.format("    }\n\n");
 

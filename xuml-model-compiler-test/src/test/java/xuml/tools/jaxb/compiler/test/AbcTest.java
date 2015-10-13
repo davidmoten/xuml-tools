@@ -123,7 +123,7 @@ public class AbcTest {
         Context.setEntityActorListenerFactory(createSignalProcessorListenerFactory());
 
         // pass the EntityManagerFactory to the generated xuml Context
-        Context.setEntityManagerFactory(emf);
+        Context.setEntityManagerFactory(emf, 10);
 
         // set the behaviour factory for the class A
         A.setBehaviourFactory(ABehaviour.class);

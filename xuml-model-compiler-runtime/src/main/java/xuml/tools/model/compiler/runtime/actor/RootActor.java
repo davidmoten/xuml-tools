@@ -11,7 +11,6 @@ import akka.actor.Props;
 import akka.actor.UntypedActor;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
-import akka.routing.RoundRobinPool;
 import xuml.tools.model.compiler.runtime.SignalProcessorListenerFactory;
 import xuml.tools.model.compiler.runtime.message.ActorConfig;
 import xuml.tools.model.compiler.runtime.message.CloseEntityActor;
@@ -24,7 +23,6 @@ public class RootActor extends UntypedActor {
     private final HashMap<String, ActorInfo> actors = Maps.newHashMap();
     private final LoggingAdapter log;
     private SignalProcessorListenerFactory listenerFactory;
-    private RoundRobinPool pool;
 
     public RootActor() {
         log = Logging.getLogger(getContext().system(), this);
@@ -46,7 +44,6 @@ public class RootActor extends UntypedActor {
     }
 
     private void handleMessage(ActorConfig message) {
-        pool = new RoundRobinPool(message.getEntityActoryPoolSize());
     }
 
     private void handleMessage(CloseEntityActor message) {
@@ -85,8 +82,8 @@ public class RootActor extends UntypedActor {
     }
 
     private ActorRef createActor(String key) {
-        return getContext().actorOf(pool.props(Props.create(EntityActor.class))
-                .withDispatcher("my-thread-pool-dispatcher"), key);
+        return getContext()
+                .actorOf(Props.create(EntityActor.class).withDispatcher("akka.entity-dispatcher"));
     }
 
     private static final class ActorInfo {
@@ -108,4 +105,5 @@ public class RootActor extends UntypedActor {
         }
 
     }
+
 }

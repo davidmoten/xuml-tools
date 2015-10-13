@@ -20,7 +20,7 @@ public class UnaryAssociationToZeroOneTest {
     @BeforeClass
     public static void setup() {
         emf = PersistenceHelper.createEmf("unary-zero-one");
-        Context.setEntityManagerFactory(emf);
+        Context.setEntityManagerFactory(emf, 10);
     }
 
     @AfterClass

@@ -19,7 +19,7 @@ public class BinaryAssociationManyToManyAssociationClassTwoTest {
     @BeforeClass
     public static void setup() {
         EntityManagerFactory emf = PersistenceHelper.createEmf("many-to-many-association-two");
-        Context.setEntityManagerFactory(emf);
+        Context.setEntityManagerFactory(emf, 10);
     }
 
     @AfterClass

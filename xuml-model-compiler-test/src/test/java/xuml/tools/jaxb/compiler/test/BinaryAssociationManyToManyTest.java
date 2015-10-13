@@ -17,7 +17,7 @@ public class BinaryAssociationManyToManyTest {
     public static void setup() {
         EntityManagerFactory emf = PersistenceHelper.createEmf("many-to-many");
 
-        Context.setEntityManagerFactory(emf);
+        Context.setEntityManagerFactory(emf, 10);
     }
 
     @AfterClass

@@ -6,16 +6,15 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceException;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 import one_to_one.A;
 import one_to_one.A.AId;
 import one_to_one.B;
 import one_to_one.B.BId;
 import one_to_one.Context;
-
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import xuml.tools.model.compiler.runtime.RelationshipNotEstablishedException;
 
 public class BinaryAssociationOneToOneTest {
@@ -23,7 +22,7 @@ public class BinaryAssociationOneToOneTest {
     @BeforeClass
     public static void setup() {
         EntityManagerFactory emf = PersistenceHelper.createEmf("one-to-one");
-        Context.setEntityManagerFactory(emf);
+        Context.setEntityManagerFactory(emf, 10);
     }
 
     @AfterClass
