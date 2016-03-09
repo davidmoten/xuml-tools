@@ -13,7 +13,7 @@ The primary inspiration for this project is  [*Executable UML - A Foundation for
 
 *2 September 2015*: active on this at the moment and documenting, so setting at *pre-alpha* till Nov 2015.
 
-Status: *pre-alpha*
+Status: *alpha*
 
 <img src="https://raw.github.com/davidmoten/xuml-tools/master/xuml-diagrams/src/docs/class-diagram.png">
 
