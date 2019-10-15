@@ -53,7 +53,7 @@
     </developers>
     <properties>
 
-        <compiler.plugin.version>3.3</compiler.plugin.version>
+        <compiler.plugin.version>3.8.1</compiler.plugin.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <gae.version>1.9.25</gae.version>
