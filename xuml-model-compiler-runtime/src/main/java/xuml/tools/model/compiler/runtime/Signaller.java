@@ -21,7 +21,9 @@ import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Cancellable;
 import akka.actor.Props;
+import akka.actor.Terminated;
 import scala.concurrent.ExecutionContext;
+import scala.concurrent.Future;
 import scala.concurrent.duration.Duration;
 import scala.concurrent.duration.FiniteDuration;
 import xuml.tools.model.compiler.runtime.actor.RootActor;
@@ -340,8 +342,8 @@ public class Signaller {
         return info.get();
     }
 
-    public void stop() {
-        actorSystem.shutdown();
+    public Future<Terminated> stop() {
+        return actorSystem.terminate();
     }
 
     public void close() {
