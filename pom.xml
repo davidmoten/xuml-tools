@@ -69,7 +69,7 @@
         <findbugs.version>3.0.2</findbugs.version>
         <javadoc.version>2.10.3</javadoc.version>
         <pmd.version>3.5</pmd.version>
-        <jdepend.version>2.0-beta-2</jdepend.version>
+        <jdepend.version>2.0</jdepend.version>
         <javancss.version>2.1</javancss.version>
         <project.info.version>2.7</project.info.version>
         <jxr.version>2.5</jxr.version>
