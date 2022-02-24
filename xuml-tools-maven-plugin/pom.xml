@@ -55,7 +55,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-plugin-plugin</artifactId>
-                <version>3.4</version>
+                <version>3.6.4</version>
                 <configuration>
                     <goalPrefix>xuml-tools</goalPrefix>
                 </configuration>
@@ -63,6 +63,6 @@
         </plugins>
     </build>
     <!-- <reporting> <plugins> <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-plugin-plugin</artifactId> 
-        <version>3.4</version> <configuration> <goalPrefix>xuml</goalPrefix> </configuration> </plugin> </plugins> 
+        <version>3.6.4</version> <configuration> <goalPrefix>xuml</goalPrefix> </configuration> </plugin> </plugins> 
         </reporting> -->
 </project>
