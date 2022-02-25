@@ -10,7 +10,7 @@
     <packaging>jar</packaging>
     <description>Swing app for viewing state diagrams</description>
     <properties>
-        <jung.version>2.0.1</jung.version>
+        <jung.version>2.1.1</jung.version>
         <exec.version>3.0.0</exec.version>
     </properties>
     <dependencies>

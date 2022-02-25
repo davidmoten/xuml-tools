@@ -40,7 +40,7 @@ public class MyEdgeLabelRenderer<V, E> implements Renderer.EdgeLabel<V, E> {
     public Component prepareRenderer(RenderContext<V, E> rc, EdgeLabelRenderer graphLabelRenderer,
             Object value, boolean isSelected, E edge) {
         return rc.getEdgeLabelRenderer().<E> getEdgeLabelRendererComponent(rc.getScreenDevice(),
-                value, rc.getEdgeFontTransformer().transform(edge), isSelected, edge);
+                value, rc.getEdgeFontTransformer().apply(edge), isSelected, edge);
     }
 
     @Override
@@ -53,17 +53,17 @@ public class MyEdgeLabelRenderer<V, E> implements Renderer.EdgeLabel<V, E> {
         Pair<V> endpoints = graph.getEndpoints(e);
         V v1 = endpoints.getFirst();
         V v2 = endpoints.getSecond();
-        if (!rc.getEdgeIncludePredicate().evaluate(Context.<Graph<V, E>, E> getInstance(graph, e)))
+        if (!rc.getEdgeIncludePredicate().apply(Context.<Graph<V, E>, E> getInstance(graph, e)))
             return;
 
         if (!rc.getVertexIncludePredicate()
-                .evaluate(Context.<Graph<V, E>, V> getInstance(graph, v1))
+                .apply(Context.<Graph<V, E>, V> getInstance(graph, v1))
                 || !rc.getVertexIncludePredicate()
-                        .evaluate(Context.<Graph<V, E>, V> getInstance(graph, v2)))
+                        .apply(Context.<Graph<V, E>, V> getInstance(graph, v2)))
             return;
 
-        Point2D p1 = layout.transform(v1);
-        Point2D p2 = layout.transform(v2);
+        Point2D p1 = layout.apply(v1);
+        Point2D p2 = layout.apply(v2);
         p1 = rc.getMultiLayerTransformer().transform(Layer.LAYOUT, p1);
         p2 = rc.getMultiLayerTransformer().transform(Layer.LAYOUT, p2);
         float x1 = (float) p1.getX();
@@ -77,7 +77,7 @@ public class MyEdgeLabelRenderer<V, E> implements Renderer.EdgeLabel<V, E> {
         double totalLength = Math.sqrt(distX * distX + distY * distY);
 
         double closeness = rc.getEdgeLabelClosenessTransformer()
-                .transform(Context.<Graph<V, E>, E> getInstance(graph, e)).doubleValue();
+                .apply(Context.<Graph<V, E>, E> getInstance(graph, e)).doubleValue();
 
         int posX = (int) (x1 + (closeness) * distX);
         int posY = (int) (y1 + (closeness) * distY);
@@ -91,7 +91,7 @@ public class MyEdgeLabelRenderer<V, E> implements Renderer.EdgeLabel<V, E> {
         Dimension d = component.getPreferredSize();
 
         Shape edgeShape = rc.getEdgeShapeTransformer()
-                .transform(Context.<Graph<V, E>, E> getInstance(graph, e));
+                .apply(Context.<Graph<V, E>, E> getInstance(graph, e).element);
 
         double parallelOffset = 1;
 

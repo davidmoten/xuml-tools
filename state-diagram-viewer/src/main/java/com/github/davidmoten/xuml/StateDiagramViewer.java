@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Graphics;
 import java.awt.GridLayout;
-import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.print.PrinterException;
 import java.io.File;
@@ -21,7 +20,9 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
-import org.apache.commons.collections15.Transformer;
+import java.awt.Rectangle;
+
+import com.google.common.base.Function;
 
 import edu.uci.ics.jung.algorithms.layout.FRLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
@@ -211,7 +212,7 @@ public class StateDiagramViewer {
         vv.getRenderContext().setVertexShapeTransformer(createVertexShapeTransformer(layout));
         vv.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.CNTR);
         vv.getRenderContext().setEdgeLabelTransformer(edge -> " " + edge.name + " ");
-        vv.getRenderContext().setEdgeShapeTransformer(new EdgeShape.QuadCurve<String, Edge>());
+        vv.getRenderContext().setEdgeShapeTransformer(EdgeShape.quadCurve(graph));
         vv.getRenderer().setEdgeLabelRenderer(new MyEdgeLabelRenderer<>(-10, Color.white));
 
         // The following code adds capability for mouse picking of
@@ -222,7 +223,7 @@ public class StateDiagramViewer {
         return vv;
     }
 
-    private static Transformer<String, Shape> createVertexShapeTransformer(
+    private static Function<String, Shape> createVertexShapeTransformer(
             Layout<String, Edge> layout) {
         return vertex -> {
             int w = 150;
