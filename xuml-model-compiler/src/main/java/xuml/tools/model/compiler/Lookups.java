@@ -6,12 +6,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.bind.JAXBElement;
-
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+import jakarta.xml.bind.JAXBElement;
 import xuml.tools.miuml.metamodel.jaxb.Association;
 import xuml.tools.miuml.metamodel.jaxb.AtomicType;
 import xuml.tools.miuml.metamodel.jaxb.BinaryAssociation;

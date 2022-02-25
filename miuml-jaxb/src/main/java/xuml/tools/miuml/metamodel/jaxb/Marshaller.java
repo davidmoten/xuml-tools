@@ -2,11 +2,6 @@ package xuml.tools.miuml.metamodel.jaxb;
 
 import java.io.InputStream;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.ValidationEvent;
-import javax.xml.bind.ValidationEventHandler;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
@@ -14,6 +9,12 @@ import javax.xml.validation.SchemaFactory;
 import org.xml.sax.SAXException;
 
 import com.google.common.base.Preconditions;
+
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.ValidationEvent;
+import jakarta.xml.bind.ValidationEventHandler;
 
 /**
  * Uunmarshals {@link Domains}.

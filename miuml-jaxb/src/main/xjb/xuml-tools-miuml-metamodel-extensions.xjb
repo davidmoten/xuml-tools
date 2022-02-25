@@ -1,0 +1,7 @@
+<bindings xmlns="https://jakarta.ee/xml/ns/jaxb" version="3.0">
+   <bindings schemaLocation="../xsd/xuml-tools-miuml-metamodel-extensions.xsd">
+    <schemaBindings>
+      <package name="xuml.tools.miuml.metamodel.extensions.jaxb"/>
+    </schemaBindings>
+  </bindings>
+</bindings>

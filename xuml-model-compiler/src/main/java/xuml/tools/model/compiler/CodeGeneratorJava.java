@@ -15,12 +15,12 @@ import java.util.stream.Stream;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.xml.bind.JAXBElement;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
+import jakarta.xml.bind.JAXBElement;
 import xuml.tools.miuml.metamodel.jaxb.Class;
 import xuml.tools.miuml.metamodel.jaxb.Domains;
 import xuml.tools.miuml.metamodel.jaxb.LocalEffectiveSignalingEvent;

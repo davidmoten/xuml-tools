@@ -16,9 +16,6 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-
 import org.w3c.dom.Node;
 
 import com.google.common.base.Function;
@@ -28,6 +25,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
+import jakarta.xml.bind.JAXBElement;
+import jakarta.xml.bind.JAXBException;
 import xuml.tools.miuml.metamodel.extensions.jaxb.Documentation;
 import xuml.tools.miuml.metamodel.extensions.jaxb.Find;
 import xuml.tools.miuml.metamodel.extensions.jaxb.Generation;
@@ -207,10 +206,10 @@ public class ClassInfo {
                     documentationContent = doco.getContent();
                 } else if (e instanceof Generation) {
                     Generation g = (Generation) e;
-                    generated = g.getGenerated();
+                    generated = g.isGenerated();
                 } else if (e instanceof Optional) {
                     xuml.tools.miuml.metamodel.extensions.jaxb.Optional o = (xuml.tools.miuml.metamodel.extensions.jaxb.Optional) e;
-                    optional = o.getOptional();
+                    optional = o.isOptional();
                 }
             }
         }

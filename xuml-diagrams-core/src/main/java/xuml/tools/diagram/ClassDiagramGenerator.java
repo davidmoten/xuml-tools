@@ -8,10 +8,11 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.JAXBElement;
-
 import org.apache.commons.io.IOUtils;
 
+import com.google.common.base.Optional;
+
+import jakarta.xml.bind.JAXBElement;
 import xuml.tools.miuml.metamodel.jaxb.AssociativeReference;
 import xuml.tools.miuml.metamodel.jaxb.Attribute;
 import xuml.tools.miuml.metamodel.jaxb.BinaryAssociation;
@@ -32,8 +33,6 @@ import xuml.tools.miuml.metamodel.jaxb.Relationship;
 import xuml.tools.miuml.metamodel.jaxb.Subsystem;
 import xuml.tools.miuml.metamodel.jaxb.SubsystemElement;
 import xuml.tools.miuml.metamodel.jaxb.UnaryAssociation;
-
-import com.google.common.base.Optional;
 
 public class ClassDiagramGenerator {
 

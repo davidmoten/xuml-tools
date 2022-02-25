@@ -4,11 +4,10 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import javax.xml.bind.JAXBElement;
-
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Lists;
 
+import jakarta.xml.bind.JAXBElement;
 import xuml.tools.miuml.metamodel.jaxb.Class;
 import xuml.tools.miuml.metamodel.jaxb.Domain;
 import xuml.tools.miuml.metamodel.jaxb.Domains;
