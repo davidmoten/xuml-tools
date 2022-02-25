@@ -11,7 +11,7 @@
     <description>Swing app for viewing state diagrams</description>
     <properties>
         <jung.version>2.0.1</jung.version>
-        <exec.version>1.4.0</exec.version>
+        <exec.version>3.0.0</exec.version>
     </properties>
     <dependencies>
 
@@ -66,19 +66,6 @@
 
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.3</version>
-                <configuration>
-                    <source>${maven.compiler.target}</source>
-                    <target>${maven.compiler.target}</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-
     <profiles>
         <profile>
             <id>state</id>
@@ -87,7 +74,7 @@
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>exec-maven-plugin</artifactId>
-                        <version>1.4.0</version>
+                        <version>${exec.version}</version>
                         <executions>
                             <execution>
                                 <goals>
