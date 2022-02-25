@@ -64,7 +64,7 @@
         <h2.version>2.1.210</h2.version>
         <slf4j.version>1.7.36</slf4j.version>
 
-        <checkstyle.version>2.16</checkstyle.version>
+        <checkstyle.version>3.1.1</checkstyle.version>
         <javadoc.version>3.3.2</javadoc.version>
         <pmd.version>3.16.0</pmd.version>
         <project.info.version>2.7</project.info.version>
