@@ -3,7 +3,7 @@
     <parent>
         <artifactId>xuml-tools</artifactId>
         <groupId>com.github.davidmoten</groupId>
-        <version>0.4.4-SNAPSHOT</version>
+        <version>0.5</version>
     </parent>
     <artifactId>state-diagram-viewer</artifactId>
     <name>${project.artifactId}</name>
