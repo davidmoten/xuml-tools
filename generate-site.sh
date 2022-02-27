@@ -3,7 +3,7 @@ PROJECT=xuml-tools
 set -e
 mvn clean install 
 mvn site
-mvn site:stage -Dsite.url=file://`pwd`/target/staging-temp
+mvn site:stage
 cd ../davidmoten.github.io
 git pull
 mkdir -p $PROJECT
