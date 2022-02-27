@@ -154,6 +154,12 @@
             </plugin>
         </plugins>
     </build>
+    <distributionManagement>
+        <site>
+            <id>xuml-tools-site</id>
+            <url>http://davidmoten.github.io/xuml-tools</url>
+        </site>
+    </distributionManagement>
     <reporting>
         <outputDirectory>${project.build.directory}/site</outputDirectory>
         <plugins>
