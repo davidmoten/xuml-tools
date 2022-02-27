@@ -155,6 +155,7 @@
         </plugins>
     </build>
     <reporting>
+        <outputDirectory>${project.build.directory}/site</outputDirectory>
         <plugins>
             <!-- this one should go first so that it is available to other 
                 plugins when they run -->
