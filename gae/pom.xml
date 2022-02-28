@@ -38,7 +38,7 @@
 		<dependency>
 			<groupId>com.google.appengine.orm</groupId>
 			<artifactId>datanucleus-appengine</artifactId>
-			<version>1.0.4.1</version>
+			<version>2.1.2</version>
 		</dependency>
 
 		<dependency>
