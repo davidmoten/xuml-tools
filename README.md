@@ -14,7 +14,7 @@ Status: *released to Maven Central*
 
 <img src="https://raw.github.com/davidmoten/xuml-tools/master/xuml-diagrams/src/docs/class-diagram.png">
 
-Maven site is [here](http://davidmoten.github.io/xuml-tools/) including [javadocs](http://davidmoten.github.io/xuml-tools/site/apidocs/index.html).
+Maven site is [here](http://davidmoten.github.io/xuml-tools/) including javadocs.
 
 Technologies
 -------------
