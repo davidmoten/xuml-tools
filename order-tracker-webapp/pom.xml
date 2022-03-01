@@ -12,7 +12,7 @@
     <properties>
         <jetty.plugin.version>9.4.45.v20220203</jetty.plugin.version>
         <jetty.stop.port>8079</jetty.stop.port>
-        <jersey.version>2.21</jersey.version>
+        <jersey.version>2.35</jersey.version>
     </properties>
     <dependencies>
         <dependency>
@@ -65,7 +65,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.3</version>
+                <version>3.10.0</version>
                 <configuration>
                     <verbose>true</verbose>
                     <fork>true</fork>
