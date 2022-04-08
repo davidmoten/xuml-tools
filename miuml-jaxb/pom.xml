@@ -10,7 +10,7 @@
     <description>Contains miUML metamodel schema and xuml-tools extensions schema and generates JAXB classes from those schemas.</description>
     <properties>
         <jaxb.generated>${project.build.directory}/generated-sources/jaxb</jaxb.generated>
-        <jakarta.xml.bind-api.version>3.0.1</jakarta.xml.bind-api.version>
+        <jakarta.xml.bind-api.version>4.0.0</jakarta.xml.bind-api.version>
         <jaxb.runtime.version>3.0.2</jaxb.runtime.version>
     </properties>
     <dependencies>
