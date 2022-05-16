@@ -10,9 +10,10 @@
 	<name>${project.artifactId}</name>
 	<description>Runtime dependencies for Hibernate JPA implementation</description>
 	<properties>
-                <!-- see hibernate bug report https://hibernate.atlassian.net/browse/HHH-15091 
-                     that prevents us from going to 5.4.17 to 5.6.5 -->
-		<hibernate.version>5.4.16.Final</hibernate.version>
+                <!-- see hibernate bug report https://hibernate.atlassian.net/browse/HHH-15277 
+                     that prevents us from going to 5.4.17 to 5.6.9. Versions between those are
+                     affected by https://hibernate.atlassian.net/browse/HHH-15091 -->
+		<hibernate.version>5.4.17.Final</hibernate.version>
 	</properties>
 	<dependencies>
 		<dependency>
