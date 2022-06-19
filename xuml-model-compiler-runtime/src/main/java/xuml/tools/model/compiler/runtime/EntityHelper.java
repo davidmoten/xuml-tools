@@ -3,7 +3,7 @@ package xuml.tools.model.compiler.runtime;
 import java.util.List;
 import java.util.Stack;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;

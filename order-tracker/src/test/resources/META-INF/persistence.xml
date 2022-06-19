@@ -4,6 +4,7 @@
     version="1.0">
 
     <persistence-unit name="testPersistenceUnit">
+        <provider>org.hibernate.ejb.HibernatePersistence</provider>
         <class>ordertracker.Order</class>
         <class>ordertracker.Depot</class>
         <class>ordertracker.SystemEvent</class>

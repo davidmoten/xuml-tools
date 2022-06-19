@@ -2,7 +2,7 @@ package xuml.tools.model.compiler.runtime.actor;
 
 import java.util.HashMap;
 
-import javax.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityManagerFactory;
 
 import com.google.common.collect.Maps;
 

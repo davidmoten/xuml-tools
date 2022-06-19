@@ -3,7 +3,7 @@ package xuml.tools.model.compiler.runtime;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 public class Info {
 

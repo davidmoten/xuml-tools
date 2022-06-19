@@ -2,9 +2,9 @@ package xuml.tools.jaxb.compiler.test;
 
 import static org.junit.Assert.assertNotNull;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceException;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.PersistenceException;
 
 import one_to_zero_one.A;
 import one_to_zero_one.A.AId;

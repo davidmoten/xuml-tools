@@ -1,8 +1,8 @@
 package xuml.tools.jaxb.compiler.test;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.RollbackException;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.RollbackException;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.AfterClass;

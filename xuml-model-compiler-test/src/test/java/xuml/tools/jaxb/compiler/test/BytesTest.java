@@ -1,7 +1,7 @@
 package xuml.tools.jaxb.compiler.test;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;

@@ -1,7 +1,7 @@
 package xuml.tools.jaxb.compiler.test;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 
 import many_to_many.A;
 import many_to_many.B;
