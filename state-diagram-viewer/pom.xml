@@ -11,7 +11,7 @@
     <description>Swing app for viewing state diagrams</description>
     <properties>
         <jung.version>2.1.1</jung.version>
-        <exec.version>3.0.0</exec.version>
+        <exec.version>3.1.0</exec.version>
     </properties>
     <dependencies>
 
