@@ -77,7 +77,7 @@
         <xuml.tools.version>${project.version}</xuml.tools.version>
         <hsqldb.version>2.6.1</hsqldb.version>
         <build.helper.version>3.3.0</build.helper.version>
-        <deploy.plugin.version>3.0.0-M2</deploy.plugin.version>
+        <deploy.plugin.version>3.0.0</deploy.plugin.version>
     </properties>
 
     <modules>
