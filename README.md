@@ -1,7 +1,7 @@
 xuml-tools 
 ==========
 <a href="https://github.com/davidmoten/xuml-tools/actions/workflows/ci.yml"><img src="https://github.com/davidmoten/xuml-tools/actions/workflows/ci.yml/badge.svg"/></a><br/>
-[Executable UML](http://en.wikipedia.org/wiki/Executable_UML) tools based on the [miUML](http://www.miuml.org) [metamodel](https://docs.google.com/spreadsheet/ccc?key=0AtejhCC8R03tdERpSzJFdTRVWkFMYnN2MlZzbG5YYnc#gid=1) (thanks to Leon Starr!). 
+[Executable UML](http://en.wikipedia.org/wiki/Executable_UML) tools based on the [miUML](http://miuml.org) [metamodel](https://docs.google.com/spreadsheet/ccc?key=0AtejhCC8R03tdERpSzJFdTRVWkFMYnN2MlZzbG5YYnc#gid=1) (thanks to Leon Starr!). 
 
 * miUML metamodel XML schema
 * Java model compiler (JSE/JEE)
