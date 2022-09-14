@@ -6,13 +6,14 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 import javax.persistence.Basic;
@@ -57,7 +58,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
-import scala.concurrent.duration.Duration;
 import xuml.tools.model.compiler.ClassInfo.OtherId;
 import xuml.tools.model.compiler.info.Mult;
 import xuml.tools.model.compiler.info.MyAttributeExtensions;
@@ -1408,9 +1408,9 @@ public class ClassWriter {
                 info.getJavaClassSimpleName(), info.addType(Event.class),
                 info.getJavaClassSimpleName());
         out.format(
-                "        return signal(event, %s.create(time-%s.currentTimeMillis(),%s.MILLISECONDS));\n",
+                "        return signal(event, %s.of(time-%s.currentTimeMillis(),%s.MILLIS));\n",
                 info.addType(Duration.class), info.addType(System.class),
-                info.addType(TimeUnit.class));
+                info.addType(ChronoUnit.class));
         out.format("    }\n\n");
 
         out.format("    public %s cancelSignal(String eventSignatureKey) {\n ",

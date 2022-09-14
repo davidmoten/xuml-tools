@@ -5,8 +5,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -15,6 +16,8 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Optional;
 
@@ -23,9 +26,6 @@ import abc.A.AId;
 import abc.A.Events.Create;
 import abc.A.Events.StateSignature_DoneSomething;
 import abc.Context;
-import akka.event.Logging;
-import akka.event.LoggingAdapter;
-import scala.concurrent.duration.Duration;
 import xuml.tools.model.compiler.runtime.SignalProcessorListener;
 import xuml.tools.model.compiler.runtime.SignalProcessorListenerFactory;
 import xuml.tools.model.compiler.runtime.actor.EntityActor;
@@ -65,7 +65,7 @@ public class AbcTest {
         a1.signal(new A.Events.SomethingDone(11));
         a2.signal(new A.Events.SomethingDone(12));
         // send asynchronous signal to a3 after a tiny delay (5ms)
-        a3.signal(new A.Events.SomethingDone(13), Duration.create(5, TimeUnit.MILLISECONDS));
+        a3.signal(new A.Events.SomethingDone(13), Duration.of(5, ChronoUnit.MILLIS));
 
         // wait a bit for all signals to be processed
         Thread.sleep(2000);
@@ -242,12 +242,13 @@ public class AbcTest {
      */
     private static SignalProcessorListener createSignalProcessorListener() {
         return new SignalProcessorListener() {
+            
+            private final Logger log = LoggerFactory.getLogger(SignalProcessorListener.class);
 
             private int processed = 0;
 
             @Override
             public void beforeProcessing(Signal<?> signal, EntityActor actor) {
-                LoggingAdapter log = Logging.getLogger(actor.getContext().system(), this);
                 log.info("before processing");
             }
 
@@ -255,14 +256,12 @@ public class AbcTest {
             public void afterProcessing(Signal<?> signal, EntityActor actor) {
                 // count the number processed and log it
                 processed++;
-                LoggingAdapter log = Logging.getLogger(actor.getContext().system(), this);
                 log.info("after processing " + processed);
             }
 
             @Override
             public void failure(Signal<?> signal, Exception e, EntityActor actor) {
-                LoggingAdapter log = Logging.getLogger(actor.getContext().system(), this);
-                log.error(e, e.getMessage());
+                log.error(e.getMessage(), e);
             }
         };
     }
