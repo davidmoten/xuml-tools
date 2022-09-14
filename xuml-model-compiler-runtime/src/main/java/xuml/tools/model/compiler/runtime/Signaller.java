@@ -1,6 +1,8 @@
 package xuml.tools.model.compiler.runtime;
 
 import java.io.Serializable;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -12,20 +14,15 @@ import javax.persistence.EntityTransaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.davidmoten.reels.ActorRef;
+import com.github.davidmoten.reels.Context;
+import com.github.davidmoten.reels.Disposable;
+import com.github.davidmoten.reels.Scheduler;
+import com.github.davidmoten.reels.Worker;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
-import com.typesafe.config.ConfigFactory;
 
-import akka.actor.ActorRef;
-import akka.actor.ActorSystem;
-import akka.actor.Cancellable;
-import akka.actor.Props;
-import akka.actor.Terminated;
-import scala.concurrent.ExecutionContext;
-import scala.concurrent.Future;
-import scala.concurrent.duration.Duration;
-import scala.concurrent.duration.FiniteDuration;
 import xuml.tools.model.compiler.runtime.actor.RootActor;
 import xuml.tools.model.compiler.runtime.message.ActorConfig;
 import xuml.tools.model.compiler.runtime.message.Signal;
@@ -40,19 +37,19 @@ public class Signaller {
             return new Info();
         }
     };
-    private final ActorSystem actorSystem = ActorSystem.create("xuml-tools",
-            ConfigFactory.load("xuml-akka").withFallback(ConfigFactory.load()));
-    private final ActorRef root = actorSystem.actorOf(Props.create(RootActor.class), "root");
+    private final Context actorSystem = new Context();
+    private final ActorRef<Object> root = actorSystem.createActor(RootActor.class);
     private final EntityManagerFactory emf;
+    private final Worker worker;
 
     public Signaller(EntityManagerFactory emf, int entityActorPoolSize,
             SignalProcessorListenerFactory listenerFactory) {
         this.emf = emf;
-        log.debug("Akka system settings:\n{}", actorSystem.settings());
         root.tell(new ActorConfig(entityActorPoolSize), root);
         root.tell(emf, root);
         if (listenerFactory != null)
             root.tell(listenerFactory, root);
+        this.worker = Scheduler.computation().createWorker();
     }
 
     public EntityManagerFactory getEntityManagerFactory() {
@@ -60,11 +57,10 @@ public class Signaller {
     }
 
     /**
-     * Returns a new instance of type T using the given {@link CreationEvent}.
-     * This is a synchronous creation using a newly created then closed
-     * EntityManager for persisting the entity. If you need finer grained
-     * control of commits then open your own entity manager and do the the
-     * persist yourself.
+     * Returns a new instance of type T using the given {@link CreationEvent}. This
+     * is a synchronous creation using a newly created then closed EntityManager for
+     * persisting the entity. If you need finer grained control of commits then open
+     * your own entity manager and do the the persist yourself.
      * 
      * @param cls
      * @param event
@@ -107,13 +103,13 @@ public class Signaller {
 
     }
 
-    public <T extends Entity<T>> void signal(String fromEntityUniqueId, Entity<T> entity,
-            Event<T> event, Optional<Duration> delay) {
-        signal(fromEntityUniqueId, entity, event, delay, Optional.<FiniteDuration> absent());
+    public <T extends Entity<T>> void signal(String fromEntityUniqueId, Entity<T> entity, Event<T> event,
+            Optional<Duration> delay) {
+        signal(fromEntityUniqueId, entity, event, delay, Optional.<Duration>absent());
     }
 
-    public <T extends Entity<T>> void signal(String fromEntityUniqueId, Entity<T> entity,
-            Event<T> event, Long time, Optional<FiniteDuration> repeatInterval) {
+    public <T extends Entity<T>> void signal(String fromEntityUniqueId, Entity<T> entity, Event<T> event, Long time,
+            Optional<Duration> repeatInterval) {
         signal(fromEntityUniqueId, entity, event, getDelay(time), repeatInterval);
     }
 
@@ -122,11 +118,11 @@ public class Signaller {
         if (time == null || time <= now)
             return Optional.absent();
         else
-            return Optional.<Duration> of(Duration.create(time - now, TimeUnit.MILLISECONDS));
+            return Optional.<Duration>of(Duration.of(time - now, ChronoUnit.MILLIS));
     }
 
-    public <T extends Entity<T>> void signal(String fromEntityUniqueId, Entity<T> entity,
-            Event<T> event, Optional<Duration> delay, Optional<FiniteDuration> repeatInterval) {
+    public <T extends Entity<T>> void signal(String fromEntityUniqueId, Entity<T> entity, Event<T> event,
+            Optional<Duration> delay, Optional<Duration> repeatInterval) {
         Preconditions.checkNotNull(delay);
         Preconditions.checkNotNull(repeatInterval);
         long time;
@@ -142,11 +138,11 @@ public class Signaller {
             repeatIntervalMs = Optional.absent();
 
         @SuppressWarnings("unchecked")
-        String id = persistSignal(fromEntityUniqueId, entity.getId(), (Class<T>) entity.getClass(),
-                event, time, repeatIntervalMs, entity.uniqueId());
+        String id = persistSignal(fromEntityUniqueId, entity.getId(), (Class<T>) entity.getClass(), event, time,
+                repeatIntervalMs, entity.uniqueId());
         @SuppressWarnings("unchecked")
-        Signal<T> signal = new Signal<T>(fromEntityUniqueId, (Class<Entity<T>>) entity.getClass(),
-                event, id, time, repeatInterval, entity.getId(), entity.uniqueId());
+        Signal<T> signal = new Signal<T>(fromEntityUniqueId, (Class<Entity<T>>) entity.getClass(), event, id, time,
+                repeatInterval, entity.getId(), entity.uniqueId());
         signal(signal);
     }
 
@@ -167,8 +163,7 @@ public class Signaller {
             int result = 1;
             result = prime * result + ((entityUniqueId == null) ? 0 : entityUniqueId.hashCode());
             result = prime * result + ((eventSignature == null) ? 0 : eventSignature.hashCode());
-            result = prime * result
-                    + ((fromEntityUniqueId == null) ? 0 : fromEntityUniqueId.hashCode());
+            result = prime * result + ((fromEntityUniqueId == null) ? 0 : fromEntityUniqueId.hashCode());
             return result;
         }
 
@@ -201,10 +196,9 @@ public class Signaller {
 
     }
 
-    private final Map<EntityEvent, Cancellable> scheduleCancellers = Maps.newHashMap();
+    private final Map<EntityEvent, Disposable> scheduleCancellers = Maps.newHashMap();
 
-    public <T> void cancelSignal(String fromEntityUniqueId, Entity<T> entity,
-            String eventSignatureKey) {
+    public <T> void cancelSignal(String fromEntityUniqueId, Entity<T> entity, String eventSignatureKey) {
         cancelSignal(fromEntityUniqueId, entity.uniqueId(), eventSignatureKey);
     }
 
@@ -221,32 +215,28 @@ public class Signaller {
                 // signature outstanding for each sender-receiver instance pair
                 // at any one time. Mellor & Balcer p194.
                 synchronized (this) {
-                    EntityEvent key = cancelSignal(signal.getFromEntityUniqueId(),
-                            signal.getEntityUniqueId(), signal.getEvent().signatureKey());
+                    EntityEvent key = cancelSignal(signal.getFromEntityUniqueId(), signal.getEntityUniqueId(),
+                            signal.getEvent().signatureKey());
 
-                    Cancellable cancellable;
-                    ExecutionContext executionContext = actorSystem.dispatcher();
-                    if (!signal.getRepeatInterval().isPresent())
-                        cancellable = actorSystem.scheduler().scheduleOnce(
-                                Duration.create(delayMs, TimeUnit.MILLISECONDS), root, signal,
-                                executionContext, root);
-                    else
-                        cancellable = actorSystem.scheduler().schedule(
-                                Duration.create(delayMs, TimeUnit.MILLISECONDS),
-                                signal.getRepeatInterval().get(), root, signal, executionContext,
-                                root);
+                    Disposable cancellable;
+                    
+                    if (!signal.getRepeatInterval().isPresent()) {
+                        cancellable = worker.schedule(()-> root.tell(signal, root), delayMs, TimeUnit.MILLISECONDS);
+                    }
+                    else {
+                        cancellable = worker.schedulePeriodically(() -> root.tell(signal, root), delayMs, signal.getRepeatInterval().get().toMillis(), TimeUnit.MILLISECONDS);
+                    }
                     scheduleCancellers.put(key, cancellable);
                 }
             }
         }
     }
 
-    private <T> EntityEvent cancelSignal(String fromEntityUniqueid, String toEntityUniqueId,
-            String eventSignatureKey) {
+    private <T> EntityEvent cancelSignal(String fromEntityUniqueid, String toEntityUniqueId, String eventSignatureKey) {
         EntityEvent key = new EntityEvent(fromEntityUniqueid, toEntityUniqueId, eventSignatureKey);
-        Cancellable current = scheduleCancellers.get(key);
+        Disposable current = scheduleCancellers.get(key);
         if (current != null)
-            current.cancel();
+            current.dispose();
         return key;
     }
 
@@ -256,9 +246,10 @@ public class Signaller {
         try {
             tx = em.getTransaction();
             tx.begin();
-            List<QueuedSignal> signals = em.createQuery(
-                    "select s from " + QueuedSignal.class.getSimpleName() + " s order by id",
-                    QueuedSignal.class).getResultList();
+            List<QueuedSignal> signals = em
+                    .createQuery("select s from " + QueuedSignal.class.getSimpleName() + " s order by id",
+                            QueuedSignal.class)
+                    .getResultList();
             tx.commit();
             return signals;
         } catch (RuntimeException e) {
@@ -285,8 +276,7 @@ public class Signaller {
         try {
             tx = em.getTransaction();
             tx.begin();
-            count = em.createQuery(
-                    "select count(s) from " + QueuedSignal.class.getSimpleName() + " s", Long.class)
+            count = em.createQuery("select count(s) from " + QueuedSignal.class.getSimpleName() + " s", Long.class)
                     .getSingleResult();
             tx.commit();
             return count;
@@ -305,8 +295,7 @@ public class Signaller {
         Event<?> event = Util.toObject(sig.eventContent, sig.eventClass());
         Serializable id = Util.toObject(sig.idContent, sig.idClass());
         Class<?> entityClass = getClassForName(sig.entityClassName);
-        signal(new Signal(sig.fromEntityUniqueId, entityClass, event, sig.id, id,
-                sig.toEntityUniqueId));
+        signal(new Signal(sig.fromEntityUniqueId, entityClass, event, sig.id, id, sig.toEntityUniqueId));
     }
 
     private Class<?> getClassForName(String className) {
@@ -317,14 +306,12 @@ public class Signaller {
         }
     }
 
-    public <T extends Entity<T>> String persistSignal(String fromEntityUniqueId, Object id,
-            Class<T> cls, Event<T> event, long time, Optional<Long> repeatIntervalMs,
-            String entityUniqueId) {
+    public <T extends Entity<T>> String persistSignal(String fromEntityUniqueId, Object id, Class<T> cls,
+            Event<T> event, long time, Optional<Long> repeatIntervalMs, String entityUniqueId) {
         byte[] idBytes = Util.toBytes(id);
         byte[] eventBytes = Util.toBytes(event);
         QueuedSignal signal = new QueuedSignal(id.getClass().getName(), idBytes, cls.getName(),
-                event.getClass().getName(), eventBytes, time, repeatIntervalMs, fromEntityUniqueId,
-                entityUniqueId);
+                event.getClass().getName(), eventBytes, time, repeatIntervalMs, fromEntityUniqueId, entityUniqueId);
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
         em.persist(signal);
@@ -342,8 +329,9 @@ public class Signaller {
         return info.get();
     }
 
-    public Future<Terminated> stop() {
-        return actorSystem.terminate();
+    public void stop() {
+        worker.dispose();
+        actorSystem.dispose();
     }
 
     public void close() {

@@ -4,56 +4,52 @@ import java.util.HashMap;
 
 import javax.persistence.EntityManagerFactory;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.github.davidmoten.reels.Actor;
+import com.github.davidmoten.reels.ActorRef;
+import com.github.davidmoten.reels.Context;
+import com.github.davidmoten.reels.MessageContext;
 import com.google.common.collect.Maps;
 
-import akka.actor.ActorRef;
-import akka.actor.Props;
-import akka.actor.UntypedActor;
-import akka.event.Logging;
-import akka.event.LoggingAdapter;
 import xuml.tools.model.compiler.runtime.SignalProcessorListenerFactory;
-import xuml.tools.model.compiler.runtime.message.ActorConfig;
 import xuml.tools.model.compiler.runtime.message.CloseEntityActor;
 import xuml.tools.model.compiler.runtime.message.Signal;
 import xuml.tools.model.compiler.runtime.message.StopEntityActor;
 
-public class RootActor extends UntypedActor {
+public class RootActor implements Actor<Object> {
+
+    private static final Logger log = LoggerFactory.getLogger(RootActor.class);
 
     private EntityManagerFactory emf;
     private final HashMap<String, ActorInfo> actors = Maps.newHashMap();
-    private final LoggingAdapter log;
     private SignalProcessorListenerFactory listenerFactory;
 
     public RootActor() {
-        log = Logging.getLogger(getContext().system(), this);
     }
 
     @Override
-    public void onReceive(Object message) throws Exception {
+    public void onMessage(MessageContext<Object> context, Object message) {
         log.debug("received message {}", message.getClass().getName());
-        if (message instanceof ActorConfig) {
-            handleMessage((ActorConfig) message);
-        } else if (message instanceof EntityManagerFactory)
+        if (message instanceof EntityManagerFactory)
             handleMessage((EntityManagerFactory) message);
         else if (message instanceof SignalProcessorListenerFactory)
             listenerFactory = (SignalProcessorListenerFactory) message;
         else if (message instanceof Signal)
-            handleMessage((Signal<?>) message);
+            handleMessage(context, (Signal<?>) message);
         else if (message instanceof CloseEntityActor)
-            handleMessage((CloseEntityActor) message);
+            handleMessage(context, (CloseEntityActor) message);
     }
 
-    private void handleMessage(ActorConfig message) {
-    }
-
-    private void handleMessage(CloseEntityActor message) {
+    private void handleMessage(MessageContext<Object> context, CloseEntityActor message) {
         String key = message.getEntityUniqueId();
         ActorInfo info = actors.remove(key);
         if (info.counter > 1) {
             actors.put(key, info.decrement());
         } else {
             // when the counter gets down to 1 we stop the entity actor
-            info.actor.tell(new StopEntityActor(), getSelf());
+            info.actor.tell(new StopEntityActor(), context.self());
         }
     }
 
@@ -61,37 +57,36 @@ public class RootActor extends UntypedActor {
         emf = message;
     }
 
-    private void handleMessage(Signal<?> message) {
+    private void handleMessage(MessageContext<Object> context, Signal<?> message) {
         String key = message.getEntityUniqueId();
-        ActorRef actor = getActor(key);
-        actor.tell(message, getSelf());
+        ActorRef<Object> actor = getActor(context, key);
+        actor.tell(message, context.self());
     }
 
-    private ActorRef getActor(String key) {
+    private ActorRef<Object> getActor(MessageContext<Object> context, String key) {
         ActorInfo info = actors.get(key);
         if (info == null) {
-            ActorRef actor = createActor(key);
+            ActorRef<Object> actor = createActor(context.context(), key);
             actors.put(key, new ActorInfo(actor, 1));
-            actor.tell(emf, getSelf());
+            actor.tell(emf, context.self());
             if (listenerFactory != null)
-                actor.tell(listenerFactory.create(key), getSelf());
+                actor.tell(listenerFactory.create(key), context.self());
         } else {
             actors.put(key, info.increment());
         }
         return actors.get(key).actor;
     }
 
-    private ActorRef createActor(String key) {
-        return getContext()
-                .actorOf(Props.create(EntityActor.class).withDispatcher("akka.entity-dispatcher"));
+    private ActorRef<Object> createActor(Context context, String key) {
+        return context.createActor(EntityActor.class);
     }
 
     private static final class ActorInfo {
 
-        final ActorRef actor;
+        final ActorRef<Object> actor;
         final long counter;
 
-        ActorInfo(ActorRef actor, long counter) {
+        ActorInfo(ActorRef<Object> actor, long counter) {
             this.actor = actor;
             this.counter = counter;
         }

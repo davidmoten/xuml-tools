@@ -4,9 +4,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 
-import akka.actor.UntypedActor;
-import akka.event.Logging;
-import akka.event.LoggingAdapter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.github.davidmoten.reels.Actor;
+import com.github.davidmoten.reels.MessageContext;
+
 import xuml.tools.model.compiler.runtime.Entity;
 import xuml.tools.model.compiler.runtime.QueuedSignal;
 import xuml.tools.model.compiler.runtime.SignalProcessorListener;
@@ -15,32 +18,32 @@ import xuml.tools.model.compiler.runtime.message.CloseEntityActor;
 import xuml.tools.model.compiler.runtime.message.Signal;
 import xuml.tools.model.compiler.runtime.message.StopEntityActor;
 
-public class EntityActor extends UntypedActor {
+public class EntityActor implements Actor<Object> {
+
+    private static final Logger log = LoggerFactory.getLogger(EntityActor.class);
 
     private EntityManagerFactory emf;
-    private final LoggingAdapter log;
     private SignalProcessorListener listener = SignalProcessorListenerDoesNothing.getInstance();
 
     public EntityActor() {
-        log = Logging.getLogger(getContext().system(), this);
     }
 
     @Override
-    public void onReceive(Object message) throws Exception {
+    public void onMessage(MessageContext<Object> context, Object message) {
         log.debug("received message {}", message.getClass().getName());
         if (message instanceof EntityManagerFactory)
             handleMessage((EntityManagerFactory) message);
         else if (message instanceof SignalProcessorListener)
             listener = (SignalProcessorListener) message;
         else if (message instanceof Signal) {
-            handleMessage((Signal<?>) message);
+            handleMessage(context, (Signal<?>) message);
         } else if (message instanceof StopEntityActor) {
-            getContext().stop(getSelf());
+            context.self().stop();
         }
     }
 
     @SuppressWarnings("unchecked")
-    private void handleMessage(@SuppressWarnings("rawtypes") Signal signal) {
+    private void handleMessage(MessageContext<Object> context, @SuppressWarnings("rawtypes") Signal signal) {
         if (emf != null) {
             // perform the event on the entity after it has been
             // loaded by a new EntityManager
@@ -84,13 +87,13 @@ public class EntityActor extends UntypedActor {
                     entity.helper().setEntityManager(null);
                 }
                 // give RootActor a chance to dispose of this actor
-                getSender().tell(new CloseEntityActor(signal.getEntityUniqueId()), getSelf());
+                context.sender().ifPresent(sender -> sender.tell(new CloseEntityActor(signal.getEntityUniqueId()), context.self()));
             }
         }
     }
 
-    private void handleException(@SuppressWarnings("rawtypes") Signal signal, EntityManager em,
-            EntityTransaction tx, RuntimeException e) {
+    private void handleException(@SuppressWarnings("rawtypes") Signal signal, EntityManager em, EntityTransaction tx,
+            RuntimeException e) {
         try {
             if (tx != null && tx.isActive()) {
                 tx.rollback();
