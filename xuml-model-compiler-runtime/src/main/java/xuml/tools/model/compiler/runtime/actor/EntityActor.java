@@ -7,8 +7,8 @@ import javax.persistence.EntityTransaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.davidmoten.reels.Actor;
-import com.github.davidmoten.reels.MessageContext;
+import com.github.davidmoten.reels.AbstractActor;
+import com.github.davidmoten.reels.Message;
 
 import xuml.tools.model.compiler.runtime.Entity;
 import xuml.tools.model.compiler.runtime.QueuedSignal;
@@ -18,7 +18,7 @@ import xuml.tools.model.compiler.runtime.message.CloseEntityActor;
 import xuml.tools.model.compiler.runtime.message.Signal;
 import xuml.tools.model.compiler.runtime.message.StopEntityActor;
 
-public class EntityActor implements Actor<Object> {
+public class EntityActor extends AbstractActor<Object> {
 
     private static final Logger log = LoggerFactory.getLogger(EntityActor.class);
 
@@ -28,28 +28,32 @@ public class EntityActor implements Actor<Object> {
     public EntityActor() {
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public void onMessage(MessageContext<Object> context, Object message) {
-        log.debug("received message {}", message.getClass().getName());
-        if (message instanceof EntityManagerFactory)
-            handleMessage((EntityManagerFactory) message);
-        else if (message instanceof SignalProcessorListener)
-            listener = (SignalProcessorListener) message;
-        else if (message instanceof Signal) {
-            handleMessage(context, (Signal<?>) message);
-        } else if (message instanceof StopEntityActor) {
-            context.self().stop();
+    public void onMessage(Message<Object> message) {
+        Object content = message.content();
+        log.debug("received message {}", content.getClass().getName());
+        if (content instanceof EntityManagerFactory)
+            handleMessage((EntityManagerFactory) content);
+        else if (content instanceof SignalProcessorListener)
+            listener = (SignalProcessorListener) content;
+        else if (content instanceof Signal) {
+            handleMessage((Message<Signal<?>>) (Message<?>) message);
+        } else if (content instanceof StopEntityActor) {
+            message.self().stop();
         }
     }
 
     @SuppressWarnings("unchecked")
-    private void handleMessage(MessageContext<Object> context, @SuppressWarnings("rawtypes") Signal signal) {
+    private void handleMessage(Message<Signal<?>> message) {
         if (emf != null) {
             // perform the event on the entity after it has been
             // loaded by a new EntityManager
             EntityManager em = null;
             EntityTransaction tx = null;
             Entity<?> entity = null;
+            @SuppressWarnings("rawtypes")
+            Signal signal = message.content();
             try {
                 listener.beforeProcessing(signal, this);
                 em = emf.createEntityManager();
@@ -57,15 +61,13 @@ public class EntityActor implements Actor<Object> {
                 tx.begin();
                 log.debug("started transaction");
                 entity = (Entity<?>) em.find(signal.getEntityClass(), signal.getEntityId());
-                log.debug("calling event {} on entity id = ",
-                        signal.getEvent().getClass().getSimpleName(), signal.getEntityId());
+                log.debug("calling event {} on entity id = ", signal.getEvent().getClass().getSimpleName(),
+                        signal.getEntityId());
                 entity.helper().setEntityManager(em);
                 entity.event(signal.getEvent());
-                log.debug("removing signal from persistence signalId={}, entityId={}",
-                        signal.getId(), signal.getEntityId());
-                int countDeleted = em
-                        .createQuery("delete from " + QueuedSignal.class.getSimpleName()
-                                + " where id=:id")
+                log.debug("removing signal from persistence signalId={}, entityId={}", signal.getId(),
+                        signal.getEntityId());
+                int countDeleted = em.createQuery("delete from " + QueuedSignal.class.getSimpleName() + " where id=:id")
                         .setParameter("id", signal.getId()).executeUpdate();
                 if (countDeleted == 0) {
                     throw new RuntimeException("queued signal not deleted: " + signal.getId());
@@ -87,7 +89,8 @@ public class EntityActor implements Actor<Object> {
                     entity.helper().setEntityManager(null);
                 }
                 // give RootActor a chance to dispose of this actor
-                context.sender().ifPresent(sender -> sender.tell(new CloseEntityActor(signal.getEntityUniqueId()), context.self()));
+                message.sender().ifPresent(
+                        sender -> sender.tell(new CloseEntityActor(signal.getEntityUniqueId()), message.self()));
             }
         }
     }
