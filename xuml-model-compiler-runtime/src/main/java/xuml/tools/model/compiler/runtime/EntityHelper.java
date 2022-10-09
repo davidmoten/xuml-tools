@@ -81,7 +81,7 @@ public class EntityHelper {
             entity.event(event);
         }
         stack.pop();
-        if (stack.size() == 0) {
+        if (stack.isEmpty()) {
             Info info = signaller.getInfo();
             // reset the thread local variable so that the next use of this
             // thread will not make an assumption about the current entity
