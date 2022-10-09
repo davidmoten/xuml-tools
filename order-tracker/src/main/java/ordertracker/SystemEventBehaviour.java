@@ -13,13 +13,15 @@ public class SystemEventBehaviour implements SystemEvent.Behaviour {
 
     @Override
     public void onEntryCreated(Create event) {
+        System.out.println("Create");
         self.setId(event.getEventID());
     }
 
     @Override
-    public void onEntryCreated(NewEvent event) {
+    public void onEntryHasEvent(NewEvent event) {
+        System.out.println("NewEvent");
         // call event service (a bridge)
-        EventService.instance().event(event.getData());
+        EventService.instance().event(event.getData());        
     }
 
 }

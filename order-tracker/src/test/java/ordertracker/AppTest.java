@@ -22,7 +22,6 @@ import org.slf4j.LoggerFactory;
 
 import rx.Scheduler;
 import rx.Subscriber;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import xuml.tools.util.database.DerbyUtil;
 
@@ -34,6 +33,7 @@ public class AppTest {
 
     @Before
     public void setup() {
+        System.setProperty("org.jboss.logging.provider", "slf4j");
         DerbyUtil.disableDerbyLog();
         for (File file : new File("target").listFiles(f -> f.getName().startsWith("testdb.")))
             file.delete();
@@ -55,11 +55,9 @@ public class AppTest {
     public void testEventService() throws InterruptedException {
         // TODO move this test to xuml-model-compiler-test
         final CountDownLatch latch = new CountDownLatch(1);
-        EventService.instance().events().subscribeOn(scheduler).subscribe(new Action1<String>() {
-            @Override
-            public void call(String event) {
-                latch.countDown();
-            }
+        EventService.instance().events().subscribeOn(scheduler).subscribe(event -> {
+            log.info("event=" + event);
+            latch.countDown();
         });
 
         Order.create(new Order.Events.Create("1", "test order", "canberra", "sydney",
@@ -176,7 +174,7 @@ public class AppTest {
                     throws InterruptedException {
         log.info(
                 "waiting for latch " + index + " to detect state " + expectedStates.get(index));
-        assertTrue("states="+ states, latches.get(index).await(10, TimeUnit.SECONDS));
+        assertTrue("latch timeout, states="+ states, latches.get(index).await(10, TimeUnit.SECONDS));
         log.info("latch obtained for " + index);
         assertEquals(expectedStates.subList(0, index + 1), states.subList(0, index + 1));
     }

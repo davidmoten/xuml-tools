@@ -213,9 +213,10 @@ public class Signaller {
         } else {
             long now = System.currentTimeMillis();
             long delayMs = (signal.getTime() == null ? now : signal.getTime()) - now;
-            if (delayMs <= 0)
+            if (delayMs <= 0) {
+                log.debug("root --> root: " + signal);
                 root.tell(signal, root);
-            else {
+            } else {
                 // There can be at most one delayed signal of a given event
                 // signature outstanding for each sender-receiver instance pair
                 // at any one time. Mellor & Balcer p194.

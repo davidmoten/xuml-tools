@@ -207,6 +207,7 @@
 				</IndependentAttribute>
 				<Lifecycle>
 					<State Name="Created" />
+					<State Name="HasEvent" />
 					<CreationEvent Name="Create" ID="1" State="Created">
 						<EventSignature>
 							<StateModelParameter Name="Event ID" Type="EventID" />
@@ -218,7 +219,8 @@
 							<StateModelParameter Name="Data" Type="String" />
 						</EventSignature>
 					</LocalEffectiveSignalingEvent>
-					<Transition State="Created" EventID="2" Destination="Created" />
+					<Transition State="Created" EventID="2" Destination="HasEvent" />
+					<Transition State="HasEvent" EventID="2" Destination="HasEvent" />
 				</Lifecycle>
 			</Class>
 

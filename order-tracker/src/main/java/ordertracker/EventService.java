@@ -14,6 +14,7 @@ public class EventService {
     }
 
     public void event(String data) {
+        System.out.println("event reported=" + data);
         subject.onNext(data);
     }
 

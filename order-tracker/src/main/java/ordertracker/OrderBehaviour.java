@@ -3,6 +3,9 @@ package ordertracker;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.base.Optional;
 
 import ordertracker.Order.Events.ArrivedDepot;
@@ -22,6 +25,8 @@ import ordertracker.Order.Events.Send;
 import ordertracker.Order.State;
 
 public class OrderBehaviour implements Order.Behaviour {
+    
+    private static final Logger log = LoggerFactory.getLogger(OrderBehaviour.class);
 
     private final Order self;
 
@@ -136,7 +141,9 @@ public class OrderBehaviour implements Order.Behaviour {
 
     private void event(State state) {
         // send the state to the singleton event entity
+        log.info("sending event "+ state);
         SystemEvent.find("1").get().signal(new SystemEvent.Events.NewEvent(state.toString()));
+        log.info("sent event "+ state);
     }
 
     @Override
