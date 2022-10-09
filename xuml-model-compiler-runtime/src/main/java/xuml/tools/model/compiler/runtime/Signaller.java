@@ -37,8 +37,13 @@ public class Signaller {
             return new Info();
         }
     };
-    private final Context actorSystem = new Context();
-    private final ActorRef<Object> root = actorSystem.createActor(RootActor.class);
+    private final Context actorSystem = Context.builder().supervisor((m, actor, e) -> {
+        log.error(e.getMessage(), e);
+        // TODO make configurable
+        actor.pause(15, TimeUnit.SECONDS);
+        actor.retry();
+    }).build();
+    private final ActorRef<Object> root = actorSystem.createActor(RootActor.class, "root");
     private final EntityManagerFactory emf;
     private final Worker worker;
 
@@ -49,7 +54,7 @@ public class Signaller {
         root.tell(emf, root);
         if (listenerFactory != null)
             root.tell(listenerFactory, root);
-        this.worker = Scheduler.computation().createWorker();
+        this.worker = Scheduler.computationSticky().createWorker();
     }
 
     public EntityManagerFactory getEntityManagerFactory() {

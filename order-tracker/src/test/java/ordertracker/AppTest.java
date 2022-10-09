@@ -1,6 +1,7 @@
 package ordertracker;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.sql.Connection;
@@ -63,7 +64,7 @@ public class AppTest {
 
         Order.create(new Order.Events.Create("1", "test order", "canberra", "sydney",
                 "fred@yahoo.com", "joey@gmail.com", 3, "created"));
-        latch.await(5000, TimeUnit.MILLISECONDS);
+        assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
     }
 
     @Test
@@ -173,10 +174,10 @@ public class AppTest {
     private static synchronized void checkLatch(List<CountDownLatch> latches,
             List<String> expectedStates, List<String> states, int index)
                     throws InterruptedException {
-        System.out.println(
+        log.info(
                 "waiting for latch " + index + " to detect state " + expectedStates.get(index));
-        latches.get(index).await(120, TimeUnit.SECONDS);
-        System.out.println("latch obtained for " + index);
+        assertTrue("states="+ states, latches.get(index).await(10, TimeUnit.SECONDS));
+        log.info("latch obtained for " + index);
         assertEquals(expectedStates.subList(0, index + 1), states.subList(0, index + 1));
     }
 
