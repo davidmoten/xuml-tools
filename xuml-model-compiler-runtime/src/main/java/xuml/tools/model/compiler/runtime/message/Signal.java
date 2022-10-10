@@ -1,11 +1,10 @@
 package xuml.tools.model.compiler.runtime.message;
 
 import java.io.Serializable;
+import java.time.Duration;
 
 import com.google.common.base.Optional;
 
-import scala.concurrent.duration.Duration;
-import scala.concurrent.duration.FiniteDuration;
 import xuml.tools.model.compiler.runtime.Entity;
 import xuml.tools.model.compiler.runtime.Event;
 
@@ -16,13 +15,13 @@ public class Signal<T> {
     private final String id;
     // epoch time ms to process signal
     private final Long timeMs;
-    private final Optional<FiniteDuration> repeatInterval;
+    private final Optional<Duration> repeatInterval;
     private final String fromEntityUniqueId;
     private final Serializable entityId;
     private final String entityUniqueId;
 
     public Signal(String fromEntityUniqueId, Class<Entity<T>> entityClass, Event<T> event,
-            String id, Long timeMs, Optional<FiniteDuration> repeatInterval, Serializable entityId,
+            String id, Long timeMs, Optional<Duration> repeatInterval, Serializable entityId,
             String entityUniqueId) {
         if (entityId instanceof Optional)
             throw new RuntimeException("unexpected");
@@ -42,7 +41,7 @@ public class Signal<T> {
     }
 
     public Signal(String fromEntityUniqueId, Class<Entity<T>> entityClass, Event<T> event,
-            String id, Duration delay, FiniteDuration repeatInterval, Serializable entityId,
+            String id, Duration delay, Duration repeatInterval, Serializable entityId,
             String entityUniqueId) {
         this(fromEntityUniqueId, entityClass, event, id, getTime(delay),
                 Optional.of(repeatInterval), entityId, entityUniqueId);
@@ -64,7 +63,7 @@ public class Signal<T> {
         return id;
     }
 
-    public Optional<FiniteDuration> getRepeatInterval() {
+    public Optional<Duration> getRepeatInterval() {
         return repeatInterval;
     }
 

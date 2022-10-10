@@ -4,9 +4,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 
-import akka.actor.UntypedActor;
-import akka.event.Logging;
-import akka.event.LoggingAdapter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.github.davidmoten.reels.AbstractActor;
+import com.github.davidmoten.reels.Message;
+
 import xuml.tools.model.compiler.runtime.Entity;
 import xuml.tools.model.compiler.runtime.QueuedSignal;
 import xuml.tools.model.compiler.runtime.SignalProcessorListener;
@@ -15,18 +18,22 @@ import xuml.tools.model.compiler.runtime.message.CloseEntityActor;
 import xuml.tools.model.compiler.runtime.message.Signal;
 import xuml.tools.model.compiler.runtime.message.StopEntityActor;
 
-public class EntityActor extends UntypedActor {
+public class EntityActor extends AbstractActor<Object> {
 
+    private static final Logger log = LoggerFactory.getLogger(EntityActor.class);
+    
     private EntityManagerFactory emf;
-    private final LoggingAdapter log;
     private SignalProcessorListener listener = SignalProcessorListenerDoesNothing.getInstance();
 
+    private Message<Object> m;
+
     public EntityActor() {
-        log = Logging.getLogger(getContext().system(), this);
     }
 
     @Override
-    public void onReceive(Object message) throws Exception {
+    public void onMessage(Message<Object> m) {
+        this.m = m;
+        Object message = m.content();
         log.debug("received message {}", message.getClass().getName());
         if (message instanceof EntityManagerFactory)
             handleMessage((EntityManagerFactory) message);
@@ -35,7 +42,7 @@ public class EntityActor extends UntypedActor {
         else if (message instanceof Signal) {
             handleMessage((Signal<?>) message);
         } else if (message instanceof StopEntityActor) {
-            getContext().stop(getSelf());
+            m.self().stop();
         }
     }
 
@@ -84,7 +91,7 @@ public class EntityActor extends UntypedActor {
                     entity.helper().setEntityManager(null);
                 }
                 // give RootActor a chance to dispose of this actor
-                getSender().tell(new CloseEntityActor(signal.getEntityUniqueId()), getSelf());
+                m.<Object>senderRaw().tell(new CloseEntityActor(signal.getEntityUniqueId()), m.self());
             }
         }
     }

@@ -1,8 +1,7 @@
 package xuml.tools.model.compiler.runtime;
 
 import java.io.Serializable;
-
-import scala.concurrent.duration.Duration;
+import java.time.Duration;
 
 public interface Entity<T> {
 

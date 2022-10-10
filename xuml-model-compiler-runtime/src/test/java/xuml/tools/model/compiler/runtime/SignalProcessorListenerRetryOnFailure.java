@@ -1,10 +1,10 @@
 package xuml.tools.model.compiler.runtime;
 
-import java.util.concurrent.TimeUnit;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import scala.concurrent.duration.Duration;
 import xuml.tools.model.compiler.runtime.actor.EntityActor;
 import xuml.tools.model.compiler.runtime.message.Signal;
 
@@ -13,7 +13,7 @@ public class SignalProcessorListenerRetryOnFailure implements SignalProcessorLis
     private static Logger log = Logger
             .getLogger(SignalProcessorListenerRetryOnFailure.class.getName());
 
-    private static final Duration DELAY = Duration.create(5, TimeUnit.MINUTES);
+    private static final Duration DELAY = Duration.of(5, ChronoUnit.MINUTES);
 
     @Override
     public void beforeProcessing(Signal<?> signal, EntityActor actor) {

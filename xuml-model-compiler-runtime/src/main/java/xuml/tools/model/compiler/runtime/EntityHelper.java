@@ -1,5 +1,6 @@
 package xuml.tools.model.compiler.runtime;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Stack;
 
@@ -8,7 +9,6 @@ import javax.persistence.EntityManager;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 
-import scala.concurrent.duration.Duration;
 import xuml.tools.model.compiler.runtime.message.Signal;
 
 /**

@@ -4,10 +4,10 @@ import static org.junit.Assert.assertEquals;
 import static xuml.tools.model.compiler.runtime.query.SelectBuilder.builder;
 
 import java.io.Serializable;
+import java.time.Duration;
 
 import org.junit.Test;
 
-import scala.concurrent.duration.Duration;
 import xuml.tools.model.compiler.runtime.Entity;
 import xuml.tools.model.compiler.runtime.EntityHelper;
 import xuml.tools.model.compiler.runtime.Event;
