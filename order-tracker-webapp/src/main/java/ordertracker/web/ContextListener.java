@@ -3,15 +3,19 @@ package ordertracker.web;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import ordertracker.App;
-
-import org.apache.log4j.Logger;
-
 import xuml.tools.util.database.DerbyUtil;
 
 public class ContextListener implements ServletContextListener {
 
-	private static Logger log = Logger.getLogger(ContextListener.class);
+	private static Logger log = LoggerFactory.getLogger(ContextListener.class);
+	
+    static {
+        System.setProperty("org.jboss.logging.provider", "slf4j");
+    }
 
 	@Override
 	public void contextInitialized(ServletContextEvent event) {

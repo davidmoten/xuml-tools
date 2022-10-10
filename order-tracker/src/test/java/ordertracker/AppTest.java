@@ -31,7 +31,7 @@ public class AppTest {
     private static final Logger log = LoggerFactory.getLogger(AppTest.class);
 
     private final Scheduler scheduler = Schedulers.from(Executors.newSingleThreadExecutor());
-
+    
     @Before
     public void setup() {
         DerbyUtil.disableDerbyLog();
