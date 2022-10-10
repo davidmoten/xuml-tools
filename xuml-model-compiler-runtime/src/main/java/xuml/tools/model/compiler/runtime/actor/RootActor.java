@@ -86,7 +86,7 @@ public class RootActor extends AbstractActor<Object> {
 
     private ActorRef<Object> createActor(String key) {
         return context
-                .factory(() -> new EntityActor()).build();
+                .actorFactory(() -> new EntityActor()).build();
     }
 
     private static final class ActorInfo {
