@@ -219,9 +219,9 @@ public class Signaller {
 
                     Disposable cancellable;
                     if (!signal.getRepeatInterval().isPresent())
-                        cancellable = actorSystem.scheduler().schedule(() -> root.tell(signal, root), delayMs, TimeUnit.MILLISECONDS);
+                        cancellable = root.scheduler().schedule(() -> root.tell(signal, root), delayMs, TimeUnit.MILLISECONDS);
                     else
-                        cancellable = actorSystem.scheduler().schedulePeriodically(() -> root.tell(signal, root),
+                        cancellable = root.scheduler().schedulePeriodically(() -> root.tell(signal, root),
                                 delayMs, signal.getRepeatInterval().get().toMillis(), TimeUnit.MILLISECONDS);
                     scheduleCancellers.put(key, cancellable);
                 }
