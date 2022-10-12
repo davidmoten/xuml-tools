@@ -91,7 +91,7 @@ public class EntityActor extends AbstractActor<Object> {
                     entity.helper().setEntityManager(null);
                 }
                 // give RootActor a chance to dispose of this actor
-                m.<Object>senderRaw().tell(new CloseEntityActor(signal.getEntityUniqueId()), m.self());
+                m.<Object>sender().tell(new CloseEntityActor(signal.getEntityUniqueId()), m.self());
             }
         }
     }
