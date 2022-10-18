@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import com.github.davidmoten.reels.ActorRef;
 import com.github.davidmoten.reels.Context;
 import com.github.davidmoten.reels.Disposable;
+import com.github.davidmoten.reels.Scheduler;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
@@ -35,7 +36,9 @@ public class Signaller {
             return new Info();
         }
     };
-    private final Context actorSystem = Context.create();
+    
+    // use io scheduler because all state entry procedures are doing database work 
+    private final Context actorSystem = Context.create(Scheduler.io());
     private final ActorRef<Object> root = actorSystem.createActor(RootActor.class, "root");
     private final EntityManagerFactory emf;
 
