@@ -5,6 +5,7 @@ import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
@@ -39,13 +40,15 @@ public class Signaller {
 
     // use io scheduler because all state entry procedures are doing database work
     // could also use a bounded pool based on an ExecutorService
-    private final Context actorSystem = Context.create(Scheduler.io());
-    private final ActorRef<Object> root = actorSystem.createActor(RootActor.class, "root");
+    private final Context actorSystem;
+    private final ActorRef<Object> root;
     private final EntityManagerFactory emf;
 
     public Signaller(EntityManagerFactory emf, int entityActorPoolSize,
             SignalProcessorListenerFactory listenerFactory) {
         this.emf = emf;
+        this.actorSystem = Context.create(Scheduler.fromExecutor(Executors.newScheduledThreadPool(entityActorPoolSize)));
+        this.root = actorSystem.createActor(RootActor.class, "root");
         root.tell(emf, root);
         if (listenerFactory != null) {
             root.tell(listenerFactory, root);
