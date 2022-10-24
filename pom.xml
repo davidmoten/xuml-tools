@@ -75,7 +75,7 @@
         <changelog.version>2.2</changelog.version>
         <coverage.reports.dir>${project.build.directory}/target/coverage-reports</coverage.reports.dir>
         <xuml.tools.version>${project.version}</xuml.tools.version>
-        <hsqldb.version>2.7.0</hsqldb.version>
+        <hsqldb.version>2.7.1</hsqldb.version>
         <build.helper.version>3.3.0</build.helper.version>
         <deploy.plugin.version>3.0.0</deploy.plugin.version>
     </properties>
