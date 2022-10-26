@@ -3,7 +3,7 @@
     <parent>
         <artifactId>xuml-tools</artifactId>
         <groupId>com.github.davidmoten</groupId>
-        <version>0.6-SNAPSHOT</version>
+        <version>0.6</version>
     </parent>
     <artifactId>xuml-model-compiler-test</artifactId>
     <name>${project.artifactId}</name>
