@@ -27,7 +27,7 @@ Getting started
 ---------------
 Requirements:
 
-* JDK 1.6 or later (for build, runtime)
+* JDK 1.8 or later (for build, runtime)
 * maven 3.0.3 or later (for build)
 
 This is how to build the artifacts from source:
