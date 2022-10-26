@@ -6,13 +6,14 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 import javax.persistence.Basic;
@@ -52,12 +53,10 @@ import org.apache.commons.lang.StringEscapeUtils;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
-import scala.concurrent.duration.Duration;
 import xuml.tools.model.compiler.ClassInfo.OtherId;
 import xuml.tools.model.compiler.info.Mult;
 import xuml.tools.model.compiler.info.MyAttributeExtensions;
@@ -337,21 +336,21 @@ public class ClassWriter {
         out.format("    private %s _behaviour;\n\n", behaviourTypeName);
     }
 
-    private void writeConstructorUsingBehaviour(PrintStream out, ClassInfo info,
-            String behaviourTypeName) {
-        jd(out, "Constructor using Behaviour.", "    ");
-        if (info.useGuiceInjection())
-            out.format("    @%s\n", info.addType("com.google.inject.Inject"));
-        out.format("    public %s(%s behaviour){\n", info.getJavaClassSimpleName(),
-                behaviourTypeName);
-        out.format("        %s.checkNotNull(_behaviourFactory,\n",
-                info.addType(Preconditions.class));
-        out.format(
-                "            \"You need to call static method setBehaviourFactory before instantiating \" + %s.class.getName());\n",
-                info.getJavaClassSimpleName());
-        out.format("        this._behaviour = behaviour;\n");
-        out.format("    }\n\n");
-    }
+//    private void writeConstructorUsingBehaviour(PrintStream out, ClassInfo info,
+//            String behaviourTypeName) {
+//        jd(out, "Constructor using Behaviour.", "    ");
+//        if (info.useGuiceInjection())
+//            out.format("    @%s\n", info.addType("com.google.inject.Inject"));
+//        out.format("    public %s(%s behaviour){\n", info.getJavaClassSimpleName(),
+//                behaviourTypeName);
+//        out.format("        %s.checkNotNull(_behaviourFactory,\n",
+//                info.addType(Preconditions.class));
+//        out.format(
+//                "            \"You need to call static method setBehaviourFactory before instantiating \" + %s.class.getName());\n",
+//                info.getJavaClassSimpleName());
+//        out.format("        this._behaviour = behaviour;\n");
+//        out.format("    }\n\n");
+//    }
 
     private void writeBehaviourFactoryGetterAndSetter(PrintStream out, String factoryTypeName) {
         jd(out, "Sets the BehaviourFactory for all instances of\n"
@@ -1408,9 +1407,9 @@ public class ClassWriter {
                 info.getJavaClassSimpleName(), info.addType(Event.class),
                 info.getJavaClassSimpleName());
         out.format(
-                "        return signal(event, %s.create(time-%s.currentTimeMillis(),%s.MILLISECONDS));\n",
+                "        return signal(event, %s.of(time-%s.currentTimeMillis(),%s.MILLIS));\n",
                 info.addType(Duration.class), info.addType(System.class),
-                info.addType(TimeUnit.class));
+                info.addType(ChronoUnit.class));
         out.format("    }\n\n");
 
         out.format("    public %s cancelSignal(String eventSignatureKey) {\n ",

@@ -1,6 +1,7 @@
 package xuml.tools.model.compiler;
 
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -47,7 +48,7 @@ public class BehaviourImplementationWriter {
         try (PrintStream out = new PrintStream(bytes)) {
             generate(out);
         }
-        String result = bytes.toString().replace("<IMPORTS>",
+        String result = bytes.toString(StandardCharsets.UTF_8).replace("<IMPORTS>",
                 types.getImports(behaviourFullClassName).trim());
         return result;
     }

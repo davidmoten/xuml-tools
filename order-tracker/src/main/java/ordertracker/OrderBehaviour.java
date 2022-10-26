@@ -1,6 +1,7 @@
 package ordertracker;
 
-import java.util.concurrent.TimeUnit;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 
 import com.google.common.base.Optional;
 
@@ -19,7 +20,6 @@ import ordertracker.Order.Events.PickedUp;
 import ordertracker.Order.Events.ReturnToSender;
 import ordertracker.Order.Events.Send;
 import ordertracker.Order.State;
-import scala.concurrent.duration.Duration;
 
 public class OrderBehaviour implements Order.Behaviour {
 
@@ -104,7 +104,7 @@ public class OrderBehaviour implements Order.Behaviour {
 
     @Override
     public void onEntryAwaitingNextDeliveryAttempt(DeliverAgain event) {
-        self.signal(new Order.Events.DeliverAgain(), Duration.create(12, TimeUnit.MILLISECONDS));
+        self.signal(new Order.Events.DeliverAgain(), Duration.of(12, ChronoUnit.MILLIS));
         event(Order.State.AWAITING_NEXT_DELIVERY_ATTEMPT);
     }
 
@@ -119,7 +119,7 @@ public class OrderBehaviour implements Order.Behaviour {
     }
 
     private void returnToSenderIfNotPickedUp() {
-        self.signal(new Order.Events.ReturnToSender(), Duration.create(14, TimeUnit.MILLISECONDS));
+        self.signal(new Order.Events.ReturnToSender(), Duration.of(14, ChronoUnit.MILLIS));
         event(Order.State.HELD_FOR_PICKUP);
     }
 

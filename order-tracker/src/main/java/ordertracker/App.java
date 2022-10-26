@@ -3,11 +3,16 @@ package ordertracker;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class App {
 
-    private static Logger log = Logger.getLogger(App.class);
+    private static final Logger log = LoggerFactory.getLogger(App.class);
+    
+    static {
+        System.setProperty("org.jboss.logging.provider", "slf4j");
+    }
 
     public static void startup() {
 
