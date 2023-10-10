@@ -10,7 +10,7 @@
     <description>Web application for order-tracker using REST API</description>
     <packaging>war</packaging>
     <properties>
-        <jetty.plugin.version>9.4.52.v20230823</jetty.plugin.version>
+        <jetty.plugin.version>9.4.53.v20231009</jetty.plugin.version>
         <jetty.stop.port>8079</jetty.stop.port>
         <jersey.version>2.40</jersey.version>
     </properties>
