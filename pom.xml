@@ -58,7 +58,7 @@
         <gae.plugin.version>0.9.6</gae.plugin.version>
         <junit.version>4.13.2</junit.version>
         <guava.version>32.1.3-jre</guava.version>
-        <derby.version>10.16.1.1</derby.version>
+        <derby.version>10.17.1.0</derby.version>
         <h2.version>2.2.224</h2.version>
         <slf4j.version>1.7.36</slf4j.version>
 
