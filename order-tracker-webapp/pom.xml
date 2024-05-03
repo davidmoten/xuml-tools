@@ -12,7 +12,7 @@
     <properties>
         <jetty.plugin.version>9.4.54.v20240208</jetty.plugin.version>
         <jetty.stop.port>8079</jetty.stop.port>
-        <jersey.version>2.42</jersey.version>
+        <jersey.version>2.43</jersey.version>
     </properties>
     <dependencies>
         <dependency>
